@@ -18,13 +18,13 @@ public class VerticalGrabberActions {
 
         verticalGrabberServo = hardwareMap.get(Servo.class, ConfigConstants.VERTICAL_GRABBER);
 
-        verticalGrabberServo.setPosition(0.9);
-    }
-    public void open() {
         verticalGrabberServo.setPosition(0.0);
     }
+    public void open() {
+        verticalGrabberServo.setPosition(1.0);
+    }
     public void close() {
-        verticalGrabberServo.setPosition(0.9);
+        verticalGrabberServo.setPosition(0.0);
     }
     public void teleOp(boolean open, boolean close) {
         if (open) {

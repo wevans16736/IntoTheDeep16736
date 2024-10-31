@@ -23,7 +23,7 @@ public class ConfigConstants {
     public static final String HORIZONTAL_SLIDE1 = "horizontalSlide1";
     public static final String HORIZONTAL_SLIDE2 = "horizontalSlide2";
     public static final String HORIZONTAL_WRIST = "horizontalWrist";
-    public static final String INTAKE = "intake";
+    public static final String HORIZONTAL_INTAKE = "intake";
 
     public static final String VERTICAL_SLIDE1 = "verticalSlide1";
     public static final String VERTICAL_SLIDE2 = "verticalSlide2";

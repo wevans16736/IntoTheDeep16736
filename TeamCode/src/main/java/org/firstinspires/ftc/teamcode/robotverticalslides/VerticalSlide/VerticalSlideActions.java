@@ -27,9 +27,6 @@ public class VerticalSlideActions {
 
         VerticalSlide2 = hardwareMap.get(DcMotorEx.class, ConfigConstants.VERTICAL_SLIDE2);
         VerticalSlide2.setDirection(DcMotorSimple.Direction.FORWARD);
-        VerticalSlide2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        VerticalSlide2.setTargetPosition(0);
-        VerticalSlide2.setMode(DcMotor.RunMode.RUN_TO_POSITION);
     }
 
     public void resetSlide() {
@@ -49,9 +46,6 @@ public class VerticalSlideActions {
             if (VerticalSlide1.getMode() == DcMotor.RunMode.RUN_USING_ENCODER) {
                 VerticalSlide1.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                 VerticalSlide1.setPower(1.0);
-
-                VerticalSlide2.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                VerticalSlide2.setPower(1.0);
             }
 //            double time = System.currentTimeMillis();
 
@@ -64,7 +58,7 @@ public class VerticalSlideActions {
             RobotLog.dd("LiftyUppy", "Target Position %f, time %f", SlidePosition, time);
         }
         prevTime = time;
-        telemetry.addData("target position", SlidePosition);
+        telemetry.addData("target position vs", SlidePosition);
         telemetry.addData("liftyPower", VerticalSlide1.getPower());
         telemetry.addData("liftyCurrent mA", VerticalSlide1.getCurrent(CurrentUnit.MILLIAMPS));
 
@@ -75,34 +69,40 @@ public class VerticalSlideActions {
         }
 
         telemetry.addData("liftyMax mA", maxCurrent);
-        telemetry.addData("current position", VerticalSlide1.getCurrentPosition());
+        telemetry.addData("current position vs", VerticalSlide1.getCurrentPosition());
     }
 
     boolean downTo1 = false;
     int preset1 = 0;
-    int preset2 = -1100;
-    int preset3 = -1500;
-    int preset4 = -2500;
+    int preset2 = -200;
+    int preset3 = -300;
+    int preset4 = -500;
+    boolean wasSet = false;
 
     public void goToPreset(boolean bottomRung, boolean bottomBasket, boolean topRung, boolean topBasket) {
-        if ((bottomRung || bottomBasket || topRung) && VerticalSlide1.getMode() == DcMotor.RunMode.RUN_USING_ENCODER) {
-            VerticalSlide1.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            VerticalSlide1.setPower(1.0);
-
-            VerticalSlide2.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            VerticalSlide2.setPower(1.0);
-        }
-        if (bottomRung) {
-            setSlidePosition(preset1, 1800);
-            downTo1 = true;
-            if (bottomBasket) {
-                setSlidePosition(preset2, 2500);
-            } else if (topRung) {
-                setSlidePosition(preset3, 2500);
-            } else if (topBasket) {
-                setSlidePosition(preset4, 2500);
+        if (bottomRung || bottomBasket || topRung || topBasket){
+            if (VerticalSlide1.getMode() == DcMotor.RunMode.RUN_USING_ENCODER) {
+                VerticalSlide1.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                VerticalSlide1.setPower(1.0);
             }
+            if (!wasSet) {
+                if (bottomRung) {
+                    setSlidePosition(preset1, 1800);
+                    downTo1 = true;
+                }
+                if (bottomBasket) {
+                    setSlidePosition(preset2, 2500);
+                } else if (topRung) {
+                    setSlidePosition(preset3, 2500);
+                } else if (topBasket) {
+                    setSlidePosition(preset4, 2500);
+                }
+            }
+            wasSet = true;
+        } else {
+            wasSet = false;
         }
+        telemetry.addData("vert position", VerticalSlide1.getCurrentPosition());
     }
 
     double SlidePosition = 0;
@@ -111,7 +111,29 @@ public class VerticalSlideActions {
         VerticalSlide1.setTargetPosition(position);
         VerticalSlide1.setVelocity(velocity);
         SlidePosition = position;
+//        runVerticalSlide2.start();
     }
+    public void maintainVerticalSlide2() {
+        double slideAmps = VerticalSlide1.getCurrent(CurrentUnit.MILLIAMPS);
+        double slidePower = slideAmps / 9200;
+//        VerticalSlide2.setPower(slidePower);
+    }
+
+    Thread runVerticalSlide2 = new Thread(new Runnable() {
+        @Override
+        public void run() {
+            double slideAmps = VerticalSlide1.getCurrent(CurrentUnit.MILLIAMPS);
+            double slidePower = slideAmps / 9200;
+            VerticalSlide2.setPower(slidePower);
+            while (VerticalSlide1.isMotorEnabled()) {
+                slideAmps = VerticalSlide1.getCurrent(CurrentUnit.MILLIAMPS);
+                slidePower = slideAmps / 9200;
+                VerticalSlide2.setPower(slidePower);
+                telemetry.addData("Current VS1", slideAmps);
+                telemetry.addData("Current VS2", VerticalSlide2.getCurrent(CurrentUnit.MILLIAMPS));
+            }
+        }
+    });
 
     boolean rungWasSet = false;
     public void setOnRung(boolean setRung) {

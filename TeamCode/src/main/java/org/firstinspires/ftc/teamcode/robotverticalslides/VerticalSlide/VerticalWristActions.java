@@ -21,10 +21,10 @@ public class VerticalWristActions {
         verticalWristServo.setPosition(0.9);
     }
     public void forward() {
-        verticalWristServo.setPosition(0.0);
+        verticalWristServo.setPosition(0.9);
     }
     public void backward() {
-        verticalWristServo.setPosition(0.9);
+        verticalWristServo.setPosition(0.0);
     }
     public void flipping(boolean input) {
         if (input) {

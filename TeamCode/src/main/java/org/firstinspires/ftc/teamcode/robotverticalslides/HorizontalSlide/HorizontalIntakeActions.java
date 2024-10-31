@@ -17,7 +17,7 @@ public class HorizontalIntakeActions {
         this.telemetry = opModeTelemetry;
         this.hardwareMap = opModeHardware;
 
-        intakeServo = hardwareMap.get(CRServo.class, ConfigConstants.INTAKE);
+        intakeServo = hardwareMap.get(CRServo.class, ConfigConstants.HORIZONTAL_INTAKE);
 
         intakeServo.setDirection(DcMotorSimple.Direction.FORWARD);
     }
@@ -26,5 +26,14 @@ public class HorizontalIntakeActions {
     }
     public void outtake(double power) {
         intakeServo.setPower(-power);
+    }
+    public void teleop(double intake, double outtake) {
+        if (intake > 0.05) {
+            intake(intake);
+        } else if (outtake > 0.05) {
+            outtake(outtake);
+        } else {
+            intake(0);
+        }
     }
 }

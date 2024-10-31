@@ -26,7 +26,7 @@ public class HorizontalSlideActions {
         HorizontalSlide1.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
         HorizontalSlide2 = hardwareMap.get(DcMotorEx.class, ConfigConstants.HORIZONTAL_SLIDE2);
-        HorizontalSlide2.setDirection(DcMotorSimple.Direction.REVERSE);
+        HorizontalSlide2.setDirection(DcMotorSimple.Direction.FORWARD);
         HorizontalSlide2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         HorizontalSlide2.setTargetPosition(0);
         HorizontalSlide2.setMode(DcMotor.RunMode.RUN_TO_POSITION);
@@ -46,7 +46,7 @@ public class HorizontalSlideActions {
     public void teleOpHorizontalSlide(double power, double liftSpeedMultiplier) { //  controls the lifty uppy (viper slides) which is being extended and retracted
         double time = System.currentTimeMillis();
         if (power != 0) {
-            if (HorizontalSlide1.getMode() == DcMotor.RunMode.RUN_USING_ENCODER) {
+            if (HorizontalSlide2.getMode() == DcMotor.RunMode.RUN_USING_ENCODER) {
                 HorizontalSlide1.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                 HorizontalSlide1.setPower(1.0);
 
@@ -56,24 +56,24 @@ public class HorizontalSlideActions {
 //            double time = System.currentTimeMillis();
 
             double total = SlidePosition + power * (time - prevTime) * liftSpeedMultiplier;
-            total = Range.clip(total, -3000, 100);
+            total = Range.clip(total, 120, 2500);
             setSlidePosition((int) total, 3000 * liftSpeedMultiplier);
 //            prevTime = time;
             RobotLog.dd("LiftyUppy", "Target Position %f, time %f", SlidePosition, time);
         }
         prevTime = time;
         telemetry.addData("target position", SlidePosition);
-        telemetry.addData("liftyPower", HorizontalSlide1.getPower());
-        telemetry.addData("liftyCurrent mA", HorizontalSlide1.getCurrent(CurrentUnit.MILLIAMPS));
+        telemetry.addData("liftyPower", HorizontalSlide2.getPower());
+        telemetry.addData("liftyCurrent mA", HorizontalSlide2.getCurrent(CurrentUnit.MILLIAMPS));
 
         double maxCurrent = 0;
 
-        if (HorizontalSlide1.getCurrent(CurrentUnit.MILLIAMPS) > maxCurrent) {
-            maxCurrent = HorizontalSlide1.getCurrent(CurrentUnit.MILLIAMPS);
+        if (HorizontalSlide2.getCurrent(CurrentUnit.MILLIAMPS) > maxCurrent) {
+            maxCurrent = HorizontalSlide2.getCurrent(CurrentUnit.MILLIAMPS);
         }
 
         telemetry.addData("liftyMax mA", maxCurrent);
-        telemetry.addData("current position", HorizontalSlide1.getCurrentPosition());
+        telemetry.addData("current position", HorizontalSlide2.getCurrentPosition());
     }
 
 //    boolean downTo1 = false;

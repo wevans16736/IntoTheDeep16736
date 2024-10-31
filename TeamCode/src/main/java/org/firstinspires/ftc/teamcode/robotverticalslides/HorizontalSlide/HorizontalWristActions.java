@@ -18,13 +18,13 @@ public class HorizontalWristActions {
 
         horizontalWristServo = hardwareMap.get(Servo.class, ConfigConstants.HORIZONTAL_WRIST);
 
-        horizontalWristServo.setPosition(0.9);
+        horizontalWristServo.setPosition(0.65);
     }
     public void forward() {
-        horizontalWristServo.setPosition(0.0);
+        horizontalWristServo.setPosition(0.65);
     }
     public void backward() {
-        horizontalWristServo.setPosition(0.9);
+        horizontalWristServo.setPosition(0.05);
     }
     public void flipping(boolean input) {
         if (input) {
