@@ -22,10 +22,10 @@ public class HorizontalIntakeActions {
         intakeServo.setDirection(DcMotorSimple.Direction.FORWARD);
     }
     public void intake(double power) {
-        intakeServo.setPower(power);
+        intakeServo.setPower(-power);
     }
     public void outtake(double power) {
-        intakeServo.setPower(-power);
+        intakeServo.setPower(power);
     }
     public void teleop(double intake, double outtake) {
         if (intake > 0.05) {

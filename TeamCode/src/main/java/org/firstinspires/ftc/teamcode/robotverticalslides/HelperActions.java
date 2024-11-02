@@ -2,6 +2,12 @@ package org.firstinspires.ftc.teamcode.robotverticalslides;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
+import org.firstinspires.ftc.teamcode.robotverticalslides.HorizontalSlide.HorizontalIntakeActions;
+import org.firstinspires.ftc.teamcode.robotverticalslides.HorizontalSlide.HorizontalSlideActions;
+import org.firstinspires.ftc.teamcode.robotverticalslides.HorizontalSlide.HorizontalWristActions;
+import org.firstinspires.ftc.teamcode.robotverticalslides.VerticalSlide.VerticalGrabberActions;
+import org.firstinspires.ftc.teamcode.robotverticalslides.VerticalSlide.VerticalWristActions;
+
 public abstract class HelperActions extends LinearOpMode {
     public final double SPEED = 0.5;
 
@@ -74,5 +80,9 @@ public abstract class HelperActions extends LinearOpMode {
             }
         }
          prevToggle = toggle;
+    }
+    public void updateExchangeAssembly(VerticalGrabberActions grabber, VerticalWristActions verticalWrist, HorizontalWristActions horizontalWrist, HorizontalSlideActions horizontalSlide) {
+        verticalWrist.setGrabberClosed(grabber.isClose());
+        horizontalWrist.setIsSlideIn(horizontalSlide.getSlidePosition() < 200);
     }
 }

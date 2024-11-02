@@ -21,16 +21,29 @@ public class VerticalWristActions {
         verticalWristServo.setPosition(0.9);
     }
     public void forward() {
-        verticalWristServo.setPosition(0.9);
+        verticalWristServo.setPosition(0.0);
+        forward = true;
     }
     public void backward() {
-        verticalWristServo.setPosition(0.0);
+        verticalWristServo.setPosition(0.9);
+        forward = false;
     }
+    boolean isGrabberClosed = true;
+    public void setGrabberClosed(boolean isIt) {
+        isGrabberClosed = isIt;
+    }
+    boolean wasInput = false;
+    boolean forward = false;
     public void flipping(boolean input) {
-        if (input) {
-            backward();
-        } else {
-            forward();
+        if (isGrabberClosed) {
+            if (input && !wasInput) {
+                if (forward) {
+                    backward();
+                } else {
+                    forward();
+                }
+            }
         }
+        wasInput = input;
     }
 }

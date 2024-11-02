@@ -21,16 +21,27 @@ public class HorizontalWristActions {
         horizontalWristServo.setPosition(0.65);
     }
     public void forward() {
-        horizontalWristServo.setPosition(0.65);
+        horizontalWristServo.setPosition(0.05);
+        forward = true;
     }
     public void backward() {
-        horizontalWristServo.setPosition(0.05);
+        horizontalWristServo.setPosition(0.65);
+        forward = false;
     }
+    boolean isSlideIn = true;
+    public void setIsSlideIn(boolean isIt) {
+        isSlideIn = isIt;
+    }
+    boolean wasInput = false;
+    boolean forward = false;
     public void flipping(boolean input) {
-        if (input) {
-            backward();
-        } else {
-            forward();
+        if (input && !wasInput) {
+            if (!forward && !isSlideIn) {
+                forward();
+            } else if (forward){
+                backward();
+            }
         }
+        wasInput = input;
     }
 }

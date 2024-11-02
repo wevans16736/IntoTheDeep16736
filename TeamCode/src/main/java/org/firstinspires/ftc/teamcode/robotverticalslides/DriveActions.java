@@ -71,15 +71,15 @@ public class DriveActions {
         rightRear = hardwareMap.get(DcMotorEx.class, ConfigConstants.BACK_RIGHT);
 
         // old code
-//        leftFront.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-//        leftRear.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-//        rightFront.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-//        rightRear.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        leftFront.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        leftRear.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        rightFront.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        rightRear.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
-        leftFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        leftRear.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        rightFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        rightRear.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+//        leftFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+//        leftRear.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+//        rightFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+//        rightRear.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
 //        rightFront.setVelocity(0.0);
 //        leftFront.setVelocity(0.0);
@@ -92,10 +92,10 @@ public class DriveActions {
         rightRear.setPower(0.0);
         leftRear.setPower(0.0);
 
-        rightFront.setVelocity(0.0);
-        leftFront.setVelocity(0.0);
-        rightRear.setVelocity(0.0);
-        leftRear.setVelocity(0.0);
+//        rightFront.setVelocity(0.0);
+//        leftFront.setVelocity(0.0);
+//        rightRear.setVelocity(0.0);
+//        leftRear.setVelocity(0.0);
 
         // 2. Set direction
         setMotorDirection_Forward();
@@ -158,18 +158,18 @@ public class DriveActions {
             backRight = backRight / max;
         }
         // old code
-//        rightFront.setPower(frontRight);
-//        leftFront.setPower(frontLeft);
-//        rightRear.setPower(backRight);
-//        leftRear.setPower(backLeft);
+        rightFront.setPower(frontRight);
+        leftFront.setPower(frontLeft);
+        rightRear.setPower(backRight);
+        leftRear.setPower(backLeft);
 
 
 
 
-        rightFront.setVelocity((frontRight * MotorConstants.MAX_VELOCITY_WHEELS));
-        leftFront.setVelocity((frontLeft * MotorConstants.MAX_VELOCITY_WHEELS));
-        rightRear.setVelocity((backRight * MotorConstants.MAX_VELOCITY_WHEELS));
-        leftRear.setVelocity((backLeft * MotorConstants.MAX_VELOCITY_WHEELS));
+//        rightFront.setVelocity((frontRight * MotorConstants.MAX_VELOCITY_WHEELS));
+//        leftFront.setVelocity((frontLeft * MotorConstants.MAX_VELOCITY_WHEELS));
+//        rightRear.setVelocity((backRight * MotorConstants.MAX_VELOCITY_WHEELS));
+//        leftRear.setVelocity((backLeft * MotorConstants.MAX_VELOCITY_WHEELS));
 
     }
 

@@ -73,10 +73,10 @@ public class VerticalSlideActions {
     }
 
     boolean downTo1 = false;
-    int preset1 = 0;
-    int preset2 = -200;
-    int preset3 = -300;
-    int preset4 = -500;
+    int preset1 = -500;
+    int preset2 = -0;
+    int preset3 = -800;
+    int preset4 = -1100;
     boolean wasSet = false;
 
     public void goToPreset(boolean bottomRung, boolean bottomBasket, boolean topRung, boolean topBasket) {

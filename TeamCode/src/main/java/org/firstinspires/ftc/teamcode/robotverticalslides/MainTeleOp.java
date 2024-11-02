@@ -70,6 +70,8 @@ public class MainTeleOp extends HelperActions {
             verticalWrist.flipping(gamepad2.right_bumper);
             verticalGrabber.teleOp(gamepad2.y, gamepad2.x);
 
+            updateExchangeAssembly(verticalGrabber, verticalWrist, horizontalWrist, horizontalSlide);
+
             telemetry.update();
         }
 

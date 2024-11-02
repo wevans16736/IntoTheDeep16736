@@ -19,11 +19,12 @@ public class HorizontalSlideActions {
 
     public HorizontalSlideActions(HardwareMap hardwareMap, Telemetry telemetry) {
         this.telemetry = telemetry;
-        HorizontalSlide1 = hardwareMap.get(DcMotorEx.class, ConfigConstants.HORIZONTAL_SLIDE1);
-        HorizontalSlide1.setDirection(DcMotorSimple.Direction.REVERSE);
-        HorizontalSlide1.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        HorizontalSlide1.setTargetPosition(0);
-        HorizontalSlide1.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+//        HorizontalSlide1 = hardwareMap.get(DcMotorEx.class, ConfigConstants.HORIZONTAL_SLIDE1);
+//        HorizontalSlide1.setDirection(DcMotorSimple.Direction.REVERSE);
+////        HorizontalSlide1.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+////        HorizontalSlide1.setTargetPosition(0);
+////        HorizontalSlide1.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+//        HorizontalSlide1.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         HorizontalSlide2 = hardwareMap.get(DcMotorEx.class, ConfigConstants.HORIZONTAL_SLIDE2);
         HorizontalSlide2.setDirection(DcMotorSimple.Direction.FORWARD);
@@ -33,9 +34,9 @@ public class HorizontalSlideActions {
     }
 
     public void resetSlide() {
-        HorizontalSlide1.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        HorizontalSlide1.setTargetPosition(0);
-        HorizontalSlide1.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+//        HorizontalSlide1.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+//        HorizontalSlide1.setTargetPosition(0);
+//        HorizontalSlide1.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
         HorizontalSlide2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         HorizontalSlide2.setTargetPosition(0);
@@ -47,8 +48,8 @@ public class HorizontalSlideActions {
         double time = System.currentTimeMillis();
         if (power != 0) {
             if (HorizontalSlide2.getMode() == DcMotor.RunMode.RUN_USING_ENCODER) {
-                HorizontalSlide1.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                HorizontalSlide1.setPower(1.0);
+//                HorizontalSlide1.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+//                HorizontalSlide1.setPower(1.0);
 
                 HorizontalSlide2.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                 HorizontalSlide2.setPower(1.0);
@@ -103,11 +104,15 @@ public class HorizontalSlideActions {
     double SlidePosition = 0;
 
     public void setSlidePosition(int position, double velocity) {
-        HorizontalSlide1.setTargetPosition(position);
-        HorizontalSlide1.setVelocity(velocity);
+//        HorizontalSlide1.setTargetPosition(position);
+//        HorizontalSlide1.setVelocity(velocity);
 
         HorizontalSlide2.setTargetPosition(position);
         HorizontalSlide2.setVelocity(velocity);
         SlidePosition = position;
     }
+    public int getSlidePosition() {
+        return HorizontalSlide2.getCurrentPosition();
+    }
+
 }
