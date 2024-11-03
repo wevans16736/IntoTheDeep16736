@@ -40,7 +40,9 @@ public class HorizontalWristActions {
     private double backwardPosOut = 0.35;
     private double backwardPosIn = 0.9;
     public void update() {
-        if (forward) {
+        if (override) {
+            horizontalWristServo.setPosition(backwardPosIn);
+        } else if (forward) {
             if (!isSlideIn) {
                 horizontalWristServo.setPosition(forwardPosOut);
             } else {

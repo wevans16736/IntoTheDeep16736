@@ -87,7 +87,7 @@ public abstract class HelperActions extends LinearOpMode {
     public void updateExchangeAssembly(VerticalGrabberActions grabber, VerticalWristActions verticalWrist, HorizontalWristActions horizontalWrist, HorizontalSlideActions horizontalSlide, VerticalSlideActions verticalSlide) {
         verticalWrist.setGrabberClosed(grabber.isClose());
         verticalWrist.setSlideUp(verticalSlide.getSlidePosition() < -1000);
-        overrideSlide = horizontalSlide.getSlidePosition() < 300;
+        overrideSlide = horizontalSlide.getSlidePosition() < 325;
         horizontalWrist.setIsSlideIn(overrideSlide);
         overrideSlide(horizontalSlide);
         wasOverrideSlide = overrideSlide;
