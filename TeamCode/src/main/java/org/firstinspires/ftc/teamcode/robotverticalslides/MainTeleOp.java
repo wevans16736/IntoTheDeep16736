@@ -62,6 +62,7 @@ public class MainTeleOp extends HelperActions {
 
             horizontalSlide.teleOpHorizontalSlide(-gamepad2.left_stick_y, 1);
             horizontalWrist.flipping(gamepad2.left_bumper);
+            horizontalWrist.override(gamepad1.b);
             horizontalIntake.teleop(gamepad2.right_trigger, gamepad2.left_trigger);
 
             verticalSlide.goToPreset(gamepad2.dpad_left, gamepad2.dpad_down, gamepad2.dpad_right, gamepad2.dpad_up);
@@ -70,11 +71,12 @@ public class MainTeleOp extends HelperActions {
             verticalWrist.flipping(gamepad2.right_bumper);
             verticalGrabber.teleOp(gamepad2.y, gamepad2.x);
 
-            updateExchangeAssembly(verticalGrabber, verticalWrist, horizontalWrist, horizontalSlide);
+            updateExchangeAssembly(verticalGrabber, verticalWrist, horizontalWrist, horizontalSlide, verticalSlide);
 
             telemetry.update();
         }
 
+        close(verticalGrabber, verticalWrist, verticalSlide, horizontalWrist, horizontalSlide);
         telemetry.addData("[ROBOTNAME] ", "Going");
         telemetry.update();
 //        idle();
@@ -100,7 +102,7 @@ public class MainTeleOp extends HelperActions {
 //        return rotation;
         return  rightStickX * Math.abs(rightStickX);
     }
-    private boolean isTurning() {
-        return Math.abs((driveActions.leftFront.getVelocity() + driveActions.leftRear.getVelocity()) - (driveActions.rightFront.getVelocity() + driveActions.rightRear.getVelocity())) < 1;
-    }
+//    private boolean isTurning() {
+//        return Math.abs((driveActions.leftFront.getVelocity() + driveActions.leftRear.getVelocity()) - (driveActions.rightFront.getVelocity() + driveActions.rightRear.getVelocity())) < 1;
+//    }
 }

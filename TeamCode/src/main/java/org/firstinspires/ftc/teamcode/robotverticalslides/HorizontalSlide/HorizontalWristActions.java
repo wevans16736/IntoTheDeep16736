@@ -18,15 +18,45 @@ public class HorizontalWristActions {
 
         horizontalWristServo = hardwareMap.get(Servo.class, ConfigConstants.HORIZONTAL_WRIST);
 
-        horizontalWristServo.setPosition(0.65);
+        horizontalWristServo.setPosition(backwardPosIn);
     }
     public void forward() {
-        horizontalWristServo.setPosition(0.05);
+//        horizontalWristServo.setPosition(0.2);
         forward = true;
     }
     public void backward() {
-        horizontalWristServo.setPosition(0.65);
+//        horizontalWristServo.setPosition(0.9);
         forward = false;
+    }
+    boolean override = false;
+    boolean wasOverride = false;
+    public void override(boolean input) {
+        if (input &! wasOverride) {
+            override = !override;
+        }
+        wasOverride = input;
+    }
+    private double forwardPosOut = 0.2;
+    private double backwardPosOut = 0.35;
+    private double backwardPosIn = 0.9;
+    public void update() {
+        if (forward) {
+            if (!isSlideIn) {
+                horizontalWristServo.setPosition(forwardPosOut);
+            } else {
+                horizontalWristServo.setPosition(backwardPosIn);
+            }
+        } else {
+            if (isSlideIn) {
+                horizontalWristServo.setPosition(backwardPosIn);
+            } else {
+                if (override) {
+                    horizontalWristServo.setPosition(backwardPosIn);
+                } else {
+                    horizontalWristServo.setPosition(backwardPosOut);
+                }
+            }
+        }
     }
     boolean isSlideIn = true;
     public void setIsSlideIn(boolean isIt) {
@@ -43,5 +73,6 @@ public class HorizontalWristActions {
             }
         }
         wasInput = input;
+        update();
     }
 }

@@ -44,9 +44,13 @@ public class HorizontalSlideActions {
     }
     double prevTime = System.currentTimeMillis();
 
+    boolean override = false;
+    public void setOverride(boolean input) {
+        override = input;
+    }
     public void teleOpHorizontalSlide(double power, double liftSpeedMultiplier) { //  controls the lifty uppy (viper slides) which is being extended and retracted
         double time = System.currentTimeMillis();
-        if (power != 0) {
+        if (power != 0 && !override) {
             if (HorizontalSlide2.getMode() == DcMotor.RunMode.RUN_USING_ENCODER) {
 //                HorizontalSlide1.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 //                HorizontalSlide1.setPower(1.0);
@@ -57,7 +61,7 @@ public class HorizontalSlideActions {
 //            double time = System.currentTimeMillis();
 
             double total = SlidePosition + power * (time - prevTime) * liftSpeedMultiplier;
-            total = Range.clip(total, 120, 2500);
+            total = Range.clip(total, 0, 1600);
             setSlidePosition((int) total, 3000 * liftSpeedMultiplier);
 //            prevTime = time;
             RobotLog.dd("LiftyUppy", "Target Position %f, time %f", SlidePosition, time);

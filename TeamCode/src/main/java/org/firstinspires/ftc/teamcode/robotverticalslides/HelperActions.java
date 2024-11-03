@@ -6,6 +6,7 @@ import org.firstinspires.ftc.teamcode.robotverticalslides.HorizontalSlide.Horizo
 import org.firstinspires.ftc.teamcode.robotverticalslides.HorizontalSlide.HorizontalSlideActions;
 import org.firstinspires.ftc.teamcode.robotverticalslides.HorizontalSlide.HorizontalWristActions;
 import org.firstinspires.ftc.teamcode.robotverticalslides.VerticalSlide.VerticalGrabberActions;
+import org.firstinspires.ftc.teamcode.robotverticalslides.VerticalSlide.VerticalSlideActions;
 import org.firstinspires.ftc.teamcode.robotverticalslides.VerticalSlide.VerticalWristActions;
 
 public abstract class HelperActions extends LinearOpMode {
@@ -81,8 +82,34 @@ public abstract class HelperActions extends LinearOpMode {
         }
          prevToggle = toggle;
     }
-    public void updateExchangeAssembly(VerticalGrabberActions grabber, VerticalWristActions verticalWrist, HorizontalWristActions horizontalWrist, HorizontalSlideActions horizontalSlide) {
+    boolean wasOverrideSlide = true;
+    boolean overrideSlide = true;
+    public void updateExchangeAssembly(VerticalGrabberActions grabber, VerticalWristActions verticalWrist, HorizontalWristActions horizontalWrist, HorizontalSlideActions horizontalSlide, VerticalSlideActions verticalSlide) {
         verticalWrist.setGrabberClosed(grabber.isClose());
-        horizontalWrist.setIsSlideIn(horizontalSlide.getSlidePosition() < 200);
+        verticalWrist.setSlideUp(verticalSlide.getSlidePosition() < -1000);
+        overrideSlide = horizontalSlide.getSlidePosition() < 300;
+        horizontalWrist.setIsSlideIn(overrideSlide);
+        overrideSlide(horizontalSlide);
+        wasOverrideSlide = overrideSlide;
+    }
+    double startTime = 0;
+    public void overrideSlide(HorizontalSlideActions horizontalSlide) {
+        if (overrideSlide && !wasOverrideSlide) {
+            startTime = System.currentTimeMillis();
+        }
+        if (System.currentTimeMillis() < startTime + 420) {
+            horizontalSlide.setOverride(true);
+        } else {
+            horizontalSlide.setOverride(false);
+        }
+    }
+    public void close(VerticalGrabberActions verticalGrabber, VerticalWristActions verticalWrist, VerticalSlideActions verticalSlide, HorizontalWristActions horizontalWrist, HorizontalSlideActions horizontalSlide) {
+        verticalGrabber.close();
+        verticalWrist.backward();
+        verticalSlide.setSlidePosition(0, 1000);
+
+        horizontalWrist.backward();
+        horizontalSlide.setSlidePosition(0, 1000);
+        sleep(500);
     }
 }

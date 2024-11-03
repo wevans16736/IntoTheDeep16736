@@ -21,7 +21,7 @@ public class VerticalGrabberActions {
         verticalGrabberServo.setPosition(1.0);
     }
     public void open() {
-        verticalGrabberServo.setPosition(0.0);
+        verticalGrabberServo.setPosition(0.3);
     }
     public void close() {
         verticalGrabberServo.setPosition(1.0);

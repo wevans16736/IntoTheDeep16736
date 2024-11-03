@@ -134,12 +134,12 @@ public class VerticalSlideActions {
             }
         }
     });
-
-    boolean rungWasSet = false;
     public void setOnRung(boolean setRung) {
-        if (setRung &! rungWasSet) {
-            setSlidePosition((int) (SlidePosition + 100), 1800);
+        if (setRung) {
+            setSlidePosition((int) (SlidePosition - 1), 1800);
         }
-        rungWasSet = setRung;
+    }
+    public double getSlidePosition() {
+        return SlidePosition;
     }
 }
