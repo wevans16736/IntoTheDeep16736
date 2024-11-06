@@ -48,21 +48,29 @@ public class MainTeleOp extends HelperActions {
             /** Gamepad 1 **/
 
             driveActions.drive(
-                    (gamepad1.left_stick_x * Math.abs(gamepad1.left_stick_x)),      //joystick controlling strafe
-                    (-gamepad1.left_stick_y * Math.abs(gamepad1.left_stick_y)),     //joystick controlling forward/backward
-                    driveStraight(gamepad1.right_stick_x));    //joystick controlling rotation
+                    //joystick controlling strafe
+                    (gamepad1.left_stick_x * Math.abs(gamepad1.left_stick_x)),
+                    //joystick controlling forward/backward
+                    (-gamepad1.left_stick_y * Math.abs(gamepad1.left_stick_y)),
+                    //joystick controlling rotation
+                    driveStraight(gamepad1.right_stick_x));
             telemetry.addData("Left stick x", gamepad1.left_stick_x);
             telemetry.addData("left stick y", gamepad1.left_stick_y);
             telemetry.addData("right stick x", gamepad1.right_stick_x);
 
             telemetry.addData("Joystick", gamepad2.left_stick_y);
 
+            //allow you to use a d-pad to adjust the speed of the drive train
             changeSpeed(driveActions, gamepad1.dpad_up, gamepad1.dpad_down, false, false);
             toggleSpeed(gamepad1.a);
 
+            //use the player 2 left joystick to run the horzontal slide
             horizontalSlide.teleOpHorizontalSlide(-gamepad2.left_stick_y, 1);
+            //rotate the servo with intake in it
             horizontalWrist.flipping(gamepad2.left_bumper);
+            //force the servo to flip bypassing the range limit apply
             horizontalWrist.override(gamepad1.b);
+            //
             horizontalIntake.teleop(gamepad2.right_trigger, gamepad2.left_trigger);
 
             verticalSlide.goToPreset(gamepad2.dpad_left, gamepad2.dpad_down, gamepad2.dpad_right, gamepad2.dpad_up);
