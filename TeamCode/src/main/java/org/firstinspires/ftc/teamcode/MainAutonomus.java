@@ -61,12 +61,13 @@ public class MainAutonomus extends LinearOpMode {
         PinpointDrive drive = new PinpointDrive(hardwareMap, initialPose);
 
         //trajectory from initial spot moving to blue parking spot
+        //todo find the correct blue park position and put it below
         TrajectoryActionBuilder parkBlue = drive.actionBuilder(initialPose)
                 .splineTo(new Vector2d(20, 30), Math.PI / 2);
         //more trajectory coming soon
 
 
-
+        //wait for the start button to be press
         waitForStart();
         //if stop button is press, automatically stop
         if (isStopRequested()) return;
