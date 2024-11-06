@@ -11,7 +11,7 @@ public final class JoshuaTest extends LinearOpMode {
     //@Override
     public void runOpMode() throws InterruptedException {
         Pose2d beginPose = new Pose2d(0, 0, 0);
-            PinpointDrive drive = new PinpointDrive(hardwareMap, beginPose);
+        PinpointDrive drive = new PinpointDrive(hardwareMap, beginPose);
 
             waitForStart();
 
