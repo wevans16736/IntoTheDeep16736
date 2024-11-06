@@ -64,26 +64,33 @@ public class MainTeleOp extends HelperActions {
             changeSpeed(driveActions, gamepad1.dpad_up, gamepad1.dpad_down, false, false);
             toggleSpeed(gamepad1.a);
 
+
+            /** Gamepad 2 **/
             //use the player 2 left joystick to run the horzontal slide
             horizontalSlide.teleOpHorizontalSlide(-gamepad2.left_stick_y, 1);
             //rotate the servo with intake in it
             horizontalWrist.flipping(gamepad2.left_bumper);
             //force the servo to flip bypassing the range limit apply
             horizontalWrist.override(gamepad1.b);
-            //
+            //right trigger make the servo negative and left make the servo postivie.
             horizontalIntake.teleop(gamepad2.right_trigger, gamepad2.left_trigger);
 
+            //this assign the dpad to the diffrent level of the basket on the slide. left-bottom bar, down-bottom basket, right-top bar, up-top basket
             verticalSlide.goToPreset(gamepad2.dpad_left, gamepad2.dpad_down, gamepad2.dpad_right, gamepad2.dpad_up);
+            //method that set slideAmp to the amp draw of the motor
             verticalSlide.maintainVerticalSlide2();
+            //is gamepad a is press, no clue what this does
             verticalSlide.setOnRung(gamepad2.a);
+            //this set up a vertical wrist servo to down or up in a toggle way.
             verticalWrist.flipping(gamepad2.right_bumper);
+            //vertical grabber servo, y-close, x-close
             verticalGrabber.teleOp(gamepad2.y, gamepad2.x);
-
+            //no clue what this does
             updateExchangeAssembly(verticalGrabber, verticalWrist, horizontalWrist, horizontalSlide, verticalSlide);
 
             telemetry.update();
         }
-
+        //Stop and close all servo close position when stop button is press on the phone?????
         close(verticalGrabber, verticalWrist, verticalSlide, horizontalWrist, horizontalSlide);
         telemetry.addData("[ROBOTNAME] ", "Going");
         telemetry.update();

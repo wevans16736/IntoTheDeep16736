@@ -23,6 +23,7 @@ public abstract class HelperActions extends LinearOpMode {
     private int speeding = 0;
     private double speed = 0.6;
 
+    /**drive speed configuration**/
     public double getSpeed() { return speed; }
     public void setSpeed(double speed) {
         this.speed = speed;
@@ -82,6 +83,8 @@ public abstract class HelperActions extends LinearOpMode {
         }
          prevToggle = toggle;
     }
+
+     /**slide configuration?**/
     boolean wasOverrideSlide = true;
     boolean overrideSlide = true;
     public void updateExchangeAssembly(VerticalGrabberActions grabber, VerticalWristActions verticalWrist, HorizontalWristActions horizontalWrist, HorizontalSlideActions horizontalSlide, VerticalSlideActions verticalSlide) {
@@ -103,6 +106,7 @@ public abstract class HelperActions extends LinearOpMode {
             horizontalSlide.setOverride(false);
         }
     }
+
     public void close(VerticalGrabberActions verticalGrabber, VerticalWristActions verticalWrist, VerticalSlideActions verticalSlide, HorizontalWristActions horizontalWrist, HorizontalSlideActions horizontalSlide) {
         verticalGrabber.close();
         verticalWrist.backward();
