@@ -77,4 +77,15 @@ public class HorizontalWristActions {
         wasInput = input;
         update();
     }
+    double position = 0.9;
+    public void manual(boolean activate, boolean reverse) {
+        if (activate) {
+            if (!reverse) {
+                position = position - 0.005;
+            } else {
+                position = position + 0.005;
+            }
+        }
+        horizontalWristServo.setPosition(position);
+    }
 }

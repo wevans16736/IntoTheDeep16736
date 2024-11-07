@@ -10,8 +10,8 @@ import org.firstinspires.ftc.teamcode.robotverticalslides.VerticalSlide.Vertical
 import org.firstinspires.ftc.teamcode.robotverticalslides.VerticalSlide.VerticalSlideActions;
 import org.firstinspires.ftc.teamcode.robotverticalslides.VerticalSlide.VerticalWristActions;
 
-@TeleOp(name = "Tele Op 2 Slide Robot", group = "Linear Opmode")
-public class MainTeleOp extends HelperActions {
+@TeleOp(name = "Manual Tele Op", group = "Linear Opmode")
+public class ManualTeleOp extends HelperActions {
 
     private DriveActions driveActions = null;
     private HorizontalSlideActions horizontalSlide = null;
@@ -60,24 +60,22 @@ public class MainTeleOp extends HelperActions {
             changeSpeed(driveActions, gamepad1.dpad_up, gamepad1.dpad_down, false, false, gamepad1.right_trigger);
             toggleSpeed(gamepad1.a);
 
-            horizontalSlide.teleOpHorizontalSlide(-gamepad2.left_stick_y, 0.5);
-            horizontalWrist.flipping(gamepad2.left_bumper);
-            horizontalWrist.override(gamepad1.b || gamepad2.b);
+            horizontalSlide.teleOpHorizontalSlide(-gamepad2.left_stick_y, 1);
+            horizontalWrist.manual(gamepad2.left_bumper, gamepad2.b);
             horizontalIntake.teleop(gamepad2.right_trigger, gamepad2.left_trigger);
 
-            verticalSlide.goToPreset(gamepad2.dpad_left, gamepad2.dpad_down, gamepad2.dpad_right, gamepad2.dpad_up);
-            verticalSlide.teleOpVerticalSlide(gamepad2.right_stick_y, 1);
+            verticalSlide.teleOpVerticalSlide(-gamepad2.right_stick_y, 1);
 //            verticalSlide.maintainVerticalSlide2();
-            verticalSlide.setOnRung(gamepad2.a);
-            verticalWrist.flipping(gamepad2.right_bumper);
+//            verticalSlide.setOnRung(gamepad2.a);
+            verticalWrist.manual(gamepad2.right_bumper, gamepad2.b);
             verticalGrabber.teleOp(gamepad2.y, gamepad2.x);
 
-            updateExchangeAssembly(verticalGrabber, verticalWrist, horizontalWrist, horizontalSlide, verticalSlide);
+//            updateExchangeAssembly(verticalGrabber, verticalWrist, horizontalWrist, horizontalSlide, verticalSlide);
 
             telemetry.update();
         }
 
-        close(verticalGrabber, verticalWrist, verticalSlide, horizontalWrist, horizontalSlide);
+//        close(verticalGrabber, verticalWrist, verticalSlide, horizontalWrist, horizontalSlide);
         telemetry.addData("[ROBOTNAME] ", "Going");
         telemetry.update();
 //        idle();

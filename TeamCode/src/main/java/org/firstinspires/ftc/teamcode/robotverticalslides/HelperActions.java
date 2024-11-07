@@ -27,7 +27,7 @@ public abstract class HelperActions extends LinearOpMode {
     public void setSpeed(double speed) {
         this.speed = speed;
     }
-    public void changeSpeed(DriveActions driveActions, boolean upOne, boolean downOne, boolean upTwo, boolean downTwo) {
+    public void changeSpeed(DriveActions driveActions, boolean upOne, boolean downOne, boolean upTwo, boolean downTwo, double scalarMultiple) {
         if (upOne) {
             speeding++;
             if (speeding == 1) {
@@ -61,7 +61,8 @@ public abstract class HelperActions extends LinearOpMode {
         if (speed > 1.0) {
             speed = 1.0;
         }
-        driveActions.setSpeed(speed);
+        double speedLeft = 1.0 - speed;
+        driveActions.setSpeed(speed + (scalarMultiple * speedLeft));
         telemetry.addData("speed: ", speed);
     }
 

@@ -37,8 +37,8 @@ public class VerticalWristActions {
         isSlideUp = isIt;
     }
     double forwardUp = 0.55;
-    double forwardDown = 0.3;
-    double backwardPos = 0.9;
+    double forwardDown = 0.32;
+    double backwardPos = 0.89;
     public void update() {
         if (forward) {
             if (isSlideUp) {
@@ -64,5 +64,16 @@ public class VerticalWristActions {
         }
         wasInput = input;
         update();
+    }
+    double position = 0.9;
+    public void manual(boolean activate, boolean reverse) {
+        if (activate) {
+            if (!reverse) {
+                position = position - 0.005;
+            } else {
+                position = position + 0.005;
+            }
+        }
+        verticalWristServo.setPosition(position);
     }
 }
