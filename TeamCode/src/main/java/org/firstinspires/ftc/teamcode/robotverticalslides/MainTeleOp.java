@@ -48,35 +48,47 @@ public class MainTeleOp extends HelperActions {
             /** Gamepad 1 **/
 
             driveActions.drive(
-                    (gamepad1.left_stick_x * Math.abs(gamepad1.left_stick_x)),      //joystick controlling strafe
-                    (-gamepad1.left_stick_y * Math.abs(gamepad1.left_stick_y)),     //joystick controlling forward/backward
-                    driveStraight(gamepad1.right_stick_x));    //joystick controlling rotation
+                    //joystick controlling strafe
+                    (gamepad1.left_stick_x * Math.abs(gamepad1.left_stick_x)),
+                    //joystick controlling forward/backward
+                    (-gamepad1.left_stick_y * Math.abs(gamepad1.left_stick_y)),
+                    //joystick controlling rotation
+                    driveStraight(gamepad1.right_stick_x));
             telemetry.addData("Left stick x", gamepad1.left_stick_x);
             telemetry.addData("left stick y", gamepad1.left_stick_y);
             telemetry.addData("right stick x", gamepad1.right_stick_x);
 
             telemetry.addData("Joystick", gamepad2.left_stick_y);
 
+            //allow you to use a d-pad to adjust the speed of the drive train
             changeSpeed(driveActions, gamepad1.dpad_up, gamepad1.dpad_down, false, false, gamepad1.right_trigger);
             toggleSpeed(gamepad1.a);
-
+            
+            /** Gamepad 2 **/
+            //use the player 2 left joystick to run the horzontal slide
             horizontalSlide.teleOpHorizontalSlide(-gamepad2.left_stick_y, 0.5);
+            //rotate the servo with intake in it
             horizontalWrist.flipping(gamepad2.left_bumper);
+            //force the servo to flip bypassing the range limit apply
             horizontalWrist.override(gamepad1.b || gamepad2.b);
+            //right trigger make the servo negative and left make the servo postivie.
             horizontalIntake.teleop(gamepad2.right_trigger, gamepad2.left_trigger);
 
+            //this assign the dpad to the diffrent level of the basket on the slide. left-bottom bar, down-bottom basket, right-top bar, up-top basket
             verticalSlide.goToPreset(gamepad2.dpad_left, gamepad2.dpad_down, gamepad2.dpad_right, gamepad2.dpad_up);
+            //manually moves the vertical slide
             verticalSlide.teleOpVerticalSlide(gamepad2.right_stick_y, 1);
 //            verticalSlide.maintainVerticalSlide2();
-            verticalSlide.setOnRung(gamepad2.a);
             verticalWrist.flipping(gamepad2.right_bumper);
+            //this set up a vertical wrist servo to down or up in a toggle way.
+            //vertical grabber servo, y-close, x-close
             verticalGrabber.teleOp(gamepad2.y, gamepad2.x);
-
+            //manages interface between different pieces of the exchange assembly
             updateExchangeAssembly(verticalGrabber, verticalWrist, horizontalWrist, horizontalSlide, verticalSlide);
 
             telemetry.update();
         }
-
+        //Stop and close all servo close position when stop button is press on the phone?????
         close(verticalGrabber, verticalWrist, verticalSlide, horizontalWrist, horizontalSlide);
         telemetry.addData("[ROBOTNAME] ", "Going");
         telemetry.update();
