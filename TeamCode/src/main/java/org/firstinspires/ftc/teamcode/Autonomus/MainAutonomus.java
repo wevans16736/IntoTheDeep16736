@@ -1,10 +1,7 @@
-package org.firstinspires.ftc.teamcode;
-
-import androidx.annotation.NonNull;
+package org.firstinspires.ftc.teamcode.Autonomus;
 
 // RR-specific imports
 import com.acmerobotics.dashboard.config.Config;
-import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.acmerobotics.roadrunner.Action;
 import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.SequentialAction;
@@ -15,13 +12,9 @@ import com.acmerobotics.roadrunner.ftc.Actions;
 //Non-RR imports
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.hardware.HardwareMap;
-import com.qualcomm.robotcore.hardware.Servo;
-import com.qualcomm.robotcore.hardware.DcMotorEx;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
-import org.firstinspires.ftc.teamcode.MecanumDrive;
 
 //Team code imports
+import org.firstinspires.ftc.teamcode.PinpointDrive;
 import org.firstinspires.ftc.teamcode.robotverticalslides.DriveActions;
 import org.firstinspires.ftc.teamcode.robotverticalslides.HorizontalSlide.HorizontalSlideActions;
 import org.firstinspires.ftc.teamcode.robotverticalslides.HorizontalSlide.HorizontalWristActions;
@@ -29,6 +22,7 @@ import org.firstinspires.ftc.teamcode.robotverticalslides.HorizontalSlide.Horizo
 import org.firstinspires.ftc.teamcode.robotverticalslides.VerticalSlide.VerticalGrabberActions;
 import org.firstinspires.ftc.teamcode.robotverticalslides.VerticalSlide.VerticalSlideActions;
 import org.firstinspires.ftc.teamcode.robotverticalslides.VerticalSlide.VerticalWristActions;
+//import org.firstinspires.ftc.teamcode.Autonomus.Configuration;
 
 
 @Config
@@ -42,6 +36,8 @@ public class MainAutonomus extends LinearOpMode {
     private VerticalSlideActions verticalSlide = null;
     private VerticalWristActions verticalWrist = null;
     private VerticalGrabberActions verticalGrabber = null;
+
+    //Configuration config = new Configuration;
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -62,9 +58,13 @@ public class MainAutonomus extends LinearOpMode {
 
         //trajectory from initial spot moving to blue parking spot
         //todo find the correct blue park position and put it below
+
         TrajectoryActionBuilder parkBlue = drive.actionBuilder(initialPose)
-                .splineTo(new Vector2d(20, 30), Math.PI / 2);
-        //more trajectory coming soon
+                .splineTo(new Vector2d(20,30), Math.PI/2);
+
+        //trajectory from initial spot moving to red parking spot
+        TrajectoryActionBuilder parkRed = drive.actionBuilder(initialPose)
+                .splineTo(new Vector2d(20,30), Math.PI/2);
 
 
         //wait for the start button to be press

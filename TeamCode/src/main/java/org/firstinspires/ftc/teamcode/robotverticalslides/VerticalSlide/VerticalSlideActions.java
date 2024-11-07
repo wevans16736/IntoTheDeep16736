@@ -40,7 +40,9 @@ public class VerticalSlideActions {
     }
     double prevTime = System.currentTimeMillis();
 
-    public void teleOpVerticalSlide(double power, double liftSpeedMultiplier, boolean cancel) { //  controls the lifty uppy (viper slides) which is being extended and retracted
+    //  controls the lifty uppy (viper slides) which is being extended and retracted
+    //cancel is to remove the slide range limit
+    public void teleOpVerticalSlide(double power, double liftSpeedMultiplier, boolean cancel) {
         double time = System.currentTimeMillis();
         if (power != 0) {
             if (VerticalSlide1.getMode() == DcMotor.RunMode.RUN_USING_ENCODER) {
