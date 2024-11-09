@@ -37,7 +37,7 @@ public class VerticalWristActions {
         isSlideUp = isIt;
     }
     //this is a position to place it on the basket
-    double forwardUp = 0.55;
+    double forwardUp = 0.5;
     //this is a position to grab the butter from the wall
     double forwardDown = 0.30;
     //this is the position to grab the butter from the intake
