@@ -33,8 +33,8 @@ public class PinpointDrive extends MecanumDrive {
         //These are tuned for 3110-0002-0001 Product Insight #1
         // RR localizer note: These units are inches, presets are converted from mm (which is why they are inexact)
 
-        private final double xOffsetMillimeters = 52.0;
-        private final double yOffsetMillimeters = -176.0;
+        private final double xOffsetMillimeters = 0.0;
+        private final double yOffsetMillimeters = -72;
 
         public double xOffset = xOffsetMillimeters / 25.4;
         public double yOffset = yOffsetMillimeters / 25.4;
@@ -59,7 +59,7 @@ public class PinpointDrive extends MecanumDrive {
         you move the robot to the left.
          */
         public GoBildaPinpointDriver.EncoderDirection xDirection = GoBildaPinpointDriver.EncoderDirection.FORWARD;
-        public GoBildaPinpointDriver.EncoderDirection yDirection = GoBildaPinpointDriver.EncoderDirection.REVERSED;
+        public GoBildaPinpointDriver.EncoderDirection yDirection = GoBildaPinpointDriver.EncoderDirection.FORWARD;
     }
 
     public static Params PARAMS = new Params();
