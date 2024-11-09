@@ -37,7 +37,7 @@ public class VerticalWristActions {
         isSlideUp = isIt;
     }
     double forwardUp = 0.55;
-    double forwardDown = 0.32;
+    double forwardDown = 0.33;
     double backwardPos = 0.89;
     //If wrist is at highest point, set the wrist a bit higher to reach a higher point
     public void update() {
