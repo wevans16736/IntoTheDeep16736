@@ -47,6 +47,8 @@ public class BackupAutoLeft extends LinearOpMode{
         telemetry.update();
         waitForStart();
         if (opModeIsActive()) {
+            //keep horzontal slide static
+            horizontalSlide.setSlidePosition(0, 200);
             //Putting initial sample on rung
             //Flip wrist out
             verticalWrist.flipping(true);
@@ -54,8 +56,8 @@ public class BackupAutoLeft extends LinearOpMode{
             verticalSlide.setSlidePosition(-540, 2500);
             //drive forward 30 inches
 
-            driveActions.drive(0, 0.2, 0);
-            sleep(3800);
+            driveActions.drive(0, 0.3, 0);
+            sleep(3400);
             driveActions.drive(0, 0, 0);
             verticalGrabber.open();
             sleep(500);

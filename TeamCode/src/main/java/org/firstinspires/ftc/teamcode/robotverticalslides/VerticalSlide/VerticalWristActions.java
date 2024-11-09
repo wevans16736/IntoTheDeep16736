@@ -36,9 +36,12 @@ public class VerticalWristActions {
     public void setSlideUp(boolean isIt) {
         isSlideUp = isIt;
     }
+    //this is a position to place it on the basket
     double forwardUp = 0.55;
-    double forwardDown = 0.33;
-    double backwardPos = 0.89;
+    //this is a position to grab the butter from the wall
+    double forwardDown = 0.30;
+    //this is the position to grab the butter from the intake
+    double backwardPos = 0.84;
     //If wrist is at highest point, set the wrist a bit higher to reach a higher point
     public void update() {
         if (forward) {
