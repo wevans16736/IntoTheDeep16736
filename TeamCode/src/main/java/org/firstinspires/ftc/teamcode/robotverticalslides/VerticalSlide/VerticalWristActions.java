@@ -39,6 +39,7 @@ public class VerticalWristActions {
     double forwardUp = 0.55;
     double forwardDown = 0.32;
     double backwardPos = 0.89;
+    //If wrist is at highest point, set the wrist a bit higher to reach a higher point
     public void update() {
         if (forward) {
             if (isSlideUp) {
@@ -52,6 +53,8 @@ public class VerticalWristActions {
     }
     boolean wasInput = false;
     boolean forward = false;
+    //If the grabber is open, do nothing
+    //If the grabber is closed and the button is pushed, it flips between forward and back
     public void flipping(boolean input) {
         if (isGrabberClosed) {
             if (input && !wasInput) {
@@ -65,7 +68,8 @@ public class VerticalWristActions {
         wasInput = input;
         update();
     }
-    double position = 0.9;
+    double position = 0.89;
+    //Manually control the wrist. move with one button, reverse movement with other button
     public void manual(boolean activate, boolean reverse) {
         if (activate) {
             if (!reverse) {
@@ -75,5 +79,14 @@ public class VerticalWristActions {
             }
         }
         verticalWristServo.setPosition(position);
+    }
+    public void autoFlipBack() {
+        verticalWristServo.setPosition(backwardPos);
+    }
+    public void autoFlipForwardDown() {
+        verticalWristServo.setPosition(forwardDown);
+    }
+    public void autoFlipForwardUp() {
+        verticalWristServo.setPosition(forwardUp);
     }
 }

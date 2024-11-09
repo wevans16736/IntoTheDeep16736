@@ -89,8 +89,11 @@ public abstract class HelperActions extends LinearOpMode {
     boolean wasOverrideSlide = true;
     boolean overrideSlide = true;
     public void updateExchangeAssembly(VerticalGrabberActions grabber, VerticalWristActions verticalWrist, HorizontalWristActions horizontalWrist, HorizontalSlideActions horizontalSlide, VerticalSlideActions verticalSlide) {
+        //tells the vertical wrist when the grabber is closed
         verticalWrist.setGrabberClosed(grabber.isClose());
+        //tells the vertical wrist when the slide is up
         verticalWrist.setSlideUp(verticalSlide.getSlidePosition() < -1000);
+        //tells the horizontal slide to stop and let the horizontal wrist flip up or flip down when going in or out
         overrideSlide = horizontalSlide.getSlidePosition() < 325;
         horizontalWrist.setIsSlideIn(overrideSlide);
         overrideSlide(horizontalSlide);
@@ -116,5 +119,18 @@ public abstract class HelperActions extends LinearOpMode {
         horizontalWrist.backward();
         horizontalSlide.setSlidePosition(0, 1000);
         sleep(500);
+    }
+    double placeState = 0;
+    double startTimePlace = 0;
+    public void placeSample(VerticalGrabberActions verticalGrabber, VerticalWristActions verticalWrist, VerticalSlideActions verticalSlide) {
+        if (placeState == 0) {
+            verticalGrabber.close();
+            startTimePlace = System.currentTimeMillis();
+            placeState = 1;
+        } else if (placeState == 1 && System.currentTimeMillis() > startTimePlace + 420) {
+            placeState = 2;
+            verticalWrist.autoFlipForwardDown();
+            verticalSlide.setSlidePosition(-700, 2000);
+        }
     }
 }

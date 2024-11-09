@@ -63,7 +63,8 @@ public class HorizontalSlideActions {
             }
 //            double time = System.currentTimeMillis();
 
-            //ask jermey/wyatt/james for this logic check and why is this set the way it is
+            //change the slide position by the input power times the change in time times the speed.
+            //Multiplying by change in time makes sure the slide speed is more consistent
             double total = SlidePosition + power * (time - prevTime) * liftSpeedMultiplier;
             total = Range.clip(total, 0, 1600);
             setSlidePosition((int) total, 3000 * liftSpeedMultiplier);

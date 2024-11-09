@@ -46,15 +46,19 @@ public class VerticalSlideActions {
     public void teleOpVerticalSlide(double power, double liftSpeedMultiplier) { //  controls the lifty uppy (viper slides) which is being extended and retracted
         double time = System.currentTimeMillis();
         if (power != 0) {
+            //if line 55 is true then check if the motor is using run to encoder
             if (VerticalSlide1.getMode() == DcMotor.RunMode.RUN_USING_ENCODER) {
 //                HorizontalSlide1.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 //                HorizontalSlide1.setPower(1.0);
 
+                //if line 57 is true, then turn the motor to run to position which keep the slide stable
                 VerticalSlide1.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                 VerticalSlide1.setPower(1.0);
             }
 //            double time = System.currentTimeMillis();
 
+            //change the slide position by the input power times the change in time times the speed.
+            //Multiplying by change in time makes sure the slide speed is more consistent
             double total = SlidePosition + power * (time - prevTime) * liftSpeedMultiplier;
             total = Range.clip(total, -1100, 0);
             setSlidePosition((int) total, 3000 * liftSpeedMultiplier);
@@ -106,6 +110,7 @@ public class VerticalSlideActions {
         } else {
             wasSet = false;
         }
+        //If the slide is at the button, turn it off
         if(downTo1 && !VerticalSlide1.isMotorEnabled()) {
             downTo1 = false;
             VerticalSlide1.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
