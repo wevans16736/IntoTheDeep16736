@@ -83,7 +83,7 @@ public class VerticalSlideActions {
     boolean downTo1 = false;
     int preset1 = -480;
     int preset2 = -0;
-    int preset3 = -700;
+    int preset3 = -55;
     int preset4 = -1100;
     boolean wasSet = false;
 

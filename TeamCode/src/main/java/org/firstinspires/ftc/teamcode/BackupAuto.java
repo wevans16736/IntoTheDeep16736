@@ -66,8 +66,8 @@ public class BackupAuto extends LinearOpMode{
             //keep horzontal slide static
             horizontalSlide.setSlidePosition(0, 200);
             //Putting initial sample on rung
-            //Flip wrist ouu
-            verticalWrist.flipping(true);
+            //Flip wrist out
+            verticalWrist.autoFlipForwardDown();
             //set slide up
             verticalSlide.setSlidePosition(-540, 2500);
             //drive forward 30 inches
@@ -89,8 +89,7 @@ public class BackupAuto extends LinearOpMode{
             //reset outtake arm
             verticalGrabber.close();
             sleep(500);
-            verticalWrist.flipping(false);
-            verticalWrist.flipping(true);
+            verticalWrist.autoFlipBack();
             verticalSlide.setSlidePosition(0, 2000);
 
             driveActions.drive(0, 0.5, 0);

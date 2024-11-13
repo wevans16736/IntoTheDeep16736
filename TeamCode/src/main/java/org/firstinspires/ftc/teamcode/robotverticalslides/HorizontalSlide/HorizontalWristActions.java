@@ -38,7 +38,7 @@ public class HorizontalWristActions {
     }
     private double forwardPosOut = 0.2;
     private double backwardPosOut = 0.35;
-    private double backwardPosIn = 0.9;
+    private double backwardPosIn = 0.85;
     public void update() {
         if (override) {
             horizontalWristServo.setPosition(backwardPosIn);
