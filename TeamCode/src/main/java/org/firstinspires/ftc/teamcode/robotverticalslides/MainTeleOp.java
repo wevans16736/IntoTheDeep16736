@@ -49,11 +49,11 @@ public class MainTeleOp extends HelperActions {
 
             driveActions.drive(
                     //joystick controlling strafe
-                    (gamepad1.left_stick_x * Math.abs(gamepad1.left_stick_x)),
+                    (-gamepad1.left_stick_x * Math.abs(gamepad1.left_stick_x)),
                     //joystick controlling forward/backward
-                    (-gamepad1.left_stick_y * Math.abs(gamepad1.left_stick_y)),
+                    (gamepad1.left_stick_y * Math.abs(gamepad1.left_stick_y)),
                     //joystick controlling rotation
-                    driveStraight(gamepad1.right_stick_x));
+                    driveStraight(-gamepad1.right_stick_x));
             telemetry.addData("Left stick x", gamepad1.left_stick_x);
             telemetry.addData("left stick y", gamepad1.left_stick_y);
             telemetry.addData("right stick x", gamepad1.right_stick_x);
