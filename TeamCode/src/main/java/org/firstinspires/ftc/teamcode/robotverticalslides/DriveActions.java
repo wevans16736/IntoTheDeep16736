@@ -192,11 +192,11 @@ public class DriveActions {
 
     //This methods is meant for AUTONOMOUS
     public void setMotorDirection_Forward() {
-        leftFront.setDirection(MotorConstants.REVERSE);
-        leftRear.setDirection(MotorConstants.REVERSE);
+        leftFront.setDirection(MotorConstants.FORWARD);
+        leftRear.setDirection(MotorConstants.FORWARD);
 
-        rightFront.setDirection(MotorConstants.FORWARD);
-        rightRear.setDirection(MotorConstants.FORWARD);
+        rightFront.setDirection(MotorConstants.REVERSE);
+        rightRear.setDirection(MotorConstants.REVERSE);
     }
 
     public double getSteeringCorrection(double desiredHeading, double proportionalGain) {

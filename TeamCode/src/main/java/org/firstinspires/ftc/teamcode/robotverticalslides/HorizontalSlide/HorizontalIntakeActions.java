@@ -3,13 +3,14 @@ package org.firstinspires.ftc.teamcode.robotverticalslides.HorizontalSlide;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.robotverticalslides.constants.ConfigConstants;
 
 public class HorizontalIntakeActions {
-    public CRServo intakeServo;
+    public Servo intakeServo;
     private Telemetry telemetry;
     private HardwareMap hardwareMap;
     private ElapsedTime runtime = new ElapsedTime();
@@ -17,15 +18,16 @@ public class HorizontalIntakeActions {
         this.telemetry = opModeTelemetry;
         this.hardwareMap = opModeHardware;
 
-        intakeServo = hardwareMap.get(CRServo.class, ConfigConstants.HORIZONTAL_INTAKE);
+        intakeServo = hardwareMap.get(Servo.class, ConfigConstants.HORIZONTAL_INTAKE);
 
-        intakeServo.setDirection(DcMotorSimple.Direction.FORWARD);
+        intakeServo.setPosition(0);
     }
     public void intake(double power) {
-        intakeServo.setPower(-power);
+        intakeServo.setPosition(0.2 - power * 0.2);
     }
     public void outtake(double power) {
-        intakeServo.setPower(power);
+//        intakeServo.setPosition(power);
+//        telemetry.addData("intake position", intakeServo.getPosition());
     }
     public void teleop(double intake, double outtake) {
         if (intake > 0.05) {
@@ -33,7 +35,7 @@ public class HorizontalIntakeActions {
         } else if (outtake > 0.05) {
             outtake(outtake);
         } else {
-            intake(0);
+            intake(0.2);
         }
     }
 }
