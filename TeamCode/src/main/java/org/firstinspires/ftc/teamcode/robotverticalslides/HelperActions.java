@@ -111,24 +111,54 @@ public abstract class HelperActions extends LinearOpMode {
         }
     }
 
-    public void close(VerticalGrabberActions verticalGrabber, VerticalWristActions verticalWrist, VerticalSlideActions verticalSlide, HorizontalWristActions horizontalWrist, HorizontalSlideActions horizontalSlide) {
-        verticalGrabber.close();
-        verticalWrist.backward();
-        verticalSlide.setSlidePosition(0, 1000);
+    double verticalGrabberStartCloseTime = 0;
+    double verticalGrabberStartOpenTime = 0;
+    public boolean close(VerticalGrabberActions verticalGrabber, VerticalWristActions verticalWrist, VerticalSlideActions verticalSlide, HorizontalWristActions horizontalWrist, HorizontalSlideActions horizontalSlide) {
+        boolean close = true;
+        double currentTime = System.currentTimeMillis();
+        if (verticalWrist.forward) {
+            if (!verticalGrabber.isClose()) {
+                verticalGrabberStartCloseTime = currentTime;
+                verticalGrabber.close();
+            }
+            if (currentTime > verticalGrabberStartCloseTime + 420) {
+                verticalWrist.backward();
+                verticalWrist.update();
+                if (verticalGrabber.isClose()) {
+                    verticalGrabber.open();
+                    verticalGrabberStartOpenTime = currentTime;
+                }
+            }
+            close = false;
+        }
+        if (currentTime < verticalGrabberStartOpenTime + 420) {
+            close = false;
+        }
+        if (verticalSlide.getSlidePosition() < -10) {
+            verticalSlide.goToPreset(false, true, false, false);
+            close = false;
+        }
 
-        horizontalWrist.backward();
-        horizontalSlide.setSlidePosition(0, 1000);
-        sleep(500);
+        if (horizontalSlide.getSlidePosition() > 0) {
+            horizontalSlide.teleOpHorizontalSlide(-1, 0.5);
+            close = false;
+        }
+        return close;
     }
     double placeState = 0;
     double startTimePlace = 0;
-    public void placeSample(VerticalGrabberActions verticalGrabber, VerticalWristActions verticalWrist, VerticalSlideActions verticalSlide) {
+    public void placeSample(VerticalGrabberActions verticalGrabber, VerticalWristActions verticalWrist, VerticalSlideActions verticalSlide, HorizontalWristActions horizontalWrist, HorizontalIntakeActions intake) {
         if (placeState == 0) {
+            verticalWrist.backward();
+            verticalWrist.update();
+            verticalGrabber.open();
+
+        } else if (placeState == 1) {
             verticalGrabber.close();
             startTimePlace = System.currentTimeMillis();
-            placeState = 1;
-        } else if (placeState == 1 && System.currentTimeMillis() > startTimePlace + 420) {
             placeState = 2;
+        } else if (placeState == 2 && System.currentTimeMillis() > startTimePlace + 420) {
+            placeState = 3;
             verticalWrist.autoFlipForwardDown();
             verticalSlide.setSlidePosition(-700, 2000);
         }

@@ -49,11 +49,11 @@ public class MainTeleOp extends HelperActions {
 
             driveActions.drive(
                     //joystick controlling strafe
-                    (-gamepad1.left_stick_x * Math.abs(gamepad1.left_stick_x)),
+                    (gamepad1.left_stick_x * Math.abs(gamepad1.left_stick_x)),
                     //joystick controlling forward/backward
-                    (gamepad1.left_stick_y * Math.abs(gamepad1.left_stick_y)),
+                    (-gamepad1.left_stick_y * Math.abs(gamepad1.left_stick_y)),
                     //joystick controlling rotation
-                    driveStraight(-gamepad1.right_stick_x));
+                    driveStraight(gamepad1.right_stick_x));
             telemetry.addData("Left stick x", gamepad1.left_stick_x);
             telemetry.addData("left stick y", gamepad1.left_stick_y);
             telemetry.addData("right stick x", gamepad1.right_stick_x);
@@ -86,10 +86,11 @@ public class MainTeleOp extends HelperActions {
             //manages interface between different pieces of the exchange assembly
             updateExchangeAssembly(verticalGrabber, verticalWrist, horizontalWrist, horizontalSlide, verticalSlide);
 
+            if (gamepad2.left_trigger > 0.05) {
+                close(verticalGrabber, verticalWrist, verticalSlide, horizontalWrist, horizontalSlide);
+            }
             telemetry.update();
         }
-        //Stop and close all servo close position when stop button is press on the phone?????
-        close(verticalGrabber, verticalWrist, verticalSlide, horizontalWrist, horizontalSlide);
         telemetry.addData("[ROBOTNAME] ", "Going");
         telemetry.update();
 //        idle();

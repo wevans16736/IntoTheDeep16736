@@ -65,7 +65,7 @@ public class HorizontalWristActions {
         isSlideIn = isIt;
     }
     boolean wasInput = false;
-    boolean forward = false;
+    public boolean forward = false;
     public void flipping(boolean input) {
         if (input && !wasInput) {
             if (!forward && !isSlideIn) {

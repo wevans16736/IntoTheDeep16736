@@ -55,7 +55,7 @@ public class VerticalWristActions {
         }
     }
     boolean wasInput = false;
-    boolean forward = false;
+    public boolean forward = false;
     //If the grabber is open, do nothing
     //If the grabber is closed and the button is pushed, it flips between forward and back
     public void flipping(boolean input) {
