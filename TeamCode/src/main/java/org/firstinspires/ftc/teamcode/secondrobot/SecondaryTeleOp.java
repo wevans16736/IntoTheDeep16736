@@ -23,7 +23,7 @@ public class SecondaryTeleOp extends LinearOpMode {
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
         while (opModeIsActive()) {
-            arm.teleOpArm(gamepad2.left_stick_y, 0.5);
+            arm.teleOpArm(gamepad2.left_stick_y, 1.0);
             telemetry.update();
         }
     }

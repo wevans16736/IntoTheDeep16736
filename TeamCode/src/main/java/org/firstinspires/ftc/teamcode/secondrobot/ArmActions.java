@@ -49,7 +49,7 @@ public class ArmActions {
             //change the slide position by the input power times the change in time times the speed.
             //Multiplying by change in time makes sure the slide speed is more consistent
             double total = SlidePosition + power * (time - prevTime) * liftSpeedMultiplier;
-            total = Range.clip(total, -1600, 1600);
+            total = Range.clip(total, -30, 350);
             setArmPosition((int) total, 3000 * liftSpeedMultiplier);
             RobotLog.dd("LiftyUppy", "Target Position %f, time %f", SlidePosition, time);
         }
