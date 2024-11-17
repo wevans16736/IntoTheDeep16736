@@ -73,18 +73,8 @@ public class HorizontalSlideActions {
         }
 
         prevTime = time;
-        telemetry.addData("target position", SlidePosition);
-        telemetry.addData("liftyPower", HorizontalSlide2.getPower());
-        telemetry.addData("liftyCurrent mA", HorizontalSlide2.getCurrent(CurrentUnit.MILLIAMPS));
-
-        double maxCurrent = 0;
-
-        if (HorizontalSlide2.getCurrent(CurrentUnit.MILLIAMPS) > maxCurrent) {
-            maxCurrent = HorizontalSlide2.getCurrent(CurrentUnit.MILLIAMPS);
-        }
-
-        telemetry.addData("liftyMax mA", maxCurrent);
-        telemetry.addData("current position", HorizontalSlide2.getCurrentPosition());
+        telemetry.addData("target position HS", SlidePosition);
+        telemetry.addData("current position HS", HorizontalSlide2.getCurrentPosition());
     }
 
 //    boolean downTo1 = false;
