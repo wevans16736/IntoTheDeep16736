@@ -34,7 +34,7 @@ public class PinpointDrive extends MecanumDrive {
         // RR localizer note: These units are inches, presets are converted from mm (which is why they are inexact)
 
         private final double xOffsetMillimeters = 0.0;
-        private final double yOffsetMillimeters = -72;
+        private final double yOffsetMillimeters = 72;
 
         public double xOffset = xOffsetMillimeters / 25.4;
         public double yOffset = yOffsetMillimeters / 25.4;

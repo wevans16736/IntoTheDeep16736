@@ -20,6 +20,8 @@ public final class JoshuaTest extends LinearOpMode {
                             .splineTo(new Vector2d(20, 30), Math.PI / 2)
                             .splineTo(new Vector2d(0, 60), Math.PI)
                             .build());
+//                            .splineTo(Vector2d)
+//                            .build());
 
     }
 }
