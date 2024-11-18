@@ -152,6 +152,7 @@ public class MainAutonomus extends LinearOpMode {
         verticalWrist = new VerticalWristActions(telemetry, hardwareMap);
         verticalGrabber = new VerticalGrabberActions(telemetry, hardwareMap);
         VerticalSlideRR verticalSlideRR = new VerticalSlideRR(hardwareMap);
+        VerticalWristRR verticalWristRR = new VerticalWristRR(telemetry, hardwareMap);
 //        VelConstraint baseVelConstraint = new MinVelConstraint(Arrays.asList(
 //                new TranslationalVelConstraint(50.0),
 //                new AngularVelConstraint(Math.PI / 2)
