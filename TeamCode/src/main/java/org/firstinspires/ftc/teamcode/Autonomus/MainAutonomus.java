@@ -21,8 +21,10 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.Servo;
 
 //Team code imports
+import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.PinpointDrive;
 import org.firstinspires.ftc.teamcode.robotverticalslides.DriveActions;
 import org.firstinspires.ftc.teamcode.robotverticalslides.HorizontalSlide.HorizontalSlideActions;
@@ -91,8 +93,53 @@ public class MainAutonomus extends LinearOpMode {
             return new Liftup();
         }
     }
-
-    //Configuration config = new Configuration;
+    //make the whole class for the vertical wrist
+    public class VerticalWristRR{
+        public Servo verticalWristServo;
+        private Telemetry telemetry;
+        private HardwareMap hardwareMap;
+        public VerticalWristRR(Telemetry opModeTelemetry, HardwareMap opModeHardware){
+            telemetry = opModeTelemetry;
+            hardwareMap = opModeHardware;
+            verticalWristServo = hardwareMap.get(Servo.class, ConfigConstants.VERTICAL_WRIST);
+            verticalWristServo.setPosition(0.8);
+        }
+        //this is a position to grab the butter from the wall or set it on the lower basket or either rung
+        public class forwardDown implements Action{
+            @Override
+            public boolean run(@NonNull TelemetryPacket packet){
+                verticalWristServo.setPosition(0.25);
+                return false;
+            }
+        }
+        public Action forwardDown(){
+            return new forwardDown();
+        }
+        //this is a position to place it on the basket
+        public class forwardUp implements Action{
+            @Override
+            public boolean run(@NonNull TelemetryPacket packet) {
+                verticalWristServo.setPosition(0.4);
+                return false;
+            }
+        }
+        //this is a position to place it on the basket
+        public Action forwardUp(){
+            return new forwardUp();
+        }
+        //this is the position to grab the butter from the intake
+        public class backwardPos implements Action{
+            @Override
+            public boolean run(@NonNull TelemetryPacket packet){
+                verticalWristServo.setPosition(0.8);
+                return false;
+            }
+        }
+        public Action backwardPos(){
+            return new backwardPos();
+        }
+    }
+    //make the grabber method
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -121,8 +168,8 @@ public class MainAutonomus extends LinearOpMode {
         //trajectory from initial spot moving to blue parking spot
         //todo find the correct blue park position and put it below
         
-        TrajectoryActionBuilder parkBlue = drive.actionBuilder(initialPose);
-                //.lineToX(20);
+        TrajectoryActionBuilder parkBlue = drive.actionBuilder(initialPose)
+                .lineToY(20);
 
 
 
@@ -143,7 +190,7 @@ public class MainAutonomus extends LinearOpMode {
         //run the chosen action blocking
         Actions.runBlocking(
             new SequentialAction(
-                //trajectoryActionChosen,
+                trajectoryActionChosen,
                     verticalSlideRR.liftUp()
             )
 
