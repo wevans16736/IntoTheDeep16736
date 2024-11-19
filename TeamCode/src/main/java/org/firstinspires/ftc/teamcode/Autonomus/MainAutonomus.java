@@ -41,18 +41,20 @@ import org.firstinspires.ftc.teamcode.robotverticalslides.constants.ConfigConsta
 @Autonomous(name = "MainAuto", group = "Autonomus")
 public class MainAutonomus extends LinearOpMode {
 
-    private DriveActions driveActions = null;
     private HorizontalSlideActions horizontalSlide = null;
     private HorizontalWristActions horizontalWrist = null;
     private HorizontalIntakeActions horizontalIntake = null;
     private VerticalWristActions verticalWrist = null;
     private VerticalSlideActions verticalSlide = null;
     private VerticalGrabberActions verticalGrabber = null;
+    private VerticalSlideRR verticalSlideRR = null;
+    private HorizontalSlideRR horizontalSlideRR = null;
+    private VerticalGrabberRR verticalGrabberRR = null;
+    private VerticalWristRR verticalWristRR = null;
 
     public class VerticalSlideRR{
         public DcMotorEx verticalSlide1 = null;
         public DcMotorEx verticalSlide2 = null;
-
 
         public VerticalSlideRR(HardwareMap hardwareMap){
             verticalSlide1 = hardwareMap.get(DcMotorEx.class, ConfigConstants.VERTICAL_SLIDE1);
@@ -93,74 +95,133 @@ public class MainAutonomus extends LinearOpMode {
             return new Liftup();
         }
     }
-    //make the whole class for the vertical wrist
+    //make a class for horizontal Slide
+    public class HorizontalSlideRR{
+        public DcMotorEx HorizontalSlide2 = null;
+        private Telemetry telemetry;
+        public HorizontalSlideRR(HardwareMap hardwareMap, Telemetry telemetry) {
+            this.telemetry = telemetry;
+            HorizontalSlide2 = hardwareMap.get(DcMotorEx.class, ConfigConstants.HORIZONTAL_SLIDE2);
+            HorizontalSlide2.setDirection(DcMotorSimple.Direction.FORWARD);
+            HorizontalSlide2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            HorizontalSlide2.setTargetPosition(0);
+            HorizontalSlide2.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        }
+        private boolean initialized = false;
+        public class retractSlide implements Action{
+            @Override
+            public boolean run(@NonNull TelemetryPacket packet){
+                int position = 0;
+                double velocity = 0;
+                if(!initialized){
+                    horizontalSlide.resetSlide();
+                    horizontalSlide.setSlidePosition(position, velocity);
+                    initialized = true;
+                }
+                double currentPosition = horizontalSlide.getSlidePosition();
+                if(currentPosition > position){
+                    return true;
+                }else {
+                    return false;
+                }
+            }
+        }
+        public Action retractSlide(){
+            return new retractSlide();
+        }
+    }
+    //add a class for the vertical grabber
+    public class VerticalGrabberRR{
+        public Servo verticalGrabberServo;
+        private Telemetry telemetry;
+        private HardwareMap hardwareMap;
+        public VerticalGrabberRR(Telemetry opModeTelemetry, HardwareMap opModeHardware) {
+            this.telemetry = opModeTelemetry;
+            this.hardwareMap = opModeHardware;
+            verticalGrabberServo = hardwareMap.get(Servo.class, ConfigConstants.VERTICAL_GRABBER);
+            verticalGrabberServo.setPosition(1.0);
+        }
+        double close = 0.5;
+        double open = 0.3;
+        public class closeGrabber implements Action{
+            @Override
+            public boolean run(@NonNull TelemetryPacket packet){
+                verticalGrabberServo.setPosition(close);
+                return false;
+            }
+        }
+        public Action closeGrabber(){
+            return new closeGrabber();
+        }
+        public class openGrabber implements Action{
+            @Override
+            public boolean run(@NonNull TelemetryPacket packet){
+                verticalGrabberServo.setPosition(open);
+                return false;
+            }
+        }
+        public Action openGrabber(){
+            return new openGrabber();
+        }
+    }
+    //add Vertical Wrist Class
     public class VerticalWristRR{
         public Servo verticalWristServo;
         private Telemetry telemetry;
         private HardwareMap hardwareMap;
-        public VerticalWristRR(Telemetry opModeTelemetry, HardwareMap opModeHardware){
-            telemetry = opModeTelemetry;
-            hardwareMap = opModeHardware;
-            verticalWristServo = hardwareMap.get(Servo.class, ConfigConstants.VERTICAL_WRIST);
-            verticalWristServo.setPosition(0.8);
-        }
+
+        //this is a position to place it on the basket
+        double forwardUp = 0.4;
         //this is a position to grab the butter from the wall or set it on the lower basket or either rung
-        public class forwardDown implements Action{
-            @Override
-            public boolean run(@NonNull TelemetryPacket packet){
-                verticalWristServo.setPosition(0.25);
-                return false;
-            }
-        }
-        public Action forwardDown(){
-            return new forwardDown();
-        }
-        //this is a position to place it on the basket
-        public class forwardUp implements Action{
-            @Override
-            public boolean run(@NonNull TelemetryPacket packet) {
-                verticalWristServo.setPosition(0.4);
-                return false;
-            }
-        }
-        //this is a position to place it on the basket
-        public Action forwardUp(){
-            return new forwardUp();
-        }
+        double forwardDown = 0.25;
         //this is the position to grab the butter from the intake
-        public class backwardPos implements Action{
+        double backwardPos = 0.8;
+        public VerticalWristRR(Telemetry opModeTelemetry, HardwareMap opModeHardware) {
+            this.telemetry = opModeTelemetry;
+            this.hardwareMap = opModeHardware;
+            verticalWristServo = hardwareMap.get(Servo.class, ConfigConstants.VERTICAL_WRIST);
+            verticalWristServo.setPosition(backwardPos);
+        }
+        public class placeBasket implements Action{
             @Override
             public boolean run(@NonNull TelemetryPacket packet){
-                verticalWristServo.setPosition(0.8);
+                verticalWristServo.setPosition(forwardUp);
                 return false;
             }
         }
-        public Action backwardPos(){
-            return new backwardPos();
+        public Action placeBasket(){
+            return new placeBasket();
+        }
+        public class wallButter implements Action{
+            @Override
+            public boolean run(@NonNull TelemetryPacket packet){
+                verticalWristServo.setPosition(forwardDown);
+                return false;
+            }
+        }
+        public Action wallButter(){
+            return new wallButter();
+        }
+        public class takeButter implements Action{
+            @Override
+            public boolean run(@NonNull TelemetryPacket packet){
+                verticalWristServo.setPosition(backwardPos);
+                return false;
+            }
+        }
+        public Action takeButter(){
+            return new takeButter();
         }
     }
-    //make the grabber method
 
     @Override
     public void runOpMode() throws InterruptedException {
-        //set up all the hardware map for the robot and instantiate them as a object
-        driveActions = new DriveActions(telemetry, hardwareMap);
-        horizontalSlide = new HorizontalSlideActions(hardwareMap, telemetry);
-        horizontalWrist = new HorizontalWristActions(telemetry, hardwareMap);
-        horizontalIntake = new HorizontalIntakeActions(telemetry, hardwareMap);
-        verticalSlide = new VerticalSlideActions(hardwareMap, telemetry);
-        verticalWrist = new VerticalWristActions(telemetry, hardwareMap);
-        verticalGrabber = new VerticalGrabberActions(telemetry, hardwareMap);
-        VerticalSlideRR verticalSlideRR = new VerticalSlideRR(hardwareMap);
-        VerticalWristRR verticalWristRR = new VerticalWristRR(telemetry, hardwareMap);
-//        VelConstraint baseVelConstraint = new MinVelConstraint(Arrays.asList(
-//                new TranslationalVelConstraint(50.0),
-//                new AngularVelConstraint(Math.PI / 2)
-//        ));
-
-        AccelConstraint baseAccelConstraint = new ProfileAccelConstraint(-10.0, 25.0);
-
         //instantiate the robot to a particular pose.
+        verticalSlideRR = new VerticalSlideRR(hardwareMap);
+        horizontalSlideRR = new HorizontalSlideRR(hardwareMap, telemetry);
+        verticalGrabberRR = new VerticalGrabberRR(telemetry, hardwareMap);
+        verticalWristRR = new VerticalWristRR(telemetry, hardwareMap);
+
         //todo find the correct initial position and put it below
         Pose2d initialPose = new Pose2d(0,0, Math.toRadians(90));
         Vector2d vector2d = new Vector2d(0,0);
@@ -168,25 +229,29 @@ public class MainAutonomus extends LinearOpMode {
 
         //trajectory from initial spot moving to blue parking spot
         //todo find the correct blue park position and put it below
-        
-        TrajectoryActionBuilder parkBlue = drive.actionBuilder(initialPose)
-                .lineToY(20);
+        TrajectoryActionBuilder hangButter = drive.actionBuilder(initialPose)
+                .splineTo(new Vector2d(20, 0), Math.toRadians(0));
 
+        TrajectoryActionBuilder pushButterBlue = drive.actionBuilder(initialPose)
+                .splineTo(new Vector2d(10, -50), Math.toRadians(180))
+                .splineTo(new Vector2d(50, -50), Math.toRadians(180))
+                .splineTo(new Vector2d(50, -30), Math.toRadians(180))
+                .splineTo(new Vector2d(10, -30), Math.toRadians(180));
 
-
-
-        //trajectory from initial spot moving to red parking spot
-//        TrajectoryActionBuilder parkRed = drive.actionBuilder(initialPose)
-//                .splineTo(new Vector2d(20,30), Math.PI/2);
-
+        //initialize the robot
+        Actions.runBlocking(
+                new SequentialAction(
+                        verticalGrabberRR.closeGrabber(),
+                        verticalWristRR.takeButter()
+                )
+        );
 
         //wait for the start button to be press
         waitForStart();
         //if stop button is press, automatically stop
         if (isStopRequested()) return;
-        //choosing which trajectory to take, (so far only one is made)
         Action trajectoryActionChosen;
-            trajectoryActionChosen = parkBlue.build();
+        trajectoryActionChosen = pushButterBlue.build();
 
         //run the chosen action blocking
         Actions.runBlocking(
