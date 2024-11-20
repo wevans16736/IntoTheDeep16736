@@ -11,6 +11,7 @@ import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.ProfileAccelConstraint;
 import com.acmerobotics.roadrunner.SequentialAction;
 import com.acmerobotics.roadrunner.TrajectoryActionBuilder;
+import com.acmerobotics.roadrunner.TranslationalVelConstraint;
 import com.acmerobotics.roadrunner.Vector2d;
 import com.acmerobotics.roadrunner.ftc.Actions;
 
@@ -238,6 +239,11 @@ public class MainAutonomus extends LinearOpMode {
                 .splineTo(new Vector2d(50, -30), Math.toRadians(180))
                 .splineTo(new Vector2d(10, -30), Math.toRadians(180));
 
+        TrajectoryActionBuilder testAuto = drive.actionBuilder(initialPose)
+                .splineTo(new Vector2d(10, -50), Math.toRadians(180));
+                new TranslationalVelConstraint(20.0);
+                new ProfileAccelConstraint(-10,10);
+
         //initialize the robot
         Actions.runBlocking(
                 new SequentialAction(
@@ -253,11 +259,11 @@ public class MainAutonomus extends LinearOpMode {
         Action trajectoryActionChosen;
         trajectoryActionChosen = pushButterBlue.build();
 
+
         //run the chosen action blocking
         Actions.runBlocking(
             new SequentialAction(
-                trajectoryActionChosen,
-                    verticalSlideRR.liftUp()
+                testAuto.build()
             )
 
         );
