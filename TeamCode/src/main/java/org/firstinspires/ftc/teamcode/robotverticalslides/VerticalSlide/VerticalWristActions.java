@@ -6,6 +6,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.robotverticalslides.constants.ConfigConstants;
+import org.firstinspires.ftc.teamcode.Autonomus.Configuration;
 
 public class VerticalWristActions {
     public Servo verticalWristServo;
@@ -37,11 +38,11 @@ public class VerticalWristActions {
         isSlideUp = isIt;
     }
     //this is a position to place it on the basket
-    double forwardUp = 0.4;
+    double forwardUp = Configuration.forwardUp;
     //this is a position to grab the butter from the wall or set it on the lower basket or either rung
-    double forwardDown = 0.25;
+    double forwardDown = Configuration.forwardDown;
     //this is the position to grab the butter from the intake
-    double backwardPos = 0.8;
+    double backwardPos = Configuration.backwardPos;
     //If wrist is at highest point, set the wrist a bit higher to reach a higher point
     public void update() {
         if (forward) {

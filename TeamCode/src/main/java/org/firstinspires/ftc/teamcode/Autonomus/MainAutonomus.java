@@ -35,7 +35,7 @@ import org.firstinspires.ftc.teamcode.robotverticalslides.VerticalSlide.Vertical
 import org.firstinspires.ftc.teamcode.robotverticalslides.VerticalSlide.VerticalSlideActions;
 import org.firstinspires.ftc.teamcode.robotverticalslides.VerticalSlide.VerticalWristActions;
 import org.firstinspires.ftc.teamcode.robotverticalslides.constants.ConfigConstants;
-//import org.firstinspires.ftc.teamcode.Autonomus.Configuration;
+import org.firstinspires.ftc.teamcode.Autonomus.Configuration;
 
 
 @Config
@@ -95,6 +95,30 @@ public class MainAutonomus extends LinearOpMode {
         public Action liftUp(){
             return new Liftup();
         }
+        public class SetDown implements Action{
+            private boolean initialized = false;
+            public boolean run(@NonNull TelemetryPacket packet){
+                int position = 0;
+                double velocity = 1800;
+                if(!initialized){
+                    verticalSlide1.setTargetPosition(position);
+                    verticalSlide1.setVelocity(velocity);
+                    verticalSlide2.setTargetPosition(-position);
+                    verticalSlide2.setVelocity(-velocity);
+                    initialized = true;
+                }
+                double currentPosition = verticalSlide1.getCurrentPosition();
+                if (currentPosition > position){
+                    return true;
+                } else {
+                    return false;
+
+                }
+            }
+        }
+        public Action setDown(){
+            return new SetDown();
+        }
     }
     //make a class for horizontal Slide
     public class HorizontalSlideRR{
@@ -109,17 +133,17 @@ public class MainAutonomus extends LinearOpMode {
             HorizontalSlide2.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         }
         private boolean initialized = false;
-        public class retractSlide implements Action{
+        public class RetractSlide implements Action{
             @Override
             public boolean run(@NonNull TelemetryPacket packet){
                 int position = 0;
                 double velocity = 0;
                 if(!initialized){
-                    horizontalSlide.resetSlide();
-                    horizontalSlide.setSlidePosition(position, velocity);
+                    HorizontalSlide2.setTargetPosition(position);
+                    HorizontalSlide2.setVelocity(velocity);
                     initialized = true;
                 }
-                double currentPosition = horizontalSlide.getSlidePosition();
+                double currentPosition = HorizontalSlide2.getCurrentPosition();
                 if(currentPosition > position){
                     return true;
                 }else {
@@ -128,7 +152,7 @@ public class MainAutonomus extends LinearOpMode {
             }
         }
         public Action retractSlide(){
-            return new retractSlide();
+            return new RetractSlide();
         }
     }
     //add a class for the vertical grabber
@@ -144,7 +168,7 @@ public class MainAutonomus extends LinearOpMode {
         }
         double close = 0.5;
         double open = 0.3;
-        public class closeGrabber implements Action{
+        public class CloseGrabber implements Action{
             @Override
             public boolean run(@NonNull TelemetryPacket packet){
                 verticalGrabberServo.setPosition(close);
@@ -152,9 +176,9 @@ public class MainAutonomus extends LinearOpMode {
             }
         }
         public Action closeGrabber(){
-            return new closeGrabber();
+            return new CloseGrabber();
         }
-        public class openGrabber implements Action{
+        public class OpenGrabber implements Action{
             @Override
             public boolean run(@NonNull TelemetryPacket packet){
                 verticalGrabberServo.setPosition(open);
@@ -162,7 +186,7 @@ public class MainAutonomus extends LinearOpMode {
             }
         }
         public Action openGrabber(){
-            return new openGrabber();
+            return new OpenGrabber();
         }
     }
     //add Vertical Wrist Class
@@ -172,18 +196,18 @@ public class MainAutonomus extends LinearOpMode {
         private HardwareMap hardwareMap;
 
         //this is a position to place it on the basket
-        double forwardUp = 0.4;
+        double forwardUp = Configuration.forwardUp;
         //this is a position to grab the butter from the wall or set it on the lower basket or either rung
-        double forwardDown = 0.25;
+        double forwardDown = Configuration.forwardDown;
         //this is the position to grab the butter from the intake
-        double backwardPos = 0.8;
+        double backwardPos = Configuration.backwardPos;
         public VerticalWristRR(Telemetry opModeTelemetry, HardwareMap opModeHardware) {
             this.telemetry = opModeTelemetry;
             this.hardwareMap = opModeHardware;
             verticalWristServo = hardwareMap.get(Servo.class, ConfigConstants.VERTICAL_WRIST);
             verticalWristServo.setPosition(backwardPos);
         }
-        public class placeBasket implements Action{
+        public class PlaceBasket implements Action{
             @Override
             public boolean run(@NonNull TelemetryPacket packet){
                 verticalWristServo.setPosition(forwardUp);
@@ -191,9 +215,9 @@ public class MainAutonomus extends LinearOpMode {
             }
         }
         public Action placeBasket(){
-            return new placeBasket();
+            return new PlaceBasket();
         }
-        public class wallButter implements Action{
+        public class WallButter implements Action{
             @Override
             public boolean run(@NonNull TelemetryPacket packet){
                 verticalWristServo.setPosition(forwardDown);
@@ -201,9 +225,9 @@ public class MainAutonomus extends LinearOpMode {
             }
         }
         public Action wallButter(){
-            return new wallButter();
+            return new WallButter();
         }
-        public class takeButter implements Action{
+        public class TakeButter implements Action{
             @Override
             public boolean run(@NonNull TelemetryPacket packet){
                 verticalWristServo.setPosition(backwardPos);
@@ -211,7 +235,7 @@ public class MainAutonomus extends LinearOpMode {
             }
         }
         public Action takeButter(){
-            return new takeButter();
+            return new TakeButter();
         }
     }
 
@@ -230,25 +254,37 @@ public class MainAutonomus extends LinearOpMode {
 
         //trajectory from initial spot moving to blue parking spot
         //todo find the correct blue park position and put it below
-        TrajectoryActionBuilder hangButter = drive.actionBuilder(initialPose)
-                .splineTo(new Vector2d(20, 0), Math.toRadians(0));
-
-        TrajectoryActionBuilder pushButterBlue = drive.actionBuilder(initialPose)
-                .splineTo(new Vector2d(10, -50), Math.toRadians(180))
-                .splineTo(new Vector2d(50, -50), Math.toRadians(180))
-                .splineTo(new Vector2d(50, -30), Math.toRadians(180))
-                .splineTo(new Vector2d(10, -30), Math.toRadians(180));
-
         TrajectoryActionBuilder testAuto = drive.actionBuilder(initialPose)
-                .splineTo(new Vector2d(10, -50), Math.toRadians(180));
-                new TranslationalVelConstraint(20.0);
-                new ProfileAccelConstraint(-10,10);
+                .setTangent(0)
+                .splineToConstantHeading(new Vector2d(-5,15),Math.toRadians(0));
+                new TranslationalVelConstraint(1);
+                new ProfileAccelConstraint(-.5,.5);
+
+        TrajectoryActionBuilder pushBlock = drive.actionBuilder(initialPose)
+                .waitSeconds(1)
+                .splineToConstantHeading(new Vector2d(-5, 25), 0);
+        new TranslationalVelConstraint(1);
+        new ProfileAccelConstraint(-.5,.5);
+
+        TrajectoryActionBuilder resetPush = drive.actionBuilder(initialPose)
+                .waitSeconds(.5)
+                .splineToConstantHeading(new Vector2d(-5,5), 0)
+                .waitSeconds(.5);
+
+        TrajectoryActionBuilder parkBlue = drive.actionBuilder(initialPose)
+                .splineToConstantHeading(new Vector2d(20,0), 0);
+
+        TrajectoryActionBuilder wait = drive.actionBuilder(initialPose)
+            .waitSeconds(.5);
+
+
 
         //initialize the robot
         Actions.runBlocking(
                 new SequentialAction(
                         verticalGrabberRR.closeGrabber(),
-                        verticalWristRR.takeButter()
+                        verticalWristRR.takeButter(),
+                        horizontalSlideRR.retractSlide()
                 )
         );
 
@@ -256,14 +292,20 @@ public class MainAutonomus extends LinearOpMode {
         waitForStart();
         //if stop button is press, automatically stop
         if (isStopRequested()) return;
-        Action trajectoryActionChosen;
-        trajectoryActionChosen = pushButterBlue.build();
-
 
         //run the chosen action blocking
         Actions.runBlocking(
             new SequentialAction(
-                testAuto.build()
+                    testAuto.build(),
+                    verticalSlideRR.liftUp(),
+                    verticalWristRR.wallButter(),
+                    pushBlock.build(),
+                    verticalGrabberRR.openGrabber(),
+                    resetPush.build(),
+                    verticalWristRR.takeButter(),
+                    verticalSlideRR.setDown(),
+                    wait.build(),
+                    parkBlue.build()
             )
 
         );
