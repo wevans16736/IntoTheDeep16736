@@ -257,6 +257,7 @@ public class MainAutonomus extends LinearOpMode {
         TrajectoryActionBuilder testAuto = drive.actionBuilder(initialPose)
                 .setTangent(0)
                 .splineToConstantHeading(new Vector2d(-5,15),Math.toRadians(0));
+        //todo
                 new TranslationalVelConstraint(1);
                 new ProfileAccelConstraint(-.5,.5);
 
