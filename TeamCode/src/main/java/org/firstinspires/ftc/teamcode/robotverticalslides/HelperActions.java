@@ -113,6 +113,8 @@ public abstract class HelperActions extends LinearOpMode {
 
     double verticalGrabberStartCloseTime = 0;
     double verticalGrabberStartOpenTime = 0;
+    double verticalFlipBackStartTime = 0;
+    boolean flipBack = false;
     public boolean close(VerticalGrabberActions verticalGrabber, VerticalWristActions verticalWrist, VerticalSlideActions verticalSlide, HorizontalWristActions horizontalWrist, HorizontalSlideActions horizontalSlide) {
         boolean close = true;
         double currentTime = System.currentTimeMillis();
@@ -124,35 +126,40 @@ public abstract class HelperActions extends LinearOpMode {
             if (currentTime > verticalGrabberStartCloseTime + 420) {
                 verticalWrist.backward();
                 verticalWrist.update();
-                if (verticalGrabber.isClose()) {
-                    verticalGrabber.open();
-                    verticalGrabberStartOpenTime = currentTime;
-                }
+                flipBack = true;
+                verticalFlipBackStartTime = currentTime;
             }
+            close = false;
+        }
+        if (currentTime > verticalFlipBackStartTime + 420) {
+            if (verticalGrabber.isClose()) {
+                verticalGrabber.open();
+                verticalGrabberStartOpenTime = currentTime;
+            }
+        } else {
             close = false;
         }
         if (currentTime < verticalGrabberStartOpenTime + 420) {
             close = false;
         }
         if (verticalSlide.getSlidePosition() < -10) {
-            verticalSlide.goToPreset(false, true, false, false);
+            verticalSlide.setSlidePosition(10, 2000);
             close = false;
         }
 
         if (horizontalSlide.getSlidePosition() > 0) {
-            horizontalSlide.teleOpHorizontalSlide(-1, 0.5);
+            horizontalSlide.teleOpHorizontalSlide(-1, 2);
             close = false;
         }
         return close;
     }
     double placeState = 0;
     double startTimePlace = 0;
-    public void placeSample(VerticalGrabberActions verticalGrabber, VerticalWristActions verticalWrist, VerticalSlideActions verticalSlide, HorizontalWristActions horizontalWrist, HorizontalIntakeActions intake) {
+    public void placeSample(VerticalGrabberActions verticalGrabber, VerticalWristActions verticalWrist, VerticalSlideActions verticalSlide, HorizontalWristActions horizontalWrist, HorizontalSlideActions horizontalSlide, HorizontalIntakeActions intake) {
         if (placeState == 0) {
-            verticalWrist.backward();
-            verticalWrist.update();
-            verticalGrabber.open();
-
+            if (close(verticalGrabber, verticalWrist, verticalSlide, horizontalWrist, horizontalSlide)){
+                placeState = 1;
+            }
         } else if (placeState == 1) {
             verticalGrabber.close();
             startTimePlace = System.currentTimeMillis();

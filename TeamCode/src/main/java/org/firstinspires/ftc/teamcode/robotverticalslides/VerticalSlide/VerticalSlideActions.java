@@ -60,7 +60,7 @@ public class VerticalSlideActions {
             //change the slide position by the input power times the change in time times the speed.
             //Multiplying by change in time makes sure the slide speed is more consistent
             double total = SlidePosition + power * (time - prevTime) * liftSpeedMultiplier;
-            total = Range.clip(total, -1100, 0);
+            total = Range.clip(total, -1100, 50);
             setSlidePosition((int) total, 3000 * liftSpeedMultiplier);
 //            prevTime = time;
             RobotLog.dd("LiftyUppy", "Target Position %f, time %f", SlidePosition, time);
