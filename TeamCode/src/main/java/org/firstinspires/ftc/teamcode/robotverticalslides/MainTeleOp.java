@@ -22,6 +22,7 @@ public class MainTeleOp extends HelperActions {
     private VerticalGrabberActions verticalGrabber = null;
 
     boolean correctRotation = false;
+    boolean close = true;
     double rotationPosition = 0;
     double rotation = 0;
     double liftSpdMult = 0.8 ;
@@ -86,9 +87,12 @@ public class MainTeleOp extends HelperActions {
             //manages interface between different pieces of the exchange assembly
             updateExchangeAssembly(verticalGrabber, verticalWrist, horizontalWrist, horizontalSlide, verticalSlide);
 
-            if (gamepad2.left_trigger > 0.05) {
-                close(verticalGrabber, verticalWrist, verticalSlide, horizontalWrist, horizontalSlide);
-            }
+//            if (gamepad2.left_trigger > 0.05) {
+//                close = close(verticalGrabber, verticalWrist, verticalSlide, horizontalWrist, horizontalSlide);
+//            }
+//            if (!close) {
+//                close = close(verticalGrabber, verticalWrist, verticalSlide, horizontalWrist, horizontalSlide);
+//            }
             telemetry.update();
         }
         telemetry.addData("[ROBOTNAME] ", "Going");

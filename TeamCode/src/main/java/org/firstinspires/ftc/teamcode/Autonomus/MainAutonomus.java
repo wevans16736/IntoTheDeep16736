@@ -253,7 +253,6 @@ public class MainAutonomus extends LinearOpMode {
         PinpointDrive drive = new PinpointDrive(hardwareMap, initialPose);
 
         //trajectory from initial spot moving to blue parking spot
-        //todo find the correct blue park position and put it below
         TrajectoryActionBuilder testAuto = drive.actionBuilder(initialPose)
                 .setTangent(0)
                 .splineToConstantHeading(new Vector2d(-5,15),Math.toRadians(0));
@@ -272,11 +271,22 @@ public class MainAutonomus extends LinearOpMode {
                 .splineToConstantHeading(new Vector2d(-5,5), 0)
                 .waitSeconds(.5);
 
-        TrajectoryActionBuilder parkBlue = drive.actionBuilder(initialPose)
-                .splineToConstantHeading(new Vector2d(20,0), 0);
+        TrajectoryActionBuilder park = drive.actionBuilder(initialPose)
+                .splineToConstantHeading(new Vector2d(18,5), 0)
+               .splineToConstantHeading(new Vector2d(18, 50), 0)
+                .splineToConstantHeading(new Vector2d(28, 50), 0)
+                .splineToConstantHeading(new Vector2d(28, 5), 0);
+        new TranslationalVelConstraint(1);
+        new ProfileAccelConstraint(-.5,.5);
 
         TrajectoryActionBuilder wait = drive.actionBuilder(initialPose)
             .waitSeconds(.5);
+
+        TrajectoryActionBuilder parkBlock = drive.actionBuilder(initialPose)
+                .splineToConstantHeading(new Vector2d(30, 40), 0);
+//                .splineToConstantHeading(new Vector2d(42, 40), 0)
+//                .splineToConstantHeading(new Vector2d(42, 5), 0);
+
 
 
 
@@ -305,10 +315,9 @@ public class MainAutonomus extends LinearOpMode {
                     resetPush.build(),
                     verticalWristRR.takeButter(),
                     verticalSlideRR.setDown(),
-                    wait.build(),
-                    parkBlue.build()
+                    verticalGrabberRR.closeGrabber(),
+                    park.build()
             )
-
         );
     }
 }
