@@ -22,7 +22,8 @@ public class Configuration{
     //servo position to have grabber grab the butter
     public static double forwardPosOut = 0.2;
 
-
-
+    //horizontal grabber servo position
+    public static double floorClose = 0;
+    public static double floorOpen = .1;
 
 }

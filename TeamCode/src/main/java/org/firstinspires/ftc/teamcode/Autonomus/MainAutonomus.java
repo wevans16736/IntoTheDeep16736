@@ -55,6 +55,7 @@ public class MainAutonomus extends LinearOpMode {
     private VerticalGrabberRR verticalGrabberRR = null;
     private VerticalWristRR verticalWristRR = null;
     private HorizontalWristRR horizontalWristRR = null;
+    private HorizontalGrabberRR horizontalGrabberRR = null;
 
     public class VerticalSlideRR{
         public DcMotorEx verticalSlide1 = null;
@@ -140,7 +141,7 @@ public class MainAutonomus extends LinearOpMode {
             @Override
             public boolean run(@NonNull TelemetryPacket packet){
                 int position = 0;
-                double velocity = 0;
+                double velocity = 1800;
                 if(!initialized){
                     HorizontalSlide2.setTargetPosition(position);
                     HorizontalSlide2.setVelocity(velocity);
@@ -271,6 +272,40 @@ public class MainAutonomus extends LinearOpMode {
             return new InRobot();
         }
     }
+    //HorizontalGrabber class
+    public class HorizontalGrabberRR{
+        public Servo intakeServo;
+        private Telemetry telemetry;
+        private HardwareMap hardwareMap;
+        public HorizontalGrabberRR(Telemetry opModeTelemetry, HardwareMap opModeHardware) {
+            this.telemetry = opModeTelemetry;
+            this.hardwareMap = opModeHardware;
+            intakeServo = hardwareMap.get(Servo.class, ConfigConstants.HORIZONTAL_INTAKE);
+            intakeServo.setPosition(0);
+        }
+        private double floorClose = Configuration.floorClose;
+        private double floorOpen = Configuration.floorOpen;
+        public class FloorClose implements Action{
+            @Override
+            public boolean run(@NonNull TelemetryPacket telemetryPacket) {
+                intakeServo.setPosition(floorClose);
+                return false;
+            }
+        }
+        public Action floorClose(){
+            return new FloorClose();
+        }
+        public class FloorOpen implements Action{
+            @Override
+            public boolean run(@NonNull TelemetryPacket telemetryPacket) {
+                intakeServo.setPosition(floorOpen);
+                return false;
+            }
+        }
+        public Action floorOpen(){
+            return new FloorOpen();
+        }
+    }
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -280,6 +315,7 @@ public class MainAutonomus extends LinearOpMode {
         verticalGrabberRR = new VerticalGrabberRR(telemetry, hardwareMap);
         verticalWristRR = new VerticalWristRR(telemetry, hardwareMap);
         horizontalWristRR = new HorizontalWristRR(telemetry, hardwareMap);
+        horizontalGrabberRR = new HorizontalGrabberRR(telemetry, hardwareMap);
 
 
         //todo find the correct initial position and put it below
@@ -289,12 +325,15 @@ public class MainAutonomus extends LinearOpMode {
         VelConstraint pushBlockVelOverride = new TranslationalVelConstraint(30);
         AccelConstraint pushBlockAccelOverride = new ProfileAccelConstraint(-10, 25);
 
-        VelConstraint parkVelOverride = new TranslationalVelConstraint(60);
+        VelConstraint parkVelOverride = new TranslationalVelConstraint(80);
         VelConstraint parkAngularOverride = new MinVelConstraint(Arrays.asList(
                 new TranslationalVelConstraint(60),
                 new AngularVelConstraint(Math.toRadians(90))
         ));
-        AccelConstraint parkAccelOverride = new ProfileAccelConstraint(-10, 10);
+        AccelConstraint parkAccelOverride = new ProfileAccelConstraint(-50, 50);
+
+        VelConstraint humanVelOverride = new TranslationalVelConstraint(30);
+        AccelConstraint humanAccelOverride = new ProfileAccelConstraint(-7, 50);
 
 
 
@@ -305,18 +344,17 @@ public class MainAutonomus extends LinearOpMode {
                 .waitSeconds(.2)
                 .afterDisp(2, verticalSlideRR.setDown())
                 .afterDisp(2, verticalWristRR.takeButter())
-                .afterDisp(4, verticalGrabberRR.closeGrabber())
-                .strafeTo(new Vector2d(26, 25), parkVelOverride, parkAccelOverride)
+                .strafeTo(new Vector2d(26, 20), parkVelOverride, parkAccelOverride)
                 .strafeTo(new Vector2d(27, 50), parkVelOverride, parkAccelOverride)
                 .setTangent(0)
-                .splineToLinearHeading(new Pose2d(38, 65,Math.toRadians(-90)),(-1)*Math.toRadians(90), parkAngularOverride, parkAccelOverride)
-                .strafeTo(new Vector2d(38, 10), parkVelOverride, parkAccelOverride)
-                .strafeTo(new Vector2d(38, 65), parkVelOverride, parkAccelOverride)
-                .strafeTo(new Vector2d( 48, 65), parkVelOverride, parkAccelOverride)
-                .strafeTo(new Vector2d(48, 10), parkVelOverride, parkAccelOverride)
-                .strafeTo(new Vector2d(48, 65), parkVelOverride, parkAccelOverride)
-                .strafeTo(new Vector2d(58, 65), parkVelOverride, parkAccelOverride)
-                .strafeTo(new Vector2d(58, 10), parkVelOverride, parkAccelOverride);
+                .splineToLinearHeading(new Pose2d(36, 65,Math.toRadians(-90)),(-1)*Math.toRadians(90), parkAngularOverride, parkAccelOverride)
+                .strafeTo(new Vector2d(36, 15), humanVelOverride, humanAccelOverride)
+                .strafeTo(new Vector2d(36, 65), parkVelOverride, parkAccelOverride)
+                .strafeTo(new Vector2d( 46, 65), parkVelOverride, parkAccelOverride)
+                .strafeTo(new Vector2d(46, 15), humanVelOverride, humanAccelOverride)
+                .strafeTo(new Vector2d(46, 65), parkVelOverride, parkAccelOverride)
+                .strafeTo(new Vector2d(53, 65), parkVelOverride, parkAccelOverride)
+                .strafeTo(new Vector2d(53, 15), humanVelOverride, humanAccelOverride);
 
 
         TrajectoryActionBuilder basket = drive.actionBuilder(initialPose)
@@ -329,13 +367,17 @@ public class MainAutonomus extends LinearOpMode {
                 .afterDisp(4, verticalGrabberRR.closeGrabber())
                 .strafeTo(new Vector2d(0, 5));
 
+        TrajectoryActionBuilder wait = drive.actionBuilder(initialPose)
+                .waitSeconds(3);
+
         //initialize the robot
         Actions.runBlocking(
                 new SequentialAction(
                         verticalGrabberRR.closeGrabber(),
                         verticalWristRR.takeButter(),
                         horizontalSlideRR.retractSlide(),
-                        horizontalWristRR.inRobot()
+                        horizontalWristRR.inRobot(),
+                        horizontalGrabberRR.floorClose()
                 )
         );
 
