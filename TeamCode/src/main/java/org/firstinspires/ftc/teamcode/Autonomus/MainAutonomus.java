@@ -274,7 +274,7 @@ public class MainAutonomus extends LinearOpMode {
 //                .afterDisp(2, verticalWristRR.wallButter())
                 .waitSeconds(.25)
                 .strafeTo(new Vector2d(-10, 29), pushBlockVelOverride, pushBlockAccelOverride)
-                .afterDisp(0.0, verticalGrabberRR.openGrabber())
+                .afterDisp(1, verticalGrabberRR.openGrabber())
                 .waitSeconds(.2)
                 .afterDisp(2, verticalSlideRR.setDown())
                 .afterDisp(2, verticalGrabberRR.closeGrabber())
@@ -284,7 +284,13 @@ public class MainAutonomus extends LinearOpMode {
                 .strafeTo(new Vector2d(27, 50), parkVelOverride, parkAccelOverride)
                 .setTangent(0)
                 .strafeToSplineHeading(new Vector2d(38,65 ), -Math.toRadians(90), parkVelOverride, parkAccelOverride)
-                .strafeTo(new Vector2d(38, 10), parkVelOverride, parkAccelOverride);
+                .strafeTo(new Vector2d(38, 10), parkVelOverride, parkAccelOverride)
+                .strafeTo(new Vector2d(38, 65), parkVelOverride, parkAccelOverride)
+                .strafeTo(new Vector2d( 48, 65), parkVelOverride, parkAccelOverride)
+                .strafeTo(new Vector2d(48, 10), parkVelOverride, parkAccelOverride)
+                .strafeTo(new Vector2d(48, 65), parkVelOverride, parkAccelOverride)
+                .strafeTo(new Vector2d(58, 65), parkVelOverride, parkAccelOverride)
+                .strafeTo(new Vector2d(58, 10), parkVelOverride, parkAccelOverride);
 
 
 
@@ -343,9 +349,7 @@ public class MainAutonomus extends LinearOpMode {
             new SequentialAction(
                     verticalSlideRR.liftUp(),
                 verticalWristRR.wallButter(),
-                bluePark.build(),
-                    wait.build()
-
+                bluePark.build()
             )
         );
     }
