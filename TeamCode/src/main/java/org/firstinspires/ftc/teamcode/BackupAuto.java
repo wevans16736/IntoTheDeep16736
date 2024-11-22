@@ -14,6 +14,7 @@ import com.acmerobotics.roadrunner.ftc.Actions;
 
 //Non-RR imports
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
@@ -32,7 +33,7 @@ import org.firstinspires.ftc.teamcode.robotverticalslides.VerticalSlide.Vertical
 import org.firstinspires.ftc.teamcode.robotverticalslides.VerticalSlide.VerticalSlideActions;
 import org.firstinspires.ftc.teamcode.robotverticalslides.VerticalSlide.VerticalWristActions;
 
-
+@Disabled
 @Config
 @Autonomous(name = "Backup Auto", group = "Autonomus")
 public class BackupAuto extends LinearOpMode{

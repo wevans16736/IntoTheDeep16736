@@ -6,6 +6,7 @@ import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.Vector2d;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.robotverticalslides.DriveActions;
@@ -16,7 +17,7 @@ import org.firstinspires.ftc.teamcode.robotverticalslides.VerticalSlide.Vertical
 import org.firstinspires.ftc.teamcode.robotverticalslides.VerticalSlide.VerticalSlideActions;
 import org.firstinspires.ftc.teamcode.robotverticalslides.VerticalSlide.VerticalWristActions;
 
-
+@Disabled
 @Config
 @Autonomous(name = "Backup Auto Left", group = "Autonomus")
 public class BackupAutoLeft extends LinearOpMode{

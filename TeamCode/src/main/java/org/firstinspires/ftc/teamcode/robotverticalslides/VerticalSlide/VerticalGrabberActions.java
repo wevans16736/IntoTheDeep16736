@@ -5,6 +5,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.teamcode.Autonomus.Configuration;
 import org.firstinspires.ftc.teamcode.robotverticalslides.constants.ConfigConstants;
 
 public class VerticalGrabberActions {
@@ -21,7 +22,7 @@ public class VerticalGrabberActions {
         verticalGrabberServo.setPosition(1.0);
     }
     public void open() {
-        verticalGrabberServo.setPosition(0.3);
+        verticalGrabberServo.setPosition(Configuration.open);
     }
     public void close() {
         verticalGrabberServo.setPosition(0.5);

@@ -28,6 +28,7 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 //Team code imports
 import org.firstinspires.ftc.robotcore.external.Telemetry;
@@ -42,23 +43,18 @@ import org.firstinspires.ftc.teamcode.robotverticalslides.VerticalSlide.Vertical
 import org.firstinspires.ftc.teamcode.robotverticalslides.constants.ConfigConstants;
 import org.firstinspires.ftc.teamcode.Autonomus.Configuration;
 
+//Java code imports
 import java.util.Arrays;
 
 
 @Config
-@Autonomous(name = "MainAuto", group = "Autonomus")
+@Autonomous(name = "MainAuto", group = "Autonomous")
 public class MainAutonomus extends LinearOpMode {
-
-    private HorizontalSlideActions horizontalSlide = null;
-    private HorizontalWristActions horizontalWrist = null;
-    private HorizontalIntakeActions horizontalIntake = null;
-    private VerticalWristActions verticalWrist = null;
-    private VerticalSlideActions verticalSlide = null;
-    private VerticalGrabberActions verticalGrabber = null;
     private VerticalSlideRR verticalSlideRR = null;
     private HorizontalSlideRR horizontalSlideRR = null;
     private VerticalGrabberRR verticalGrabberRR = null;
     private VerticalWristRR verticalWristRR = null;
+    private HorizontalWristRR horizontalWristRR = null;
 
     public class VerticalSlideRR{
         public DcMotorEx verticalSlide1 = null;
@@ -167,14 +163,14 @@ public class MainAutonomus extends LinearOpMode {
         public Servo verticalGrabberServo;
         private Telemetry telemetry;
         private HardwareMap hardwareMap;
+        private double open = Configuration.open;
+        private double close = Configuration.close;
         public VerticalGrabberRR(Telemetry opModeTelemetry, HardwareMap opModeHardware) {
             this.telemetry = opModeTelemetry;
             this.hardwareMap = opModeHardware;
             verticalGrabberServo = hardwareMap.get(Servo.class, ConfigConstants.VERTICAL_GRABBER);
             verticalGrabberServo.setPosition(1.0);
         }
-        double close = 0.5;
-        double open = 0.3;
         public class CloseGrabber implements Action{
             @Override
             public boolean run(@NonNull TelemetryPacket packet){
@@ -201,12 +197,8 @@ public class MainAutonomus extends LinearOpMode {
         public Servo verticalWristServo;
         private Telemetry telemetry;
         private HardwareMap hardwareMap;
-
-        //this is a position to place it on the basket
         double forwardUp = Configuration.forwardUp;
-        //this is a position to grab the butter from the wall or set it on the lower basket or either rung
         double forwardDown = Configuration.forwardDown;
-        //this is the position to grab the butter from the intake
         double backwardPos = Configuration.backwardPos;
         public VerticalWristRR(Telemetry opModeTelemetry, HardwareMap opModeHardware) {
             this.telemetry = opModeTelemetry;
@@ -245,6 +237,40 @@ public class MainAutonomus extends LinearOpMode {
             return new TakeButter();
         }
     }
+    public class HorizontalWristRR{
+        public Servo horizontalWristServo;
+        private Telemetry telemetry;
+        private HardwareMap hardwareMap;
+        private double backwardPosIn = Configuration.backwardPosIn;
+        private double backwardPosOut = Configuration.backwardPosOut;
+        private double forwardPosOut = Configuration.forwardPosOut;
+        public HorizontalWristRR(Telemetry opModeTelemetry, HardwareMap opModeHardware) {
+            this.telemetry = opModeTelemetry;
+            this.hardwareMap = opModeHardware;
+            horizontalWristServo = hardwareMap.get(Servo.class, ConfigConstants.HORIZONTAL_WRIST);
+            horizontalWristServo.setPosition(backwardPosIn);
+        }
+        public class GrabButter implements Action{
+            @Override
+            public boolean run(@NonNull TelemetryPacket telemetryPacket) {
+                horizontalWristServo.setPosition(forwardPosOut);
+                return false;
+            }
+        }
+        public Action grabButter(){
+            return new GrabButter();
+        }
+        public class InRobot implements Action{
+            @Override
+            public boolean run(@NonNull TelemetryPacket telemetryPacket) {
+                horizontalWristServo.setPosition(backwardPosIn);
+                return false;
+            }
+        }
+        public Action inRobot(){
+            return new InRobot();
+        }
+    }
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -253,6 +279,8 @@ public class MainAutonomus extends LinearOpMode {
         horizontalSlideRR = new HorizontalSlideRR(hardwareMap, telemetry);
         verticalGrabberRR = new VerticalGrabberRR(telemetry, hardwareMap);
         verticalWristRR = new VerticalWristRR(telemetry, hardwareMap);
+        horizontalWristRR = new HorizontalWristRR(telemetry, hardwareMap);
+
 
         //todo find the correct initial position and put it below
         Pose2d initialPose = new Pose2d(0,0, Math.toRadians(90));
@@ -261,7 +289,8 @@ public class MainAutonomus extends LinearOpMode {
         VelConstraint pushBlockVelOverride = new TranslationalVelConstraint(30);
         AccelConstraint pushBlockAccelOverride = new ProfileAccelConstraint(-10, 25);
 
-        VelConstraint parkVelOverride = new MinVelConstraint(Arrays.asList(
+        VelConstraint parkVelOverride = new TranslationalVelConstraint(60);
+        VelConstraint parkAngularOverride = new MinVelConstraint(Arrays.asList(
                 new TranslationalVelConstraint(60),
                 new AngularVelConstraint(Math.toRadians(90))
         ));
@@ -269,21 +298,18 @@ public class MainAutonomus extends LinearOpMode {
 
 
 
-        TrajectoryActionBuilder bluePark = drive.actionBuilder(initialPose)
-
-//                .afterDisp(2, verticalSlideRR.liftUp())
-//                .afterDisp(2, verticalWristRR.wallButter())
+        TrajectoryActionBuilder park = drive.actionBuilder(initialPose)
                 .waitSeconds(.25)
                 .strafeTo(new Vector2d(-10, 29), pushBlockVelOverride, pushBlockAccelOverride)
                 .afterDisp(0, verticalGrabberRR.openGrabber())
                 .waitSeconds(.2)
                 .afterDisp(2, verticalSlideRR.setDown())
                 .afterDisp(2, verticalWristRR.takeButter())
-                .afterDisp(2, verticalGrabberRR.closeGrabber())
-                .strafeTo(new Vector2d(26, 5), parkVelOverride, parkAccelOverride)
+                .afterDisp(4, verticalGrabberRR.closeGrabber())
+                .strafeTo(new Vector2d(26, 25), parkVelOverride, parkAccelOverride)
                 .strafeTo(new Vector2d(27, 50), parkVelOverride, parkAccelOverride)
                 .setTangent(0)
-                .splineToLinearHeading(new Pose2d(38, 65,Math.toRadians(-90)),(-1)*Math.toRadians(90), parkVelOverride, parkAccelOverride)
+                .splineToLinearHeading(new Pose2d(38, 65,Math.toRadians(-90)),(-1)*Math.toRadians(90), parkAngularOverride, parkAccelOverride)
                 .strafeTo(new Vector2d(38, 10), parkVelOverride, parkAccelOverride)
                 .strafeTo(new Vector2d(38, 65), parkVelOverride, parkAccelOverride)
                 .strafeTo(new Vector2d( 48, 65), parkVelOverride, parkAccelOverride)
@@ -293,49 +319,23 @@ public class MainAutonomus extends LinearOpMode {
                 .strafeTo(new Vector2d(58, 10), parkVelOverride, parkAccelOverride);
 
 
-
-
-        TrajectoryActionBuilder pushBlock = drive.actionBuilder(initialPose)
-                .waitSeconds(.5)
-//                .splineToConstantHeading(new Vector2d(-10, 25), 0, pushBlockVelOverride, pushBlockAccelOverride);
-                .strafeTo(new Vector2d(-10, 27), pushBlockVelOverride, pushBlockAccelOverride);
-
-
-
-        TrajectoryActionBuilder resetPush = drive.actionBuilder(initialPose)
-                .waitSeconds(.5)
-                .splineTo(new Vector2d(-5,5), 0, parkVelOverride, parkAccelOverride)
-                .waitSeconds(.5);
-
-        TrajectoryActionBuilder park = drive.actionBuilder(initialPose)
-                .splineToConstantHeading(new Vector2d(20,5), 0, parkVelOverride, parkAccelOverride)
-               .splineToConstantHeading(new Vector2d(20, 50), 0, parkVelOverride, parkAccelOverride);
-//                .splineToConstantHeading(new Vector2d(25, 50), 0)
-//                .splineToConstantHeading(new Vector2d(25, 5), 0);
-
-        TrajectoryActionBuilder wait = drive.actionBuilder(initialPose)
-                .waitSeconds(5);
-
-
-        TrajectoryActionBuilder test = drive.actionBuilder(initialPose)
-                .strafeTo(new Vector2d(10, 20))
-                .afterDisp(0.1,verticalSlideRR.liftUp())
-                .strafeTo(new Vector2d(20, 40));
-
-
-
-
-
-
-
-
+        TrajectoryActionBuilder basket = drive.actionBuilder(initialPose)
+                .waitSeconds(.25)
+                .strafeTo(new Vector2d(10, 29), pushBlockVelOverride, pushBlockAccelOverride)
+                .afterDisp(0, verticalGrabberRR.openGrabber())
+                .waitSeconds(.2)
+                .afterDisp(2, verticalSlideRR.setDown())
+                .afterDisp(2, verticalWristRR.takeButter())
+                .afterDisp(4, verticalGrabberRR.closeGrabber())
+                .strafeTo(new Vector2d(0, 5));
 
         //initialize the robot
         Actions.runBlocking(
                 new SequentialAction(
                         verticalGrabberRR.closeGrabber(),
                         verticalWristRR.takeButter(),
-                        horizontalSlideRR.retractSlide()
+                        horizontalSlideRR.retractSlide(),
+                        horizontalWristRR.inRobot()
                 )
         );
 
@@ -348,8 +348,8 @@ public class MainAutonomus extends LinearOpMode {
         Actions.runBlocking(
             new SequentialAction(
                     verticalSlideRR.liftUp(),
-                verticalWristRR.wallButter(),
-                bluePark.build()
+                    verticalWristRR.wallButter(),
+                    park.build()
             )
         );
     }
