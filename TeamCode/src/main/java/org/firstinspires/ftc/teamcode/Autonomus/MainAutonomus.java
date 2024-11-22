@@ -7,12 +7,15 @@ import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.acmerobotics.roadrunner.AccelConstraint;
 import com.acmerobotics.roadrunner.Action;
+import com.acmerobotics.roadrunner.AngularVelConstraint;
+import com.acmerobotics.roadrunner.MinVelConstraint;
 import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.ProfileAccelConstraint;
 import com.acmerobotics.roadrunner.SequentialAction;
 import com.acmerobotics.roadrunner.TrajectoryActionBuilder;
 import com.acmerobotics.roadrunner.TranslationalVelConstraint;
 import com.acmerobotics.roadrunner.Vector2d;
+import com.acmerobotics.roadrunner.VelConstraint;
 import com.acmerobotics.roadrunner.ftc.Actions;
 
 //Non-RR imports
@@ -36,6 +39,8 @@ import org.firstinspires.ftc.teamcode.robotverticalslides.VerticalSlide.Vertical
 import org.firstinspires.ftc.teamcode.robotverticalslides.VerticalSlide.VerticalWristActions;
 import org.firstinspires.ftc.teamcode.robotverticalslides.constants.ConfigConstants;
 import org.firstinspires.ftc.teamcode.Autonomus.Configuration;
+
+import java.util.Arrays;
 
 
 @Config
@@ -251,41 +256,70 @@ public class MainAutonomus extends LinearOpMode {
         Pose2d initialPose = new Pose2d(0,0, Math.toRadians(90));
         Vector2d vector2d = new Vector2d(0,0);
         PinpointDrive drive = new PinpointDrive(hardwareMap, initialPose);
+        VelConstraint pushBlockVelOverride = new TranslationalVelConstraint(30);
+        AccelConstraint pushBlockAccelOverride = new ProfileAccelConstraint(-10, 25);
 
-        //trajectory from initial spot moving to blue parking spot
-        TrajectoryActionBuilder testAuto = drive.actionBuilder(initialPose)
+        VelConstraint parkVelOverride = new MinVelConstraint(Arrays.asList(
+                new TranslationalVelConstraint(30),
+                new AngularVelConstraint(Math.toRadians(90))
+        ));
+        AccelConstraint parkAccelOverride = new ProfileAccelConstraint(-10, 10);
+        AngularVelConstraint parkAngularOverride = new AngularVelConstraint(Math.toRadians(90));
+
+
+
+        TrajectoryActionBuilder bluePark = drive.actionBuilder(initialPose)
+
+//                .afterDisp(2, verticalSlideRR.liftUp())
+//                .afterDisp(2, verticalWristRR.wallButter())
+                .waitSeconds(.25)
+                .strafeTo(new Vector2d(-10, 29), pushBlockVelOverride, pushBlockAccelOverride)
+                .afterDisp(0.0, verticalGrabberRR.openGrabber())
+                .waitSeconds(.2)
+                .afterDisp(2, verticalSlideRR.setDown())
+                .afterDisp(2, verticalGrabberRR.closeGrabber())
+                .afterDisp(2, verticalWristRR.takeButter())
+//                .strafeTo(new Vector2d(0, 5), parkVelOverride, parkAccelOverride)
+                .strafeTo(new Vector2d(26, 5), parkVelOverride, parkAccelOverride)
+                .strafeTo(new Vector2d(27, 50), parkVelOverride, parkAccelOverride)
                 .setTangent(0)
-                .splineToConstantHeading(new Vector2d(-5,15),Math.toRadians(0));
-        //todo
-                new TranslationalVelConstraint(1);
-                new ProfileAccelConstraint(-.5,.5);
+                .strafeToSplineHeading(new Vector2d(38,65 ), -Math.toRadians(90), parkVelOverride, parkAccelOverride)
+                .strafeTo(new Vector2d(38, 10), parkVelOverride, parkAccelOverride);
+
+
+
 
         TrajectoryActionBuilder pushBlock = drive.actionBuilder(initialPose)
-                .waitSeconds(1)
-                .splineToConstantHeading(new Vector2d(-5, 25), 0);
-        new TranslationalVelConstraint(1);
-        new ProfileAccelConstraint(-.5,.5);
+                .waitSeconds(.5)
+//                .splineToConstantHeading(new Vector2d(-10, 25), 0, pushBlockVelOverride, pushBlockAccelOverride);
+                .strafeTo(new Vector2d(-10, 27), pushBlockVelOverride, pushBlockAccelOverride);
+
+
 
         TrajectoryActionBuilder resetPush = drive.actionBuilder(initialPose)
                 .waitSeconds(.5)
-                .splineToConstantHeading(new Vector2d(-5,5), 0)
+                .splineTo(new Vector2d(-5,5), 0, parkVelOverride, parkAccelOverride)
                 .waitSeconds(.5);
 
         TrajectoryActionBuilder park = drive.actionBuilder(initialPose)
-                .splineToConstantHeading(new Vector2d(18,5), 0)
-               .splineToConstantHeading(new Vector2d(18, 50), 0)
-                .splineToConstantHeading(new Vector2d(28, 50), 0)
-                .splineToConstantHeading(new Vector2d(28, 5), 0);
-        new TranslationalVelConstraint(1);
-        new ProfileAccelConstraint(-.5,.5);
+                .splineToConstantHeading(new Vector2d(20,5), 0, parkVelOverride, parkAccelOverride)
+               .splineToConstantHeading(new Vector2d(20, 50), 0, parkVelOverride, parkAccelOverride);
+//                .splineToConstantHeading(new Vector2d(25, 50), 0)
+//                .splineToConstantHeading(new Vector2d(25, 5), 0);
 
         TrajectoryActionBuilder wait = drive.actionBuilder(initialPose)
-            .waitSeconds(.5);
+                .waitSeconds(5);
 
-        TrajectoryActionBuilder parkBlock = drive.actionBuilder(initialPose)
-                .splineToConstantHeading(new Vector2d(30, 40), 0);
-//                .splineToConstantHeading(new Vector2d(42, 40), 0)
-//                .splineToConstantHeading(new Vector2d(42, 5), 0);
+
+        TrajectoryActionBuilder test = drive.actionBuilder(initialPose)
+                .strafeTo(new Vector2d(10, 20))
+                .afterDisp(0.1,verticalSlideRR.liftUp())
+                .strafeTo(new Vector2d(20, 40));
+
+
+
+
+
 
 
 
@@ -307,16 +341,11 @@ public class MainAutonomus extends LinearOpMode {
         //run the chosen action blocking
         Actions.runBlocking(
             new SequentialAction(
-                    testAuto.build(),
                     verticalSlideRR.liftUp(),
-                    verticalWristRR.wallButter(),
-                    pushBlock.build(),
-                    verticalGrabberRR.openGrabber(),
-                    resetPush.build(),
-                    verticalWristRR.takeButter(),
-                    verticalSlideRR.setDown(),
-                    verticalGrabberRR.closeGrabber(),
-                    park.build()
+                verticalWristRR.wallButter(),
+                bluePark.build(),
+                    wait.build()
+
             )
         );
     }
