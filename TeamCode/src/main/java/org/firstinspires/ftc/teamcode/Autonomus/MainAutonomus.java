@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.Autonomus;
 // RR-specific imports
 import androidx.annotation.NonNull;
 
+import com.acmerobotics.dashboard.canvas.Rotation;
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.acmerobotics.roadrunner.AccelConstraint;
@@ -11,6 +12,7 @@ import com.acmerobotics.roadrunner.AngularVelConstraint;
 import com.acmerobotics.roadrunner.MinVelConstraint;
 import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.ProfileAccelConstraint;
+import com.acmerobotics.roadrunner.Rotation2d;
 import com.acmerobotics.roadrunner.SequentialAction;
 import com.acmerobotics.roadrunner.TrajectoryActionBuilder;
 import com.acmerobotics.roadrunner.TranslationalVelConstraint;
@@ -260,11 +262,10 @@ public class MainAutonomus extends LinearOpMode {
         AccelConstraint pushBlockAccelOverride = new ProfileAccelConstraint(-10, 25);
 
         VelConstraint parkVelOverride = new MinVelConstraint(Arrays.asList(
-                new TranslationalVelConstraint(30),
+                new TranslationalVelConstraint(60),
                 new AngularVelConstraint(Math.toRadians(90))
         ));
         AccelConstraint parkAccelOverride = new ProfileAccelConstraint(-10, 10);
-        AngularVelConstraint parkAngularOverride = new AngularVelConstraint(Math.toRadians(90));
 
 
 
@@ -274,16 +275,15 @@ public class MainAutonomus extends LinearOpMode {
 //                .afterDisp(2, verticalWristRR.wallButter())
                 .waitSeconds(.25)
                 .strafeTo(new Vector2d(-10, 29), pushBlockVelOverride, pushBlockAccelOverride)
-                .afterDisp(1, verticalGrabberRR.openGrabber())
+                .afterDisp(0, verticalGrabberRR.openGrabber())
                 .waitSeconds(.2)
                 .afterDisp(2, verticalSlideRR.setDown())
-                .afterDisp(2, verticalGrabberRR.closeGrabber())
                 .afterDisp(2, verticalWristRR.takeButter())
-//                .strafeTo(new Vector2d(0, 5), parkVelOverride, parkAccelOverride)
+                .afterDisp(2, verticalGrabberRR.closeGrabber())
                 .strafeTo(new Vector2d(26, 5), parkVelOverride, parkAccelOverride)
                 .strafeTo(new Vector2d(27, 50), parkVelOverride, parkAccelOverride)
                 .setTangent(0)
-                .strafeToSplineHeading(new Vector2d(38,65 ), -Math.toRadians(90), parkVelOverride, parkAccelOverride)
+                .splineToLinearHeading(new Pose2d(38, 65,Math.toRadians(-90)),(-1)*Math.toRadians(90), parkVelOverride, parkAccelOverride)
                 .strafeTo(new Vector2d(38, 10), parkVelOverride, parkAccelOverride)
                 .strafeTo(new Vector2d(38, 65), parkVelOverride, parkAccelOverride)
                 .strafeTo(new Vector2d( 48, 65), parkVelOverride, parkAccelOverride)
