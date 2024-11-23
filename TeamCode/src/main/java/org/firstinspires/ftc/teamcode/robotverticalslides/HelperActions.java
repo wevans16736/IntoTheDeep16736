@@ -88,13 +88,14 @@ public abstract class HelperActions extends LinearOpMode {
      /**slide configuration?**/
     boolean wasOverrideSlide = true;
     boolean overrideSlide = true;
+    double overrideSlideThreshold = 325;
     public void updateExchangeAssembly(VerticalGrabberActions grabber, VerticalWristActions verticalWrist, HorizontalWristActions horizontalWrist, HorizontalSlideActions horizontalSlide, VerticalSlideActions verticalSlide) {
         //tells the vertical wrist when the grabber is closed
         verticalWrist.setGrabberClosed(grabber.isClose());
         //tells the vertical wrist when the slide is up
         verticalWrist.setSlideUp(verticalSlide.getSlidePosition() < -1000);
         //tells the horizontal slide to stop and let the horizontal wrist flip up or flip down when going in or out
-        overrideSlide = horizontalSlide.getSlidePosition() < 325;
+        overrideSlide = horizontalSlide.getSlidePosition() < overrideSlideThreshold;
         horizontalWrist.setIsSlideIn(overrideSlide);
         overrideSlide(horizontalSlide);
         wasOverrideSlide = overrideSlide;
@@ -114,6 +115,7 @@ public abstract class HelperActions extends LinearOpMode {
     double verticalGrabberStartCloseTime = 0;
     double verticalGrabberStartOpenTime = 0;
     double verticalFlipBackStartTime = 0;
+    double horizontalFlipBackStartTime = 0;
     boolean flipBack = false;
     public boolean close(VerticalGrabberActions verticalGrabber, VerticalWristActions verticalWrist, VerticalSlideActions verticalSlide, HorizontalWristActions horizontalWrist, HorizontalSlideActions horizontalSlide) {
         boolean close = true;
@@ -130,27 +132,41 @@ public abstract class HelperActions extends LinearOpMode {
                 verticalFlipBackStartTime = currentTime;
             }
             close = false;
+            telemetry.addData("close", 1);
         }
         if (currentTime > verticalFlipBackStartTime + 420) {
             if (verticalGrabber.isClose()) {
                 verticalGrabber.open();
                 verticalGrabberStartOpenTime = currentTime;
+                close = false;
+                telemetry.addData("close", 2);
             }
         } else {
             close = false;
+            telemetry.addData("close", 3);
         }
         if (currentTime < verticalGrabberStartOpenTime + 420) {
             close = false;
+            telemetry.addData("close", 4);
         }
         if (verticalSlide.getSlidePosition() < -10) {
             verticalSlide.setSlidePosition(10, 2000);
             close = false;
+            telemetry.addData("close", 5);
         }
 
-        if (horizontalSlide.getSlidePosition() > 0) {
-            horizontalSlide.teleOpHorizontalSlide(-1, 2);
+        if (horizontalSlide.getSlidePosition() > 1) {
+            if (horizontalWrist.forward && horizontalSlide.getSlidePosition() > overrideSlideThreshold) {
+                horizontalFlipBackStartTime = currentTime;
+                horizontalWrist.backward();
+            }
+            if (currentTime > horizontalFlipBackStartTime + 420) {
+                horizontalSlide.teleOpHorizontalSlide(-1, 2);
+            }
             close = false;
+            telemetry.addData("close", 6);
         }
+        telemetry.addData("close", close);
         return close;
     }
     double placeState = 0;
@@ -162,12 +178,21 @@ public abstract class HelperActions extends LinearOpMode {
             }
         } else if (placeState == 1) {
             verticalGrabber.close();
+            intake.intake(1);
             startTimePlace = System.currentTimeMillis();
             placeState = 2;
-        } else if (placeState == 2 && System.currentTimeMillis() > startTimePlace + 420) {
-            placeState = 3;
-            verticalWrist.autoFlipForwardDown();
-            verticalSlide.setSlidePosition(-700, 2000);
+        } else if (placeState == 2) {
+            intake.intake(1);
+            if (System.currentTimeMillis() > startTimePlace + 420) {
+                placeState = 3;
+                verticalWrist.autoFlipForwardDown();
+                verticalSlide.setSlidePosition(-700, 2000);
+            } else {
+                intake.intake(1);
+            }
         }
+    }
+    public void resetPlaceState() {
+        placeState = 0;
     }
 }

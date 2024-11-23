@@ -67,7 +67,7 @@ public class MainTeleOp extends HelperActions {
             
             /** Gamepad 2 **/
             //use the player 2 left joystick to run the horzontal slide
-            horizontalSlide.teleOpHorizontalSlide(-gamepad2.left_stick_y, .75);
+            horizontalSlide.teleOpHorizontalSlide(-gamepad2.left_stick_y, 1.8);
             //rotate the servo with intake in it
             horizontalWrist.flipping(gamepad2.left_bumper);
             //force the servo to flip bypassing the range limit apply
@@ -87,12 +87,11 @@ public class MainTeleOp extends HelperActions {
             //manages interface between different pieces of the exchange assembly
             updateExchangeAssembly(verticalGrabber, verticalWrist, horizontalWrist, horizontalSlide, verticalSlide);
 
-//            if (gamepad2.left_trigger > 0.05) {
-//                close = close(verticalGrabber, verticalWrist, verticalSlide, horizontalWrist, horizontalSlide);
-//            }
-//            if (!close) {
-//                close = close(verticalGrabber, verticalWrist, verticalSlide, horizontalWrist, horizontalSlide);
-//            }
+            if (gamepad2.left_trigger > 0.05) {
+                placeSample(verticalGrabber, verticalWrist, verticalSlide, horizontalWrist, horizontalSlide, horizontalIntake);
+            } else {
+                resetPlaceState();
+            }
             telemetry.update();
         }
         telemetry.addData("[ROBOTNAME] ", "Going");

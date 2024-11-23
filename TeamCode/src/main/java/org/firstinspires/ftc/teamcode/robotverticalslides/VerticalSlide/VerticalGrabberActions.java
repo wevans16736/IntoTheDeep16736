@@ -23,9 +23,11 @@ public class VerticalGrabberActions {
     }
     public void open() {
         verticalGrabberServo.setPosition(Configuration.open);
+        isClose = false;
     }
     public void close() {
         verticalGrabberServo.setPosition(0.5);
+        isClose = true;
     }
     boolean isClose = true;
     public boolean isClose() {
@@ -34,11 +36,9 @@ public class VerticalGrabberActions {
     public void teleOp(boolean open, boolean close) {
         if (open) {
             open();
-            isClose = false;
         }
         if (close) {
             close();
-            isClose = true;
         }
     }
 }
