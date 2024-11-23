@@ -19,7 +19,7 @@ public class VerticalGrabberActions {
 
         verticalGrabberServo = hardwareMap.get(Servo.class, ConfigConstants.VERTICAL_GRABBER);
 
-        verticalGrabberServo.setPosition(1.0);
+        verticalGrabberServo.setPosition(0.3);
     }
     public void open() {
         verticalGrabberServo.setPosition(Configuration.open);
