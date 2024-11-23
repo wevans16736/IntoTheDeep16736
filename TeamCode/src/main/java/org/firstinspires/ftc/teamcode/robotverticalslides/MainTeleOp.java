@@ -66,7 +66,7 @@ public class MainTeleOp extends HelperActions {
             toggleSpeed(gamepad1.a);
             
             /** Gamepad 2 **/
-            //use the player 2 left joystick to run the horzontal slide
+            //use the player 2 left joystick to run the horizontal slide
             horizontalSlide.teleOpHorizontalSlide(-gamepad2.left_stick_y, 1.8);
             //rotate the servo with intake in it
             horizontalWrist.flipping(gamepad2.left_bumper);

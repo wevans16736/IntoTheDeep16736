@@ -34,8 +34,8 @@ import java.util.Arrays;
 
 
 @Config
-@Autonomous(name = "Advance Main Auto", group = "Autonomous")
-public class AdvanceMainAuto extends LinearOpMode {
+@Autonomous(name = "Test Main Auto", group = "Autonomous")
+public class TestMainAuto extends LinearOpMode {
     private VerticalSlideRR verticalSlideRR = null;
     private HorizontalSlideRR horizontalSlideRR = null;
     private VerticalGrabberRR verticalGrabberRR = null;
@@ -339,10 +339,11 @@ public class AdvanceMainAuto extends LinearOpMode {
                 .waitSeconds(.2)
                 .afterDisp(2, verticalSlideRR.setDown())
                 .afterDisp(2, verticalWristRR.takeButter())
-                .strafeTo(new Vector2d(26, 20), parkVelOverride, parkAccelOverride)
-                .strafeTo(new Vector2d(27, 50), parkVelOverride, parkAccelOverride)
+                .strafeTo(new Vector2d(-10, 15), parkVelOverride, parkAccelOverride)
                 .setTangent(0)
-                .splineToLinearHeading(new Pose2d(36, 65,Math.toRadians(-90)),(-1)*Math.toRadians(90), parkAngularOverride, parkAccelOverride)
+                .splineToLinearHeading(new Pose2d(26, 20,Math.toRadians(-90)),(-1)*Math.toRadians(90), parkAngularOverride, parkAccelOverride)
+                .strafeTo(new Vector2d(27, 60), parkVelOverride, parkAccelOverride)
+                .strafeTo(new Vector2d(36, 60), parkAngularOverride, parkAccelOverride)
                 .afterDisp(0.0, verticalWristRR.wallButter())
                 .strafeTo(new Vector2d(36, 18), humanVelOverride, humanAccelOverride)
                 .waitSeconds(.125)
@@ -355,7 +356,7 @@ public class AdvanceMainAuto extends LinearOpMode {
 
         TrajectoryActionBuilder hang = drive.actionBuilder(initialPose)
                 .waitSeconds(.25)
-                .strafeTo(new Vector2d(-10, 30), pushBlockVelOverride, pushBlockAccelOverride)
+                .strafeTo(new Vector2d(-7, 31), pushBlockVelOverride, pushBlockAccelOverride)
                 .afterDisp(0, verticalGrabberRR.openGrabber())
                 .waitSeconds(.2)
                 .afterDisp(2, verticalSlideRR.setDown())
@@ -380,6 +381,8 @@ public class AdvanceMainAuto extends LinearOpMode {
         waitForStart();
         //if stop button is press, automatically stop
         if (isStopRequested()) return;
+
+
 
         //run the chosen action blocking
         Actions.runBlocking(
