@@ -60,21 +60,22 @@ public class AdvanceMainAuto extends LinearOpMode {
             verticalSlide2.setTargetPosition(0);
             verticalSlide2.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         }
-        public class Liftup implements Action{
+        public class Liftup implements Action {
             private boolean initialized = false;
+
             @Override
-            public boolean run(@NonNull TelemetryPacket packet){
+            public boolean run(@NonNull TelemetryPacket packet) {
                 int position = -480;
                 double velocity = 1800;
-                if(!initialized){
-                        verticalSlide1.setTargetPosition(position);
-                        verticalSlide1.setVelocity(velocity);
-                        verticalSlide2.setTargetPosition(-position);
-                        verticalSlide2.setVelocity(-velocity);
+                if (!initialized) {
+                    verticalSlide1.setTargetPosition(position);
+                    verticalSlide1.setVelocity(velocity);
+                    verticalSlide2.setTargetPosition(-position);
+                    verticalSlide2.setVelocity(-velocity);
                     initialized = true;
                 }
                 double currentPosition = verticalSlide1.getCurrentPosition();
-                if (currentPosition > position){
+                if (currentPosition > position) {
                     return true;
                 } else {
                     return false;
@@ -314,7 +315,6 @@ public class AdvanceMainAuto extends LinearOpMode {
         horizontalWristRR = new HorizontalWristRR(telemetry, hardwareMap);
         horizontalGrabberRR = new HorizontalGrabberRR(telemetry, hardwareMap);
 
-
         //todo find the correct initial position and put it below
         Pose2d initialPose = new Pose2d(0,0, Math.toRadians(90));
         Vector2d vector2d = new Vector2d(0,0);
@@ -332,8 +332,6 @@ public class AdvanceMainAuto extends LinearOpMode {
         VelConstraint humanVelOverride = new TranslationalVelConstraint(30);
         AccelConstraint humanAccelOverride = new ProfileAccelConstraint(-7, 50);
 
-
-
         TrajectoryActionBuilder park = drive.actionBuilder(initialPose)
                 .waitSeconds(.25)
                 .strafeTo(new Vector2d(-10, 29), pushBlockVelOverride, pushBlockAccelOverride)
@@ -346,32 +344,26 @@ public class AdvanceMainAuto extends LinearOpMode {
                 .setTangent(0)
                 .splineToLinearHeading(new Pose2d(36, 65,Math.toRadians(-90)),(-1)*Math.toRadians(90), parkAngularOverride, parkAccelOverride)
                 .afterDisp(0.0, verticalWristRR.wallButter())
-                .strafeTo(new Vector2d(36, 16), humanVelOverride, humanAccelOverride)
+                .strafeTo(new Vector2d(36, 17.5), humanVelOverride, humanAccelOverride)
                 .waitSeconds(.125)
-                .afterDisp(0.0, verticalGrabberRR.closeGrabber())
+                .afterTime(0.0, verticalGrabberRR.closeGrabber())
                 .afterTime(0.0, verticalWristRR.wallButter())
-                .strafeTo(new Vector2d(36, 30), parkVelOverride,parkAccelOverride);
+                .waitSeconds(0.5)
+                .strafeTo(new Vector2d(36, 30), parkVelOverride,parkAccelOverride)
+                .setTangent(0)
+                .splineToLinearHeading(new Pose2d(0, 12,Math.toRadians(90)),Math.toRadians(90), parkAngularOverride, parkAccelOverride);
 
-//                .strafeTo(new Vector2d(36, 65), parkVelOverride, parkAccelOverride)
-//                .strafeTo(new Vector2d( 46, 65), parkVelOverride, parkAccelOverride)
-//                .strafeTo(new Vector2d(46, 15), humanVelOverride, humanAccelOverride)
-//                .strafeTo(new Vector2d(46, 65), parkVelOverride, parkAccelOverride)
-//                .strafeTo(new Vector2d(53, 65), parkVelOverride, parkAccelOverride)
-//                .strafeTo(new Vector2d(53, 15), humanVelOverride, humanAccelOverride);
-
-
-        TrajectoryActionBuilder basket = drive.actionBuilder(initialPose)
+        TrajectoryActionBuilder hang = drive.actionBuilder(initialPose)
                 .waitSeconds(.25)
-                .strafeTo(new Vector2d(10, 29), pushBlockVelOverride, pushBlockAccelOverride)
+                .strafeTo(new Vector2d(-10, 29), pushBlockVelOverride, pushBlockAccelOverride)
                 .afterDisp(0, verticalGrabberRR.openGrabber())
                 .waitSeconds(.2)
                 .afterDisp(2, verticalSlideRR.setDown())
                 .afterDisp(2, verticalWristRR.takeButter())
-                .afterDisp(4, verticalGrabberRR.closeGrabber())
-                .strafeTo(new Vector2d(0, 5));
+                .strafeTo(new Vector2d(30, 8), parkVelOverride, parkAccelOverride);
 
         TrajectoryActionBuilder wait = drive.actionBuilder(initialPose)
-                .waitSeconds(3);
+                .waitSeconds(.5);
 
         //initialize the robot
         Actions.runBlocking(
@@ -394,7 +386,11 @@ public class AdvanceMainAuto extends LinearOpMode {
             new SequentialAction(
                     verticalSlideRR.liftUp(),
                     verticalWristRR.wallButter(),
-                    park.build()
+                    park.build(),
+                    verticalSlideRR.liftUp(),
+                    verticalWristRR.wallButter(),
+                    hang.build(),
+                    wait.build()
             )
         );
     }

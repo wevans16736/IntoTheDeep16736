@@ -1,10 +1,11 @@
 package org.firstinspires.ftc.teamcode.secondrobot;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.secondrobot.ArmActions;
-
+@Disabled
 @TeleOp(name = "Tele Op second robot", group = "Linear Opmode")
 public class SecondaryTeleOp extends LinearOpMode {
 

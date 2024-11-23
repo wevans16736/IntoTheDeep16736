@@ -1,6 +1,7 @@
 
 package org.firstinspires.ftc.teamcode.robotverticalslides;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.robotverticalslides.HorizontalSlide.HorizontalSlideActions;
@@ -9,7 +10,7 @@ import org.firstinspires.ftc.teamcode.robotverticalslides.HorizontalSlide.Horizo
 import org.firstinspires.ftc.teamcode.robotverticalslides.VerticalSlide.VerticalGrabberActions;
 import org.firstinspires.ftc.teamcode.robotverticalslides.VerticalSlide.VerticalSlideActions;
 import org.firstinspires.ftc.teamcode.robotverticalslides.VerticalSlide.VerticalWristActions;
-
+@Disabled
 @TeleOp(name = "Manual Tele Op", group = "Linear Opmode")
 public class ManualTeleOp extends HelperActions {
 
