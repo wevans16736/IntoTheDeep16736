@@ -32,11 +32,12 @@ public class HorizontalWristActions {
 //        horizontalWristServo.setPosition(0.9);
         forward = false;
     }
-    boolean override = false;
+    public boolean override = true;
     boolean wasOverride = false;
     public void override(boolean input) {
         if (input &! wasOverride) {
             override = !override;
+            forward();
         }
         wasOverride = input;
     }

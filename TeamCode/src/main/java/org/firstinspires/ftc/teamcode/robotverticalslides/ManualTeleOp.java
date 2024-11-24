@@ -63,7 +63,7 @@ public class ManualTeleOp extends HelperActions {
 
             horizontalSlide.teleOpHorizontalSlide(-gamepad2.left_stick_y, 1);
             horizontalWrist.manual(gamepad2.left_bumper, gamepad2.b);
-            horizontalIntake.teleop(gamepad2.right_trigger, gamepad2.left_trigger);
+            horizontalIntake.teleop(gamepad2.right_trigger > 0.05);
 
             verticalSlide.teleOpVerticalSlide(-gamepad2.right_stick_y, 1);
 //            verticalSlide.maintainVerticalSlide2();

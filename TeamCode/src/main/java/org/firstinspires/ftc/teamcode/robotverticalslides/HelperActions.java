@@ -95,7 +95,7 @@ public abstract class HelperActions extends LinearOpMode {
         //tells the vertical wrist when the slide is up
         verticalWrist.setSlideUp(verticalSlide.getSlidePosition() < -1000);
         //tells the horizontal slide to stop and let the horizontal wrist flip up or flip down when going in or out
-        overrideSlide = horizontalSlide.getSlidePosition() < overrideSlideThreshold;
+        overrideSlide = horizontalSlide.getSlidePosition() < overrideSlideThreshold && !horizontalWrist.override;
         horizontalWrist.setIsSlideIn(overrideSlide);
         overrideSlide(horizontalSlide);
         wasOverrideSlide = overrideSlide;
@@ -178,17 +178,17 @@ public abstract class HelperActions extends LinearOpMode {
             }
         } else if (placeState == 1) {
             verticalGrabber.close();
-            intake.intake(1);
+            intake.open();
             startTimePlace = System.currentTimeMillis();
             placeState = 2;
         } else if (placeState == 2) {
-            intake.intake(1);
+            intake.open();
             if (System.currentTimeMillis() > startTimePlace + 420) {
                 placeState = 3;
                 verticalWrist.autoFlipForwardDown();
                 verticalSlide.setSlidePosition(-700, 2000);
             } else {
-                intake.intake(1);
+                intake.open();
             }
         }
     }

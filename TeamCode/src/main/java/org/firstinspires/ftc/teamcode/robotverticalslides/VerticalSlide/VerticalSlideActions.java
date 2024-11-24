@@ -81,6 +81,8 @@ public class VerticalSlideActions {
     }
 
     boolean downTo1 = false;
+    boolean at1 = false;
+    double at1StartTime = 0;
     int preset1 = -480;
     int preset2 = -0;
     int preset3 = -55;
@@ -113,6 +115,14 @@ public class VerticalSlideActions {
         //If the slide is at the button, turn it off
         if(downTo1 && !VerticalSlide1.isMotorEnabled()) {
             downTo1 = false;
+            at1 = true;
+            at1StartTime = System.currentTimeMillis();
+        }
+        if (at1 && VerticalSlide1.isMotorEnabled()) {
+            at1 = false;
+        }
+        if (System.currentTimeMillis() > at1StartTime + 200 && at1) {
+            at1 = false;
             VerticalSlide1.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             VerticalSlide2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         }

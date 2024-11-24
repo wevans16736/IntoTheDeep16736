@@ -1,7 +1,5 @@
 package org.firstinspires.ftc.teamcode.robotverticalslides.HorizontalSlide;
 
-import com.qualcomm.robotcore.hardware.CRServo;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -22,20 +20,42 @@ public class HorizontalIntakeActions {
 
         intakeServo.setPosition(0);
     }
-    public void intake(double power) {
-        intakeServo.setPosition(0.2 - power * 0.2);
+
+    public void open() {
+        open = true;
     }
-    public void outtake(double power) {
-//        intakeServo.setPosition(power);
-//        telemetry.addData("intake position", intakeServo.getPosition());
+    public void close() {
+        open = false;
     }
-    public void teleop(double intake, double outtake) {
-        if (intake > 0.05) {
-            intake(intake);
-        } else if (outtake > 0.05) {
-            outtake(outtake);
+    public void update() {
+        if (open) {
+            intakeServo.setPosition(0.0);
         } else {
-            intake(0.2);
+            intakeServo.setPosition(0.2);
         }
+    }
+    boolean wasInput = false;
+    public boolean open = false;
+    public void teleop(boolean input) {
+        if (input && !wasInput) {
+            if (open) {
+                close();
+            } else {
+                open();
+            }
+        }
+        wasInput = input;
+        update();
+    }
+    double position = 0.9;
+    public void manual(boolean activate, boolean reverse) {
+        if (activate) {
+            if (!reverse) {
+                position = position - 0.005;
+            } else {
+                position = position + 0.005;
+            }
+        }
+        intakeServo.setPosition(position);
     }
 }

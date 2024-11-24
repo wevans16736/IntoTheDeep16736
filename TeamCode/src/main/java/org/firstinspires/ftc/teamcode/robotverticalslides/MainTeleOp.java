@@ -73,7 +73,7 @@ public class MainTeleOp extends HelperActions {
             //force the servo to flip bypassing the range limit apply
             horizontalWrist.override(gamepad1.b || gamepad2.b);
             //right trigger make the servo negative and left make the servo postivie.
-            horizontalIntake.teleop(gamepad2.right_trigger, gamepad2.left_trigger);
+            horizontalIntake.teleop(gamepad2.right_trigger > 0.05 || gamepad2.left_trigger > 0.05);
 
             //this assign the dpad to the diffrent level of the basket on the slide. left-bottom bar, down-bottom basket, right-top bar, up-top basket
             verticalSlide.goToPreset(gamepad2.dpad_left, gamepad2.dpad_down, gamepad2.dpad_right, gamepad2.dpad_up);
@@ -87,11 +87,12 @@ public class MainTeleOp extends HelperActions {
             //manages interface between different pieces of the exchange assembly
             updateExchangeAssembly(verticalGrabber, verticalWrist, horizontalWrist, horizontalSlide, verticalSlide);
 
-            if (gamepad2.left_trigger > 0.05) {
-                placeSample(verticalGrabber, verticalWrist, verticalSlide, horizontalWrist, horizontalSlide, horizontalIntake);
-            } else {
-                resetPlaceState();
-            }
+
+//            if (gamepad2.left_trigger > 0.05) {
+//                placeSample(verticalGrabber, verticalWrist, verticalSlide, horizontalWrist, horizontalSlide, horizontalIntake);
+//            } else {
+//                resetPlaceState();
+//            }
             telemetry.update();
         }
         telemetry.addData("[ROBOTNAME] ", "Going");
