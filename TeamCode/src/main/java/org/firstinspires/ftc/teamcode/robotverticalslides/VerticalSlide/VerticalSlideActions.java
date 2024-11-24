@@ -60,7 +60,7 @@ public class VerticalSlideActions {
             //change the slide position by the input power times the change in time times the speed.
             //Multiplying by change in time makes sure the slide speed is more consistent
             double total = SlidePosition + power * (time - prevTime) * liftSpeedMultiplier;
-            total = Range.clip(total, -1100, 50);
+            total = Range.clip(total, -830, 50);
             setSlidePosition((int) total, 3000 * liftSpeedMultiplier);
 //            prevTime = time;
             RobotLog.dd("LiftyUppy", "Target Position %f, time %f", SlidePosition, time);
@@ -68,16 +68,9 @@ public class VerticalSlideActions {
         prevTime = time;
         telemetry.addData("target position", SlidePosition);
         telemetry.addData("liftyPower", VerticalSlide1.getPower());
-        telemetry.addData("liftyCurrent mA", VerticalSlide1.getCurrent(CurrentUnit.MILLIAMPS));
 
-        double maxCurrent = 0;
-
-        if (VerticalSlide1.getCurrent(CurrentUnit.MILLIAMPS) > maxCurrent) {
-            maxCurrent = VerticalSlide1.getCurrent(CurrentUnit.MILLIAMPS);
-        }
-
-        telemetry.addData("liftyMax mA", maxCurrent);
-        telemetry.addData("current position", VerticalSlide1.getCurrentPosition());
+        telemetry.addData("Current VS1", VerticalSlide1.getCurrent(CurrentUnit.MILLIAMPS));
+        telemetry.addData("Current VS2", VerticalSlide2.getCurrent(CurrentUnit.MILLIAMPS));
     }
 
     boolean downTo1 = false;
@@ -86,7 +79,7 @@ public class VerticalSlideActions {
     int preset1 = -480;
     int preset2 = -0;
     int preset3 = -55;
-    int preset4 = -1100;
+    int preset4 = -830;
     boolean wasSet = false;
 
     public void goToPreset(boolean bottomRung, boolean bottom, boolean topRung, boolean topBasket) {

@@ -93,7 +93,7 @@ public abstract class HelperActions extends LinearOpMode {
         //tells the vertical wrist when the grabber is closed
         verticalWrist.setGrabberClosed(grabber.isClose());
         //tells the vertical wrist when the slide is up
-        verticalWrist.setSlideUp(verticalSlide.getSlidePosition() < -1000);
+        verticalWrist.setSlideUp(verticalSlide.getSlidePosition() < -800);
         //tells the horizontal slide to stop and let the horizontal wrist flip up or flip down when going in or out
         overrideSlide = horizontalSlide.getSlidePosition() < overrideSlideThreshold && !horizontalWrist.override;
         horizontalWrist.setIsSlideIn(overrideSlide);
