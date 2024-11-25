@@ -367,6 +367,22 @@ public class TotalAuto extends LinearOpMode {
         TrajectoryActionBuilder wait = drive.actionBuilder(initialPose)
                 .waitSeconds(.5);
 
+        TrajectoryActionBuilder hang = drive.actionBuilder(initialPose)
+                .afterTime(0.0,verticalSlideRR.liftUp())
+                .afterTime(0.0,verticalWristRR.wallButter())
+                .waitSeconds(.25)
+                .strafeTo(new Vector2d(-10, 30), pushBlockVelOverride, pushBlockAccelOverride)
+                .afterDisp(0, verticalGrabberRR.openGrabber())
+                .waitSeconds(.2)
+                .afterDisp(2, verticalSlideRR.setDown())
+                .afterDisp(2, verticalWristRR.takeButter())
+                .strafeTo(new Vector2d(-10, 15));
+
+        TrajectoryActionBuilder butter = drive.actionBuilder(initialPose)
+                ;
+
+
+
         //initialize the robot
         Actions.runBlocking(
                 new SequentialAction(
@@ -379,14 +395,64 @@ public class TotalAuto extends LinearOpMode {
         );
 
         //ask the driver which auto they want to run
-        int chooseSide = 0;
-
+        boolean pickRightSide = false;
+        boolean pickLeftSide = false;
+        boolean pickHang = false;
+        boolean pickHuman = false;
+        boolean pickBasket = false;
+        boolean pickPark = false;
+        while(gamepad1.a =false) {
+            telemetry.clear();
+            telemetry.addLine("Which side?");
+            telemetry.update();
+            if (gamepad1.dpad_left == true && gamepad2.dpad_right == false) {
+                pickLeftSide = true;
+                while(!gamepad1.a){
+                    telemetry.clear();
+                    telemetry.addLine("D-Pad Left-hang: " + pickHang);
+                    telemetry.addLine("D-Pad Up-Basket" + pickBasket);
+                    telemetry.addLine("D-Pad Right-Park" + pickPark);
+                    if(gamepad1.dpad_left == true && gamepad1.dpad_up == false && gamepad1.dpad_right == false && gamepad1.dpad_down == false){
+                        pickHang = true;
+                    }
+                    if(gamepad1.dpad_left == false && gamepad1.dpad_up == true && gamepad1.dpad_right == false && gamepad1.dpad_down == false){
+                        pickBasket = true;
+                    }
+                    if(gamepad1.dpad_left == false && gamepad1.dpad_up == false && gamepad1.dpad_right == true && gamepad1.dpad_down == false){
+                        pickPark = true;
+                    }
+                    telemetry.update();
+                }
+            }
+            if(gamepad1.dpad_left == false && gamepad1.dpad_right == true){
+                pickRightSide = true;
+                while(!gamepad1.a) {
+                    telemetry.clear();
+                    telemetry.addLine("D-Pad Left-Hang: " + pickHang);
+                    telemetry.addLine("D-Pad Up-Human: " + pickHuman);
+                    telemetry.addLine("D-Pad Right-Park" + pickPark);
+                    if(gamepad1.dpad_left == true && gamepad1.dpad_up == false && gamepad1.dpad_right == false && gamepad1.dpad_down == false) {
+                        pickHang = true;
+                    }
+                    if(gamepad1.dpad_left == false && gamepad1.dpad_up == true && gamepad1.dpad_right == false && gamepad1.dpad_down == false) {
+                        pickHuman = true;
+                    }
+                    if(gamepad1.dpad_left == false && gamepad1.dpad_up == false && gamepad1.dpad_right == true && gamepad1.dpad_down == false) {
+                        pickPark = true;
+                    }
+                    telemetry.update();
+                }
+            }
+        }
 
 
         //wait for the start button to be press
         waitForStart();
         //if stop button is press, automatically stop
         if (isStopRequested()) return;
+
+        //choose the trajectory
+
 
         //run the chosen action blocking
         Actions.runBlocking(
