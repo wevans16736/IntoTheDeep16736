@@ -32,11 +32,10 @@ import org.firstinspires.ftc.teamcode.robotverticalslides.constants.ConfigConsta
 
 import java.util.Arrays;
 
-
 @Config
-@Autonomous(name = "Test Main Auto", group = "Autonomous")
-public class TestMainAuto extends LinearOpMode {
-//    private VerticalSlideRR verticalSlideRR = null;
+@Autonomous(name = "Total Auto", group = "Autonomous")
+public class TotalAuto extends LinearOpMode {
+    private VerticalSlideRR verticalSlideRR = null;
     private HorizontalSlideRR horizontalSlideRR = null;
     private VerticalGrabberRR verticalGrabberRR = null;
     private VerticalWristRR verticalWristRR = null;
@@ -308,7 +307,7 @@ public class TestMainAuto extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
         //instantiate the robot to a particular pose.
-        VerticalSlideRR verticalSlideRR = new VerticalSlideRR(hardwareMap);
+        verticalSlideRR = new VerticalSlideRR(hardwareMap);
         horizontalSlideRR = new HorizontalSlideRR(hardwareMap, telemetry);
         verticalGrabberRR = new VerticalGrabberRR(telemetry, hardwareMap);
         verticalWristRR = new VerticalWristRR(telemetry, hardwareMap);
@@ -319,7 +318,6 @@ public class TestMainAuto extends LinearOpMode {
         Pose2d initialPose = new Pose2d(0,0, Math.toRadians(90));
         Vector2d vector2d = new Vector2d(0,0);
         PinpointDrive drive = new PinpointDrive(hardwareMap, initialPose);
-
         VelConstraint pushBlockVelOverride = new TranslationalVelConstraint(30);
         AccelConstraint pushBlockAccelOverride = new ProfileAccelConstraint(-10, 25);
 
@@ -345,17 +343,19 @@ public class TestMainAuto extends LinearOpMode {
                 .splineToLinearHeading(new Pose2d(26, 20,Math.toRadians(-90)),(-1)*Math.toRadians(90), parkAngularOverride, parkAccelOverride)
                 .strafeTo(new Vector2d(27, 60), parkVelOverride, parkAccelOverride)
                 .strafeTo(new Vector2d(36, 60), parkAngularOverride, parkAccelOverride)
+                .strafeTo(new Vector2d(36, 18), humanVelOverride, humanAccelOverride)
+                .strafeTo(new Vector2d(36, 30), parkVelOverride, parkAccelOverride)
+                .waitSeconds(3)
                 .afterDisp(0.0, verticalWristRR.wallButter())
                 .strafeTo(new Vector2d(36, 18), humanVelOverride, humanAccelOverride)
-                .waitSeconds(.125)
                 .afterTime(0.0, verticalGrabberRR.closeGrabber())
                 .afterTime(0.0, verticalWristRR.wallButter())
                 .waitSeconds(0.5)
                 .strafeTo(new Vector2d(36, 30), parkVelOverride,parkAccelOverride)
                 .setTangent(0)
-                .splineToLinearHeading(new Pose2d(0, 12,Math.toRadians(90)),Math.toRadians(90), parkAngularOverride, parkAccelOverride);
-
-        TrajectoryActionBuilder hang = drive.actionBuilder(initialPose)
+                .splineToLinearHeading(new Pose2d(0, 12,Math.toRadians(90)),Math.toRadians(90), parkAngularOverride, parkAccelOverride)
+                .afterTime(0.0, verticalSlideRR.liftUp())
+                .afterTime(0.0, verticalWristRR.wallButter())
                 .waitSeconds(.25)
                 .strafeTo(new Vector2d(-7, 31), pushBlockVelOverride, pushBlockAccelOverride)
                 .afterDisp(0, verticalGrabberRR.openGrabber())
@@ -378,12 +378,15 @@ public class TestMainAuto extends LinearOpMode {
                 )
         );
 
+        //ask the driver which auto they want to run
+        int chooseSide = 0;
+
+
+
         //wait for the start button to be press
         waitForStart();
         //if stop button is press, automatically stop
         if (isStopRequested()) return;
-
-
 
         //run the chosen action blocking
         Actions.runBlocking(
@@ -391,9 +394,6 @@ public class TestMainAuto extends LinearOpMode {
                     verticalSlideRR.liftUp(),
                     verticalWristRR.wallButter(),
                     park.build(),
-                    verticalSlideRR.liftUp(),
-                    verticalWristRR.wallButter(),
-                    hang.build(),
                     wait.build()
             )
         );
