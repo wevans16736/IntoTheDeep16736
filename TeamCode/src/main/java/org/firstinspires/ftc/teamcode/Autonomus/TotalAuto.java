@@ -145,6 +145,29 @@ public class TotalAuto extends LinearOpMode {
         public Action retractSlide(){
             return new RetractSlide();
         }
+        public class ExtendButter implements Action{
+            private boolean initialized = false;
+            int extend = Configuration.extend;
+            double extendVelocity = Configuration.extendVelocity;
+            public boolean run(@NonNull TelemetryPacket packet) {
+                int position = extend;
+                double velocity = extendVelocity;
+                if (!initialized) {
+                    HorizontalSlide2.setTargetPosition(position);
+                    HorizontalSlide2.setVelocity(velocity);
+                    initialized = true;
+                }
+                double currentPosition = HorizontalSlide2.getCurrentPosition();
+                if(currentPosition > position){
+                    return true;
+                }else {
+                    return false;
+                }
+            }
+        }
+        public Action extendButter(){
+            return new ExtendButter();
+        }
     }
     //add a class for the vertical grabber
     public class VerticalGrabberRR{
@@ -326,8 +349,6 @@ public class TotalAuto extends LinearOpMode {
             return new Flat();
         }
     }
-
-
     @Override
     public void runOpMode() throws InterruptedException {
         //instantiate the robot to a particular pose.
@@ -403,9 +424,6 @@ public class TotalAuto extends LinearOpMode {
                 .afterDisp(2, verticalWristRR.takeButter())
                 .strafeTo(new Vector2d(-10, 15));
 
-        TrajectoryActionBuilder butter = drive.actionBuilder(initialPose);
-
-
         //ask the driver which auto they want to run
         boolean pickRightSide = false;
         boolean pickLeftSide = false;
@@ -413,49 +431,47 @@ public class TotalAuto extends LinearOpMode {
         boolean pickHuman = false;
         boolean pickBasket = false;
         boolean pickPark = false;
-//        while(gamepad1.a==false) {
-            telemetry.clear();
-            telemetry.addLine("Which side?");
-            telemetry.update();
-            if (gamepad1.dpad_left == true && gamepad1.dpad_right == false) {
-                pickLeftSide = true;
-                while(!gamepad1.a){
-                    telemetry.clear();
-                    telemetry.addLine("D-Pad Left-hang: " + pickHang);
-                    telemetry.addLine("D-Pad Up-Basket" + pickBasket);
-                    telemetry.addLine("D-Pad Right-Park" + pickPark);
-                    if(gamepad1.dpad_left == true && gamepad1.dpad_up == false && gamepad1.dpad_right == false && gamepad1.dpad_down == false){
-                        pickHang = true;
-                    }
-                    if(gamepad1.dpad_left == false && gamepad1.dpad_up == true && gamepad1.dpad_right == false && gamepad1.dpad_down == false){
-                        pickBasket = true;
-                    }
-                    if(gamepad1.dpad_left == false && gamepad1.dpad_up == false && gamepad1.dpad_right == true && gamepad1.dpad_down == false){
-                        pickPark = true;
-                    }
-                    telemetry.update();
+        telemetry.clear();
+        telemetry.addLine("Which side?");
+        telemetry.update();
+        if(gamepad1.square && !gamepad1.circle) {
+            pickLeftSide = true;
+            while(!gamepad1.right_bumper){
+                telemetry.clear();
+                telemetry.addLine("square-hang: " + pickHang);
+                telemetry.addLine("triangle-Basket" + pickBasket);
+                telemetry.addLine("circle-Park" + pickPark);
+                if(gamepad1.square && !gamepad1.triangle && !gamepad1.circle && !gamepad1.cross){
+                    pickHang = true;
                 }
-            }
-            if(gamepad1.dpad_left == false && gamepad1.dpad_right == true){
-                pickRightSide = true;
-                while(!gamepad1.a) {
-                    telemetry.clear();
-                    telemetry.addLine("D-Pad Left-Hang: " + pickHang);
-                    telemetry.addLine("D-Pad Up-Human: " + pickHuman);
-                    telemetry.addLine("D-Pad Right-Park" + pickPark);
-                    if(gamepad1.dpad_left == true && gamepad1.dpad_up == false && gamepad1.dpad_right == false && gamepad1.dpad_down == false) {
-                        pickHang = true;
-                    }
-                    if(gamepad1.dpad_left == false && gamepad1.dpad_up == true && gamepad1.dpad_right == false && gamepad1.dpad_down == false) {
-                        pickHuman = true;
-                    }
-                    if(gamepad1.dpad_left == false && gamepad1.dpad_up == false && gamepad1.dpad_right == true && gamepad1.dpad_down == false) {
-                        pickPark = true;
-                    }
-                    telemetry.update();
+                if(!gamepad1.square && gamepad1.triangle && !gamepad1.circle && !gamepad1.cross){
+                    pickBasket = true;
                 }
+                if(!gamepad1.square && !gamepad1.triangle && gamepad1.circle && !gamepad1.cross){
+                    pickPark = true;
+                }
+                telemetry.update();
             }
-//        }
+        }
+        if(!gamepad1.square && gamepad1.circle){
+            pickRightSide = true;
+            while(!gamepad1.right_bumper) {
+                telemetry.clear();
+                telemetry.addLine("square-Hang: " + pickHang);
+                telemetry.addLine("triangle-Human: " + pickHuman);
+                telemetry.addLine("circle-Park" + pickPark);
+                if(gamepad1.square && !gamepad1.triangle && !gamepad1.circle && !gamepad1.cross){
+                    pickHang = true;
+                }
+                if(!gamepad1.square && gamepad1.triangle && !gamepad1.circle && !gamepad1.cross){
+                    pickHuman = true;
+                }
+                if(!gamepad1.square && !gamepad1.triangle && gamepad1.circle && !gamepad1.cross){
+                    pickPark = true;
+                }
+                telemetry.update();
+            }
+        }
 
         //initialize the robot
         Actions.runBlocking(
