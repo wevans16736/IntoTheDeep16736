@@ -487,7 +487,7 @@ public class TotalAuto extends LinearOpMode {
         telemetry.clear();
         telemetry.addLine("Which side?");
         telemetry.update();
-        //right side
+        //left side
         if (gamepad1.square && !gamepad1.circle) {
             pickLeftSide = true;
             while (!gamepad1.right_bumper) {
@@ -497,19 +497,19 @@ public class TotalAuto extends LinearOpMode {
                 telemetry.addLine("circle-Park" + pickPark);
                 if (gamepad1.square && !gamepad1.triangle && !gamepad1.circle && !gamepad1.cross) {
                     pickHang = true;
-                    hangSide = 1;
+                    hangSide = -1;
                 }
                 if (!gamepad1.square && gamepad1.triangle && !gamepad1.circle && !gamepad1.cross) {
                     pickBasket = true;
                 }
                 if (!gamepad1.square && !gamepad1.triangle && gamepad1.circle && !gamepad1.cross) {
                     pickPark = true;
-                    parkSide = 1;
+                    parkSide = -1;
                 }
                 telemetry.update();
             }
         }
-        //left side
+        //right side
         if (!gamepad1.square && gamepad1.circle) {
             pickRightSide = true;
             while (!gamepad1.right_bumper) {
@@ -520,7 +520,7 @@ public class TotalAuto extends LinearOpMode {
                 telemetry.addLine("cross-butter" + pickButter);
                 if (gamepad1.square && !gamepad1.triangle && !gamepad1.circle && !gamepad1.cross) {
                     pickHang = true;
-                    hangSide = -1;
+                    hangSide = 1;
                 }
                 if (!gamepad1.square && gamepad1.triangle && !gamepad1.circle && !gamepad1.cross) {
                     pickHuman = true;
@@ -530,7 +530,7 @@ public class TotalAuto extends LinearOpMode {
                 }
                 if (!gamepad1.square && !gamepad1.triangle && !gamepad1.circle && gamepad1.cross) {
                     pickButter = true;
-                    butterSide = -1;
+                    butterSide = 1;
                 }
                 telemetry.update();
             }
