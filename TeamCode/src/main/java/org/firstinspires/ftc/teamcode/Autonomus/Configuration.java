@@ -1,6 +1,12 @@
 package org.firstinspires.ftc.teamcode.Autonomus;
 
 public class Configuration{
+    //vertical slide position
+    public static int highBar = -480;
+    public static int bottom = 0;
+    //todo is this right?
+    public static int lowBar = -55;
+    public static int topBasket = -830;
 
     //this is vertical wrist servo position
     //this is a position to place it on the basket
@@ -30,6 +36,7 @@ public class Configuration{
     public static double flat = 0.075;
 
     //horizontal slide motor position
+    public static int retractSlide = 0;
     public static int extend = 1000;
     public static double extendVelocity = 1800;
 }

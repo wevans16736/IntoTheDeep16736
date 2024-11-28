@@ -9,6 +9,7 @@ import com.qualcomm.robotcore.util.RobotLog;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
+import org.firstinspires.ftc.teamcode.Autonomus.Configuration;
 import org.firstinspires.ftc.teamcode.robotverticalslides.constants.ConfigConstants;
 
 public class VerticalSlideActions {
@@ -76,10 +77,11 @@ public class VerticalSlideActions {
     boolean downTo1 = false;
     boolean at1 = false;
     double at1StartTime = 0;
-    int preset1 = -480;
-    int preset2 = -0;
-    int preset3 = -55;
-    int preset4 = -830;
+    int preset1 = Configuration.highBar;
+    int preset2 = Configuration.bottom;
+    //todo is this right?
+    int preset3 = Configuration.lowBar;
+    int preset4 = Configuration.topBasket;
     boolean wasSet = false;
 
     public void goToPreset(boolean bottomRung, boolean bottom, boolean topRung, boolean topBasket) {

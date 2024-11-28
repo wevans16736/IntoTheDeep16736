@@ -43,6 +43,19 @@ public class TotalAuto extends LinearOpMode {
     private HorizontalGrabberRR horizontalGrabberRR = null;
     private HorizontalRollRR horizontalRollRR = null;
 
+    boolean pickRightSide = false;
+    boolean pickLeftSide = false;
+    boolean pickHang = false;
+    boolean pickHuman = false;
+    boolean pickBasket = false;
+    boolean pickPark = false;
+    boolean pickButter = false;
+
+    int hangSide = 1;
+    int butterSide = 1;
+    int parkSide = 1;
+    int waitHuman = 0;
+
     public class VerticalSlideRR{
         public DcMotorEx verticalSlide1 = null;
         public DcMotorEx verticalSlide2 = null;
@@ -65,7 +78,7 @@ public class TotalAuto extends LinearOpMode {
 
             @Override
             public boolean run(@NonNull TelemetryPacket packet) {
-                int position = -480;
+                int position = Configuration.highBar;
                 double velocity = 1800;
                 if (!initialized) {
                     verticalSlide1.setTargetPosition(position);
@@ -75,7 +88,7 @@ public class TotalAuto extends LinearOpMode {
                     initialized = true;
                 }
                 double currentPosition = verticalSlide1.getCurrentPosition();
-                if (currentPosition > position) {
+                if(currentPosition > position) {
                     return true;
                 } else {
                     return false;
@@ -99,12 +112,7 @@ public class TotalAuto extends LinearOpMode {
                     initialized = true;
                 }
                 double currentPosition = verticalSlide1.getCurrentPosition();
-                if (currentPosition > position){
-                    return true;
-                } else {
-                    return false;
-
-                }
+                return currentPosition > position;
             }
         }
         public Action setDown(){
@@ -127,7 +135,7 @@ public class TotalAuto extends LinearOpMode {
         public class RetractSlide implements Action{
             @Override
             public boolean run(@NonNull TelemetryPacket packet){
-                int position = 0;
+                int position = Configuration.retractSlide;
                 double velocity = 1800;
                 if(!initialized){
                     HorizontalSlide2.setTargetPosition(position);
@@ -135,11 +143,7 @@ public class TotalAuto extends LinearOpMode {
                     initialized = true;
                 }
                 double currentPosition = HorizontalSlide2.getCurrentPosition();
-                if(currentPosition > position){
-                    return true;
-                }else {
-                    return false;
-                }
+                return currentPosition > position;
             }
         }
         public Action retractSlide(){
@@ -158,11 +162,7 @@ public class TotalAuto extends LinearOpMode {
                     initialized = true;
                 }
                 double currentPosition = HorizontalSlide2.getCurrentPosition();
-                if(currentPosition > position){
-                    return true;
-                }else {
-                    return false;
-                }
+                return currentPosition > position;
             }
         }
         public Action extendButter(){
@@ -227,17 +227,6 @@ public class TotalAuto extends LinearOpMode {
         public Action placeBasket(){
             return new PlaceBasket();
         }
-        public class HumanPickUp implements Action{
-            @Override
-            public boolean run(@NonNull TelemetryPacket telemetryPacket) {
-                verticalWristServo.setPosition(forwardUp);
-                sleep(500);
-                return false;
-            }
-        }
-        public Action humanPickUp(){
-            return new HumanPickUp();
-        }
         public class WallButter implements Action{
             @Override
             public boolean run(@NonNull TelemetryPacket packet){
@@ -291,6 +280,16 @@ public class TotalAuto extends LinearOpMode {
         }
         public Action inRobot(){
             return new InRobot();
+        }
+        public class LiftButter implements Action{
+            @Override
+            public boolean run(@NonNull TelemetryPacket packet){
+                horizontalWristServo.setPosition(backwardPosOut);
+                return false;
+            }
+        }
+        public Action liftButter(){
+            return new LiftButter();
         }
     }
     //HorizontalGrabber class
@@ -360,9 +359,8 @@ public class TotalAuto extends LinearOpMode {
         horizontalGrabberRR = new HorizontalGrabberRR(telemetry, hardwareMap);
         horizontalRollRR = new HorizontalRollRR(telemetry, hardwareMap);
 
-        //todo find the correct initial position and put it below
-        Pose2d initialPose = new Pose2d(0,0, Math.toRadians(90));
-        Vector2d vector2d = new Vector2d(0,0);
+        Pose2d initialPose = new Pose2d(0, 0, Math.toRadians(90));
+        Vector2d vector2d = new Vector2d(0, 0);
         PinpointDrive drive = new PinpointDrive(hardwareMap, initialPose);
         VelConstraint pushBlockVelOverride = new TranslationalVelConstraint(30);
         AccelConstraint pushBlockAccelOverride = new ProfileAccelConstraint(-10, 25);
@@ -377,7 +375,7 @@ public class TotalAuto extends LinearOpMode {
         VelConstraint humanVelOverride = new TranslationalVelConstraint(30);
         AccelConstraint humanAccelOverride = new ProfileAccelConstraint(-7, 50);
 
-        TrajectoryActionBuilder park = drive.actionBuilder(initialPose)
+        TrajectoryActionBuilder deprecatedPark = drive.actionBuilder(initialPose)
                 .waitSeconds(.25)
                 .strafeTo(new Vector2d(-10, 30), pushBlockVelOverride, pushBlockAccelOverride)
                 .afterDisp(0, verticalGrabberRR.openGrabber())
@@ -386,7 +384,7 @@ public class TotalAuto extends LinearOpMode {
                 .afterDisp(2, verticalWristRR.takeButter())
                 .strafeTo(new Vector2d(-10, 15), parkVelOverride, parkAccelOverride)
                 .setTangent(0)
-                .splineToLinearHeading(new Pose2d(26, 20,Math.toRadians(-90)),(-1)*Math.toRadians(90), parkAngularOverride, parkAccelOverride)
+                .splineToLinearHeading(new Pose2d(26, 20, Math.toRadians(-90)), (-1) * Math.toRadians(90), parkAngularOverride, parkAccelOverride)
                 .strafeTo(new Vector2d(27, 60), parkVelOverride, parkAccelOverride)
                 .strafeTo(new Vector2d(36, 60), parkAngularOverride, parkAccelOverride)
                 .strafeTo(new Vector2d(36, 18), humanVelOverride, humanAccelOverride)
@@ -397,9 +395,9 @@ public class TotalAuto extends LinearOpMode {
                 .afterTime(0.0, verticalGrabberRR.closeGrabber())
                 .afterTime(0.0, verticalWristRR.wallButter())
                 .waitSeconds(0.5)
-                .strafeTo(new Vector2d(36, 30), parkVelOverride,parkAccelOverride)
+                .strafeTo(new Vector2d(36, 30), parkVelOverride, parkAccelOverride)
                 .setTangent(0)
-                .splineToLinearHeading(new Pose2d(0, 12,Math.toRadians(90)),Math.toRadians(90), parkAngularOverride, parkAccelOverride)
+                .splineToLinearHeading(new Pose2d(0, 12, Math.toRadians(90)), Math.toRadians(90), parkAngularOverride, parkAccelOverride)
                 .afterTime(0.0, verticalSlideRR.liftUp())
                 .afterTime(0.0, verticalWristRR.wallButter())
                 .waitSeconds(.25)
@@ -414,60 +412,125 @@ public class TotalAuto extends LinearOpMode {
                 .waitSeconds(.5);
 
         TrajectoryActionBuilder hang = drive.actionBuilder(initialPose)
-                .afterTime(0.0,verticalSlideRR.liftUp())
-                .afterTime(0.0,verticalWristRR.wallButter())
+                .afterTime(0.0, verticalSlideRR.liftUp())
+                .afterTime(0.0, verticalWristRR.wallButter())
                 .waitSeconds(.25)
-                .strafeTo(new Vector2d(-10, 30), pushBlockVelOverride, pushBlockAccelOverride)
+                .strafeTo(new Vector2d(10*hangSide, 30), pushBlockVelOverride, pushBlockAccelOverride)
                 .afterDisp(0, verticalGrabberRR.openGrabber())
                 .waitSeconds(.2)
                 .afterDisp(2, verticalSlideRR.setDown())
                 .afterDisp(2, verticalWristRR.takeButter())
-                .strafeTo(new Vector2d(-10, 15));
+                .strafeTo(new Vector2d(10*hangSide, 15), pushBlockVelOverride, pushBlockAccelOverride);
+
+        TrajectoryActionBuilder butterLeft = drive.actionBuilder(initialPose)
+                .afterDisp(2, horizontalSlideRR.extendButter())
+                .afterDisp(2, horizontalWristRR.grabButter())
+                .afterDisp(2, horizontalGrabberRR.floorOpen())
+                .strafeToLinearHeading(new Vector2d(35 * butterSide, 34), Math.toRadians(270))
+                .afterTime(0, horizontalGrabberRR.floorClose())
+                .afterTime(0, verticalGrabberRR.openGrabber())
+                .afterTime(.4, horizontalWristRR.inRobot())
+                .afterTime(.4, horizontalSlideRR.retractSlide())
+                .afterTime(1.3, verticalGrabberRR.closeGrabber())
+                .afterTime(1.6, horizontalGrabberRR.floorOpen())
+                .afterTime(1.7, verticalSlideRR.liftUp())
+                .afterTime(1.7, verticalWristRR.placeBasket())
+                .waitSeconds(.5)
+                .strafeToLinearHeading(new Vector2d(40 * butterSide, 20), Math.toRadians(220))
+                .waitSeconds(2)
+                .afterDisp(0, verticalGrabberRR.openGrabber())
+                .afterDisp(1, verticalSlideRR.setDown())
+                .afterDisp(1, verticalWristRR.takeButter())
+                .strafeToLinearHeading(new Vector2d(40 * butterSide, 35), Math.toRadians(270));
+
+        TrajectoryActionBuilder butterRight = drive.actionBuilder(initialPose)
+                .afterDisp(2, horizontalSlideRR.extendButter())
+                .afterDisp(2, horizontalWristRR.grabButter())
+                .afterDisp(2, horizontalGrabberRR.floorOpen())
+                .strafeToLinearHeading(new Vector2d(35 * butterSide, 34), Math.toRadians(270))
+                .afterTime(0, horizontalGrabberRR.floorClose())
+                .waitSeconds(.4)
+                .afterDisp(0, horizontalWristRR.liftButter())
+                .afterDisp(5, horizontalWristRR.grabButter())
+                .strafeToLinearHeading(new Vector2d(35, 20), Math.toRadians(90))
+                .afterDisp(0, horizontalGrabberRR.floorOpen())
+                .afterDisp(2, horizontalGrabberRR.floorClose())
+                .strafeToLinearHeading(new Vector2d(45, 34), Math.toRadians(270))
+                .afterTime(0, horizontalGrabberRR.floorClose())
+                .waitSeconds(.4)
+                .afterDisp(0, horizontalWristRR.liftButter())
+                .afterDisp(5, horizontalWristRR.grabButter())
+                .strafeToLinearHeading(new Vector2d(45, 20), Math.toRadians(90))
+                .afterDisp(0, horizontalGrabberRR.floorOpen())
+                .afterDisp(2, horizontalGrabberRR.floorClose())
+                .strafeToLinearHeading(new Vector2d(55, 34), Math.toRadians(90))
+                .afterTime(0, horizontalGrabberRR.floorClose())
+                .waitSeconds(.4)
+                .afterDisp(0, horizontalWristRR.liftButter())
+                .afterDisp(5, horizontalWristRR.grabButter())
+                .strafeToLinearHeading(new Vector2d(55, 20), Math.toRadians(90))
+                .afterDisp(0, horizontalGrabberRR.floorOpen())
+                .afterTime(1, horizontalSlideRR.retractSlide());
+
+        TrajectoryActionBuilder hangPost = drive.actionBuilder(initialPose)
+                .strafeToLinearHeading(new Vector2d(40, 30), Math.toRadians(270))
+                .waitSeconds(waitHuman)
+                .strafeTo(new Vector2d(40, 18))
+                .afterTime(0, verticalGrabberRR.closeGrabber())
+                .afterTime(.125, verticalWristRR.takeButter())
+                .strafeToLinearHeading(new Vector2d(10*hangSide,5),Math.toRadians(90));
+
+        TrajectoryActionBuilder park = drive.actionBuilder(initialPose)
+                .strafeTo(new Vector2d(50 * parkSide, 10));
 
         //ask the driver which auto they want to run
-        boolean pickRightSide = false;
-        boolean pickLeftSide = false;
-        boolean pickHang = false;
-        boolean pickHuman = false;
-        boolean pickBasket = false;
-        boolean pickPark = false;
         telemetry.clear();
         telemetry.addLine("Which side?");
         telemetry.update();
-        if(gamepad1.square && !gamepad1.circle) {
+        //right side
+        if (gamepad1.square && !gamepad1.circle) {
             pickLeftSide = true;
-            while(!gamepad1.right_bumper){
+            while (!gamepad1.right_bumper) {
                 telemetry.clear();
                 telemetry.addLine("square-hang: " + pickHang);
                 telemetry.addLine("triangle-Basket" + pickBasket);
                 telemetry.addLine("circle-Park" + pickPark);
-                if(gamepad1.square && !gamepad1.triangle && !gamepad1.circle && !gamepad1.cross){
+                if (gamepad1.square && !gamepad1.triangle && !gamepad1.circle && !gamepad1.cross) {
                     pickHang = true;
+                    hangSide = 1;
                 }
-                if(!gamepad1.square && gamepad1.triangle && !gamepad1.circle && !gamepad1.cross){
+                if (!gamepad1.square && gamepad1.triangle && !gamepad1.circle && !gamepad1.cross) {
                     pickBasket = true;
                 }
-                if(!gamepad1.square && !gamepad1.triangle && gamepad1.circle && !gamepad1.cross){
+                if (!gamepad1.square && !gamepad1.triangle && gamepad1.circle && !gamepad1.cross) {
                     pickPark = true;
+                    parkSide = 1;
                 }
                 telemetry.update();
             }
         }
-        if(!gamepad1.square && gamepad1.circle){
+        //left side
+        if (!gamepad1.square && gamepad1.circle) {
             pickRightSide = true;
-            while(!gamepad1.right_bumper) {
+            while (!gamepad1.right_bumper) {
                 telemetry.clear();
                 telemetry.addLine("square-Hang: " + pickHang);
                 telemetry.addLine("triangle-Human: " + pickHuman);
                 telemetry.addLine("circle-Park" + pickPark);
-                if(gamepad1.square && !gamepad1.triangle && !gamepad1.circle && !gamepad1.cross){
+                telemetry.addLine("cross-butter" + pickButter);
+                if (gamepad1.square && !gamepad1.triangle && !gamepad1.circle && !gamepad1.cross) {
                     pickHang = true;
+                    hangSide = -1;
                 }
-                if(!gamepad1.square && gamepad1.triangle && !gamepad1.circle && !gamepad1.cross){
+                if (!gamepad1.square && gamepad1.triangle && !gamepad1.circle && !gamepad1.cross) {
                     pickHuman = true;
                 }
-                if(!gamepad1.square && !gamepad1.triangle && gamepad1.circle && !gamepad1.cross){
+                if (!gamepad1.square && !gamepad1.triangle && gamepad1.circle && !gamepad1.cross) {
                     pickPark = true;
+                }
+                if (!gamepad1.square && !gamepad1.triangle && !gamepad1.circle && gamepad1.cross) {
+                    pickButter = true;
+                    butterSide = -1;
                 }
                 telemetry.update();
             }
@@ -491,17 +554,20 @@ public class TotalAuto extends LinearOpMode {
         if (isStopRequested()) return;
 
         //choose the trajectory
+        //todo figure out how to incorporate this
+        Action trajectoryActionChosen;
+        if (pickLeftSide) {
+            if(pickHang) {
+//                trajectoryActionChosen = trajectoryActionChosen+ hang.build();
+            }
 
+            //run the chosen action blocking
+            Actions.runBlocking(
+                    new SequentialAction(
 
-        //run the chosen action blocking
-        Actions.runBlocking(
-            new SequentialAction(
-                    verticalSlideRR.liftUp(),
-                    verticalWristRR.wallButter(),
-                    park.build(),
-                    wait.build()
-            )
-        );
+                    )
+            );
+        }
     }
 }
 
