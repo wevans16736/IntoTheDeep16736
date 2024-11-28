@@ -41,6 +41,7 @@ public class TotalAuto extends LinearOpMode {
     private VerticalWristRR verticalWristRR = null;
     private HorizontalWristRR horizontalWristRR = null;
     private HorizontalGrabberRR horizontalGrabberRR = null;
+    private HorizontalRollRR horizontalRollRR = null;
 
     public class VerticalSlideRR{
         public DcMotorEx verticalSlide1 = null;
@@ -303,6 +304,29 @@ public class TotalAuto extends LinearOpMode {
             return new FloorOpen();
         }
     }
+    public class HorizontalRollRR{
+        public Servo rollServo;
+        private Telemetry telemetry;
+        private HardwareMap hardwareMap;
+        public double flat = Configuration.flat;
+        public HorizontalRollRR(Telemetry opModeTelemetry, HardwareMap opModeHardware) {
+            this.telemetry = opModeTelemetry;
+            this.hardwareMap = opModeHardware;
+            rollServo = hardwareMap.get(Servo.class, ConfigConstants.HORIZONTAL_ROLL);
+            rollServo.setPosition(flat);
+        }
+        public class Flat implements Action{
+            @Override
+            public boolean run(@NonNull TelemetryPacket telemetryPacket) {
+                rollServo.setPosition(flat);
+                return false;
+            }
+        }
+        public Action flat(){
+            return new Flat();
+        }
+    }
+
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -313,6 +337,7 @@ public class TotalAuto extends LinearOpMode {
         verticalWristRR = new VerticalWristRR(telemetry, hardwareMap);
         horizontalWristRR = new HorizontalWristRR(telemetry, hardwareMap);
         horizontalGrabberRR = new HorizontalGrabberRR(telemetry, hardwareMap);
+        horizontalRollRR = new HorizontalRollRR(telemetry, hardwareMap);
 
         //todo find the correct initial position and put it below
         Pose2d initialPose = new Pose2d(0,0, Math.toRadians(90));
@@ -378,21 +403,8 @@ public class TotalAuto extends LinearOpMode {
                 .afterDisp(2, verticalWristRR.takeButter())
                 .strafeTo(new Vector2d(-10, 15));
 
-        TrajectoryActionBuilder butter = drive.actionBuilder(initialPose)
-                ;
+        TrajectoryActionBuilder butter = drive.actionBuilder(initialPose);
 
-
-
-        //initialize the robot
-        Actions.runBlocking(
-                new SequentialAction(
-                        verticalGrabberRR.closeGrabber(),
-                        verticalWristRR.takeButter(),
-                        horizontalSlideRR.retractSlide(),
-                        horizontalWristRR.inRobot(),
-                        horizontalGrabberRR.floorClose()
-                )
-        );
 
         //ask the driver which auto they want to run
         boolean pickRightSide = false;
@@ -401,11 +413,11 @@ public class TotalAuto extends LinearOpMode {
         boolean pickHuman = false;
         boolean pickBasket = false;
         boolean pickPark = false;
-        while(gamepad1.a =false) {
+//        while(gamepad1.a==false) {
             telemetry.clear();
             telemetry.addLine("Which side?");
             telemetry.update();
-            if (gamepad1.dpad_left == true && gamepad2.dpad_right == false) {
+            if (gamepad1.dpad_left == true && gamepad1.dpad_right == false) {
                 pickLeftSide = true;
                 while(!gamepad1.a){
                     telemetry.clear();
@@ -443,8 +455,19 @@ public class TotalAuto extends LinearOpMode {
                     telemetry.update();
                 }
             }
-        }
+//        }
 
+        //initialize the robot
+        Actions.runBlocking(
+                new SequentialAction(
+                        verticalGrabberRR.closeGrabber(),
+                        verticalWristRR.takeButter(),
+                        horizontalSlideRR.retractSlide(),
+                        horizontalWristRR.inRobot(),
+                        horizontalGrabberRR.floorClose(),
+                        horizontalRollRR.flat()
+                )
+        );
 
         //wait for the start button to be press
         waitForStart();

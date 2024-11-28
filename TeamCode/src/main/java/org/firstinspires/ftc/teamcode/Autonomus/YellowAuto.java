@@ -42,6 +42,7 @@ public class YellowAuto extends LinearOpMode {
     private VerticalWristRR verticalWristRR = null;
     private HorizontalWristRR horizontalWristRR = null;
     private HorizontalGrabberRR horizontalGrabberRR = null;
+    private HorizontalRollRR horizontalRollRR = null;
 
     public class VerticalSlideRR{
         public DcMotorEx verticalSlide1 = null;
@@ -65,7 +66,7 @@ public class YellowAuto extends LinearOpMode {
 
             @Override
             public boolean run(@NonNull TelemetryPacket packet) {
-                int position = -480;
+                int position = -830;
                 double velocity = 1800;
                 if (!initialized) {
                     verticalSlide1.setTargetPosition(position);
@@ -123,8 +124,8 @@ public class YellowAuto extends LinearOpMode {
             HorizontalSlide2.setTargetPosition(0);
             HorizontalSlide2.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         }
-        private boolean initialized = false;
         public class RetractSlide implements Action{
+            private boolean initialized = false;
             @Override
             public boolean run(@NonNull TelemetryPacket packet){
                 int position = 0;
@@ -142,8 +143,31 @@ public class YellowAuto extends LinearOpMode {
                 }
             }
         }
-        public Action retractSlide(){
+        public Action retractSlide() {
             return new RetractSlide();
+        }
+        public class ExtendButter implements Action{
+            private boolean initialized = false;
+            int extend = Configuration.extend;
+            double extendVelocity = Configuration.extendVelocity;
+            public boolean run(@NonNull TelemetryPacket packet) {
+                int position = extend;
+                double velocity = extendVelocity;
+                if (!initialized) {
+                    HorizontalSlide2.setTargetPosition(position);
+                    HorizontalSlide2.setVelocity(velocity);
+                    initialized = true;
+                }
+                double currentPosition = HorizontalSlide2.getCurrentPosition();
+                if(currentPosition > position){
+                    return true;
+                }else {
+                    return false;
+                }
+            }
+        }
+        public Action extendButter(){
+            return new ExtendButter();
         }
     }
     //add a class for the vertical grabber
@@ -304,6 +328,28 @@ public class YellowAuto extends LinearOpMode {
             return new FloorOpen();
         }
     }
+    public class HorizontalRollRR{
+        public Servo rollServo;
+        private Telemetry telemetry;
+        private HardwareMap hardwareMap;
+        public double flat = Configuration.flat;
+        public HorizontalRollRR(Telemetry opModeTelemetry, HardwareMap opModeHardware) {
+            this.telemetry = opModeTelemetry;
+            this.hardwareMap = opModeHardware;
+            rollServo = hardwareMap.get(Servo.class, ConfigConstants.HORIZONTAL_ROLL);
+            rollServo.setPosition(flat);
+        }
+        public class Flat implements Action{
+            @Override
+            public boolean run(@NonNull TelemetryPacket telemetryPacket) {
+                rollServo.setPosition(flat);
+                return false;
+            }
+        }
+        public Action flat(){
+            return new Flat();
+        }
+    }
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -314,6 +360,7 @@ public class YellowAuto extends LinearOpMode {
         verticalWristRR = new VerticalWristRR(telemetry, hardwareMap);
         horizontalWristRR = new HorizontalWristRR(telemetry, hardwareMap);
         horizontalGrabberRR = new HorizontalGrabberRR(telemetry, hardwareMap);
+        horizontalRollRR = new HorizontalRollRR(telemetry, hardwareMap);
 
         //todo find the correct initial position and put it below
         Pose2d initialPose = new Pose2d(0,0, Math.toRadians(90));
@@ -365,14 +412,62 @@ public class YellowAuto extends LinearOpMode {
                 .strafeTo(new Vector2d(30, 8), parkVelOverride, parkAccelOverride);
 
         TrajectoryActionBuilder wait = drive.actionBuilder(initialPose)
-                .waitSeconds(.5);
+                .waitSeconds(2);
 
-        TrajectoryActionBuilder straight = drive.actionBuilder(initialPose)
-                .strafeTo(new Vector2d(0,10))
-                .strafeTo(new Vector2d(10,10))
-                .strafeTo(new Vector2d(10,0))
+        TrajectoryActionBuilder drivetobutter = drive.actionBuilder(initialPose)
+                .afterDisp(2, horizontalSlideRR.extendButter())
+                .afterDisp(2, horizontalGrabberRR.floorOpen())
+                .afterDisp(2, horizontalWristRR.grabButter())
+                .strafeToLinearHeading(new Vector2d(-35,35),Math.toRadians(270))
+                .afterDisp(0, verticalGrabberRR.openGrabber())
+                .afterDisp(0,horizontalGrabberRR.floorClose())
+                .waitSeconds(1)
+                .afterDisp(0,horizontalWristRR.inRobot())
+                .afterDisp(0, horizontalSlideRR.retractSlide())
+                .afterTime(.2, verticalGrabberRR.closeGrabber())
+                .afterTime(.3, horizontalGrabberRR.floorOpen())
+                .afterTime(.4, verticalSlideRR.liftUp())
+                .afterTime(.4, verticalWristRR.placeBasket())
+                .strafeToLinearHeading(new Vector2d(-40, 20), Math.toRadians(220))
+                .afterDisp(0, verticalGrabberRR.openGrabber())
+                .afterDisp(1, verticalWristRR.takeButter())
+                .afterDisp(1, verticalSlideRR.setDown())
+                .strafeToLinearHeading(new Vector2d(-40, 35), Math.toRadians(0));
+
+        TrajectoryActionBuilder yellowButter = drive.actionBuilder(initialPose)
+                .afterDisp(2, horizontalSlideRR.extendButter())
+                .afterDisp(2, horizontalWristRR.grabButter())
+                .afterDisp(2, horizontalGrabberRR.floorOpen())
+                .strafeToLinearHeading(new Vector2d(-35,34),Math.toRadians(270))
+                .afterTime(0, horizontalGrabberRR.floorClose())
+                .afterTime(0, verticalGrabberRR.openGrabber())
+                .afterTime(.4, horizontalWristRR.inRobot())
+                .afterTime(.4, horizontalSlideRR.retractSlide())
+                .afterTime(1.3, verticalGrabberRR.closeGrabber())
+                .afterTime(1.6, horizontalGrabberRR.floorOpen())
+                .afterTime(1.7, verticalSlideRR.liftUp())
+                .afterTime(1.7, verticalWristRR.placeBasket())
+                .waitSeconds(.5)
+                .strafeToLinearHeading(new Vector2d(-40, 20), Math.toRadians(220))
+                .waitSeconds(2)
+                .afterDisp(0, verticalGrabberRR.openGrabber())
+                .afterDisp(1, verticalSlideRR.setDown())
+                .afterDisp(1, verticalWristRR.takeButter())
+                .afterDisp(1, horizontalSlideRR.extendButter())
+                .afterDisp(1, horizontalWristRR.grabButter())
+                .afterDisp(1, horizontalGrabberRR.floorOpen())
+                .strafeToLinearHeading(new Vector2d(-40, 35), Math.toRadians(270));
+
+        TrajectoryActionBuilder trasferSystem = drive.actionBuilder(initialPose)
+                .afterTime(0, horizontalGrabberRR.floorClose())
+                .afterTime(0, verticalGrabberRR.openGrabber())
+                .afterTime(.4, horizontalWristRR.inRobot())
+                .afterTime(.4, horizontalSlideRR.retractSlide())
+                .afterTime(1.4, verticalGrabberRR.closeGrabber())
+                .afterTime(1.6, horizontalGrabberRR.floorOpen())
+                .afterTime(1.7, verticalSlideRR.liftUp())
+                .afterTime(1.7, verticalWristRR.placeBasket())
                 .strafeTo(new Vector2d(0,0));
-
 
         //initialize the robot
         Actions.runBlocking(
@@ -381,25 +476,32 @@ public class YellowAuto extends LinearOpMode {
                         verticalWristRR.takeButter(),
                         horizontalSlideRR.retractSlide(),
                         horizontalWristRR.inRobot(),
-                        horizontalGrabberRR.floorClose()
+                        horizontalGrabberRR.floorClose(),
+                        horizontalRollRR.flat()
                 )
         );
+//        Actions.runBlocking(
+//                new SequentialAction(
+//                        verticalGrabberRR.closeGrabber(),
+//                        verticalWristRR.takeButter(),
+//                        horizontalSlideRR.extendButter(),
+//                        horizontalWristRR.grabButter(),
+//                        horizontalGrabberRR.floorOpen(),
+//                        horizontalRollRR.flat()
+//                )
+//        );
 
         //wait for the start button to be press
         waitForStart();
         //if stop button is press, automatically stop
         if (isStopRequested()) return;
 
-
-
         //run the chosen action blocking
         Actions.runBlocking(
             new SequentialAction(
-                    straight.build()
+                    yellowButter.build(),
+                    wait.build()
             )
         );
     }
 }
-
-
-

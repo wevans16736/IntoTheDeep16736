@@ -8,7 +8,7 @@ public class Configuration{
     //this is a position to grab the butter from the wall or set it on the lower basket or either rung
     public static double forwardDown = 0.24;
     //this is the position to grab the butter from the intake
-    public static double backwardPos = 0.8;
+    public static double backwardPos = 0.75;
 
     //vertical grabber servo position
     public static double open = 0.3;
@@ -16,7 +16,7 @@ public class Configuration{
 
     //horizontal wrist servo position
     //servo position to have the wrist to be at vertical grabber position
-    public static double backwardPosIn = 0.84;
+    public static double backwardPosIn = 0.87;
     //servo position to have grabber slightly above the ground
     public static double backwardPosOut = 0.45;
     //servo position to have grabber grab the butter
@@ -24,6 +24,12 @@ public class Configuration{
 
     //horizontal grabber servo position
     public static double floorClose = 0;
-    public static double floorOpen = .1;
+    public static double floorOpen = .4;
 
+    //horizontal roll servo position
+    public static double flat = 0.075;
+
+    //horizontal slide motor position
+    public static int extend = 1000;
+    public static double extendVelocity = 1800;
 }
