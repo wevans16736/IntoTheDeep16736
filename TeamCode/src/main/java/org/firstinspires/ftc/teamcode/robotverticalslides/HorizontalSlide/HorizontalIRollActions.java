@@ -21,4 +21,8 @@ public class HorizontalIRollActions {
         rollServo = hardwareMap.get(Servo.class, ConfigConstants.HORIZONTAL_ROLL);
         rollServo.setPosition(flat);
     }
+
+    public void setPosition(double position) {
+
+    }
 }
