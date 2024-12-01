@@ -74,11 +74,14 @@ public class TotalAuto extends LinearOpMode {
             verticalSlide2.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         }
         public class Liftup implements Action {
+            int position = Configuration.highBar;
             private boolean initialized = false;
+            public Liftup(int p){
+                this.position = p;
+            }
 
             @Override
             public boolean run(@NonNull TelemetryPacket packet) {
-                int position = Configuration.highBar;
                 double velocity = 1800;
                 if (!initialized) {
                     verticalSlide1.setTargetPosition(position);
@@ -96,8 +99,8 @@ public class TotalAuto extends LinearOpMode {
                 }
             }
         }
-        public Action liftUp(){
-            return new Liftup();
+        public Action liftUp(int p){
+            return new Liftup(p);
         }
         public class SetDown implements Action{
             private boolean initialized = false;
@@ -398,7 +401,7 @@ public class TotalAuto extends LinearOpMode {
                 .strafeTo(new Vector2d(36, 30), parkVelOverride, parkAccelOverride)
                 .setTangent(0)
                 .splineToLinearHeading(new Pose2d(0, 12, Math.toRadians(90)), Math.toRadians(90), parkAngularOverride, parkAccelOverride)
-                .afterTime(0.0, verticalSlideRR.liftUp())
+                .afterTime(0.0, verticalSlideRR.liftUp(Configuration.highBar))
                 .afterTime(0.0, verticalWristRR.wallButter())
                 .waitSeconds(.25)
                 .strafeTo(new Vector2d(-7, 31), pushBlockVelOverride, pushBlockAccelOverride)
@@ -412,7 +415,7 @@ public class TotalAuto extends LinearOpMode {
                 .waitSeconds(.5);
 
         TrajectoryActionBuilder hang = drive.actionBuilder(initialPose)
-                .afterTime(0.0, verticalSlideRR.liftUp())
+                .afterTime(0.0, verticalSlideRR.liftUp(Configuration.highBar))
                 .afterTime(0.0, verticalWristRR.wallButter())
                 .waitSeconds(.25)
                 .strafeTo(new Vector2d(10*hangSide, 30), pushBlockVelOverride, pushBlockAccelOverride)
@@ -433,7 +436,7 @@ public class TotalAuto extends LinearOpMode {
                 .afterTime(.4, horizontalSlideRR.retractSlide())
                 .afterTime(1.3, verticalGrabberRR.closeGrabber())
                 .afterTime(1.6, horizontalGrabberRR.floorOpen())
-                .afterTime(1.7, verticalSlideRR.liftUp())
+                .afterTime(1.7, verticalSlideRR.liftUp(Configuration.highBar))
                 .afterTime(1.7, verticalWristRR.placeBasket())
                 .waitSeconds(.5)
                 .strafeToLinearHeading(new Vector2d(40 * butterSide, 20), Math.toRadians(220))
@@ -564,7 +567,6 @@ public class TotalAuto extends LinearOpMode {
             //run the chosen action blocking
             Actions.runBlocking(
                     new SequentialAction(
-
                     )
             );
         }
