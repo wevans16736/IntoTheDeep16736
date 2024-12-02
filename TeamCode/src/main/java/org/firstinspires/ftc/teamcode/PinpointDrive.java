@@ -127,7 +127,6 @@ public class PinpointDrive extends MecanumDrive {
         return pinpoint.getVelocityRR();
     }
 
-
     // for debug logging
     public static final class FTCPoseMessage {
         public long timestamp;
@@ -142,9 +141,9 @@ public class PinpointDrive extends MecanumDrive {
             this.heading = pose.getHeading(AngleUnit.RADIANS);
         }
     }
-    public Pose2d getPoseX(){
-        return lastPinpointPose;
-    }
+//    public Pose2d getPoseX(){
+//
+//    }
 
 
 
