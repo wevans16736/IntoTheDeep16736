@@ -1,7 +1,6 @@
 package org.firstinspires.ftc.teamcode.Autonomus;
 
 // RR-specific imports
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
@@ -39,6 +38,18 @@ import java.util.Arrays;
 public class FinalAuto extends LinearOpMode {
     Pose2d currentPose = new Pose2d(0,0,Math.toRadians(90));
     PinpointDrive drive = new PinpointDrive(hardwareMap, currentPose);
+    VerticalSlideRR verticalSlideRR = new VerticalSlideRR(hardwareMap);
+    HorizontalSlideRR horizontalSlideRR = new HorizontalSlideRR(hardwareMap, telemetry);
+
+    VerticalGrabberRR verticalGrabberRR = new VerticalGrabberRR(hardwareMap, telemetry);
+    HorizontalGrabberRR horizontalIntakeRR = new HorizontalGrabberRR(hardwareMap, telemetry);
+
+    VerticalWristRR verticalWristRR = new VerticalWristRR(hardwareMap, telemetry);
+    HorizontalWristRR horizontalWristRR = new HorizontalWristRR(hardwareMap, telemetry);
+
+    HorizontalRollRR horizontalRollRR = new HorizontalRollRR(hardwareMap, telemetry);
+
+    ConfigPose configPose = new ConfigPose();
     public class VerticalSlideRR {
         public DcMotorEx verticalSlide1 = null;
         public DcMotorEx verticalSlide2 = null;
@@ -289,28 +300,33 @@ public class FinalAuto extends LinearOpMode {
         }
         public Action updatePose() {return new UpdatePose();}
     }
-
+    public class RobotSpecial{
+        public class TransferSystem implements Action {
+            public boolean run(@NonNull TelemetryPacket packet) {
+                horizontalWristRR.horizontalWristPosition(Configuration.backwardPos);
+                sleep(500);
+                return false;
+            }
+        }
+    }
 
     @Override
     public void runOpMode() throws InterruptedException {
-        VerticalSlideRR verticalSlideRR = new VerticalSlideRR(hardwareMap);
-        HorizontalSlideRR horizontalSlideRR = new HorizontalSlideRR(hardwareMap, telemetry);
 
-        VerticalGrabberRR verticalGrabberRR = new VerticalGrabberRR(hardwareMap, telemetry);
-        HorizontalGrabberRR horizontalIntakeRR = new HorizontalGrabberRR(hardwareMap, telemetry);
+        VelConstraint hangVelocity = new TranslationalVelConstraint(30);
+        AccelConstraint hangAcceleration = new ProfileAccelConstraint(-10, 25);
 
-        VerticalWristRR verticalWristRR = new VerticalWristRR(hardwareMap, telemetry);
-        HorizontalWristRR horizontalWristRR = new HorizontalWristRR(hardwareMap, telemetry);
-
-        HorizontalRollRR horizontalRollRR = new HorizontalRollRR(hardwareMap, telemetry);
-
-        ConfigPose configPose = new ConfigPose();
+        VelConstraint ButterAngular = new MinVelConstraint(Arrays.asList(
+                new TranslationalVelConstraint(60),
+                new AngularVelConstraint(Math.toRadians(90))
+        ));
+        AccelConstraint ButterAcceleration = new ProfileAccelConstraint(-50, 50);
 
         TrajectoryActionBuilder hang = drive.actionBuilder(currentPose)
                 .afterDisp(0, horizontalIntakeRR.horizontalIntakePosition(Configuration.open))
                 .afterTime(.5, verticalSlideRR.verticalSlidePosition(Configuration.highBar))
                 .afterDisp(1, verticalWristRR.verticalWristPosition(Configuration.forwardDown))
-                .strafeTo(new Vector2d(10, 30))
+                .strafeTo(new Vector2d(10, 30), hangVelocity, hangAcceleration)
                 .waitSeconds(.25)
                 .afterDisp(0, verticalGrabberRR.verticalGrabberPosition(Configuration.open))
                 .afterDisp(3, verticalGrabberRR.verticalGrabberPosition(Configuration.close))
@@ -319,7 +335,16 @@ public class FinalAuto extends LinearOpMode {
                 .afterTime(0, configPose.updatePose());
 
         TrajectoryActionBuilder rightPickButter = drive.actionBuilder(currentPose)
-                .splineToLinearHeading(new Pose2d(0,0,0),0);
+                .splineToLinearHeading(new Pose2d(17, 15,0), 0, ButterAngular, ButterAcceleration)
+                .afterDisp(0, horizontalSlideRR.horizontalSlidePosition(Configuration.extend))
+                .afterDisp(0, horizontalWristRR.horizontalWristPosition(Configuration.forwardPosOut))
+                .afterDisp(0, horizontalIntakeRR.horizontalIntakePosition(Configuration.floorOpen))
+                .splineToLinearHeading(new Pose2d(35, 33, Math.toRadians(90)), Math.toRadians(90),ButterAngular, ButterAcceleration)
+                .afterDisp(0, horizontalIntakeRR.horizontalIntakePosition(Configuration.close))
+                .afterTime(1, horizontalWristRR.horizontalWristPosition(Configuration.forwardPosOut));
+
+
     }
+
 
 }
