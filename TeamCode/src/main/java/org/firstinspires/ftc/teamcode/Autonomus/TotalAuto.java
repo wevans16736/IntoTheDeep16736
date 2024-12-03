@@ -379,7 +379,6 @@ public class TotalAuto extends LinearOpMode {
         }
     }
 
-
     @Override
     public void runOpMode() throws InterruptedException {
 
