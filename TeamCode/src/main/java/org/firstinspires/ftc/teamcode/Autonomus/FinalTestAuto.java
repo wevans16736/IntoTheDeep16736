@@ -6,11 +6,17 @@ import androidx.annotation.NonNull;
 
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
+import com.acmerobotics.roadrunner.AccelConstraint;
 import com.acmerobotics.roadrunner.Action;
+import com.acmerobotics.roadrunner.AngularVelConstraint;
+import com.acmerobotics.roadrunner.MinVelConstraint;
 import com.acmerobotics.roadrunner.Pose2d;
+import com.acmerobotics.roadrunner.ProfileAccelConstraint;
 import com.acmerobotics.roadrunner.SequentialAction;
 import com.acmerobotics.roadrunner.TrajectoryActionBuilder;
+import com.acmerobotics.roadrunner.TranslationalVelConstraint;
 import com.acmerobotics.roadrunner.Vector2d;
+import com.acmerobotics.roadrunner.VelConstraint;
 import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -24,9 +30,11 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.PinpointDrive;
 import org.firstinspires.ftc.teamcode.robotverticalslides.constants.ConfigConstants;
 
+import java.util.Arrays;
+
 @Config
-@Autonomous(name = "Final Auto", group = "Autonomous")
-public class FinalAuto extends LinearOpMode {
+@Autonomous(name = "Final Test Auto", group = "Autonomous")
+public class FinalTestAuto extends LinearOpMode {
     public class VerticalSlideRR {
         public DcMotorEx verticalSlide1 = null;
         public DcMotorEx verticalSlide2 = null;
@@ -85,7 +93,7 @@ public class FinalAuto extends LinearOpMode {
         public HorizontalSlideRR(HardwareMap hardwareMap, Telemetry telemetry) {
             this.telemetry = telemetry;
             horizontalSlide2 = hardwareMap.get(DcMotorEx.class, ConfigConstants.HORIZONTAL_SLIDE2);
-            horizontalSlide2.setDirection(DcMotorSimple.Direction.FORWARD);
+            horizontalSlide2.setDirection(DcMotorSimple.Direction.REVERSE);
             horizontalSlide2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             horizontalSlide2.setTargetPosition(0);
             horizontalSlide2.setMode(DcMotor.RunMode.RUN_TO_POSITION);
@@ -107,7 +115,7 @@ public class FinalAuto extends LinearOpMode {
 
             @Override
             public boolean run(@NonNull TelemetryPacket packet) {
-                double velocity = 1800;
+                double velocity = 3600;
                 if (!initialized) {
                     horizontalSlide2.setTargetPosition(position);
                     horizontalSlide2.setVelocity(velocity);
@@ -287,58 +295,168 @@ public class FinalAuto extends LinearOpMode {
         Actions.runBlocking(new SequentialAction(
                 horizontalSlideRR.horizontalSlidePosition(Configuration.retractSlide),
                 verticalSlideRR.verticalSlidePosition(Configuration.bottom),
-                horizontalIntakeRR.horizontalIntakePosition(Configuration.floorClose),
+
+                horizontalIntakeRR.horizontalIntakePosition(Configuration.floorOpen),
                 verticalGrabberRR.verticalGrabberPosition(Configuration.close),
-                horizontalWristRR.horizontalWristPosition(.7),
+
+                horizontalWristRR.horizontalWristPosition(Configuration.backwardPosIn),
                 verticalWristRR.verticalWristPosition(Configuration.backwardPos),
                 horizontalRollRR.horizontalRollPosition(Configuration.flat)
         ));
-
-        boolean pickRight = false;
-        boolean pickLeft = false;
-        boolean pickHang = false;
-        boolean pickButter = false;
-
-        telemetry.clearAll();
-        while(!gamepad1.cross) {
-            telemetry.addLine("Which Side");
-            telemetry.addLine("right: "+ pickRight);
-            telemetry.addLine("left: "+ pickLeft);
-            if(gamepad1.square && !gamepad1.circle){
-                pickRight = false;
-                pickLeft = true;
-            }
-            if(!gamepad1.square && gamepad1.circle){
-                pickRight = true;
-                pickLeft = false;
-            }
-            telemetry.update();
-        }
-        if(pickRight){
-            telemetry.clearAll();
-            while(!gamepad1.right_bumper){
-                telemetry.addLine("square-hang: "+ pickHang);
-                telemetry.addLine("triangle-butter"+ pickButter);
-                if(gamepad1.square && !gamepad1.triangle && !gamepad1.circle && !gamepad1.cross){
-                    pickHang = true;
-                }
-                if(!gamepad1.square && gamepad1.triangle && !gamepad1.circle && !gamepad1.cross){
-                    pickButter = true;
-                }
-                telemetry.update();
-            }
-        }
+//
+//        boolean pickRight = false;
+//        boolean pickLeft = false;
+//        boolean pickHang = false;
+//        boolean pickButter = false;
+//
+//        telemetry.clearAll();
+//        while(!gamepad1.cross) {
+//            telemetry.addLine("Which Side?" + pickRight);
+//            if(gamepad1.square && !gamepad1.circle){
+//                pickRight = false;
+//                pickLeft = true;
+//            }
+//            if(!gamepad1.square && gamepad1.circle){
+//                pickRight = true;
+//                pickLeft = false;
+//            }
+//            telemetry.update();
+//        }
+//        if(pickRight){
+//            telemetry.clearAll();
+//            while(!gamepad1.right_bumper){
+//                telemetry.addLine("square-hang: "+ pickHang);
+//                telemetry.addLine("triangle-butter"+ pickButter);
+//                if(gamepad1.square && !gamepad1.triangle && !gamepad1.circle && !gamepad1.cross){
+//                    pickHang = true;
+//                }
+//                if(!gamepad1.square && gamepad1.triangle && !gamepad1.circle && !gamepad1.cross){
+//                    pickButter = true;
+//                }
+//                telemetry.update();
+//            }
+//        }
 
         //wait for the start button to be press
         waitForStart();
         //if the stop button press then stop the robot
         if (isStopRequested()) return;
 
+        VelConstraint hangVelocity = new TranslationalVelConstraint(30);
+        AccelConstraint hangAcceleration = new ProfileAccelConstraint(-10, 25);
+
+        VelConstraint parkVelOverride = new TranslationalVelConstraint(50);
+        VelConstraint parkAngularOverride = new MinVelConstraint(Arrays.asList(
+                new TranslationalVelConstraint(30),
+                new AngularVelConstraint(Math.toRadians(90))
+        ));
+        AccelConstraint parkAccelOverride = new ProfileAccelConstraint(-50, 50);
+
+        VelConstraint humanVelOverride = new TranslationalVelConstraint(30);
+        AccelConstraint humanAccelOverride = new ProfileAccelConstraint(-7, 50);
+
+
         TrajectoryActionBuilder startPosition = drive.actionBuilder(currentPose);
 
+        TrajectoryActionBuilder hang = drive.actionBuilder(currentPose)
+                .afterTime(0, verticalSlideRR.verticalSlidePosition(Configuration.highBar))
+                .afterTime(0, verticalWristRR.verticalWristPosition(Configuration.forwardDown))
+                .waitSeconds(.25)
+                .strafeTo(new Vector2d(-10, 29), hangVelocity, hangAcceleration)
+                .waitSeconds(.25)
+                .afterTime(0, verticalGrabberRR.verticalGrabberPosition(Configuration.open))
+                .afterTime(.5, verticalGrabberRR.verticalGrabberPosition(Configuration.close))
+                .afterTime(.5, verticalWristRR.verticalWristPosition(Configuration.backwardPos))
+                .afterTime(.25, verticalSlideRR.verticalSlidePosition(0))
+                .strafeTo(new Vector2d(-10, 25),parkVelOverride, parkAccelOverride)
+                .waitSeconds(1);
 
-        TrajectoryActionBuilder choosenTrajectory;
-        new SequentialAction(startPosition.build());
-        choosenTrajectory = startPosition;
+        TrajectoryActionBuilder chosenTrajectory;
+        Actions.runBlocking(new SequentialAction(startPosition.build()));
+        chosenTrajectory = startPosition;
+
+        Action actionHang = chosenTrajectory.endTrajectory().fresh()
+                .afterTime(0, verticalSlideRR.verticalSlidePosition(Configuration.highBar))
+                .afterTime(0, verticalWristRR.verticalWristPosition(Configuration.forwardDown))
+                .waitSeconds(.25)
+                .strafeTo(new Vector2d(-10, 29), hangVelocity, hangAcceleration)
+                .waitSeconds(.25)
+                .afterTime(0, verticalGrabberRR.verticalGrabberPosition(Configuration.open))
+                .afterTime(.5, verticalGrabberRR.verticalGrabberPosition(Configuration.close))
+                .afterTime(.5, verticalWristRR.verticalWristPosition(Configuration.backwardPos))
+                .afterTime(.25, verticalSlideRR.verticalSlidePosition(0))
+                .strafeTo(new Vector2d(-10, 25),parkVelOverride, parkAccelOverride)
+                .build();
+        Actions.runBlocking(new SequentialAction(actionHang));
+        chosenTrajectory = hang;
+
+        Action actionRightButter = chosenTrajectory.endTrajectory().fresh()
+                .afterTime(0,horizontalSlideRR.horizontalSlidePosition(Configuration.extend))
+                .afterTime(0, horizontalWristRR.horizontalWristPosition(Configuration.forwardPosOut))
+                .afterTime(0, horizontalIntakeRR.horizontalIntakePosition(Configuration.floorOpen))
+                .splineToLinearHeading(new Pose2d(20,13, Math.toRadians(0)), Math.toRadians(0), parkAngularOverride, parkAccelOverride)
+                .splineToLinearHeading(new Pose2d(34.5, 31, Math.toRadians(-90)), Math.toRadians(90), parkVelOverride, parkAccelOverride)
+                .afterTime(0, horizontalIntakeRR.horizontalIntakePosition(Configuration.floorClose))
+                .waitSeconds(.5)
+                .afterTime(0, horizontalWristRR.horizontalWristPosition(Configuration.backwardPosOut))
+                .splineToLinearHeading(new Pose2d(36, 19, Math.toRadians(90)), Math.toRadians(-90), parkAngularOverride, parkAccelOverride)
+                .afterTime(0, horizontalIntakeRR.horizontalIntakePosition(Configuration.floorOpen))
+                .splineToLinearHeading(new Pose2d(33, 24, Math.toRadians(90)), Math.toRadians(180), parkAngularOverride, parkAccelOverride)
+                .splineToLinearHeading(new Pose2d(44.5, 31, Math.toRadians(-90)), Math.toRadians(90), parkAngularOverride, parkAccelOverride)
+                .afterTime(0, horizontalIntakeRR.horizontalIntakePosition(Configuration.floorClose))
+                .waitSeconds(.5)
+                .afterTime(0, horizontalWristRR.horizontalWristPosition(Configuration.backwardPosOut))
+                .splineToLinearHeading(new Pose2d(36, 19, Math.toRadians(90)), Math.toRadians(-90), parkAngularOverride, parkAccelOverride)
+                .afterTime(0, horizontalIntakeRR.horizontalIntakePosition(Configuration.floorOpen))
+                .afterTime( 2, horizontalWristRR.horizontalWristPosition(Configuration.forwardPosOut))
+                .splineToLinearHeading(new Pose2d(33, 24, Math.toRadians(45)), Math.toRadians(180), parkAngularOverride, parkAccelOverride)
+                .afterTime(0, horizontalRollRR.horizontalRollPosition(Configuration.sideway))
+                .splineToLinearHeading(new Pose2d(44.5, 29, Math.toRadians(-90)), Math.toRadians(180), parkAngularOverride, parkAccelOverride)
+                .waitSeconds(5)
+                .build();
+
+        Actions.runBlocking(new SequentialAction(actionRightButter));
+
+
+//        TrajectoryActionBuilder butter = drive.actionBuilder(currentPose)
+//                .strafeTo(new Vector2d(20, 15));
+//
+//        TrajectoryActionBuilder moveUp = drive.actionBuilder(currentPose)
+//                .strafeTo(new Vector2d(0, 20))
+//                .waitSeconds(1);
+//
+//        TrajectoryActionBuilder moveRight = drive.actionBuilder(currentPose)
+//                .strafeTo(new Vector2d(20, 20))
+//                .waitSeconds(1);
+
+
+
+//        TrajectoryActionBuilder chosenTrajectory;
+//        Actions.runBlocking(new SequentialAction(startPosition.build()));
+//        chosenTrajectory = startPosition;
+
+//        if(true){
+//            if(false){
+//                Action actionMoveUp = chosenTrajectory.endTrajectory().fresh()
+//                        .strafeTo(new Vector2d(0, 20))
+//                        .waitSeconds(1)
+//                        .build();
+//                Actions.runBlocking(new SequentialAction(actionMoveUp));
+//                chosenTrajectory = moveUp;
+//            }
+//            if(true){
+//                Action actionMoveRight = chosenTrajectory.endTrajectory().fresh()
+//                        .strafeTo(new Vector2d(20, 20))
+//                        .waitSeconds(1)
+//                        .build();
+//                Actions.runBlocking(new SequentialAction(actionMoveRight));
+//                chosenTrajectory = moveRight;
+//            }
+//            Action actionMoveDown = chosenTrajectory.endTrajectory().fresh()
+//                    .strafeTo(new Vector2d(20,0))
+//                    .waitSeconds(1)
+//                    .build();
+//            Actions.runBlocking(new SequentialAction(actionMoveDown));
+//        }
     }
 }

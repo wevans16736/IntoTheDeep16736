@@ -34,6 +34,7 @@ public class Configuration{
 
     //horizontal roll servo position
     public static double flat = 0.075;
+    public static double sideway = .38;
 
     //horizontal slide motor position
     public static int retractSlide = 0;
