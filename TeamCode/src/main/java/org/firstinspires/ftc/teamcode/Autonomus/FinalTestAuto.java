@@ -15,6 +15,7 @@ import com.acmerobotics.roadrunner.ProfileAccelConstraint;
 import com.acmerobotics.roadrunner.SequentialAction;
 import com.acmerobotics.roadrunner.TrajectoryActionBuilder;
 import com.acmerobotics.roadrunner.TranslationalVelConstraint;
+import com.acmerobotics.roadrunner.TurnConstraints;
 import com.acmerobotics.roadrunner.Vector2d;
 import com.acmerobotics.roadrunner.VelConstraint;
 import com.acmerobotics.roadrunner.ftc.Actions;
@@ -337,23 +338,33 @@ public class FinalTestAuto extends LinearOpMode {
 //            }
 //        }
 
+
+
         //wait for the start button to be press
         waitForStart();
         //if the stop button press then stop the robot
         if (isStopRequested()) return;
 
-        VelConstraint hangVelocity = new TranslationalVelConstraint(30);
-        AccelConstraint hangAcceleration = new ProfileAccelConstraint(-10, 25);
-
-        VelConstraint parkVelOverride = new TranslationalVelConstraint(50);
-        VelConstraint parkAngularOverride = new MinVelConstraint(Arrays.asList(
-                new TranslationalVelConstraint(30),
+        VelConstraint hangAngularOverride = new MinVelConstraint(Arrays.asList(
+                new TranslationalVelConstraint(50),
                 new AngularVelConstraint(Math.toRadians(90))
         ));
-        AccelConstraint parkAccelOverride = new ProfileAccelConstraint(-50, 50);
+        AccelConstraint hangAcceleration = new ProfileAccelConstraint(-30, 50);
 
-        VelConstraint humanVelOverride = new TranslationalVelConstraint(30);
-        AccelConstraint humanAccelOverride = new ProfileAccelConstraint(-7, 50);
+        VelConstraint parkVelOverride = new TranslationalVelConstraint(100);
+        VelConstraint parkAngularOverride = new MinVelConstraint(Arrays.asList(
+                new TranslationalVelConstraint(100),
+                new AngularVelConstraint(Math.toRadians(80))
+        ));
+        AccelConstraint parkAccelOverride = new ProfileAccelConstraint(-100, 100);
+
+        VelConstraint humanAngularOverride = new MinVelConstraint(Arrays.asList(
+                new TranslationalVelConstraint(50),
+                new AngularVelConstraint(Math.toRadians(180))
+        ));
+        AccelConstraint humanAccelOverride = new ProfileAccelConstraint(-15, 50);
+
+        TurnConstraints turnConstraints = new TurnConstraints(Math.toRadians(180), -Math.toRadians(450), Math.toRadians(360));
 
 
         TrajectoryActionBuilder startPosition = drive.actionBuilder(currentPose);
@@ -362,14 +373,78 @@ public class FinalTestAuto extends LinearOpMode {
                 .afterTime(0, verticalSlideRR.verticalSlidePosition(Configuration.highBar))
                 .afterTime(0, verticalWristRR.verticalWristPosition(Configuration.forwardDown))
                 .waitSeconds(.25)
-                .strafeTo(new Vector2d(-10, 29), hangVelocity, hangAcceleration)
-                .waitSeconds(.25)
+                .strafeTo(new Vector2d(-16, 30), hangAngularOverride, hangAcceleration)
+                .waitSeconds(.125)
                 .afterTime(0, verticalGrabberRR.verticalGrabberPosition(Configuration.open))
                 .afterTime(.5, verticalGrabberRR.verticalGrabberPosition(Configuration.close))
                 .afterTime(.5, verticalWristRR.verticalWristPosition(Configuration.backwardPos))
                 .afterTime(.25, verticalSlideRR.verticalSlidePosition(0))
-                .strafeTo(new Vector2d(-10, 25),parkVelOverride, parkAccelOverride)
-                .waitSeconds(1);
+                .strafeTo(new Vector2d(-10, 25),parkVelOverride, parkAccelOverride);
+
+
+//        TrajectoryActionBuilder butterRight = drive.actionBuilder(currentPose)
+////                //first butter
+////                .splineToLinearHeading(new Pose2d(20,13, Math.toRadians(0)), Math.toRadians(0), parkAngularOverride, parkAccelOverride)
+////                .afterTime(0,horizontalSlideRR.horizontalSlidePosition(Configuration.extend))
+////                .afterTime(0, horizontalWristRR.horizontalWristPosition(Configuration.forwardPosOut))
+////                .afterTime(0, horizontalIntakeRR.horizontalIntakePosition(Configuration.floorOpen))
+////                .splineToLinearHeading(new Pose2d(34.25, 29.9, Math.toRadians(-90)), Math.toRadians(90), hangAngularOverride, parkAccelOverride)
+////                .afterTime(0, horizontalIntakeRR.horizontalIntakePosition(Configuration.floorClose))
+////                .waitSeconds(.5)
+////                .afterTime(0, horizontalWristRR.horizontalWristPosition(Configuration.backwardPosOut))
+////                .splineToLinearHeading(new Pose2d(35, 19, Math.toRadians(90)), Math.toRadians(-90), parkAngularOverride, parkAccelOverride)
+////                .afterTime(0, horizontalIntakeRR.horizontalIntakePosition(Configuration.floorOpen))
+////                .waitSeconds(.5)
+////
+////                //second butter
+////                .afterTime(0, horizontalWristRR.horizontalWristPosition(Configuration.forwardPosOut))
+////                .turn(Math.toRadians(180), turnConstraints)
+////                .strafeToLinearHeading(new Vector2d(47, 30.5), Math.toRadians(-90), parkAngularOverride, parkAccelOverride)
+////                .afterTime(0, horizontalIntakeRR.horizontalIntakePosition(Configuration.floorClose))
+////                .waitSeconds(.5)
+////                .afterTime(0, horizontalWristRR.horizontalWristPosition(Configuration.backwardPosOut))
+////                .splineToLinearHeading(new Pose2d(36, 19, Math.toRadians(90)), Math.toRadians(-90), parkAngularOverride, parkAccelOverride)
+////                .afterTime(0, horizontalIntakeRR.horizontalIntakePosition(Configuration.floorOpen))
+////                .waitSeconds(.5)
+////                .afterTime(0, horizontalIntakeRR.horizontalIntakePosition(Configuration.floorOpen))
+////                .afterTime(.25, horizontalIntakeRR.horizontalIntakePosition(Configuration.floorClose))
+////                .afterTime(.25, horizontalSlideRR.horizontalSlidePosition(Configuration.retractSlide))
+////                .afterTime(.25, horizontalWristRR.horizontalWristPosition(Configuration.backwardPosIn))
+////                .afterTime(.25, horizontalRollRR.horizontalRollPosition(Configuration.flat));
+
+        TrajectoryActionBuilder postHang = drive.actionBuilder(currentPose)
+                .afterTime(0, verticalWristRR.verticalWristPosition(Configuration.forwardDown))
+                .afterTime(0, verticalGrabberRR.verticalGrabberPosition(Configuration.open))
+                .strafeTo(new Vector2d(39, 20))
+                .turn(Math.toRadians(180), turnConstraints)
+                .strafeTo(new Vector2d(39, 19), humanAngularOverride, humanAccelOverride)
+                .afterTime(0, verticalGrabberRR.verticalGrabberPosition(Configuration.close))
+                .afterTime(.4, verticalSlideRR.verticalSlidePosition(-100))
+                .waitSeconds(.45)
+                .turn(Math.toRadians(180), turnConstraints)
+                .afterTime(0, verticalSlideRR.verticalSlidePosition(Configuration.highBar))
+                .strafeTo(new Vector2d(39, 12), parkAngularOverride, parkAccelOverride)
+                .afterTime(0, verticalWristRR.verticalWristPosition(Configuration.forwardDown))
+                .splineToLinearHeading(new Pose2d(-12, 29, Math.toRadians(90)), Math.toRadians(90), hangAngularOverride, hangAcceleration)
+                .waitSeconds(.125)
+                .afterTime(0, verticalGrabberRR.verticalGrabberPosition(Configuration.open))
+                .afterTime(.25, verticalSlideRR.verticalSlidePosition(0))
+                .strafeTo(new Vector2d(-10, 24), parkVelOverride, parkAccelOverride)
+                //second hang
+                .turn(Math.toRadians(180), turnConstraints)
+                .strafeToLinearHeading(new Vector2d(39, 27), Math.toRadians(-90), parkAngularOverride, parkAccelOverride)
+                .strafeTo(new Vector2d(39, 18), parkVelOverride, parkAccelOverride)
+                .afterTime(0, verticalGrabberRR.verticalGrabberPosition(Configuration.close))
+                .afterTime(.4, verticalSlideRR.verticalSlidePosition(-100))
+                .waitSeconds(.45)
+                .afterTime(0, verticalWristRR.verticalWristPosition(Configuration.forwardDown))
+                .afterTime(0, verticalSlideRR.verticalSlidePosition(Configuration.highBar))
+                .strafeTo(new Vector2d(39, 23), parkAngularOverride, parkAccelOverride)
+                .splineToLinearHeading(new Pose2d(-8, 29, Math.toRadians(90)), Math.toRadians(90), hangAngularOverride, hangAcceleration)
+                .waitSeconds(.125)
+                .afterTime(0, verticalGrabberRR.verticalGrabberPosition(Configuration.open))
+                .afterTime(0, verticalWristRR.verticalWristPosition(Configuration.backwardPos))
+                .afterTime(.25, verticalSlideRR.verticalSlidePosition(0));
 
         TrajectoryActionBuilder chosenTrajectory;
         Actions.runBlocking(new SequentialAction(startPosition.build()));
@@ -379,8 +454,8 @@ public class FinalTestAuto extends LinearOpMode {
                 .afterTime(0, verticalSlideRR.verticalSlidePosition(Configuration.highBar))
                 .afterTime(0, verticalWristRR.verticalWristPosition(Configuration.forwardDown))
                 .waitSeconds(.25)
-                .strafeTo(new Vector2d(-10, 29), hangVelocity, hangAcceleration)
-                .waitSeconds(.25)
+                .strafeTo(new Vector2d(-16, 28), hangAngularOverride, hangAcceleration)
+                .waitSeconds(.125)
                 .afterTime(0, verticalGrabberRR.verticalGrabberPosition(Configuration.open))
                 .afterTime(.5, verticalGrabberRR.verticalGrabberPosition(Configuration.close))
                 .afterTime(.5, verticalWristRR.verticalWristPosition(Configuration.backwardPos))
@@ -391,72 +466,95 @@ public class FinalTestAuto extends LinearOpMode {
         chosenTrajectory = hang;
 
         Action actionRightButter = chosenTrajectory.endTrajectory().fresh()
+                //first butter
+                .splineToLinearHeading(new Pose2d(20,13, Math.toRadians(0)), Math.toRadians(0), parkAngularOverride, parkAccelOverride)
                 .afterTime(0,horizontalSlideRR.horizontalSlidePosition(Configuration.extend))
                 .afterTime(0, horizontalWristRR.horizontalWristPosition(Configuration.forwardPosOut))
                 .afterTime(0, horizontalIntakeRR.horizontalIntakePosition(Configuration.floorOpen))
-                .splineToLinearHeading(new Pose2d(20,13, Math.toRadians(0)), Math.toRadians(0), parkAngularOverride, parkAccelOverride)
-                .splineToLinearHeading(new Pose2d(34.5, 31, Math.toRadians(-90)), Math.toRadians(90), parkVelOverride, parkAccelOverride)
+                .splineToLinearHeading(new Pose2d(34.25, 29.9, Math.toRadians(-90)), Math.toRadians(90), hangAngularOverride, parkAccelOverride)
+                .afterTime(0, horizontalIntakeRR.horizontalIntakePosition(Configuration.floorClose))
+                .waitSeconds(.5)
+                .afterTime(0, horizontalWristRR.horizontalWristPosition(Configuration.backwardPosOut))
+                .splineToLinearHeading(new Pose2d(35, 19, Math.toRadians(90)), Math.toRadians(-90), parkAngularOverride, parkAccelOverride)
+                .afterTime(0, horizontalIntakeRR.horizontalIntakePosition(Configuration.floorOpen))
+                .waitSeconds(.5)
+
+                //second butter
+                .afterTime(0, horizontalWristRR.horizontalWristPosition(Configuration.forwardPosOut))
+                .turn(Math.toRadians(180), turnConstraints)
+                .strafeToLinearHeading(new Vector2d(47, 30.5), Math.toRadians(-90), parkAngularOverride, parkAccelOverride)
                 .afterTime(0, horizontalIntakeRR.horizontalIntakePosition(Configuration.floorClose))
                 .waitSeconds(.5)
                 .afterTime(0, horizontalWristRR.horizontalWristPosition(Configuration.backwardPosOut))
                 .splineToLinearHeading(new Pose2d(36, 19, Math.toRadians(90)), Math.toRadians(-90), parkAngularOverride, parkAccelOverride)
                 .afterTime(0, horizontalIntakeRR.horizontalIntakePosition(Configuration.floorOpen))
-                .splineToLinearHeading(new Pose2d(33, 24, Math.toRadians(90)), Math.toRadians(180), parkAngularOverride, parkAccelOverride)
-                .splineToLinearHeading(new Pose2d(44.5, 31, Math.toRadians(-90)), Math.toRadians(90), parkAngularOverride, parkAccelOverride)
-                .afterTime(0, horizontalIntakeRR.horizontalIntakePosition(Configuration.floorClose))
                 .waitSeconds(.5)
-                .afterTime(0, horizontalWristRR.horizontalWristPosition(Configuration.backwardPosOut))
-                .splineToLinearHeading(new Pose2d(36, 19, Math.toRadians(90)), Math.toRadians(-90), parkAngularOverride, parkAccelOverride)
                 .afterTime(0, horizontalIntakeRR.horizontalIntakePosition(Configuration.floorOpen))
-                .afterTime( 2, horizontalWristRR.horizontalWristPosition(Configuration.forwardPosOut))
-                .splineToLinearHeading(new Pose2d(33, 24, Math.toRadians(45)), Math.toRadians(180), parkAngularOverride, parkAccelOverride)
-                .afterTime(0, horizontalRollRR.horizontalRollPosition(Configuration.sideway))
-                .splineToLinearHeading(new Pose2d(44.5, 29, Math.toRadians(-90)), Math.toRadians(180), parkAngularOverride, parkAccelOverride)
-                .waitSeconds(5)
+                .afterTime(.25, horizontalIntakeRR.horizontalIntakePosition(Configuration.floorClose))
+                .afterTime(.25, horizontalSlideRR.horizontalSlidePosition(Configuration.retractSlide))
+                .afterTime(.25, horizontalWristRR.horizontalWristPosition(Configuration.backwardPosIn))
+                .afterTime(.25, horizontalRollRR.horizontalRollPosition(Configuration.flat))
+
+                //third butter
+//                .afterTime(0, horizontalRollRR.horizontalRollPosition(Configuration.sideway))
+//                .afterTime(.5, horizontalWristRR.horizontalWristPosition(Configuration.forwardPosOut))
+//                .splineToLinearHeading(new Pose2d(43, 40.5, Math.toRadians(180)), Math.toRadians(0), parkAngularOverride, parkAccelOverride)
+//                .splineToLinearHeading(new Pose2d(47.75, 40.5, Math.toRadians(180)), Math.toRadians(-90), parkAngularOverride, parkAccelOverride)
+//                .afterTime(.5, horizontalIntakeRR.horizontalIntakePosition(Configuration.floorClose))
+//                .waitSeconds(1)
+//                .afterTime(0, horizontalWristRR.horizontalWristPosition(Configuration.backwardPosOut))
+//                .splineToLinearHeading(new Pose2d(39, 17, Math.toRadians(90)), Math.toRadians(-90), parkAngularOverride, parkAccelOverride)
+//                .afterTime(0, horizontalIntakeRR.horizontalIntakePosition(Configuration.floorOpen))
+//                .afterTime(.25, horizontalIntakeRR.horizontalIntakePosition(Configuration.floorClose))
+//                .afterTime(.25, horizontalSlideRR.horizontalSlidePosition(Configuration.retractSlide))
+//                .afterTime(.25, horizontalWristRR.horizontalWristPosition(Configuration.backwardPosIn))
+//                .afterTime(.25, horizontalRollRR.horizontalRollPosition(Configuration.flat))
                 .build();
 
         Actions.runBlocking(new SequentialAction(actionRightButter));
+//        chosenTrajectory = butterRight;
 
+//        Action actionPostHang = chosenTrajectory.endTrajectory().fresh()
+//                .afterTime(0, verticalWristRR.verticalWristPosition(Configuration.forwardDown))
+//                .afterTime(0, verticalGrabberRR.verticalGrabberPosition(Configuration.open))
+//                .strafeTo(new Vector2d(39, 20))
+//                .turn(Math.toRadians(180), turnConstraints)
+//                .strafeTo(new Vector2d(39, 19), humanAngularOverride, humanAccelOverride)
+//                .afterTime(0, verticalGrabberRR.verticalGrabberPosition(Configuration.close))
+//                .afterTime(.4, verticalSlideRR.verticalSlidePosition(-100))
+//                .waitSeconds(.45)
+//                .turn(Math.toRadians(180), turnConstraints)
+//                .afterTime(0, verticalSlideRR.verticalSlidePosition(Configuration.highBar))
+//                .strafeTo(new Vector2d(39, 12), parkAngularOverride, parkAccelOverride)
+//                .afterTime(0, verticalWristRR.verticalWristPosition(Configuration.forwardDown))
+//                .splineToLinearHeading(new Pose2d(-12, 29, Math.toRadians(90)), Math.toRadians(90), hangAngularOverride, hangAcceleration)
+//                .waitSeconds(.125)
+//                .afterTime(0, verticalGrabberRR.verticalGrabberPosition(Configuration.open))
+//                .afterTime(.25, verticalSlideRR.verticalSlidePosition(0))
+//                .strafeTo(new Vector2d(-10, 24), parkVelOverride, parkAccelOverride)
+//                //second hang
+//                .turn(Math.toRadians(180), turnConstraints)
+//                .strafeToLinearHeading(new Vector2d(39, 27), Math.toRadians(-90), parkAngularOverride, parkAccelOverride)
+//                .strafeTo(new Vector2d(39, 18), parkVelOverride, parkAccelOverride)
+//                .afterTime(0, verticalGrabberRR.verticalGrabberPosition(Configuration.close))
+//                .afterTime(.4, verticalSlideRR.verticalSlidePosition(-100))
+//                .waitSeconds(.45)
+//                .afterTime(0, verticalWristRR.verticalWristPosition(Configuration.forwardDown))
+//                .afterTime(0, verticalSlideRR.verticalSlidePosition(Configuration.highBar))
+//                .strafeTo(new Vector2d(39, 23), parkAngularOverride, parkAccelOverride)
+//                .splineToLinearHeading(new Pose2d(-8, 29, Math.toRadians(90)), Math.toRadians(90), hangAngularOverride, hangAcceleration)
+//                .waitSeconds(.125)
+//                .afterTime(0, verticalGrabberRR.verticalGrabberPosition(Configuration.open))
+//                .afterTime(0, verticalWristRR.verticalWristPosition(Configuration.backwardPos))
+//                .afterTime(.25, verticalSlideRR.verticalSlidePosition(0))
 
-//        TrajectoryActionBuilder butter = drive.actionBuilder(currentPose)
-//                .strafeTo(new Vector2d(20, 15));
-//
-//        TrajectoryActionBuilder moveUp = drive.actionBuilder(currentPose)
-//                .strafeTo(new Vector2d(0, 20))
-//                .waitSeconds(1);
-//
-//        TrajectoryActionBuilder moveRight = drive.actionBuilder(currentPose)
-//                .strafeTo(new Vector2d(20, 20))
-//                .waitSeconds(1);
+//        Actions.runBlocking(new SequentialAction(actionPostHang));
+        chosenTrajectory = postHang;
 
-
-
-//        TrajectoryActionBuilder chosenTrajectory;
-//        Actions.runBlocking(new SequentialAction(startPosition.build()));
-//        chosenTrajectory = startPosition;
-
-//        if(true){
-//            if(false){
-//                Action actionMoveUp = chosenTrajectory.endTrajectory().fresh()
-//                        .strafeTo(new Vector2d(0, 20))
-//                        .waitSeconds(1)
-//                        .build();
-//                Actions.runBlocking(new SequentialAction(actionMoveUp));
-//                chosenTrajectory = moveUp;
-//            }
-//            if(true){
-//                Action actionMoveRight = chosenTrajectory.endTrajectory().fresh()
-//                        .strafeTo(new Vector2d(20, 20))
-//                        .waitSeconds(1)
-//                        .build();
-//                Actions.runBlocking(new SequentialAction(actionMoveRight));
-//                chosenTrajectory = moveRight;
-//            }
-//            Action actionMoveDown = chosenTrajectory.endTrajectory().fresh()
-//                    .strafeTo(new Vector2d(20,0))
-//                    .waitSeconds(1)
-//                    .build();
-//            Actions.runBlocking(new SequentialAction(actionMoveDown));
-//        }
+        Action actionParkRight = chosenTrajectory.endTrajectory().fresh()
+                .splineToLinearHeading(new Pose2d(40, 18, Math.toRadians(90)),Math.toRadians(90), parkAngularOverride, parkAccelOverride)
+                .waitSeconds(1)
+                .build();
+//        Actions.runBlocking(new SequentialAction(actionParkRight));
     }
 }
