@@ -1,14 +1,14 @@
 package org.firstinspires.ftc.teamcode.robotverticalslides.HorizontalSlide;
 
 import com.qualcomm.robotcore.hardware.HardwareMap;
-import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.hardware.ServoImplEx;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.robotverticalslides.constants.ConfigConstants;
 
 public class HorizontalIntakeActions {
-    public Servo intakeServo;
+    public ServoImplEx intakeServo;
     private Telemetry telemetry;
     private HardwareMap hardwareMap;
     private ElapsedTime runtime = new ElapsedTime();
@@ -16,32 +16,49 @@ public class HorizontalIntakeActions {
         this.telemetry = opModeTelemetry;
         this.hardwareMap = opModeHardware;
 
-        intakeServo = hardwareMap.get(Servo.class, ConfigConstants.HORIZONTAL_INTAKE);
+        intakeServo = hardwareMap.get(ServoImplEx.class, ConfigConstants.HORIZONTAL_INTAKE);
 
         intakeServo.setPosition(0);
     }
 
-    public void open() {
-        open = true;
-    }
+    double openStartTime = 0;
     public void close() {
-        open = false;
+        closed = true;
     }
+    public void open() {
+        closed = false;
+        openStartTime = System.currentTimeMillis();
+    }
+    //After opening, turn off the servo until it needs to close
     public void update() {
-        if (open) {
-            intakeServo.setPosition(0.0);
+        if (!closed) {
+            setPosition(0.2);
+            if (System.currentTimeMillis() > openStartTime + 420) {
+                if (intakeServo.isPwmEnabled()) {
+                    intakeServo.setPwmDisable();
+                }
+            }
         } else {
-            intakeServo.setPosition(0.2);
+            setPosition(0.0);
+            if (!intakeServo.isPwmEnabled()) {
+                intakeServo.setPwmEnable();
+            }
+        }
+
+    }
+    public void setPosition(double position) {
+        if (intakeServo.isPwmEnabled()) {
+            intakeServo.setPosition(position);
         }
     }
     boolean wasInput = false;
-    public boolean open = false;
+    public boolean closed = false;
     public void teleop(boolean input) {
         if (input && !wasInput) {
-            if (open) {
-                close();
-            } else {
+            if (closed) {
                 open();
+            } else {
+                close();
             }
         }
         wasInput = input;

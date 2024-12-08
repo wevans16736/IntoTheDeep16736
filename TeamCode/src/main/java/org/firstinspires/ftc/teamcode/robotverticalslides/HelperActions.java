@@ -178,17 +178,17 @@ public abstract class HelperActions extends LinearOpMode {
             }
         } else if (placeState == 1) {
             verticalGrabber.close();
-            intake.open();
+            intake.close();
             startTimePlace = System.currentTimeMillis();
             placeState = 2;
         } else if (placeState == 2) {
-            intake.open();
+            intake.close();
             if (System.currentTimeMillis() > startTimePlace + 420) {
                 placeState = 3;
                 verticalWrist.autoFlipForwardDown();
                 verticalSlide.setSlidePosition(-700, 2000);
             } else {
-                intake.open();
+                intake.close();
             }
         }
     }

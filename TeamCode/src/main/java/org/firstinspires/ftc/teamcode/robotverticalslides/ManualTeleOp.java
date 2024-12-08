@@ -10,7 +10,7 @@ import org.firstinspires.ftc.teamcode.robotverticalslides.HorizontalSlide.Horizo
 import org.firstinspires.ftc.teamcode.robotverticalslides.VerticalSlide.VerticalGrabberActions;
 import org.firstinspires.ftc.teamcode.robotverticalslides.VerticalSlide.VerticalSlideActions;
 import org.firstinspires.ftc.teamcode.robotverticalslides.VerticalSlide.VerticalWristActions;
-@Disabled
+//@Disabled
 @TeleOp(name = "Manual Tele Op", group = "Linear Opmode")
 public class ManualTeleOp extends HelperActions {
 
@@ -63,13 +63,16 @@ public class ManualTeleOp extends HelperActions {
 
             horizontalSlide.teleOpHorizontalSlide(-gamepad2.left_stick_y, 1);
             horizontalWrist.manual(gamepad2.left_bumper, gamepad2.b);
-            horizontalIntake.teleop(gamepad2.right_trigger > 0.05);
+            horizontalIntake.manual(gamepad2.right_trigger > 0.05, gamepad2.b);
+            if (gamepad2.a){
+                horizontalIntake.intakeServo.setPwmDisable();
+            }
 
             verticalSlide.teleOpVerticalSlide(-gamepad2.right_stick_y, 1);
 //            verticalSlide.maintainVerticalSlide2();
 //            verticalSlide.setOnRung(gamepad2.a);
             verticalWrist.manual(gamepad2.right_bumper, gamepad2.b);
-            verticalGrabber.teleOp(gamepad2.y, gamepad2.x);
+            verticalGrabber.teleOp(gamepad2.x);
 
 //            updateExchangeAssembly(verticalGrabber, verticalWrist, horizontalWrist, horizontalSlide, verticalSlide);
 

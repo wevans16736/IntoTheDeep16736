@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.robotverticalslides.HorizontalSlide;
 
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.hardware.ServoImplEx;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
@@ -9,7 +10,7 @@ import org.firstinspires.ftc.teamcode.Autonomus.Configuration;
 import org.firstinspires.ftc.teamcode.robotverticalslides.constants.ConfigConstants;
 
 public class HorizontalWristActions {
-    public Servo horizontalWristServo;
+    public ServoImplEx horizontalWristServo;
     private Telemetry telemetry;
     private HardwareMap hardwareMap;
     private ElapsedTime runtime = new ElapsedTime();
@@ -20,7 +21,7 @@ public class HorizontalWristActions {
         this.telemetry = opModeTelemetry;
         this.hardwareMap = opModeHardware;
 
-        horizontalWristServo = hardwareMap.get(Servo.class, ConfigConstants.HORIZONTAL_WRIST);
+        horizontalWristServo = hardwareMap.get(ServoImplEx.class, ConfigConstants.HORIZONTAL_WRIST);
 
         horizontalWristServo.setPosition(backwardPosIn);
     }
