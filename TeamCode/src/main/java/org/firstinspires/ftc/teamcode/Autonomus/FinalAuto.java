@@ -308,6 +308,8 @@ public class FinalAuto extends LinearOpMode {
         boolean pickButter = false;
         boolean pickPostHang = false;
 
+        int hangSide = 1;
+
         telemetry.clearAll();
         while(!gamepad1.cross) {
             telemetry.addLine("Which Side");
@@ -340,7 +342,7 @@ public class FinalAuto extends LinearOpMode {
                 if(!gamepad1.square && !gamepad1.triangle && gamepad1.circle && !gamepad1.cross){
                     pickPostHang = !pickPostHang;
                 }
-
+                telemetry.clearAll();
                 telemetry.update();
             }
         }
@@ -356,6 +358,7 @@ public class FinalAuto extends LinearOpMode {
                 if (!gamepad1.square && gamepad1.triangle && !gamepad1.circle && !gamepad1.cross) {
                     pickButter = !pickButter;
                 }
+                telemetry.clearAll();
                 telemetry.update();
             }
         }
@@ -616,6 +619,9 @@ public class FinalAuto extends LinearOpMode {
                     .waitSeconds(1)
                     .build();
             Actions.runBlocking(new SequentialAction(actionParkRight));
+        }
+        if(pickLeft){
+
         }
     }
 }

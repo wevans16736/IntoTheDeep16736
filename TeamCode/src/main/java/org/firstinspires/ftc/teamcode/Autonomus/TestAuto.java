@@ -34,7 +34,7 @@ import org.firstinspires.ftc.teamcode.robotverticalslides.constants.ConfigConsta
 import java.util.Arrays;
 
 @Config
-@Autonomous(name = "Test Auto", group = "Autonomous")
+@Autonomous(name = "1. Test Auto", group = "Autonomous")
 public class TestAuto extends LinearOpMode {
     public class VerticalSlideRR {
         public DcMotorEx verticalSlide1 = null;
@@ -378,108 +378,113 @@ public class TestAuto extends LinearOpMode {
                 .strafeTo(new Vector2d(-16, 24));
 
         TrajectoryActionBuilder ButterRight = drive.actionBuilder(currentPose)
-                .splineToLinearHeading(new Pose2d(20,13, Math.toRadians(0)), Math.toRadians(0))
+                 .strafeToLinearHeading(new Vector2d(18,1), Math.toRadians(0))
+                .afterTime(0, verticalGrabberRR.verticalGrabberPosition(Configuration.open))
+                .afterTime(0, verticalWristRR.verticalWristPosition(Configuration.backwardPos))
+                .strafeToLinearHeading(new Vector2d(36, 27.5), Math.toRadians(-90))
                 .afterTime(0,horizontalSlideRR.horizontalSlidePosition(Configuration.extend))
                 .afterTime(0, horizontalWristRR.horizontalWristPosition(Configuration.forwardPosOut))
                 .afterTime(0, horizontalIntakeRR.horizontalIntakePosition(Configuration.floorOpen))
-                .afterTime(0, verticalGrabberRR.verticalGrabberPosition(Configuration.open))
-                .afterTime(0, verticalWristRR.verticalWristPosition(Configuration.backwardPos))
-                .splineToLinearHeading(new Pose2d(34.25, 29.9, Math.toRadians(-90)), Math.toRadians(90))
                 //got to the first butter, will execute a transfer system
+                .waitSeconds(1.3)
                 .afterTime(0, horizontalIntakeRR.horizontalIntakePosition(Configuration.floorClose))
-                .afterTime(.25, horizontalWristRR.horizontalWristPosition(Configuration.backwardPosIn))
-                .afterTime(.25, horizontalSlideRR.horizontalSlidePosition(Configuration.retractSlide))
-                .strafeTo(new Vector2d(47, 29.9))
+                .afterTime(.5, horizontalWristRR.horizontalWristPosition(Configuration.backwardPosIn))
+                .afterTime(.5, horizontalSlideRR.horizontalSlidePosition(Configuration.retractSlide))
+                .waitSeconds(1)
+                .strafeTo(new Vector2d(48.25, 28.25))
                 //butter is in the robot held by horizontal grabber
                 .afterTime(0, verticalGrabberRR.verticalGrabberPosition(Configuration.close))
-                .afterTime(0, horizontalIntakeRR.horizontalIntakePosition(Configuration.floorOpen))
+                .afterTime(.3, horizontalIntakeRR.horizontalIntakePosition(Configuration.floorOpen))
                 //butter is now held by vertical grabber
                 .afterTime(.5, verticalWristRR.verticalWristPosition(Configuration.forwardDown))
                 .afterTime(.5, horizontalSlideRR.horizontalSlidePosition(Configuration.extend))
                 .afterTime(.5, horizontalWristRR.horizontalWristPosition(Configuration.forwardPosOut))
-                //first butter is on the other side of the robot while the horizontal slide extended
-                .afterTime(1, verticalGrabberRR.verticalGrabberPosition(Configuration.open))
-                .afterTime(1, horizontalIntakeRR.horizontalIntakePosition(Configuration.floorClose))
-                .waitSeconds(1)
+//                first butter is on the other side of the robot while the horizontal slide extended
+                .afterTime(1.5, verticalGrabberRR.verticalGrabberPosition(Configuration.open))
+                .afterTime(1.5, horizontalIntakeRR.horizontalIntakePosition(Configuration.floorClose))
+                .waitSeconds(2)
                 //held the second butter and drop the first butter
-                .afterTime(1.25, horizontalSlideRR.horizontalSlidePosition(Configuration.retractSlide))
-                .afterTime(1.25, horizontalWristRR.horizontalWristPosition(Configuration.backwardPosIn))
-                //todo can I grab the third butter while having the vertical wrist in the human to drop the butter?
-                .strafeToLinearHeading(new Vector2d(47, 29.9), Math.toRadians(30))
-                .afterTime(0, verticalGrabberRR.verticalGrabberPosition(Configuration.close))
-                .afterTime(0, horizontalIntakeRR.horizontalIntakePosition(Configuration.open))
-
-                //second butter in the transfer system
-                .afterTime(.5, verticalWristRR.verticalWristPosition(Configuration.forwardDown))
-                .afterTime(.5, horizontalSlideRR.horizontalSlidePosition(Configuration.extend))
-                .afterTime(.5, horizontalWristRR.horizontalWristPosition(Configuration.forwardPosOut))
-                //second butter is other side of the robot and the horizontal slide is extended
-                .afterTime(1, verticalGrabberRR.verticalGrabberPosition(Configuration.open))
-                .afterTime(1, horizontalIntakeRR.horizontalIntakePosition(Configuration.floorClose))
-                .waitSeconds(1)
-                //second butter dropped and the third butter is picked up
-                .strafeToLinearHeading(new Vector2d(39,20), Math.toRadians(90))
-                .afterTime(0, verticalWristRR.verticalWristPosition(Configuration.backwardPos))
                 .afterTime(0, horizontalSlideRR.horizontalSlidePosition(Configuration.retractSlide))
                 .afterTime(0, horizontalWristRR.horizontalWristPosition(Configuration.backwardPosIn))
-                //third butter is in the transfer system
-                .afterTime(.5, verticalGrabberRR.verticalGrabberPosition(Configuration.close))
-                .afterTime(.5, horizontalIntakeRR.horizontalIntakePosition(Configuration.floorOpen))
-                //third butter is now held by vertical grabber
-                .afterTime(1, verticalWristRR.verticalWristPosition(Configuration.forwardDown))
-                //third butter is now other side of the robot
+                .afterTime(0, verticalWristRR.verticalWristPosition(Configuration.backwardPos))
+                .waitSeconds(1.5)
+                //todo can I grab the third butter while having the vertical wrist in the human to drop the butter?
+//                .strafeToLinearHeading(new Vector2d(47, 29.9), Math.toRadians(30))
+                .afterTime(0, verticalGrabberRR.verticalGrabberPosition(Configuration.close))
+                .afterTime(.3, horizontalIntakeRR.horizontalIntakePosition(Configuration.open))
+                .waitSeconds(.35)
+//                //second butter in the transfer system
+                .afterTime(0, verticalWristRR.verticalWristPosition(Configuration.forwardDown))
+//                .afterTime(.5, horizontalSlideRR.horizontalSlidePosition(Configuration.extend))
+//                .afterTime(.5, horizontalWristRR.horizontalWristPosition(Configuration.forwardPosOut))
+//                //second butter is other side of the robot and the horizontal slide is extended
                 .afterTime(1.5, verticalGrabberRR.verticalGrabberPosition(Configuration.open))
-                //third butter is now dropped
-                .waitSeconds(15);
-
-        TrajectoryActionBuilder postHang = drive.actionBuilder(currentPose)
-                .afterTime(0, verticalGrabberRR.verticalGrabberPosition(Configuration.open))
-                .strafeToLinearHeading(new Vector2d(39, 24), Math.toRadians(-90))
-                .strafeTo(new Vector2d(39, 19)) //todo might want to add human player acceleration
-                .afterTime(0, verticalGrabberRR.verticalGrabberPosition(Configuration.close))
-                .afterTime(.4, verticalSlideRR.verticalSlidePosition(-100))
-                .waitSeconds(.4)
-                //robot pick the butter from the wall
-                .afterTime(0, verticalSlideRR.verticalSlidePosition(Configuration.highBar))
-                .strafeToLinearHeading(new Vector2d(-12, 24),Math.toRadians(90))
-                .strafeTo(new Vector2d(-12, 28)) //todo might add hang velocity and acceleration
-                //hang the butter
-                .afterTime(0, verticalGrabberRR.verticalGrabberPosition(Configuration.open))
-                .afterTime(1, verticalWristRR.verticalWristPosition(Configuration.backwardPos))
-                .strafeTo(new Vector2d(-12, 24))
-                //approach the human player area
-                .afterTime(1, verticalWristRR.verticalWristPosition(Configuration.forwardDown))
-                .afterTime(1, verticalSlideRR.verticalSlidePosition(Configuration.bottom))
-                .strafeToLinearHeading(new Vector2d(39, 24), Math.toRadians(-90))
-                .strafeTo(new Vector2d(39,19)) //todo might want to add human player acceleration
-                .afterTime(0, verticalGrabberRR.verticalGrabberPosition(Configuration.close))
-                .afterTime(.4, verticalSlideRR.verticalSlidePosition(-100))
-                .waitSeconds(.4)
-                //grab the second butter from the wall
-                .afterTime(0, verticalSlideRR.verticalSlidePosition(Configuration.highBar))
-                .strafeToLinearHeading(new Vector2d(-10, 24),Math.toRadians(90))
-                .strafeTo(new Vector2d(-10, 28))//todo might add hang velocity and acceleration
-                //hang the butter
-                .afterTime(0, verticalGrabberRR.verticalGrabberPosition(Configuration.open))
-                .afterTime(1, verticalWristRR.verticalWristPosition(Configuration.backwardPos))
-                .strafeTo(new Vector2d(-10, 24))
-                //approach the human player area
-                .afterTime(1, verticalWristRR.verticalWristPosition(Configuration.forwardDown))
-                .afterTime(1, verticalSlideRR.verticalSlidePosition(Configuration.bottom))
-                .strafeToLinearHeading(new Vector2d(39, 24), Math.toRadians(-90))
-                .strafeTo(new Vector2d(39,19)) //todo might want to add human player acceleration
-                .afterTime(0, verticalGrabberRR.verticalGrabberPosition(Configuration.close))
-                .afterTime(.4, verticalSlideRR.verticalSlidePosition(-100))
-                .waitSeconds(.4)
-                //grab the third butter from the wall
-                .afterTime(0, verticalSlideRR.verticalSlidePosition(Configuration.highBar))
-                .strafeToLinearHeading(new Vector2d(-8, 24),Math.toRadians(90))
-                .strafeTo(new Vector2d(-8, 28)) //todo might add hang velocity and acceleration
-                //hang the butter
-                .afterTime(0, verticalGrabberRR.verticalGrabberPosition(Configuration.open))
-                .afterTime(1, verticalWristRR.verticalWristPosition(Configuration.backwardPos))
-                .strafeTo(new Vector2d(-8, 24))
-                .afterTime(0, verticalSlideRR.verticalSlidePosition(Configuration.bottom));
+//                .afterTime(1, horizontalIntakeRR.horizontalIntakePosition(Configuration.floorClose))
+                .waitSeconds(1.5)
+//                //second butter dropped and the third butter is picked up
+//                .strafeToLinearHeading(new Vector2d(39,20), Math.toRadians(90))
+//                .afterTime(0, verticalWristRR.verticalWristPosition(Configuration.backwardPos))
+//                .afterTime(0, horizontalSlideRR.horizontalSlidePosition(Configuration.retractSlide))
+//                .afterTime(0, horizontalWristRR.horizontalWristPosition(Configuration.backwardPosIn))
+//                //third butter is in the transfer system
+//                .afterTime(.5, verticalGrabberRR.verticalGrabberPosition(Configuration.close))
+//                .afterTime(.5, horizontalIntakeRR.horizontalIntakePosition(Configuration.floorOpen))
+//                //third butter is now held by vertical grabber
+//                .afterTime(1, verticalWristRR.verticalWristPosition(Configuration.forwardDown))
+//                //third butter is now other side of the robot
+//                .afterTime(1.5, verticalGrabberRR.verticalGrabberPosition(Configuration.open))
+//                //third butter is now dropped
+//                .waitSeconds(15)
+                .waitSeconds(2);
+//
+//        TrajectoryActionBuilder postHang = drive.actionBuilder(currentPose)
+//                .afterTime(0, verticalGrabberRR.verticalGrabberPosition(Configuration.open))
+//                .strafeToLinearHeading(new Vector2d(39, 24), Math.toRadians(-90))
+//                .strafeTo(new Vector2d(39, 19)) //todo might want to add human player acceleration
+//                .afterTime(0, verticalGrabberRR.verticalGrabberPosition(Configuration.close))
+//                .afterTime(.4, verticalSlideRR.verticalSlidePosition(-100))
+//                .waitSeconds(.4)
+//                //robot pick the butter from the wall
+//                .afterTime(0, verticalSlideRR.verticalSlidePosition(Configuration.highBar))
+//                .strafeToLinearHeading(new Vector2d(-12, 24),Math.toRadians(90))
+//                .strafeTo(new Vector2d(-12, 28)) //todo might add hang velocity and acceleration
+//                //hang the butter
+//                .afterTime(0, verticalGrabberRR.verticalGrabberPosition(Configuration.open))
+//                .afterTime(1, verticalWristRR.verticalWristPosition(Configuration.backwardPos))
+//                .strafeTo(new Vector2d(-12, 24))
+//                //approach the human player area
+//                .afterTime(1, verticalWristRR.verticalWristPosition(Configuration.forwardDown))
+//                .afterTime(1, verticalSlideRR.verticalSlidePosition(Configuration.bottom))
+//                .strafeToLinearHeading(new Vector2d(39, 24), Math.toRadians(-90))
+//                .strafeTo(new Vector2d(39,19)) //todo might want to add human player acceleration
+//                .afterTime(0, verticalGrabberRR.verticalGrabberPosition(Configuration.close))
+//                .afterTime(.4, verticalSlideRR.verticalSlidePosition(-100))
+//                .waitSeconds(.4)
+//                //grab the second butter from the wall
+//                .afterTime(0, verticalSlideRR.verticalSlidePosition(Configuration.highBar))
+//                .strafeToLinearHeading(new Vector2d(-10, 24),Math.toRadians(90))
+//                .strafeTo(new Vector2d(-10, 28))//todo might add hang velocity and acceleration
+//                //hang the butter
+//                .afterTime(0, verticalGrabberRR.verticalGrabberPosition(Configuration.open))
+//                .afterTime(1, verticalWristRR.verticalWristPosition(Configuration.backwardPos))
+//                .strafeTo(new Vector2d(-10, 24))
+//                //approach the human player area
+//                .afterTime(1, verticalWristRR.verticalWristPosition(Configuration.forwardDown))
+//                .afterTime(1, verticalSlideRR.verticalSlidePosition(Configuration.bottom))
+//                .strafeToLinearHeading(new Vector2d(39, 24), Math.toRadians(-90))
+//                .strafeTo(new Vector2d(39,19)) //todo might want to add human player acceleration
+//                .afterTime(0, verticalGrabberRR.verticalGrabberPosition(Configuration.close))
+//                .afterTime(.4, verticalSlideRR.verticalSlidePosition(-100))
+//                .waitSeconds(.4)
+//                //grab the third butter from the wall
+//                .afterTime(0, verticalSlideRR.verticalSlidePosition(Configuration.highBar))
+//                .strafeToLinearHeading(new Vector2d(-8, 24),Math.toRadians(90))
+//                .strafeTo(new Vector2d(-8, 28)) //todo might add hang velocity and acceleration
+//                //hang the butter
+//                .afterTime(0, verticalGrabberRR.verticalGrabberPosition(Configuration.open))
+//                .afterTime(1, verticalWristRR.verticalWristPosition(Configuration.backwardPos))
+//                .strafeTo(new Vector2d(-8, 24))
+//                .afterTime(0, verticalSlideRR.verticalSlidePosition(Configuration.bottom));
 
 
 
@@ -495,10 +500,11 @@ public class TestAuto extends LinearOpMode {
         Action actionHang = chosenTrajectory.endTrajectory().fresh()
                 .afterTime(0, verticalSlideRR.verticalSlidePosition(Configuration.highBar))
                 .afterTime(0, verticalWristRR.verticalWristPosition(Configuration.forwardDown))
-                .waitSeconds(.125)
+                .waitSeconds(.4)
                 .strafeTo(new Vector2d(-16, 28))
-                .afterTime(0, verticalWristRR.verticalWristPosition(Configuration.open))
-                .afterTime(1, verticalWristRR.verticalWristPosition(Configuration.backwardPos))
+                .afterTime(0, verticalGrabberRR.verticalGrabberPosition(Configuration.open))
+                .afterTime(.25, verticalWristRR.verticalWristPosition(Configuration.backwardPos))
+                .afterTime(.25, verticalSlideRR.verticalSlidePosition(Configuration.bottom))
                 .strafeTo(new Vector2d(-16, 24))
                 .build();
 
@@ -506,59 +512,63 @@ public class TestAuto extends LinearOpMode {
         chosenTrajectory = hang;
 
         Action actionButterRight = chosenTrajectory.endTrajectory().fresh()
-                .splineToLinearHeading(new Pose2d(20,13, Math.toRadians(0)), Math.toRadians(0))
+//                .strafeToLinearHeading(new Vector2d(18,1), Math.toRadians(0))
+                .afterTime(0, verticalGrabberRR.verticalGrabberPosition(Configuration.open))
+                .afterTime(0, verticalWristRR.verticalWristPosition(Configuration.backwardPos))
+                .strafeToLinearHeading(new Vector2d(36, 27.45), Math.toRadians(-90))
                 .afterTime(0,horizontalSlideRR.horizontalSlidePosition(Configuration.extend))
                 .afterTime(0, horizontalWristRR.horizontalWristPosition(Configuration.forwardPosOut))
                 .afterTime(0, horizontalIntakeRR.horizontalIntakePosition(Configuration.floorOpen))
-                .afterTime(0, verticalGrabberRR.verticalGrabberPosition(Configuration.open))
-                .afterTime(0, verticalWristRR.verticalWristPosition(Configuration.backwardPos))
-                .splineToLinearHeading(new Pose2d(34.25, 29.9, Math.toRadians(-90)), Math.toRadians(90))
                 //got to the first butter, will execute a transfer system
+                .waitSeconds(1.3)
                 .afterTime(0, horizontalIntakeRR.horizontalIntakePosition(Configuration.floorClose))
-                .afterTime(.25, horizontalWristRR.horizontalWristPosition(Configuration.backwardPosIn))
-                .afterTime(.25, horizontalSlideRR.horizontalSlidePosition(Configuration.retractSlide))
-                .strafeTo(new Vector2d(47, 29.9))
+                .afterTime(.5, horizontalWristRR.horizontalWristPosition(Configuration.backwardPosIn))
+                .afterTime(.5, horizontalSlideRR.horizontalSlidePosition(Configuration.retractSlide))
+                .waitSeconds(1)
+                .strafeTo(new Vector2d(48.25, 27.75))
                 //butter is in the robot held by horizontal grabber
                 .afterTime(0, verticalGrabberRR.verticalGrabberPosition(Configuration.close))
-                .afterTime(0, horizontalIntakeRR.horizontalIntakePosition(Configuration.floorOpen))
+                .afterTime(.3, horizontalIntakeRR.horizontalIntakePosition(Configuration.floorOpen))
                 //butter is now held by vertical grabber
                 .afterTime(.5, verticalWristRR.verticalWristPosition(Configuration.forwardDown))
                 .afterTime(.5, horizontalSlideRR.horizontalSlidePosition(Configuration.extend))
                 .afterTime(.5, horizontalWristRR.horizontalWristPosition(Configuration.forwardPosOut))
-                //first butter is on the other side of the robot while the horizontal slide extended
-                .afterTime(1, verticalGrabberRR.verticalGrabberPosition(Configuration.open))
-                .afterTime(1, horizontalIntakeRR.horizontalIntakePosition(Configuration.floorClose))
-                .waitSeconds(1)
+//                first butter is on the other side of the robot while the horizontal slide extended
+                .afterTime(1.5, verticalGrabberRR.verticalGrabberPosition(Configuration.open))
+                .afterTime(1.5, horizontalIntakeRR.horizontalIntakePosition(Configuration.floorClose))
+                .waitSeconds(2)
                 //held the second butter and drop the first butter
-                .afterTime(1.25, horizontalSlideRR.horizontalSlidePosition(Configuration.retractSlide))
-                .afterTime(1.25, horizontalWristRR.horizontalWristPosition(Configuration.backwardPosIn))
-                //todo can I grab the third butter while having the vertical wrist in the human to drop the butter?
-                .strafeToLinearHeading(new Vector2d(47, 29.9), Math.toRadians(30))
-                .afterTime(0, verticalGrabberRR.verticalGrabberPosition(Configuration.close))
-                .afterTime(0, horizontalIntakeRR.horizontalIntakePosition(Configuration.open))
-
-                //second butter in the transfer system
-                .afterTime(.5, verticalWristRR.verticalWristPosition(Configuration.forwardDown))
-                .afterTime(.5, horizontalSlideRR.horizontalSlidePosition(Configuration.extend))
-                .afterTime(.5, horizontalWristRR.horizontalWristPosition(Configuration.forwardPosOut))
-                //second butter is other side of the robot and the horizontal slide is extended
-                .afterTime(1, verticalGrabberRR.verticalGrabberPosition(Configuration.open))
-                .afterTime(1, horizontalIntakeRR.horizontalIntakePosition(Configuration.floorClose))
-                .waitSeconds(1)
-                //second butter dropped and the third butter is picked up
-                .strafeToLinearHeading(new Vector2d(39,20), Math.toRadians(90))
-                .afterTime(0, verticalWristRR.verticalWristPosition(Configuration.backwardPos))
                 .afterTime(0, horizontalSlideRR.horizontalSlidePosition(Configuration.retractSlide))
                 .afterTime(0, horizontalWristRR.horizontalWristPosition(Configuration.backwardPosIn))
-                //third butter is in the transfer system
-                .afterTime(.5, verticalGrabberRR.verticalGrabberPosition(Configuration.close))
-                .afterTime(.5, horizontalIntakeRR.horizontalIntakePosition(Configuration.floorOpen))
-                //third butter is now held by vertical grabber
-                .afterTime(1, verticalWristRR.verticalWristPosition(Configuration.forwardDown))
-                //third butter is now other side of the robot
+                .afterTime(0, verticalWristRR.verticalWristPosition(Configuration.backwardPos))
+                .waitSeconds(1.5)
+                //todo can I grab the third butter while having the vertical wrist in the human to drop the butter?
+//                .strafeToLinearHeading(new Vector2d(47, 29.9), Math.toRadians(30))
+                .afterTime(0, verticalGrabberRR.verticalGrabberPosition(Configuration.close))
+                .afterTime(.3, horizontalIntakeRR.horizontalIntakePosition(Configuration.open))
+                .waitSeconds(.35)
+//                //second butter in the transfer system
+                .afterTime(0, verticalWristRR.verticalWristPosition(Configuration.forwardDown))
+//                .afterTime(.5, horizontalSlideRR.horizontalSlidePosition(Configuration.extend))
+//                .afterTime(.5, horizontalWristRR.horizontalWristPosition(Configuration.forwardPosOut))
+//                //second butter is other side of the robot and the horizontal slide is extended
                 .afterTime(1.5, verticalGrabberRR.verticalGrabberPosition(Configuration.open))
-                //third butter is now dropped
-                .waitSeconds(15)
+//                .afterTime(1, horizontalIntakeRR.horizontalIntakePosition(Configuration.floorClose))
+                .waitSeconds(1.5)
+//                //second butter dropped and the third butter is picked up
+//                .strafeToLinearHeading(new Vector2d(39,20), Math.toRadians(90))
+//                .afterTime(0, verticalWristRR.verticalWristPosition(Configuration.backwardPos))
+//                .afterTime(0, horizontalSlideRR.horizontalSlidePosition(Configuration.retractSlide))
+//                .afterTime(0, horizontalWristRR.horizontalWristPosition(Configuration.backwardPosIn))
+//                //third butter is in the transfer system
+//                .afterTime(.5, verticalGrabberRR.verticalGrabberPosition(Configuration.close))
+//                .afterTime(.5, horizontalIntakeRR.horizontalIntakePosition(Configuration.floorOpen))
+//                //third butter is now held by vertical grabber
+//                .afterTime(1, verticalWristRR.verticalWristPosition(Configuration.forwardDown))
+//                //third butter is now other side of the robot
+//                .afterTime(1.5, verticalGrabberRR.verticalGrabberPosition(Configuration.open))
+//                //third butter is now dropped
+//                .waitSeconds(15)
                 .build();
 
         Actions.runBlocking(new SequentialAction(actionButterRight));
@@ -566,59 +576,59 @@ public class TestAuto extends LinearOpMode {
 
         Action actionPostHang = chosenTrajectory.endTrajectory().fresh()
                 .afterTime(0, verticalGrabberRR.verticalGrabberPosition(Configuration.open))
-                .strafeToLinearHeading(new Vector2d(39, 24), Math.toRadians(-90))
-                .strafeTo(new Vector2d(39, 19)) //todo might want to add human player acceleration
+                .strafeToLinearHeading(new Vector2d(42, 24), Math.toRadians(-90))
+                .strafeTo(new Vector2d(42, 19)) //todo might want to add human player acceleration
                 .afterTime(0, verticalGrabberRR.verticalGrabberPosition(Configuration.close))
                 .afterTime(.4, verticalSlideRR.verticalSlidePosition(-100))
-                .waitSeconds(.4)
+                .waitSeconds(.45)
                 //robot pick the butter from the wall
                 .afterTime(0, verticalSlideRR.verticalSlidePosition(Configuration.highBar))
-                .strafeToLinearHeading(new Vector2d(-12, 24),Math.toRadians(90))
+                .strafeToLinearHeading(new Vector2d(-12, 20),Math.toRadians(90))
                 .strafeTo(new Vector2d(-12, 28)) //todo might add hang velocity and acceleration
                 //hang the butter
                 .afterTime(0, verticalGrabberRR.verticalGrabberPosition(Configuration.open))
-                .afterTime(1, verticalWristRR.verticalWristPosition(Configuration.backwardPos))
-                .strafeTo(new Vector2d(-12, 24))
+                .strafeTo(new Vector2d(-12, 20))
                 //approach the human player area
-                .afterTime(1, verticalWristRR.verticalWristPosition(Configuration.forwardDown))
                 .afterTime(1, verticalSlideRR.verticalSlidePosition(Configuration.bottom))
-                .strafeToLinearHeading(new Vector2d(39, 24), Math.toRadians(-90))
-                .strafeTo(new Vector2d(39,19)) //todo might want to add human player acceleration
+                .strafeToLinearHeading(new Vector2d(42, 24), Math.toRadians(-90))
+                .strafeTo(new Vector2d(42,19)) //todo might want to add human player acceleration
                 .afterTime(0, verticalGrabberRR.verticalGrabberPosition(Configuration.close))
                 .afterTime(.4, verticalSlideRR.verticalSlidePosition(-100))
-                .waitSeconds(.4)
+                .waitSeconds(.45)
                 //grab the second butter from the wall
                 .afterTime(0, verticalSlideRR.verticalSlidePosition(Configuration.highBar))
-                .strafeToLinearHeading(new Vector2d(-10, 24),Math.toRadians(90))
+                .strafeToLinearHeading(new Vector2d(-10, 20),Math.toRadians(90))
                 .strafeTo(new Vector2d(-10, 28))//todo might add hang velocity and acceleration
                 //hang the butter
                 .afterTime(0, verticalGrabberRR.verticalGrabberPosition(Configuration.open))
                 .afterTime(1, verticalWristRR.verticalWristPosition(Configuration.backwardPos))
-                .strafeTo(new Vector2d(-10, 24))
-                //approach the human player area
-                .afterTime(1, verticalWristRR.verticalWristPosition(Configuration.forwardDown))
                 .afterTime(1, verticalSlideRR.verticalSlidePosition(Configuration.bottom))
-                .strafeToLinearHeading(new Vector2d(39, 24), Math.toRadians(-90))
-                .strafeTo(new Vector2d(39,19)) //todo might want to add human player acceleration
-                .afterTime(0, verticalGrabberRR.verticalGrabberPosition(Configuration.close))
-                .afterTime(.4, verticalSlideRR.verticalSlidePosition(-100))
-                .waitSeconds(.4)
-                //grab the third butter from the wall
-                .afterTime(0, verticalSlideRR.verticalSlidePosition(Configuration.highBar))
-                .strafeToLinearHeading(new Vector2d(-8, 24),Math.toRadians(90))
-                .strafeTo(new Vector2d(-8, 28)) //todo might add hang velocity and acceleration
-                //hang the butter
-                .afterTime(0, verticalGrabberRR.verticalGrabberPosition(Configuration.open))
-                .afterTime(1, verticalWristRR.verticalWristPosition(Configuration.backwardPos))
-                .strafeTo(new Vector2d(-8, 24))
-                .afterTime(0, verticalSlideRR.verticalSlidePosition(Configuration.bottom))
+                .strafeTo(new Vector2d(-10, 22))
+                //approach the human player area
+//                .afterTime(1, verticalWristRR.verticalWristPosition(Configuration.forwardDown))
+//                .afterTime(1, verticalSlideRR.verticalSlidePosition(Configuration.bottom))
+//                .strafeToLinearHeading(new Vector2d(39, 24), Math.toRadians(-90))
+//                .strafeTo(new Vector2d(39,19)) //todo might want to add human player acceleration
+//                .afterTime(0, verticalGrabberRR.verticalGrabberPosition(Configuration.close))
+//                .afterTime(.4, verticalSlideRR.verticalSlidePosition(-100))
+//                .waitSeconds(.4)
+//                //grab the third butter from the wall
+//                .afterTime(0, verticalSlideRR.verticalSlidePosition(Configuration.highBar))
+//                .strafeToLinearHeading(new Vector2d(-8, 24),Math.toRadians(90))
+//                .strafeTo(new Vector2d(-8, 28)) //todo might add hang velocity and acceleration
+//                //hang the butter
+//                .afterTime(0, verticalGrabberRR.verticalGrabberPosition(Configuration.open))
+//                .afterTime(1, verticalWristRR.verticalWristPosition(Configuration.backwardPos))
+//                .strafeTo(new Vector2d(-8, 24))
+//                .afterTime(0, verticalSlideRR.verticalSlidePosition(Configuration.bottom))
+                .waitSeconds(5)
                 .build();
 
         Actions.runBlocking(new SequentialAction(actionPostHang));
-        chosenTrajectory = postHang;
+//        chosenTrajectory = postHang;
 
-        Action actionPark = chosenTrajectory.endTrajectory().fresh()
-
-                .build();
+//        Action actionPark = chosenTrajectory.endTrajectory().fresh()
+//
+//                .build();
     }
 }

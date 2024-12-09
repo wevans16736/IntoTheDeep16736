@@ -20,6 +20,7 @@ import com.acmerobotics.roadrunner.Vector2d;
 import com.acmerobotics.roadrunner.VelConstraint;
 import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
@@ -33,6 +34,7 @@ import org.firstinspires.ftc.teamcode.robotverticalslides.constants.ConfigConsta
 
 import java.util.Arrays;
 
+@Disabled
 @Config
 @Autonomous(name = "Final Test Auto", group = "Autonomous")
 public class FinalTestAuto extends LinearOpMode {
