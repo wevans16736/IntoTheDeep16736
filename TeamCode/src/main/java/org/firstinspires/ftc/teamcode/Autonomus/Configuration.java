@@ -34,14 +34,14 @@ public class Configuration{
     //servo position to have the wrist to be at vertical grabber position
     public static double backwardPosIn = 0.99;
     //servo position to have grabber slightly above the ground
-    public static double backwardPosOut = 0.45;
+    public static double backwardPosOut = 0.60;
     //servo position to have grabber grab the butter
     public static double forwardPosOut = 0.2;
 
 
     //horizontal grabber servo position
     public static double floorClose = 0;
-    public static double floorOpen = .4;
+    public static double floorOpen = .6;
 
     //horizontal roll servo position
     public static double flat = 0.075;

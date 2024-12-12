@@ -37,7 +37,7 @@ import org.firstinspires.ftc.teamcode.robotverticalslides.constants.ConfigConsta
 import java.util.Arrays;
 
 @Config
-@Autonomous(name = "1. Test Auto", group = "Autonomous")
+@Autonomous(name = "2. Test Auto", group = "Autonomous")
 public class TestAuto extends LinearOpMode {
     public class VerticalSlideRR {
         public DcMotorEx verticalSlide1 = null;

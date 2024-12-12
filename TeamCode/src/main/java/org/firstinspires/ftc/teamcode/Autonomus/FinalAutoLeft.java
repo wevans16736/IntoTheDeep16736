@@ -4,24 +4,14 @@ package org.firstinspires.ftc.teamcode.Autonomus;
 
 import androidx.annotation.NonNull;
 
-import com.acmerobotics.dashboard.Mutex;
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
-import com.acmerobotics.roadrunner.AccelConstraint;
 import com.acmerobotics.roadrunner.Action;
-import com.acmerobotics.roadrunner.AngularVelConstraint;
-import com.acmerobotics.roadrunner.HolonomicController;
-import com.acmerobotics.roadrunner.MinVelConstraint;
 import com.acmerobotics.roadrunner.Pose2d;
-import com.acmerobotics.roadrunner.ProfileAccelConstraint;
 import com.acmerobotics.roadrunner.SequentialAction;
 import com.acmerobotics.roadrunner.SleepAction;
-import com.acmerobotics.roadrunner.Trajectory;
 import com.acmerobotics.roadrunner.TrajectoryActionBuilder;
-import com.acmerobotics.roadrunner.TranslationalVelConstraint;
-import com.acmerobotics.roadrunner.TurnConstraints;
 import com.acmerobotics.roadrunner.Vector2d;
-import com.acmerobotics.roadrunner.VelConstraint;
 import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -32,15 +22,12 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.teamcode.MecanumDrive;
 import org.firstinspires.ftc.teamcode.PinpointDrive;
 import org.firstinspires.ftc.teamcode.robotverticalslides.constants.ConfigConstants;
 
-import java.util.Arrays;
-
 @Config
 @Autonomous(name = "1. Final Auto", group = "Autonomous")
-public class FinalAuto extends LinearOpMode {
+public class FinalAutoLeft extends LinearOpMode {
     VerticalSlideRR verticalSlideRR = new VerticalSlideRR(hardwareMap);
     HorizontalSlideRR horizontalSlideRR = new HorizontalSlideRR(hardwareMap, telemetry);
 
@@ -497,46 +484,7 @@ public class FinalAuto extends LinearOpMode {
                 .afterTime(.25, verticalSlideRR.verticalSlidePosition(Configuration.bottom))
                 .strafeTo(new Vector2d(-16, 24));
 
-        TrajectoryActionBuilder ButterRight = drive.actionBuilder(currentPose)
-                .afterDisp(0, verticalGrabberRR.verticalGrabberPosition(Configuration.open))
-                .afterDisp(0, verticalWristRR.verticalWristPosition(Configuration.backwardPos))
-                .afterDisp(5, horizontalSlideRR.horizontalSlidePosition(Configuration.extend))
-                .afterDisp(5, horizontalWristRR.horizontalWristPosition(Configuration.forwardPosOut))
-                .afterDisp(5, horizontalIntakeRR.horizontalIntakePosition(Configuration.floorOpen))
-                .strafeToSplineHeading(new Vector2d(36, 27.45), Math.toRadians(-90))
-                .afterTime(0, robotSpecial.transferSystem())
-                .waitSeconds(.5)
-                .strafeTo(new Vector2d(48.25, 27.75))
-                .afterTime(0, robotSpecial.transferSystem())
-                .waitSeconds(2);
-
-        TrajectoryActionBuilder PostHang = drive.actionBuilder(currentPose)
-                //approach the human player
-                .afterDisp(0, verticalWristRR.verticalWristPosition(Configuration.forwardDown))
-                .strafeToSplineHeading(new Vector2d(45, 20), Math.toRadians(-90))
-                //grab the butter
-                .afterTime(0, verticalGrabberRR.verticalGrabberPosition(Configuration.close))
-                .waitSeconds(.25)
-                //lift the slide partly and approach the hang
-                .afterTime(0, verticalSlideRR.verticalSlidePosition(-100))
-                .afterDisp(5, horizontalSlideRR.horizontalSlidePosition(Configuration.highBar))
-                .strafeTo(new Vector2d(-16, 24))
-                //hang
-                .afterDisp(0, verticalSlideRR.verticalSlidePosition(Configuration.highBar))
-                .afterDisp(2, verticalSlideRR.verticalSlidePosition(Configuration.bottom))
-                .strafeTo(new Vector2d(-16, 28))
-                //approach the human player
-                .strafeToSplineHeading(new Vector2d(45, 20), Math.toRadians(-90))
-                //grab the butter
-                .afterTime(0, verticalGrabberRR.verticalGrabberPosition(Configuration.close))
-                .waitSeconds(.25)
-                //lift the slide partly and approach the hang
-                .afterTime(0, verticalSlideRR.verticalSlidePosition(-100))
-                .afterDisp(5, horizontalSlideRR.horizontalSlidePosition(Configuration.highBar))
-                .strafeTo(new Vector2d(-16, 24))
-                //hang
-                .afterDisp(0, verticalSlideRR.verticalSlidePosition(Configuration.highBar))
-                .afterDisp(2, verticalSlideRR.verticalSlidePosition(Configuration.bottom));
+        TrajectoryActionBuilder ButterLeft = drive.actionBuilder(currentPose);
 
         //wait for the start button to be press
         waitForStart();
@@ -561,54 +509,24 @@ public class FinalAuto extends LinearOpMode {
         Actions.runBlocking(new SequentialAction(ActionHang));
         chosenTrajectory = hang;
 
-        Action ActionButterRight = chosenTrajectory.endTrajectory().fresh()
+        Action ActionButterLeft = chosenTrajectory.endTrajectory().fresh()
                 .afterDisp(0, verticalGrabberRR.verticalGrabberPosition(Configuration.open))
                 .afterDisp(0, verticalWristRR.verticalWristPosition(Configuration.backwardPos))
                 .afterDisp(5, horizontalSlideRR.horizontalSlidePosition(Configuration.extend))
                 .afterDisp(5, horizontalWristRR.horizontalWristPosition(Configuration.forwardPosOut))
                 .afterDisp(5, horizontalIntakeRR.horizontalIntakePosition(Configuration.floorOpen))
-                .strafeToSplineHeading(new Vector2d(36, 27.45), Math.toRadians(-90))
-                .afterTime(0, robotSpecial.transferSystem(false, true))
-                .waitSeconds(.5)
-                .strafeTo(new Vector2d(48.25, 27.75))
-                .afterTime(0, robotSpecial.transferSystem(false, false))
-                .waitSeconds(2)
-                .build();
-
-        Actions.runBlocking(new SequentialAction(ActionButterRight));
-        chosenTrajectory = ButterRight;
-
-        Action ActionPostHang= chosenTrajectory.endTrajectory().fresh()
-                //approach the human player
-                .afterDisp(0, verticalWristRR.verticalWristPosition(Configuration.forwardDown))
-                .strafeToSplineHeading(new Vector2d(45, 20), Math.toRadians(-90))
-                //grab the butter
-                .afterTime(0, verticalGrabberRR.verticalGrabberPosition(Configuration.close))
-                .waitSeconds(.25)
-                //lift the slide partly and approach the hang
-                .afterTime(0, verticalSlideRR.verticalSlidePosition(-100))
-                .afterDisp(5, horizontalSlideRR.horizontalSlidePosition(Configuration.highBar))
-                .strafeTo(new Vector2d(-16, 24))
-                //hang
-                .afterDisp(0, verticalSlideRR.verticalSlidePosition(Configuration.highBar))
+                .strafeToSplineHeading(new Vector2d(-36, 27.45), Math.toRadians(-90))
+                .afterTime(0, robotSpecial.transferSystem(true, false))
+                .strafeToSplineHeading(new Vector2d(-40, 5), Math.toRadians(200))
+                //maybe need a wait not sure
+                .afterTime(0, robotSpecial.transferSystem(true, false))
+                .strafeToSplineHeading(new Vector2d(-48.25, 27.45), Math.toRadians(-90))
+                //maybe need a wait not sure
+                .strafeToSplineHeading(new Vector2d(-40, 5), Math.toRadians(200))
+                .afterTime(0, verticalGrabberRR.verticalGrabberPosition(Configuration.open))
+                .afterDisp(1, verticalWristRR.verticalWristPosition(Configuration.backwardPos))
                 .afterDisp(2, verticalSlideRR.verticalSlidePosition(Configuration.bottom))
-                .strafeTo(new Vector2d(-16, 28))
-                //approach the human player
-                .strafeToSplineHeading(new Vector2d(45, 20), Math.toRadians(-90))
-                //grab the butter
-                .afterTime(0, verticalGrabberRR.verticalGrabberPosition(Configuration.close))
-                .waitSeconds(.25)
-                //lift the slide partly and approach the hang
-                .afterTime(0, verticalSlideRR.verticalSlidePosition(-100))
-                .afterDisp(5, horizontalSlideRR.horizontalSlidePosition(Configuration.highBar))
-                .strafeTo(new Vector2d(-16, 24))
-                //hang
-                .afterDisp(0, verticalSlideRR.verticalSlidePosition(Configuration.highBar))
-                .afterDisp(2, verticalSlideRR.verticalSlidePosition(Configuration.bottom))
+                .strafeToSplineHeading(new Vector2d(-30, 10), Math.toRadians(-90))
                 .build();
-
-        Actions.runBlocking(new SequentialAction(ActionPostHang));
-        chosenTrajectory = PostHang;
-
     }
 }
