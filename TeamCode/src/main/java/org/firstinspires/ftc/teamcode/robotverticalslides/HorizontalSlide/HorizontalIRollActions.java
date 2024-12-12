@@ -36,7 +36,7 @@ public class HorizontalIRollActions {
             rollServo.setPosition(position + Configuration.flat);
         }
         if (System.currentTimeMillis() > changePosStartTime + 420 && rollServo.isPwmEnabled()) {
-            rollServo.setPwmDisable();
+//            rollServo.setPwmDisable();
             //this part is just so it doesn't check if pwm is enabled for another little while
             changePosStartTime = System.currentTimeMillis();
         }
