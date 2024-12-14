@@ -22,8 +22,17 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.teamcode.Configuration.Configuration;
 import org.firstinspires.ftc.teamcode.PinpointDrive;
 import org.firstinspires.ftc.teamcode.robotverticalslides.constants.ConfigConstants;
+
+import org.firstinspires.ftc.teamcode.Configuration.VerticalWristRR;
+import org.firstinspires.ftc.teamcode.Configuration.VerticalSlideRR;
+import org.firstinspires.ftc.teamcode.Configuration.VerticalGrabberRR;
+import org.firstinspires.ftc.teamcode.Configuration.HorizontalSlideRR;
+import org.firstinspires.ftc.teamcode.Configuration.HorizontalGrabberRR;
+import org.firstinspires.ftc.teamcode.Configuration.HorizontalWristRR;
+import org.firstinspires.ftc.teamcode.Configuration.HorizontalRollRR;
 
 @Config
 @Autonomous(name = "1. Final Auto", group = "Autonomous")
@@ -38,309 +47,9 @@ public class FinalAutoLeft extends LinearOpMode {
     HorizontalWristRR horizontalWristRR = new HorizontalWristRR(hardwareMap, telemetry);
 
     HorizontalRollRR horizontalRollRR = new HorizontalRollRR(hardwareMap, telemetry);
-
     RobotSpecial robotSpecial = new RobotSpecial();
-    public class VerticalSlideRR {
-        public DcMotorEx verticalSlide1 = null;
-        public DcMotorEx verticalSlide2 = null;
 
-        public VerticalSlideRR(HardwareMap hardwareMap) {
-            verticalSlide1 = hardwareMap.get(DcMotorEx.class, ConfigConstants.VERTICAL_SLIDE1);
-            verticalSlide1.setDirection(DcMotorSimple.Direction.REVERSE);
-            verticalSlide1.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            verticalSlide1.setTargetPosition(0);
-            verticalSlide1.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
-            verticalSlide2 = hardwareMap.get(DcMotorEx.class, ConfigConstants.VERTICAL_SLIDE2);
-            verticalSlide2.setDirection(DcMotorSimple.Direction.FORWARD);
-            verticalSlide2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            verticalSlide2.setTargetPosition(0);
-            verticalSlide2.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        }
-
-        private boolean initialized = false;
-
-        public class VerticalSlidePosition implements Action {
-            int position = 0;
-            private boolean initialized = false;
-
-            public VerticalSlidePosition(int position) {
-                this.position = position;
-            }
-
-            public VerticalSlidePosition() {
-                this.position = Configuration.bottom;
-            }
-
-            @Override
-            public boolean run(@NonNull TelemetryPacket packet) {
-                double velocity = 1800;
-                if (!initialized) {
-                    verticalSlide1.setTargetPosition(position);
-                    verticalSlide1.setVelocity(velocity);
-                    verticalSlide2.setTargetPosition(-position);
-                    verticalSlide2.setVelocity(-velocity);
-                    initialized = true;
-                }
-                double currentPosition = verticalSlide1.getCurrentPosition();
-                return currentPosition > position;
-            }
-        }
-
-        public Action verticalSlidePosition() {
-            return new VerticalSlidePosition();
-        }
-
-        public Action verticalSlidePosition(int position) {
-            return new VerticalSlidePosition(position);
-        }
-    }
-
-    public class HorizontalSlideRR {
-        public DcMotorEx horizontalSlide2 = null;
-        private Telemetry telemetry;
-
-        public HorizontalSlideRR(HardwareMap hardwareMap, Telemetry telemetry) {
-            this.telemetry = telemetry;
-            horizontalSlide2 = hardwareMap.get(DcMotorEx.class, ConfigConstants.HORIZONTAL_SLIDE2);
-            horizontalSlide2.setDirection(DcMotorSimple.Direction.REVERSE);
-            horizontalSlide2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            horizontalSlide2.setTargetPosition(0);
-            horizontalSlide2.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        }
-
-        private boolean initialized = false;
-
-        public class HorizontalSLidePosition implements Action {
-            int position = Configuration.retractSlide;
-            private boolean initialized = false;
-
-            public HorizontalSLidePosition(int position) {
-                this.position = position;
-            }
-
-            public HorizontalSLidePosition() {
-                this.position = Configuration.retractSlide;
-            }
-
-            @Override
-            public boolean run(@NonNull TelemetryPacket packet) {
-                double velocity = 3600;
-                if (!initialized) {
-                    horizontalSlide2.setTargetPosition(position);
-                    horizontalSlide2.setVelocity(velocity);
-                    horizontalSlide2.setTargetPosition(-position);
-                    horizontalSlide2.setVelocity(-velocity);
-                    initialized = true;
-                }
-                double currentPosition = horizontalSlide2.getCurrentPosition();
-                return currentPosition > position;
-            }
-        }
-
-        public Action horizontalSlidePosition(int position) {
-            return new HorizontalSLidePosition(position);
-        }
-
-        public Action horizontalSlidePosition() {
-            return new HorizontalSLidePosition();
-        }
-    }
-
-    public class VerticalGrabberRR {
-        public Servo verticalGrabberServo;
-        private Telemetry telemetry;
-        private HardwareMap hardwareMap;
-
-        public VerticalGrabberRR(HardwareMap opModeHardware, Telemetry opModeTelemetry) {
-            this.telemetry = opModeTelemetry;
-            this.hardwareMap = opModeHardware;
-            verticalGrabberServo = hardwareMap.get(Servo.class, ConfigConstants.VERTICAL_GRABBER);
-            verticalGrabberServo.setPosition(1.0);
-        }
-
-        public class VerticalGrabberPosition implements Action {
-            double position = Configuration.close;
-
-            public VerticalGrabberPosition(double position) {
-                this.position = position;
-            }
-
-            public VerticalGrabberPosition() {
-                this.position = Configuration.close;
-            }
-
-            @Override
-            public boolean run(@NonNull TelemetryPacket packet) {
-                verticalGrabberServo.setPosition(position);
-                return false;
-            }
-        }
-
-        public Action verticalGrabberPosition(double position) {
-            return new VerticalGrabberPosition(position);
-        }
-
-        public Action verticalGrabberPosition() {
-            return new VerticalGrabberPosition();
-        }
-    }
-
-    public class VerticalWristRR {
-        public Servo verticalWristServo;
-        private Telemetry telemetry;
-        private HardwareMap hardwareMap;
-
-        public VerticalWristRR(HardwareMap opModeHardware, Telemetry opModeTelemetry) {
-            this.telemetry = opModeTelemetry;
-            this.hardwareMap = opModeHardware;
-            verticalWristServo = hardwareMap.get(Servo.class, ConfigConstants.VERTICAL_WRIST);
-            verticalWristServo.setPosition(Configuration.backwardPos);
-        }
-
-        public class VerticalWristPosition implements Action {
-            double position = Configuration.backwardPos;
-
-            public VerticalWristPosition(double position) {
-                this.position = position;
-            }
-
-            public VerticalWristPosition() {
-                this.position = Configuration.backwardPos;
-            }
-
-            @Override
-            public boolean run(@NonNull TelemetryPacket packet) {
-                verticalWristServo.setPosition(position);
-                return false;
-            }
-        }
-
-        public Action verticalWristPosition(double position) {
-            return new VerticalWristPosition(position);
-        }
-
-        public Action verticalWristPosition() {
-            return new VerticalWristPosition();
-        }
-    }
-
-    public class HorizontalGrabberRR {
-        public Servo intakeServo;
-        private Telemetry telemetry;
-        private HardwareMap hardwareMap;
-
-        public HorizontalGrabberRR(HardwareMap opModeHardware, Telemetry opModeTelemetry) {
-            this.telemetry = opModeTelemetry;
-            this.hardwareMap = opModeHardware;
-            intakeServo = hardwareMap.get(Servo.class, ConfigConstants.HORIZONTAL_INTAKE);
-            intakeServo.setPosition(Configuration.floorClose);
-        }
-
-        public class HorizontalIntakePosition implements Action {
-            double position = Configuration.floorClose;
-
-            public HorizontalIntakePosition(double position) {
-                this.position = position;
-            }
-
-            public HorizontalIntakePosition() {
-                this.position = Configuration.floorClose;
-            }
-
-            @Override
-            public boolean run(@NonNull TelemetryPacket packet) {
-                intakeServo.setPosition(position);
-                return false;
-            }
-        }
-
-        public Action horizontalIntakePosition(double position) {
-            return new HorizontalIntakePosition(position);
-        }
-
-        public Action horizontalIntakePosition() {
-            return new HorizontalIntakePosition();
-        }
-    }
-
-    public class HorizontalWristRR {
-        public Servo horizontalWristServo;
-        private Telemetry telemetry;
-        private HardwareMap hardwareMap;
-
-        public HorizontalWristRR(HardwareMap opModeHardware, Telemetry opModeTelemetry) {
-            this.telemetry = opModeTelemetry;
-            this.hardwareMap = opModeHardware;
-            horizontalWristServo = hardwareMap.get(Servo.class, ConfigConstants.HORIZONTAL_WRIST);
-            horizontalWristServo.setPosition(Configuration.backwardPosIn);
-        }
-
-        public class HorizontalWristPosition implements Action {
-            double position = Configuration.backwardPosIn;
-
-            public HorizontalWristPosition(double position) {
-                this.position = position;
-            }
-
-            public HorizontalWristPosition() {
-                this.position = Configuration.backwardPosIn;
-            }
-
-            @Override
-            public boolean run(@NonNull TelemetryPacket packet) {
-                horizontalWristServo.setPosition(position);
-                return false;
-            }
-        }
-
-        public Action horizontalWristPosition(double position) {
-            return new HorizontalWristPosition(position);
-        }
-
-        public Action horizontalWristPosition() {
-            return new HorizontalWristPosition();
-        }
-    }
-
-    public class HorizontalRollRR {
-        public Servo rollServo;
-        private Telemetry telemetry;
-        private HardwareMap hardwareMap;
-
-        public HorizontalRollRR(HardwareMap opModeHardware, Telemetry opModeTelemetry) {
-            this.telemetry = opModeTelemetry;
-            this.hardwareMap = opModeHardware;
-            rollServo = hardwareMap.get(Servo.class, ConfigConstants.HORIZONTAL_ROLL);
-            rollServo.setPosition(Configuration.flat);
-        }
-
-        public class HorizontalRollPosition implements Action {
-            double position = Configuration.flat;
-
-            public HorizontalRollPosition(double position) {
-                this.position = position;
-            }
-
-            public HorizontalRollPosition() {
-                this.position = Configuration.flat;
-            }
-
-            @Override
-            public boolean run(@NonNull TelemetryPacket packet) {
-                rollServo.setPosition(position);
-                return false;
-            }
-        }
-
-        public Action horizontalRollPosition(double position) {
-            return new HorizontalRollPosition(position);
-        }
-
-        public Action horizontalRollPosition() {
-            return new HorizontalRollPosition();
-        }
-    }
     public class RobotSpecial {
         public class TransferSystem implements Action{
             boolean primeHorizontal = false;
@@ -528,5 +237,8 @@ public class FinalAutoLeft extends LinearOpMode {
                 .afterDisp(2, verticalSlideRR.verticalSlidePosition(Configuration.bottom))
                 .strafeToSplineHeading(new Vector2d(-30, 10), Math.toRadians(-90))
                 .build();
+
+        Actions.runBlocking(new SequentialAction(ActionButterLeft));
+        chosenTrajectory = ButterLeft;
     }
 }

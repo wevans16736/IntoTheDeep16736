@@ -1,4 +1,5 @@
-package org.firstinspires.ftc.teamcode.Autonomus;
+package org.firstinspires.ftc.teamcode.Configuration;
+
 
 public class Configuration{
     //drive default movement

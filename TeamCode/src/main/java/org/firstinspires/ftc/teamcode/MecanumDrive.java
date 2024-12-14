@@ -41,7 +41,7 @@ import com.qualcomm.robotcore.hardware.VoltageSensor;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.YawPitchRollAngles;
-import org.firstinspires.ftc.teamcode.Autonomus.Configuration;
+import org.firstinspires.ftc.teamcode.Configuration.Configuration;
 import org.firstinspires.ftc.teamcode.messages.DriveCommandMessage;
 import org.firstinspires.ftc.teamcode.messages.MecanumCommandMessage;
 import org.firstinspires.ftc.teamcode.messages.MecanumLocalizerInputsMessage;
@@ -259,6 +259,7 @@ public class MecanumDrive {
         rightFront.setPower(wheelVels.rightFront.get(0) / maxPowerMag);
     }
 
+    public static Pose2d currentError;
     public final class FollowTrajectoryAction implements Action {
         public final TimeTrajectory timeTrajectory;
         private double beginTs = -1;
@@ -296,6 +297,8 @@ public class MecanumDrive {
             PoseVelocity2d robotVelRobot = updatePoseEstimate();
 
             Pose2d error = txWorldTarget.value().minusExp(pose);
+
+            currentError = error;
 
             if (t >= timeTrajectory.duration && error.position.norm() < .5 && robotVelRobot.linearVel.norm() <.5 || t>= timeTrajectory.duration +1) {
                 leftFront.setPower(0);
@@ -361,6 +364,9 @@ public class MecanumDrive {
             c.strokePolyline(xPoints, yPoints);
 
             return true;
+        }
+        public Pose2d getError(){
+            return currentError;
         }
 
         @Override

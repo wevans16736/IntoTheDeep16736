@@ -9,7 +9,7 @@ import com.qualcomm.robotcore.util.RobotLog;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
-import org.firstinspires.ftc.teamcode.Autonomus.Configuration;
+import org.firstinspires.ftc.teamcode.Configuration.Configuration;
 import org.firstinspires.ftc.teamcode.robotverticalslides.constants.ConfigConstants;
 
 public class VerticalSlideActions {
