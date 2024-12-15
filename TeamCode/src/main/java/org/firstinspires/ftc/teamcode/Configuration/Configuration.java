@@ -1,6 +1,8 @@
 package org.firstinspires.ftc.teamcode.Configuration;
 
+import com.acmerobotics.dashboard.config.Config;
 
+@Config
 public class Configuration{
     //drive default movement
     public static double maxWheelVel = 50; //default is 50
@@ -19,11 +21,11 @@ public class Configuration{
 
     //this is vertical wrist servo position
     //this is a position to place it on the basket
-    public static double forwardUp = 0.4;
+    public static double forwardUp = 0.45;
     //this is a position to grab the butter from the wall or set it on the lower basket or either rung
     public static double forwardDown = 0.24;
     //this is the position to grab the butter from the intake
-    public static double backwardPos = 0.74;
+    public static double backwardPos = 0.745;
 
 
     //vertical grabber servo position

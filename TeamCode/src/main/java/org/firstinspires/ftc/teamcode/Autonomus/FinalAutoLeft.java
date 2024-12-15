@@ -35,7 +35,7 @@ import org.firstinspires.ftc.teamcode.Configuration.HorizontalWristRR;
 import org.firstinspires.ftc.teamcode.Configuration.HorizontalRollRR;
 
 @Config
-@Autonomous(name = "1. Final Auto", group = "Autonomous")
+@Autonomous(name = "1. Final Left Auto", group = "Autonomous")
 public class FinalAutoLeft extends LinearOpMode {
     VerticalSlideRR verticalSlideRR = new VerticalSlideRR(hardwareMap);
     HorizontalSlideRR horizontalSlideRR = new HorizontalSlideRR(hardwareMap, telemetry);
