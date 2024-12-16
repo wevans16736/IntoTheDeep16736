@@ -22,7 +22,7 @@ public class VerticalGrabberActions {
         verticalGrabberServo.setPosition(0.3);
     }
     public void open() {
-        verticalGrabberServo.setPosition(Configuration.open);
+        verticalGrabberServo.setPosition(Configuration.verticalOpen);
         isClose = false;
     }
     public void close() {

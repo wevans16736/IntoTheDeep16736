@@ -16,17 +16,10 @@ import com.acmerobotics.roadrunner.Vector2d;
 import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorEx;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
-import com.qualcomm.robotcore.hardware.HardwareMap;
-import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.Configuration.Configuration;
-import org.firstinspires.ftc.teamcode.MecanumDrive;
 import org.firstinspires.ftc.teamcode.PinpointDrive;
-import org.firstinspires.ftc.teamcode.robotverticalslides.constants.ConfigConstants;
 
 
 import org.firstinspires.ftc.teamcode.Configuration.VerticalWristRR;
@@ -38,29 +31,29 @@ import org.firstinspires.ftc.teamcode.Configuration.HorizontalWristRR;
 import org.firstinspires.ftc.teamcode.Configuration.HorizontalRollRR;
 
 @Config
-@Autonomous(name = "1. Final Auto", group = "Autonomous")
+@Autonomous(name = "1. Concept Auto", group = "Autonomous")
 public class ConceptAuto extends LinearOpMode {
-    FtcDashboard dashboard = FtcDashboard.getInstance();
-    Telemetry dashboardTelemetry = dashboard.getTelemetry();
-    VerticalSlideRR verticalSlideRR = new VerticalSlideRR(hardwareMap);
-    HorizontalSlideRR horizontalSlideRR = new HorizontalSlideRR(hardwareMap, telemetry);
 
-    VerticalGrabberRR verticalGrabberRR = new VerticalGrabberRR(hardwareMap, telemetry);
-    HorizontalGrabberRR horizontalIntakeRR = new HorizontalGrabberRR(hardwareMap, telemetry);
+    @Override
+    public void runOpMode() throws InterruptedException  {
+        FtcDashboard dashboard = FtcDashboard.getInstance();
+        Telemetry dashboardTelemetry = dashboard.getTelemetry();
+        VerticalSlideRR verticalSlideRR = new VerticalSlideRR(hardwareMap);
+        HorizontalSlideRR horizontalSlideRR = new HorizontalSlideRR(hardwareMap, telemetry);
 
-    VerticalWristRR verticalWristRR = new VerticalWristRR(hardwareMap, telemetry);
-    HorizontalWristRR horizontalWristRR = new HorizontalWristRR(hardwareMap, telemetry);
+        VerticalGrabberRR verticalGrabberRR = new VerticalGrabberRR(hardwareMap, telemetry);
+        HorizontalGrabberRR horizontalIntakeRR = new HorizontalGrabberRR(hardwareMap, telemetry);
 
-    HorizontalRollRR horizontalRollRR = new HorizontalRollRR(hardwareMap, telemetry);
+        VerticalWristRR verticalWristRR = new VerticalWristRR(hardwareMap, telemetry);
+        HorizontalWristRR horizontalWristRR = new HorizontalWristRR(hardwareMap, telemetry);
 
+        HorizontalRollRR horizontalRollRR = new HorizontalRollRR(hardwareMap, telemetry);
 
+        Pose2d currentPose = new Pose2d(0, 0, Math.toRadians(90));
+        PinpointDrive drive = new PinpointDrive(hardwareMap, currentPose);
 
-    Pose2d currentPose = new Pose2d(0, 0, Math.toRadians(90));
-    PinpointDrive drive = new PinpointDrive(hardwareMap, currentPose);
-
-    RobotSpecial robotSpecial = new RobotSpecial();
-    public class RobotSpecial {
-            public class TransferSystem implements Action{
+        class RobotSpecial {
+            class TransferSystem implements Action{
                 boolean primeHorizontal = false;
                 public TransferSystem(){
                     primeHorizontal = false;
@@ -74,54 +67,54 @@ public class ConceptAuto extends LinearOpMode {
                     if(primeHorizontal) {
                         Actions.runBlocking(new SequentialAction(
                                 //grab the butter from the floor
-                                horizontalIntakeRR.horizontalIntakePosition(Configuration.floorClose),
-                                verticalGrabberRR.verticalGrabberPosition(Configuration.open),
-                                verticalWristRR.verticalWristPosition(Configuration.backwardPos),
+                                horizontalIntakeRR.horizontalIntakePosition(Configuration.horizontalGrabberClose),
+                                verticalGrabberRR.verticalGrabberPosition(Configuration.verticalOpen),
+                                verticalWristRR.verticalWristPosition(Configuration.verticalWristIntake),
                                 new SleepAction(.5),
                                 //retract the slide
-                                horizontalSlideRR.horizontalSlidePosition(Configuration.retractSlide),
-                                horizontalWristRR.horizontalWristPosition(Configuration.backwardPosIn),
-                                verticalWristRR.verticalWristPosition(Configuration.backwardPos),
+                                horizontalSlideRR.horizontalSlidePosition(Configuration.horizontalSlideRetract),
+                                horizontalWristRR.horizontalWristPosition(Configuration.horizontalWristTransfer),
+                                verticalWristRR.verticalWristPosition(Configuration.verticalWristIntake),
                                 new SleepAction(1),
                                 //vertical grabber close
-                                verticalGrabberRR.verticalGrabberPosition(Configuration.close),
+                                verticalGrabberRR.verticalGrabberPosition(Configuration.verticalClose),
                                 new SleepAction(.25),
                                 //horizontal grabber open
-                                horizontalIntakeRR.horizontalIntakePosition(Configuration.floorOpen),
+                                horizontalIntakeRR.horizontalIntakePosition(Configuration.horizontalGrabberOpen),
                                 new SleepAction(.25),
                                 //butter go to the other side while priming the horizontal slide for other butter
-                                verticalWristRR.verticalWristPosition(Configuration.forwardDown),
-                                horizontalWristRR.horizontalWristPosition(Configuration.forwardPosOut),
+                                verticalWristRR.verticalWristPosition(Configuration.verticalWristWall),
+                                horizontalWristRR.horizontalWristPosition(Configuration.horizontalWristIntake),
                                 horizontalSlideRR.horizontalSlidePosition(Configuration.extend),
                                 new SleepAction(1.5),
-                                verticalGrabberRR.verticalGrabberPosition(Configuration.open),
+                                verticalGrabberRR.verticalGrabberPosition(Configuration.verticalOpen),
                                 new SleepAction(.5),
-                                verticalWristRR.verticalWristPosition(Configuration.backwardPos)
+                                verticalWristRR.verticalWristPosition(Configuration.verticalWristIntake)
                         ));
                     }
                     if(!primeHorizontal){
                         Actions.runBlocking(new SequentialAction(
                                 //grab the butter from the floor
-                                horizontalIntakeRR.horizontalIntakePosition(Configuration.floorClose),
-                                verticalGrabberRR.verticalGrabberPosition(Configuration.open),
-                                verticalWristRR.verticalWristPosition(Configuration.backwardPos),
+                                horizontalIntakeRR.horizontalIntakePosition(Configuration.horizontalGrabberClose),
+                                verticalGrabberRR.verticalGrabberPosition(Configuration.verticalOpen),
+                                verticalWristRR.verticalWristPosition(Configuration.verticalWristIntake),
                                 new SleepAction(.5),
                                 //retract the slide
-                                horizontalSlideRR.horizontalSlidePosition(Configuration.retractSlide),
-                                horizontalWristRR.horizontalWristPosition(Configuration.backwardPosIn),
-                                verticalWristRR.verticalWristPosition(Configuration.backwardPos),
+                                horizontalSlideRR.horizontalSlidePosition(Configuration.horizontalSlideRetract),
+                                horizontalWristRR.horizontalWristPosition(Configuration.horizontalWristTransfer),
+                                verticalWristRR.verticalWristPosition(Configuration.verticalWristIntake),
                                 new SleepAction(1),
                                 //vertical grabber close
-                                verticalGrabberRR.verticalGrabberPosition(Configuration.close),
+                                verticalGrabberRR.verticalGrabberPosition(Configuration.verticalClose),
                                 new SleepAction(.25),
                                 //horizontal grabber open
-                                horizontalIntakeRR.horizontalIntakePosition(Configuration.floorOpen),
+                                horizontalIntakeRR.horizontalIntakePosition(Configuration.horizontalGrabberOpen),
                                 new SleepAction(.25),
-                                verticalWristRR.verticalWristPosition(Configuration.forwardDown),
+                                verticalWristRR.verticalWristPosition(Configuration.verticalWristWall),
                                 new SleepAction(1),
-                                verticalGrabberRR.verticalGrabberPosition(Configuration.open),
+                                verticalGrabberRR.verticalGrabberPosition(Configuration.verticalOpen),
                                 new SleepAction(.25),
-                                verticalWristRR.verticalWristPosition(Configuration.backwardPos)
+                                verticalWristRR.verticalWristPosition(Configuration.verticalWristIntake)
                         ));
                     }
                     return false;
@@ -129,48 +122,25 @@ public class ConceptAuto extends LinearOpMode {
             }
             public Action transferSystem(boolean primeHorizontal) {return new TransferSystem(primeHorizontal);}
             public Action transferSystem() {return new TransferSystem();}
-        public class SelfCorrect implements Action {
-            Pose2d currentPose = drive.getLastPinpointPose();
-            Pose2d currentError = MecanumDrive.currentError;
-
-            @Override
-            public boolean run(@NonNull TelemetryPacket packet) {
-                dashboardTelemetry.addData("X", currentPose.position.x);
-                dashboardTelemetry.addData("Y", currentPose.position.y);
-                dashboardTelemetry.addData("Heading", currentPose.heading.toDouble());
-
-                dashboardTelemetry.addData("X error", currentError.position.x);
-                dashboardTelemetry.addData("Y Error", currentError.position.y);
-                dashboardTelemetry.addData("Heading Error", currentError.heading.toDouble());
-                dashboardTelemetry.update();
-                TrajectoryActionBuilder correctError = drive.actionBuilder(currentPose)
-                        .strafeToLinearHeading(new Vector2d(currentPose.position.x - currentError.position.x,
-                                        currentPose.position.y - currentError.position.y),
-                                currentPose.heading.toDouble() - currentError.heading.toDouble());
-                Actions.runBlocking(new SequentialAction(
-                        correctError.build()
-                ));
-                return false;
-            }
         }
-        public Action selfCorrect() {return new RobotSpecial.SelfCorrect();}
-    }
 
-    TrajectoryActionBuilder test = drive.actionBuilder(currentPose)
-            .strafeTo(new Vector2d(0, 20));
+        TrajectoryActionBuilder test = drive.actionBuilder(currentPose)
+                .strafeTo(new Vector2d(0, 20));
 
-    @Override
-    public void runOpMode() throws InterruptedException  {
+        RobotSpecial robotSpecial = new RobotSpecial();
+
+
+
         //initialize the robot before starting
         Actions.runBlocking(new SequentialAction(
-                horizontalSlideRR.horizontalSlidePosition(Configuration.retractSlide),
+                horizontalSlideRR.horizontalSlidePosition(Configuration.horizontalSlideRetract),
                 verticalSlideRR.verticalSlidePosition(Configuration.bottom),
 
-                horizontalIntakeRR.horizontalIntakePosition(Configuration.floorOpen),
-                verticalGrabberRR.verticalGrabberPosition(Configuration.close),
+                horizontalIntakeRR.horizontalIntakePosition(Configuration.horizontalGrabberOpen),
+                verticalGrabberRR.verticalGrabberPosition(Configuration.verticalClose),
 
-                horizontalWristRR.horizontalWristPosition(Configuration.backwardPosIn),
-                verticalWristRR.verticalWristPosition(Configuration.backwardPos),
+                horizontalWristRR.horizontalWristPosition(Configuration.horizontalWristTransfer),
+                verticalWristRR.verticalWristPosition(Configuration.verticalWristIntake),
                 horizontalRollRR.horizontalRollPosition(Configuration.flat)
         ));
 
@@ -194,7 +164,6 @@ public class ConceptAuto extends LinearOpMode {
 
         Action ActionSecondTest = chosenTrajectory.endTrajectory().fresh()
                 .waitSeconds(3)
-                .afterTime(0, robotSpecial.selfCorrect())
                 .build();
 
         Actions.runBlocking(new SequentialAction(ActionSecondTest));

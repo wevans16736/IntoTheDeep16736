@@ -13,9 +13,9 @@ public class HorizontalWristActions {
     private Telemetry telemetry;
     private HardwareMap hardwareMap;
     private ElapsedTime runtime = new ElapsedTime();
-    private double backwardPosIn = Configuration.backwardPosIn;
-    private double backwardPosOut = Configuration.backwardPosOut;
-    private double forwardPosOut = Configuration.forwardPosOut;
+    private double backwardPosIn = Configuration.horizontalWristTransfer;
+    private double backwardPosOut = Configuration.horizontalWristHover;
+    private double forwardPosOut = Configuration.horizontalWristIntake;
     public HorizontalWristActions(Telemetry opModeTelemetry, HardwareMap opModeHardware) {
         this.telemetry = opModeTelemetry;
         this.hardwareMap = opModeHardware;

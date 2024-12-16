@@ -12,20 +12,12 @@ import com.acmerobotics.roadrunner.SleepAction;
 import com.acmerobotics.roadrunner.TrajectoryActionBuilder;
 import com.acmerobotics.roadrunner.Vector2d;
 import com.acmerobotics.roadrunner.ftc.Actions;
-import com.acmerobotics.roadrunner.ftc.GoBildaPinpointDriverRR;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorEx;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
-import com.qualcomm.robotcore.hardware.HardwareMap;
-import com.qualcomm.robotcore.hardware.Servo;
 
-import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.Configuration.Configuration;
 import org.firstinspires.ftc.teamcode.MecanumDrive;
 import org.firstinspires.ftc.teamcode.PinpointDrive;
-import org.firstinspires.ftc.teamcode.robotverticalslides.constants.ConfigConstants;
 
 import org.firstinspires.ftc.teamcode.Configuration.VerticalWristRR;
 import org.firstinspires.ftc.teamcode.Configuration.VerticalSlideRR;
@@ -38,6 +30,10 @@ import org.firstinspires.ftc.teamcode.Configuration.HorizontalRollRR;
 @Config
 @Autonomous(name = "1. Final Auto", group = "Autonomous")
 public class FinalAuto extends LinearOpMode {
+
+@Override
+    public void runOpMode() throws InterruptedException  {
+
     VerticalSlideRR verticalSlideRR = new VerticalSlideRR(hardwareMap);
     HorizontalSlideRR horizontalSlideRR = new HorizontalSlideRR(hardwareMap, telemetry);
     VerticalGrabberRR verticalGrabberRR = new VerticalGrabberRR(hardwareMap, telemetry);
@@ -48,9 +44,8 @@ public class FinalAuto extends LinearOpMode {
     Pose2d initialPose = new Pose2d(0, 0, Math.toRadians(90));
     PinpointDrive drive = new PinpointDrive(hardwareMap, initialPose);
 
-    RobotSpecial robotSpecial = new RobotSpecial();
-    public class RobotSpecial {
-        public class TransferSystem implements Action {
+     class RobotSpecial {
+         class TransferSystem implements Action {
             boolean primeHorizontal = false;
             boolean pickLeft = false;
 
@@ -68,92 +63,92 @@ public class FinalAuto extends LinearOpMode {
                 if (pickLeft) {
                     Actions.runBlocking(new SequentialAction(
                             //let go of the butter on top
-                            verticalGrabberRR.verticalGrabberPosition(Configuration.open),
+                            verticalGrabberRR.verticalGrabberPosition(Configuration.verticalOpen),
                             new SleepAction(.5),
-                            verticalWristRR.verticalWristPosition(Configuration.backwardPos),
+                            verticalWristRR.verticalWristPosition(Configuration.verticalWristIntake),
                             verticalSlideRR.verticalSlidePosition(Configuration.bottom),
                             new SleepAction(2),
                             //extend the horizontal Slide
                             horizontalIntakeRR.horizontalIntakePosition(Configuration.extend),
-                            horizontalWristRR.horizontalWristPosition(Configuration.forwardPosOut),
-                            horizontalIntakeRR.horizontalIntakePosition(Configuration.floorOpen),
+                            horizontalWristRR.horizontalWristPosition(Configuration.horizontalWristIntake),
+                            horizontalIntakeRR.horizontalIntakePosition(Configuration.horizontalGrabberOpen),
                             new SleepAction(.5),
                             //grab the butter from the floor
-                            horizontalIntakeRR.horizontalIntakePosition(Configuration.floorClose),
-                            verticalGrabberRR.verticalGrabberPosition(Configuration.open),
-                            verticalWristRR.verticalWristPosition(Configuration.backwardPos),
+                            horizontalIntakeRR.horizontalIntakePosition(Configuration.horizontalGrabberClose),
+                            verticalGrabberRR.verticalGrabberPosition(Configuration.verticalOpen),
+                            verticalWristRR.verticalWristPosition(Configuration.verticalWristIntake),
                             new SleepAction(.5),
                             //retract the slide
-                            horizontalSlideRR.horizontalSlidePosition(Configuration.retractSlide),
-                            horizontalWristRR.horizontalWristPosition(Configuration.backwardPosIn),
-                            verticalWristRR.verticalWristPosition(Configuration.backwardPos),
+                            horizontalSlideRR.horizontalSlidePosition(Configuration.horizontalSlideRetract),
+                            horizontalWristRR.horizontalWristPosition(Configuration.horizontalWristTransfer),
+                            verticalWristRR.verticalWristPosition(Configuration.verticalWristIntake),
                             new SleepAction(1),
                             //vertical grabber close
-                            verticalGrabberRR.verticalGrabberPosition(Configuration.close),
+                            verticalGrabberRR.verticalGrabberPosition(Configuration.verticalClose),
                             new SleepAction(.25),
                             //horizontal grabber open
-                            horizontalIntakeRR.horizontalIntakePosition(Configuration.floorOpen),
+                            horizontalIntakeRR.horizontalIntakePosition(Configuration.horizontalGrabberOpen),
                             new SleepAction(.25),
                             verticalSlideRR.verticalSlidePosition(Configuration.topBasket),
-                            verticalWristRR.verticalWristPosition(Configuration.forwardUp)
+                            verticalWristRR.verticalWristPosition(Configuration.verticalWristBasket)
                     ));
                 }
                 if (!pickLeft) {
                     if (primeHorizontal) {
                         Actions.runBlocking(new SequentialAction(
                                 //let go of the butter if it is up ontop of the basket
-                                verticalGrabberRR.verticalGrabberPosition(Configuration.open),
-                                verticalWristRR.verticalWristPosition(Configuration.backwardPos),
+                                verticalGrabberRR.verticalGrabberPosition(Configuration.verticalOpen),
+                                verticalWristRR.verticalWristPosition(Configuration.verticalWristIntake),
                                 verticalSlideRR.verticalSlidePosition(Configuration.bottom),
                                 //grab the butter from the floor
-                                horizontalIntakeRR.horizontalIntakePosition(Configuration.floorClose),
-                                verticalGrabberRR.verticalGrabberPosition(Configuration.open),
-                                verticalWristRR.verticalWristPosition(Configuration.backwardPos),
+                                horizontalIntakeRR.horizontalIntakePosition(Configuration.horizontalGrabberClose),
+                                verticalGrabberRR.verticalGrabberPosition(Configuration.verticalOpen),
+                                verticalWristRR.verticalWristPosition(Configuration.verticalWristIntake),
                                 new SleepAction(.5),
                                 //retract the slide
-                                horizontalSlideRR.horizontalSlidePosition(Configuration.retractSlide),
-                                horizontalWristRR.horizontalWristPosition(Configuration.backwardPosIn),
-                                verticalWristRR.verticalWristPosition(Configuration.backwardPos),
+                                horizontalSlideRR.horizontalSlidePosition(Configuration.horizontalSlideRetract),
+                                horizontalWristRR.horizontalWristPosition(Configuration.horizontalWristTransfer),
+                                verticalWristRR.verticalWristPosition(Configuration.verticalWristIntake),
                                 new SleepAction(1),
                                 //vertical grabber close
-                                verticalGrabberRR.verticalGrabberPosition(Configuration.close),
+                                verticalGrabberRR.verticalGrabberPosition(Configuration.verticalClose),
                                 new SleepAction(.25),
                                 //horizontal grabber open
-                                horizontalIntakeRR.horizontalIntakePosition(Configuration.floorOpen),
+                                horizontalIntakeRR.horizontalIntakePosition(Configuration.horizontalGrabberOpen),
                                 new SleepAction(.25),
                                 //butter go to the other side while priming the horizontal slide for other butter
-                                verticalWristRR.verticalWristPosition(Configuration.forwardDown),
-                                horizontalWristRR.horizontalWristPosition(Configuration.forwardPosOut),
+                                verticalWristRR.verticalWristPosition(Configuration.verticalWristWall),
+                                horizontalWristRR.horizontalWristPosition(Configuration.horizontalWristIntake),
                                 horizontalSlideRR.horizontalSlidePosition(Configuration.extend),
                                 new SleepAction(1.5),
-                                verticalGrabberRR.verticalGrabberPosition(Configuration.open),
+                                verticalGrabberRR.verticalGrabberPosition(Configuration.verticalOpen),
                                 new SleepAction(.5),
-                                verticalWristRR.verticalWristPosition(Configuration.backwardPos)
+                                verticalWristRR.verticalWristPosition(Configuration.verticalWristIntake)
                         ));
                     }
                     if (!primeHorizontal) {
                         Actions.runBlocking(new SequentialAction(
                                 //grab the butter from the floor
-                                horizontalIntakeRR.horizontalIntakePosition(Configuration.floorClose),
-                                verticalGrabberRR.verticalGrabberPosition(Configuration.open),
-                                verticalWristRR.verticalWristPosition(Configuration.backwardPos),
+                                horizontalIntakeRR.horizontalIntakePosition(Configuration.horizontalGrabberClose),
+                                verticalGrabberRR.verticalGrabberPosition(Configuration.verticalOpen),
+                                verticalWristRR.verticalWristPosition(Configuration.verticalWristIntake),
                                 new SleepAction(.5),
                                 //retract the slide
-                                horizontalSlideRR.horizontalSlidePosition(Configuration.retractSlide),
-                                horizontalWristRR.horizontalWristPosition(Configuration.backwardPosIn),
-                                verticalWristRR.verticalWristPosition(Configuration.backwardPos),
+                                horizontalSlideRR.horizontalSlidePosition(Configuration.horizontalSlideRetract),
+                                horizontalWristRR.horizontalWristPosition(Configuration.horizontalWristTransfer),
+                                verticalWristRR.verticalWristPosition(Configuration.verticalWristIntake),
                                 new SleepAction(1),
                                 //vertical grabber close
-                                verticalGrabberRR.verticalGrabberPosition(Configuration.close),
+                                verticalGrabberRR.verticalGrabberPosition(Configuration.verticalClose),
                                 new SleepAction(.25),
                                 //horizontal grabber open
-                                horizontalIntakeRR.horizontalIntakePosition(Configuration.floorOpen),
+                                horizontalIntakeRR.horizontalIntakePosition(Configuration.horizontalGrabberOpen),
                                 new SleepAction(.25),
-                                verticalWristRR.verticalWristPosition(Configuration.forwardDown),
+                                verticalWristRR.verticalWristPosition(Configuration.verticalWristWall),
                                 new SleepAction(1),
-                                verticalGrabberRR.verticalGrabberPosition(Configuration.open),
+                                verticalGrabberRR.verticalGrabberPosition(Configuration.verticalOpen),
                                 new SleepAction(.25),
-                                verticalWristRR.verticalWristPosition(Configuration.backwardPos)
+                                verticalWristRR.verticalWristPosition(Configuration.verticalWristIntake)
                         ));
                     }
                 }
@@ -168,41 +163,20 @@ public class FinalAuto extends LinearOpMode {
         public Action transferSystem() {
             return new TransferSystem();
         }
-
-        public class SelfCorrect implements Action {
-            Pose2d currentPose = drive.getLastPinpointPose();
-            Pose2d currentError = MecanumDrive.currentError;
-
-            @Override
-            public boolean run(@NonNull TelemetryPacket packet) {
-                TrajectoryActionBuilder correctError = drive.actionBuilder(currentPose)
-                        .strafeToLinearHeading(new Vector2d(currentPose.position.x - currentError.position.x,
-                                        currentPose.position.y - currentError.position.y),
-                                currentPose.heading.toDouble() - currentError.heading.toDouble());
-                Actions.runBlocking(new SequentialAction(
-                        correctError.build()
-                ));
-                return false;
-            }
-        }
-        public Action selfCorrect() {return new SelfCorrect();}
     }
 
-@Override
-    public void runOpMode() throws InterruptedException  {
-//        Pose2d currentPose = new Pose2d(0, 0, Math.toRadians(90));
-//        PinpointDrive drive = new PinpointDrive(hardwareMap, currentPose);
+    RobotSpecial robotSpecial = new RobotSpecial();
 
         //initialize the robot before starting
         Actions.runBlocking(new SequentialAction(
-                horizontalSlideRR.horizontalSlidePosition(Configuration.retractSlide),
+                horizontalSlideRR.horizontalSlidePosition(Configuration.horizontalSlideRetract),
                 verticalSlideRR.verticalSlidePosition(Configuration.bottom),
 
-                horizontalIntakeRR.horizontalIntakePosition(Configuration.floorOpen),
-                verticalGrabberRR.verticalGrabberPosition(Configuration.close),
+                horizontalIntakeRR.horizontalIntakePosition(Configuration.horizontalGrabberOpen),
+                verticalGrabberRR.verticalGrabberPosition(Configuration.verticalClose),
 
-                horizontalWristRR.horizontalWristPosition(Configuration.backwardPosIn),
-                verticalWristRR.verticalWristPosition(Configuration.backwardPos),
+                horizontalWristRR.horizontalWristPosition(Configuration.horizontalWristTransfer),
+                verticalWristRR.verticalWristPosition(Configuration.verticalWristIntake),
                 horizontalRollRR.horizontalRollPosition(Configuration.flat)
         ));
 
@@ -210,20 +184,20 @@ public class FinalAuto extends LinearOpMode {
 
         TrajectoryActionBuilder hang = drive.actionBuilder(initialPose)
             .afterTime(0, verticalSlideRR.verticalSlidePosition(Configuration.highBar))
-                .afterTime(0, verticalWristRR.verticalWristPosition(Configuration.forwardDown))
+                .afterTime(0, verticalWristRR.verticalWristPosition(Configuration.verticalWristWall))
                 .waitSeconds(.4)
                 .strafeTo(new Vector2d(-16, 28))
-                .afterTime(0, verticalGrabberRR.verticalGrabberPosition(Configuration.open))
-                .afterTime(.25, verticalWristRR.verticalWristPosition(Configuration.backwardPos))
+                .afterTime(0, verticalGrabberRR.verticalGrabberPosition(Configuration.verticalOpen))
+                .afterTime(.25, verticalWristRR.verticalWristPosition(Configuration.verticalWristIntake))
                 .afterTime(.25, verticalSlideRR.verticalSlidePosition(Configuration.bottom))
                 .strafeTo(new Vector2d(-16, 24));
 
         TrajectoryActionBuilder ButterRight = drive.actionBuilder(initialPose)
-                .afterDisp(0, verticalGrabberRR.verticalGrabberPosition(Configuration.open))
-                .afterDisp(0, verticalWristRR.verticalWristPosition(Configuration.backwardPos))
+                .afterDisp(0, verticalGrabberRR.verticalGrabberPosition(Configuration.verticalOpen))
+                .afterDisp(0, verticalWristRR.verticalWristPosition(Configuration.verticalWristIntake))
                 .afterDisp(5, horizontalSlideRR.horizontalSlidePosition(Configuration.extend))
-                .afterDisp(5, horizontalWristRR.horizontalWristPosition(Configuration.forwardPosOut))
-                .afterDisp(5, horizontalIntakeRR.horizontalIntakePosition(Configuration.floorOpen))
+                .afterDisp(5, horizontalWristRR.horizontalWristPosition(Configuration.horizontalWristIntake))
+                .afterDisp(5, horizontalIntakeRR.horizontalIntakePosition(Configuration.horizontalGrabberOpen))
                 .strafeToSplineHeading(new Vector2d(36, 27.45), Math.toRadians(-90))
                 .afterTime(0, robotSpecial.transferSystem())
                 .waitSeconds(.5)
@@ -233,10 +207,10 @@ public class FinalAuto extends LinearOpMode {
 
         TrajectoryActionBuilder PostHang = drive.actionBuilder(initialPose)
                 //approach the human player
-                .afterDisp(0, verticalWristRR.verticalWristPosition(Configuration.forwardDown))
+                .afterDisp(0, verticalWristRR.verticalWristPosition(Configuration.verticalWristWall))
                 .strafeToSplineHeading(new Vector2d(45, 20), Math.toRadians(-90))
                 //grab the butter
-                .afterTime(0, verticalGrabberRR.verticalGrabberPosition(Configuration.close))
+                .afterTime(0, verticalGrabberRR.verticalGrabberPosition(Configuration.verticalClose))
                 .waitSeconds(.25)
                 //lift the slide partly and approach the hang
                 .afterTime(0, verticalSlideRR.verticalSlidePosition(-100))
@@ -249,7 +223,7 @@ public class FinalAuto extends LinearOpMode {
                 //approach the human player
                 .strafeToSplineHeading(new Vector2d(45, 20), Math.toRadians(-90))
                 //grab the butter
-                .afterTime(0, verticalGrabberRR.verticalGrabberPosition(Configuration.close))
+                .afterTime(0, verticalGrabberRR.verticalGrabberPosition(Configuration.verticalClose))
                 .waitSeconds(.25)
                 //lift the slide partly and approach the hang
                 .afterTime(0, verticalSlideRR.verticalSlidePosition(-100))
@@ -270,11 +244,11 @@ public class FinalAuto extends LinearOpMode {
 
         Action ActionHang = chosenTrajectory.endTrajectory().fresh()
                 .afterTime(0, verticalSlideRR.verticalSlidePosition(Configuration.highBar))
-                .afterTime(0, verticalWristRR.verticalWristPosition(Configuration.forwardDown))
+                .afterTime(0, verticalWristRR.verticalWristPosition(Configuration.verticalWristWall))
                 .waitSeconds(.4)
                 .strafeTo(new Vector2d(-16, 28))
-                .afterDisp(0, verticalGrabberRR.verticalGrabberPosition(Configuration.open))
-                .afterDisp(2, verticalWristRR.verticalWristPosition(Configuration.backwardPos))
+                .afterDisp(0, verticalGrabberRR.verticalGrabberPosition(Configuration.verticalOpen))
+                .afterDisp(2, verticalWristRR.verticalWristPosition(Configuration.verticalWristIntake))
                 .afterDisp(2, verticalSlideRR.verticalSlidePosition(Configuration.bottom))
                 .strafeTo(new Vector2d(-16, 24))
                 .build();
@@ -283,11 +257,11 @@ public class FinalAuto extends LinearOpMode {
         chosenTrajectory = hang;
 
         Action ActionButterRight = chosenTrajectory.endTrajectory().fresh()
-                .afterDisp(0, verticalGrabberRR.verticalGrabberPosition(Configuration.open))
-                .afterDisp(0, verticalWristRR.verticalWristPosition(Configuration.backwardPos))
+                .afterDisp(0, verticalGrabberRR.verticalGrabberPosition(Configuration.verticalOpen))
+                .afterDisp(0, verticalWristRR.verticalWristPosition(Configuration.verticalWristIntake))
                 .afterDisp(5, horizontalSlideRR.horizontalSlidePosition(Configuration.extend))
-                .afterDisp(5, horizontalWristRR.horizontalWristPosition(Configuration.forwardPosOut))
-                .afterDisp(5, horizontalIntakeRR.horizontalIntakePosition(Configuration.floorOpen))
+                .afterDisp(5, horizontalWristRR.horizontalWristPosition(Configuration.horizontalWristIntake))
+                .afterDisp(5, horizontalIntakeRR.horizontalIntakePosition(Configuration.horizontalGrabberOpen))
                 .strafeToSplineHeading(new Vector2d(36, 27.45), Math.toRadians(-90))
                 .afterTime(0, robotSpecial.transferSystem(false, true))
                 .waitSeconds(.5)
@@ -301,10 +275,10 @@ public class FinalAuto extends LinearOpMode {
 
         Action ActionPostHang= chosenTrajectory.endTrajectory().fresh()
                 //approach the human player
-                .afterDisp(0, verticalWristRR.verticalWristPosition(Configuration.forwardDown))
+                .afterDisp(0, verticalWristRR.verticalWristPosition(Configuration.verticalWristWall))
                 .strafeToSplineHeading(new Vector2d(45, 20), Math.toRadians(-90))
                 //grab the butter
-                .afterTime(0, verticalGrabberRR.verticalGrabberPosition(Configuration.close))
+                .afterTime(0, verticalGrabberRR.verticalGrabberPosition(Configuration.verticalClose))
                 .waitSeconds(.25)
                 //lift the slide partly and approach the hang
                 .afterTime(0, verticalSlideRR.verticalSlidePosition(-100))
@@ -317,7 +291,7 @@ public class FinalAuto extends LinearOpMode {
                 //approach the human player
                 .strafeToSplineHeading(new Vector2d(45, 20), Math.toRadians(-90))
                 //grab the butter
-                .afterTime(0, verticalGrabberRR.verticalGrabberPosition(Configuration.close))
+                .afterTime(0, verticalGrabberRR.verticalGrabberPosition(Configuration.verticalClose))
                 .waitSeconds(.25)
                 //lift the slide partly and approach the hang
                 .afterTime(0, verticalSlideRR.verticalSlidePosition(-100))
@@ -330,6 +304,5 @@ public class FinalAuto extends LinearOpMode {
 
         Actions.runBlocking(new SequentialAction(ActionPostHang));
         chosenTrajectory = PostHang;
-
     }
 }
