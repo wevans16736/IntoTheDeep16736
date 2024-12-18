@@ -16,7 +16,6 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.Configuration.Configuration;
-import org.firstinspires.ftc.teamcode.MecanumDrive;
 import org.firstinspires.ftc.teamcode.PinpointDrive;
 
 import org.firstinspires.ftc.teamcode.Configuration.VerticalWristRR;
@@ -69,7 +68,7 @@ public class FinalAuto extends LinearOpMode {
                             verticalSlideRR.verticalSlidePosition(Configuration.bottom),
                             new SleepAction(2),
                             //extend the horizontal Slide
-                            horizontalIntakeRR.horizontalIntakePosition(Configuration.extend),
+                            horizontalIntakeRR.horizontalIntakePosition(Configuration.horizontalSlideExtend),
                             horizontalWristRR.horizontalWristPosition(Configuration.horizontalWristIntake),
                             horizontalIntakeRR.horizontalIntakePosition(Configuration.horizontalGrabberOpen),
                             new SleepAction(.5),
@@ -119,7 +118,7 @@ public class FinalAuto extends LinearOpMode {
                                 //butter go to the other side while priming the horizontal slide for other butter
                                 verticalWristRR.verticalWristPosition(Configuration.verticalWristWall),
                                 horizontalWristRR.horizontalWristPosition(Configuration.horizontalWristIntake),
-                                horizontalSlideRR.horizontalSlidePosition(Configuration.extend),
+                                horizontalSlideRR.horizontalSlidePosition(Configuration.horizontalSlideExtend),
                                 new SleepAction(1.5),
                                 verticalGrabberRR.verticalGrabberPosition(Configuration.verticalOpen),
                                 new SleepAction(.5),
@@ -195,7 +194,7 @@ public class FinalAuto extends LinearOpMode {
         TrajectoryActionBuilder ButterRight = drive.actionBuilder(initialPose)
                 .afterDisp(0, verticalGrabberRR.verticalGrabberPosition(Configuration.verticalOpen))
                 .afterDisp(0, verticalWristRR.verticalWristPosition(Configuration.verticalWristIntake))
-                .afterDisp(5, horizontalSlideRR.horizontalSlidePosition(Configuration.extend))
+                .afterDisp(5, horizontalSlideRR.horizontalSlidePosition(Configuration.horizontalSlideExtend))
                 .afterDisp(5, horizontalWristRR.horizontalWristPosition(Configuration.horizontalWristIntake))
                 .afterDisp(5, horizontalIntakeRR.horizontalIntakePosition(Configuration.horizontalGrabberOpen))
                 .strafeToSplineHeading(new Vector2d(36, 27.45), Math.toRadians(-90))
@@ -259,7 +258,7 @@ public class FinalAuto extends LinearOpMode {
         Action ActionButterRight = chosenTrajectory.endTrajectory().fresh()
                 .afterDisp(0, verticalGrabberRR.verticalGrabberPosition(Configuration.verticalOpen))
                 .afterDisp(0, verticalWristRR.verticalWristPosition(Configuration.verticalWristIntake))
-                .afterDisp(5, horizontalSlideRR.horizontalSlidePosition(Configuration.extend))
+                .afterDisp(5, horizontalSlideRR.horizontalSlidePosition(Configuration.horizontalSlideExtend))
                 .afterDisp(5, horizontalWristRR.horizontalWristPosition(Configuration.horizontalWristIntake))
                 .afterDisp(5, horizontalIntakeRR.horizontalIntakePosition(Configuration.horizontalGrabberOpen))
                 .strafeToSplineHeading(new Vector2d(36, 27.45), Math.toRadians(-90))

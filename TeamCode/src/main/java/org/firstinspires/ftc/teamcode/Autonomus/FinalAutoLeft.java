@@ -30,6 +30,12 @@ import org.firstinspires.ftc.teamcode.Configuration.HorizontalRollRR;
 @Config
 @Autonomous(name = "1. Final Left Auto", group = "Autonomous")
 public class FinalAutoLeft extends LinearOpMode {
+
+@Override
+    public void runOpMode() throws InterruptedException  {
+        Pose2d currentPose = new Pose2d(0, 0, Math.toRadians(90));
+        PinpointDrive drive = new PinpointDrive(hardwareMap, currentPose);
+
     VerticalSlideRR verticalSlideRR = new VerticalSlideRR(hardwareMap);
     HorizontalSlideRR horizontalSlideRR = new HorizontalSlideRR(hardwareMap, telemetry);
 
@@ -40,11 +46,8 @@ public class FinalAutoLeft extends LinearOpMode {
     HorizontalWristRR horizontalWristRR = new HorizontalWristRR(hardwareMap, telemetry);
 
     HorizontalRollRR horizontalRollRR = new HorizontalRollRR(hardwareMap, telemetry);
-    RobotSpecial robotSpecial = new RobotSpecial();
-
-
-    public class RobotSpecial {
-        public class TransferSystem implements Action{
+    class RobotSpecial {
+        class TransferSystem implements Action{
             boolean primeHorizontal = false;
             boolean pickLeft = false;
             public TransferSystem(){
@@ -66,7 +69,7 @@ public class FinalAutoLeft extends LinearOpMode {
                             verticalSlideRR.verticalSlidePosition(Configuration.bottom),
                             new SleepAction(2),
                             //extend the horizontal Slide
-                            horizontalIntakeRR.horizontalIntakePosition(Configuration.extend),
+                            horizontalIntakeRR.horizontalIntakePosition(Configuration.horizontalSlideExtend),
                             horizontalWristRR.horizontalWristPosition(Configuration.horizontalWristIntake),
                             horizontalIntakeRR.horizontalIntakePosition(Configuration.horizontalGrabberOpen),
                             new SleepAction(.5),
@@ -91,75 +94,71 @@ public class FinalAutoLeft extends LinearOpMode {
                     ));
                 }
                 if(!pickLeft) {
-                if (primeHorizontal) {
-                    Actions.runBlocking(new SequentialAction(
-                            //let go of the butter if it is up ontop of the basket
-                            verticalGrabberRR.verticalGrabberPosition(Configuration.verticalOpen),
-                            verticalWristRR.verticalWristPosition(Configuration.verticalWristIntake),
-                            verticalSlideRR.verticalSlidePosition(Configuration.bottom),
-                            //grab the butter from the floor
-                            horizontalIntakeRR.horizontalIntakePosition(Configuration.horizontalGrabberClose),
-                            verticalGrabberRR.verticalGrabberPosition(Configuration.verticalOpen),
-                            verticalWristRR.verticalWristPosition(Configuration.verticalWristIntake),
-                            new SleepAction(.5),
-                            //retract the slide
-                            horizontalSlideRR.horizontalSlidePosition(Configuration.horizontalSlideRetract),
-                            horizontalWristRR.horizontalWristPosition(Configuration.horizontalWristTransfer),
-                            verticalWristRR.verticalWristPosition(Configuration.verticalWristIntake),
-                            new SleepAction(1),
-                            //vertical grabber close
-                            verticalGrabberRR.verticalGrabberPosition(Configuration.verticalClose),
-                            new SleepAction(.25),
-                            //horizontal grabber open
-                            horizontalIntakeRR.horizontalIntakePosition(Configuration.horizontalGrabberOpen),
-                            new SleepAction(.25),
-                            //butter go to the other side while priming the horizontal slide for other butter
-                            verticalWristRR.verticalWristPosition(Configuration.verticalWristWall),
-                            horizontalWristRR.horizontalWristPosition(Configuration.horizontalWristIntake),
-                            horizontalSlideRR.horizontalSlidePosition(Configuration.extend),
-                            new SleepAction(1.5),
-                            verticalGrabberRR.verticalGrabberPosition(Configuration.verticalOpen),
-                            new SleepAction(.5),
-                            verticalWristRR.verticalWristPosition(Configuration.verticalWristIntake)
-                    ));
+                    if (primeHorizontal) {
+                        Actions.runBlocking(new SequentialAction(
+                                //let go of the butter if it is up ontop of the basket
+                                verticalGrabberRR.verticalGrabberPosition(Configuration.verticalOpen),
+                                verticalWristRR.verticalWristPosition(Configuration.verticalWristIntake),
+                                verticalSlideRR.verticalSlidePosition(Configuration.bottom),
+                                //grab the butter from the floor
+                                horizontalIntakeRR.horizontalIntakePosition(Configuration.horizontalGrabberClose),
+                                verticalGrabberRR.verticalGrabberPosition(Configuration.verticalOpen),
+                                verticalWristRR.verticalWristPosition(Configuration.verticalWristIntake),
+                                new SleepAction(.5),
+                                //retract the slide
+                                horizontalSlideRR.horizontalSlidePosition(Configuration.horizontalSlideRetract),
+                                horizontalWristRR.horizontalWristPosition(Configuration.horizontalWristTransfer),
+                                verticalWristRR.verticalWristPosition(Configuration.verticalWristIntake),
+                                new SleepAction(1),
+                                //vertical grabber close
+                                verticalGrabberRR.verticalGrabberPosition(Configuration.verticalClose),
+                                new SleepAction(.25),
+                                //horizontal grabber open
+                                horizontalIntakeRR.horizontalIntakePosition(Configuration.horizontalGrabberOpen),
+                                new SleepAction(.25),
+                                //butter go to the other side while priming the horizontal slide for other butter
+                                verticalWristRR.verticalWristPosition(Configuration.verticalWristWall),
+                                horizontalWristRR.horizontalWristPosition(Configuration.horizontalWristIntake),
+                                horizontalSlideRR.horizontalSlidePosition(Configuration.horizontalSlideExtend),
+                                new SleepAction(1.5),
+                                verticalGrabberRR.verticalGrabberPosition(Configuration.verticalOpen),
+                                new SleepAction(.5),
+                                verticalWristRR.verticalWristPosition(Configuration.verticalWristIntake)
+                        ));
+                    }
+                    if (!primeHorizontal) {
+                        Actions.runBlocking(new SequentialAction(
+                                //grab the butter from the floor
+                                horizontalIntakeRR.horizontalIntakePosition(Configuration.horizontalGrabberClose),
+                                verticalGrabberRR.verticalGrabberPosition(Configuration.verticalOpen),
+                                verticalWristRR.verticalWristPosition(Configuration.verticalWristIntake),
+                                new SleepAction(.5),
+                                //retract the slide
+                                horizontalSlideRR.horizontalSlidePosition(Configuration.horizontalSlideRetract),
+                                horizontalWristRR.horizontalWristPosition(Configuration.horizontalWristTransfer),
+                                verticalWristRR.verticalWristPosition(Configuration.verticalWristIntake),
+                                new SleepAction(1),
+                                //vertical grabber close
+                                verticalGrabberRR.verticalGrabberPosition(Configuration.verticalClose),
+                                new SleepAction(.25),
+                                //horizontal grabber open
+                                horizontalIntakeRR.horizontalIntakePosition(Configuration.horizontalGrabberOpen),
+                                new SleepAction(.25),
+                                verticalWristRR.verticalWristPosition(Configuration.verticalWristWall),
+                                new SleepAction(1),
+                                verticalGrabberRR.verticalGrabberPosition(Configuration.verticalOpen),
+                                new SleepAction(.25),
+                                verticalWristRR.verticalWristPosition(Configuration.verticalWristIntake)
+                        ));
+                    }
                 }
-                if (!primeHorizontal) {
-                    Actions.runBlocking(new SequentialAction(
-                            //grab the butter from the floor
-                            horizontalIntakeRR.horizontalIntakePosition(Configuration.horizontalGrabberClose),
-                            verticalGrabberRR.verticalGrabberPosition(Configuration.verticalOpen),
-                            verticalWristRR.verticalWristPosition(Configuration.verticalWristIntake),
-                            new SleepAction(.5),
-                            //retract the slide
-                            horizontalSlideRR.horizontalSlidePosition(Configuration.horizontalSlideRetract),
-                            horizontalWristRR.horizontalWristPosition(Configuration.horizontalWristTransfer),
-                            verticalWristRR.verticalWristPosition(Configuration.verticalWristIntake),
-                            new SleepAction(1),
-                            //vertical grabber close
-                            verticalGrabberRR.verticalGrabberPosition(Configuration.verticalClose),
-                            new SleepAction(.25),
-                            //horizontal grabber open
-                            horizontalIntakeRR.horizontalIntakePosition(Configuration.horizontalGrabberOpen),
-                            new SleepAction(.25),
-                            verticalWristRR.verticalWristPosition(Configuration.verticalWristWall),
-                            new SleepAction(1),
-                            verticalGrabberRR.verticalGrabberPosition(Configuration.verticalOpen),
-                            new SleepAction(.25),
-                            verticalWristRR.verticalWristPosition(Configuration.verticalWristIntake)
-                    ));
-                }
-            }
                 return false;
+            }
         }
+        public Action transferSystem(boolean pickLeft, boolean primeHorizontal) {return new TransferSystem(pickLeft, primeHorizontal);}
+        public Action transferSystem() {return new TransferSystem();}
     }
-    public Action transferSystem(boolean pickLeft, boolean primeHorizontal) {return new TransferSystem(pickLeft, primeHorizontal);}
-    public Action transferSystem() {return new TransferSystem();}
-}
-
-@Override
-    public void runOpMode() throws InterruptedException  {
-        Pose2d currentPose = new Pose2d(0, 0, Math.toRadians(90));
-        PinpointDrive drive = new PinpointDrive(hardwareMap, currentPose);
+    RobotSpecial robotSpecial = new RobotSpecial();
 
         //initialize the robot before starting
         Actions.runBlocking(new SequentialAction(
@@ -214,7 +213,7 @@ public class FinalAutoLeft extends LinearOpMode {
         Action ActionButterLeft = chosenTrajectory.endTrajectory().fresh()
                 .afterDisp(0, verticalGrabberRR.verticalGrabberPosition(Configuration.verticalOpen))
                 .afterDisp(0, verticalWristRR.verticalWristPosition(Configuration.verticalWristIntake))
-                .afterDisp(5, horizontalSlideRR.horizontalSlidePosition(Configuration.extend))
+                .afterDisp(5, horizontalSlideRR.horizontalSlidePosition(Configuration.horizontalSlideExtend))
                 .afterDisp(5, horizontalWristRR.horizontalWristPosition(Configuration.horizontalWristIntake))
                 .afterDisp(5, horizontalIntakeRR.horizontalIntakePosition(Configuration.horizontalGrabberOpen))
                 .strafeToSplineHeading(new Vector2d(-36, 27.45), Math.toRadians(-90))

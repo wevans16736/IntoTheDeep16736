@@ -149,7 +149,7 @@ public class YellowAuto extends LinearOpMode {
         }
         public class ExtendButter implements Action{
             private boolean initialized = false;
-            int extend = Configuration.extend;
+            int extend = Configuration.horizontalSlideExtend;
             double extendVelocity = Configuration.extendVelocity;
             public boolean run(@NonNull TelemetryPacket packet) {
                 int position = extend;

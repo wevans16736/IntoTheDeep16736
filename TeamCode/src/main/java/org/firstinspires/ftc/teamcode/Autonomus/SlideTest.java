@@ -44,30 +44,18 @@ import java.util.Arrays;
 @Config
 @TeleOp(name = "Slide Test")
 public class SlideTest extends HelperActions {
-    private DriveActions driveActions = null;
     private HorizontalSlideActions horizontalSlide = null;
-    private HorizontalWristActions horizontalWrist = null;
-    private HorizontalIntakeActions horizontalIntake = null;
-    private HorizontalIRollActions horizontalIRoll = null;
-    private VerticalSlideActions verticalSlide = null;
-    private VerticalWristActions verticalWrist = null;
-    private VerticalGrabberActions verticalGrabber = null;
+    private VerticalSlideActions verticalSlideAction = null;
 
     @Override
     public void runOpMode() {
 //        driveActions = new DriveActions(telemetry, hardwareMap);
         horizontalSlide = new HorizontalSlideActions(hardwareMap, telemetry);
-//        horizontalWrist = new HorizontalWristActions(telemetry, hardwareMap);
-//        horizontalIntake = new HorizontalIntakeActions(telemetry, hardwareMap);
-//        horizontalIRoll = new HorizontalIRollActions(telemetry, hardwareMap);
-//        verticalSlide = new VerticalSlideActions(hardwareMap, telemetry);
-//        verticalWrist = new VerticalWristActions(telemetry, hardwareMap);
-//        verticalGrabber = new VerticalGrabberActions(telemetry, hardwareMap);
-
-
+        verticalSlideAction = new VerticalSlideActions(hardwareMap, telemetry);
 
         waitForStart();
         while(opModeIsActive()) {
+            telemetry.addData("Vertical Slide Tick", verticalSlideAction.VerticalSlide1.getCurrentPosition());
             telemetry.addData("Horizontal Slide Tick", horizontalSlide.HorizontalSlide2.getCurrentPosition());
             telemetry.update();
         }

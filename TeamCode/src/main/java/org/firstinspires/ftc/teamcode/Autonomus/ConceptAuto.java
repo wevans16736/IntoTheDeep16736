@@ -4,7 +4,6 @@ package org.firstinspires.ftc.teamcode.Autonomus;
 
 import androidx.annotation.NonNull;
 
-import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.acmerobotics.roadrunner.Action;
@@ -17,7 +16,6 @@ import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
-import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.Configuration.Configuration;
 import org.firstinspires.ftc.teamcode.PinpointDrive;
 
@@ -36,8 +34,6 @@ public class ConceptAuto extends LinearOpMode {
 
     @Override
     public void runOpMode() throws InterruptedException  {
-        FtcDashboard dashboard = FtcDashboard.getInstance();
-        Telemetry dashboardTelemetry = dashboard.getTelemetry();
         VerticalSlideRR verticalSlideRR = new VerticalSlideRR(hardwareMap);
         HorizontalSlideRR horizontalSlideRR = new HorizontalSlideRR(hardwareMap, telemetry);
 
@@ -85,7 +81,7 @@ public class ConceptAuto extends LinearOpMode {
                                 //butter go to the other side while priming the horizontal slide for other butter
                                 verticalWristRR.verticalWristPosition(Configuration.verticalWristWall),
                                 horizontalWristRR.horizontalWristPosition(Configuration.horizontalWristIntake),
-                                horizontalSlideRR.horizontalSlidePosition(Configuration.extend),
+                                horizontalSlideRR.horizontalSlidePosition(Configuration.horizontalSlideExtend),
                                 new SleepAction(1.5),
                                 verticalGrabberRR.verticalGrabberPosition(Configuration.verticalOpen),
                                 new SleepAction(.5),
@@ -128,8 +124,6 @@ public class ConceptAuto extends LinearOpMode {
                 .strafeTo(new Vector2d(0, 20));
 
         RobotSpecial robotSpecial = new RobotSpecial();
-
-
 
         //initialize the robot before starting
         Actions.runBlocking(new SequentialAction(

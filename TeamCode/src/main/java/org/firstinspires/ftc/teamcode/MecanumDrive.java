@@ -80,16 +80,16 @@ public class MecanumDrive {
 
         // turn profile parameters (in radians)
         public double maxAngVel = Configuration.driveMinAngle; // shared with path
-        public double maxAngAccel = Configuration.driveMaxAngle;
+        public double maxAngAccel = Configuration.driveMaxAccel;
 
         // path controller gains
-        public static double axialGain = 4;
-        public static double lateralGain = 2;
-        public static double headingGain = 4; // shared with turn
+        public double axialGain = 4;
+        public double lateralGain = 2;
+        public double headingGain = 4; // shared with turn
 
-        public static double axialVelGain = 0.0;
-        public static double lateralVelGain = 0.0;
-        public static double headingVelGain = 0.0; // shared with turn
+        public double axialVelGain = 0.0;
+        public double lateralVelGain = 0.0;
+        public double headingVelGain = 0.0; // shared with turn
     }
 
     public static Params PARAMS = new Params();
@@ -229,8 +229,8 @@ public class MecanumDrive {
         rightFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         // TODO: reverse motor directions if needed
-           rightFront.setDirection(DcMotorSimple.Direction.REVERSE);
-           rightBack.setDirection(DcMotorSimple.Direction.REVERSE);
+        rightFront.setDirection(DcMotorSimple.Direction.REVERSE);
+        rightBack.setDirection(DcMotorSimple.Direction.REVERSE);
 
         // TODO: make sure your config has an IMU with this name (can be BNO or BHI)
         //   see https://ftc-docs.firstinspires.org/en/latest/hardware_and_software_configuration/configuring/index.html
@@ -259,7 +259,6 @@ public class MecanumDrive {
         rightFront.setPower(wheelVels.rightFront.get(0) / maxPowerMag);
     }
 
-    public static Pose2d currentError;
     public final class FollowTrajectoryAction implements Action {
         public final TimeTrajectory timeTrajectory;
         private double beginTs = -1;
@@ -291,16 +290,7 @@ public class MecanumDrive {
                 t = Actions.now() - beginTs;
             }
 
-            Pose2dDual<Time> txWorldTarget = timeTrajectory.get(t);
-            targetPoseWriter.write(new PoseMessage(txWorldTarget.value()));
-
-            PoseVelocity2d robotVelRobot = updatePoseEstimate();
-
-            Pose2d error = txWorldTarget.value().minusExp(pose);
-
-            currentError = error;
-
-            if (t >= timeTrajectory.duration && error.position.norm() < .5 && robotVelRobot.linearVel.norm() <.5 || t>= timeTrajectory.duration +1) {
+            if (t >= timeTrajectory.duration) {
                 leftFront.setPower(0);
                 leftBack.setPower(0);
                 rightBack.setPower(0);
@@ -309,11 +299,10 @@ public class MecanumDrive {
                 return false;
             }
 
-            //todo testing
-//            Pose2dDual<Time> txWorldTarget = timeTrajectory.get(t);
-//            targetPoseWriter.write(new PoseMessage(txWorldTarget.value()));
-//
-//            PoseVelocity2d robotVelRobot = updatePoseEstimate();
+            Pose2dDual<Time> txWorldTarget = timeTrajectory.get(t);
+            targetPoseWriter.write(new PoseMessage(txWorldTarget.value()));
+
+            PoseVelocity2d robotVelRobot = updatePoseEstimate();
 
             PoseVelocity2dDual<Time> command = new HolonomicController(
                     PARAMS.axialGain, PARAMS.lateralGain, PARAMS.headingGain,
@@ -344,7 +333,7 @@ public class MecanumDrive {
             p.put("y", pose.position.y);
             p.put("heading (deg)", Math.toDegrees(pose.heading.toDouble()));
 
-//            Pose2d error = txWorldTarget.value().minusExp(pose);
+            Pose2d error = txWorldTarget.value().minusExp(pose);
             p.put("xError", error.position.x);
             p.put("yError", error.position.y);
             p.put("headingError (deg)", Math.toDegrees(error.heading.toDouble()));
@@ -364,9 +353,6 @@ public class MecanumDrive {
             c.strokePolyline(xPoints, yPoints);
 
             return true;
-        }
-        public Pose2d getError(){
-            return currentError;
         }
 
         @Override
@@ -503,4 +489,3 @@ public class MecanumDrive {
         );
     }
 }
-

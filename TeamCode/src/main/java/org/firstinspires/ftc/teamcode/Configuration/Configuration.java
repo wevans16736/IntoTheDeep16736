@@ -53,6 +53,6 @@ public class Configuration{
 
     //horizontal slide motor position
     public static int horizontalSlideRetract = 0;
-    public static int extend = 1000;
+    public static int horizontalSlideExtend = 1000;
     public static double extendVelocity = 1800;
 }
