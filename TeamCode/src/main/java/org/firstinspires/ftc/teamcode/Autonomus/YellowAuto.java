@@ -27,6 +27,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.teamcode.Configuration.Configuration;
 import org.firstinspires.ftc.teamcode.PinpointDrive;
 import org.firstinspires.ftc.teamcode.robotverticalslides.constants.ConfigConstants;
 
@@ -148,7 +149,7 @@ public class YellowAuto extends LinearOpMode {
         }
         public class ExtendButter implements Action{
             private boolean initialized = false;
-            int extend = Configuration.extend;
+            int extend = Configuration.horizontalSlideExtend;
             double extendVelocity = Configuration.extendVelocity;
             public boolean run(@NonNull TelemetryPacket packet) {
                 int position = extend;
@@ -175,8 +176,8 @@ public class YellowAuto extends LinearOpMode {
         public Servo verticalGrabberServo;
         private Telemetry telemetry;
         private HardwareMap hardwareMap;
-        private double open = Configuration.open;
-        private double close = Configuration.close;
+        private double open = Configuration.verticalOpen;
+        private double close = Configuration.verticalClose;
         public VerticalGrabberRR(Telemetry opModeTelemetry, HardwareMap opModeHardware) {
             this.telemetry = opModeTelemetry;
             this.hardwareMap = opModeHardware;
@@ -209,9 +210,9 @@ public class YellowAuto extends LinearOpMode {
         public Servo verticalWristServo;
         private Telemetry telemetry;
         private HardwareMap hardwareMap;
-        double forwardUp = Configuration.forwardUp;
-        double forwardDown = Configuration.forwardDown;
-        double backwardPos = Configuration.backwardPos;
+        double forwardUp = Configuration.verticalWristBasket;
+        double forwardDown = Configuration.verticalWristWall;
+        double backwardPos = Configuration.verticalWristIntake;
         public VerticalWristRR(Telemetry opModeTelemetry, HardwareMap opModeHardware) {
             this.telemetry = opModeTelemetry;
             this.hardwareMap = opModeHardware;
@@ -264,9 +265,9 @@ public class YellowAuto extends LinearOpMode {
         public Servo horizontalWristServo;
         private Telemetry telemetry;
         private HardwareMap hardwareMap;
-        private double backwardPosIn = Configuration.backwardPosIn;
-        private double backwardPosOut = Configuration.backwardPosOut;
-        private double forwardPosOut = Configuration.forwardPosOut;
+        private double backwardPosIn = Configuration.horizontalWristTransfer;
+        private double backwardPosOut = Configuration.horizontalWristHover;
+        private double forwardPosOut = Configuration.horizontalWristIntake;
         public HorizontalWristRR(Telemetry opModeTelemetry, HardwareMap opModeHardware) {
             this.telemetry = opModeTelemetry;
             this.hardwareMap = opModeHardware;
@@ -305,8 +306,8 @@ public class YellowAuto extends LinearOpMode {
             intakeServo = hardwareMap.get(Servo.class, ConfigConstants.HORIZONTAL_INTAKE);
             intakeServo.setPosition(0);
         }
-        private double floorClose = Configuration.floorClose;
-        private double floorOpen = Configuration.floorOpen;
+        private double floorClose = Configuration.horizontalGrabberClose;
+        private double floorOpen = Configuration.horizontalGrabberOpen;
         public class FloorClose implements Action{
             @Override
             public boolean run(@NonNull TelemetryPacket telemetryPacket) {

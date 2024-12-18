@@ -41,7 +41,7 @@ import com.qualcomm.robotcore.hardware.VoltageSensor;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.YawPitchRollAngles;
-import org.firstinspires.ftc.teamcode.Autonomus.Configuration;
+import org.firstinspires.ftc.teamcode.Configuration.Configuration;
 import org.firstinspires.ftc.teamcode.messages.DriveCommandMessage;
 import org.firstinspires.ftc.teamcode.messages.MecanumCommandMessage;
 import org.firstinspires.ftc.teamcode.messages.MecanumLocalizerInputsMessage;
@@ -65,22 +65,22 @@ public class MecanumDrive {
 
         // drive model parameters
         public double inPerTick = 1; // SparkFun OTOS Note: you can probably leave this at 1
-        public double lateralInPerTick = 0.5589840716948888;
-        public double trackWidthTicks = 14.83116987562993;
+        public double lateralInPerTick = 0.5826805898649675;
+        public double trackWidthTicks = 14.768639684767576;
 
         // feedforward parameters (in tick units)
-        public double kS = 1.4508896378223346;
-        public double kV = 0.126443063228417;
+        public double kS = 1.312598752395592;
+        public double kV = 0.12627343205960265;
         public double kA = 0.00001;
 
         // path profile parameters (in inches)
-        public double maxWheelVel = Configuration.maxWheelVel;
-        public double minProfileAccel = Configuration.minProfileAccel;
-        public double maxProfileAccel = Configuration.maxProfileAccel;
+        public double maxWheelVel = Configuration.driveVelocity;
+        public double minProfileAccel = Configuration.driveMinAccel;
+        public double maxProfileAccel = Configuration.driveMaxAccel;
 
         // turn profile parameters (in radians)
-        public double maxAngVel = Configuration.maxAngVel; // shared with path
-        public double maxAngAccel = Configuration.maxAngAccel;
+        public double maxAngVel = Configuration.driveMinAngle; // shared with path
+        public double maxAngAccel = Configuration.driveMaxAccel;
 
         // path controller gains
         public double axialGain = 4;
@@ -229,8 +229,8 @@ public class MecanumDrive {
         rightFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         // TODO: reverse motor directions if needed
-           rightFront.setDirection(DcMotorSimple.Direction.REVERSE);
-           rightBack.setDirection(DcMotorSimple.Direction.REVERSE);
+        rightFront.setDirection(DcMotorSimple.Direction.REVERSE);
+        rightBack.setDirection(DcMotorSimple.Direction.REVERSE);
 
         // TODO: make sure your config has an IMU with this name (can be BNO or BHI)
         //   see https://ftc-docs.firstinspires.org/en/latest/hardware_and_software_configuration/configuring/index.html

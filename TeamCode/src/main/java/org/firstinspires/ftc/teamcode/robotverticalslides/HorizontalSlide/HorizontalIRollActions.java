@@ -1,12 +1,11 @@
 package org.firstinspires.ftc.teamcode.robotverticalslides.HorizontalSlide;
 
 import com.qualcomm.robotcore.hardware.HardwareMap;
-import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.ServoImplEx;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.teamcode.Autonomus.Configuration;
+import org.firstinspires.ftc.teamcode.Configuration.Configuration;
 import org.firstinspires.ftc.teamcode.robotverticalslides.constants.ConfigConstants;
 
 public class HorizontalIRollActions {
@@ -36,7 +35,7 @@ public class HorizontalIRollActions {
             rollServo.setPosition(position + Configuration.flat);
         }
         if (System.currentTimeMillis() > changePosStartTime + 420 && rollServo.isPwmEnabled()) {
-            rollServo.setPwmDisable();
+//            rollServo.setPwmDisable();
             //this part is just so it doesn't check if pwm is enabled for another little while
             changePosStartTime = System.currentTimeMillis();
         }
