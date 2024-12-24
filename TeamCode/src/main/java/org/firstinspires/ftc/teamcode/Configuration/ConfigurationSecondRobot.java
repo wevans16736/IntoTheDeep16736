@@ -16,7 +16,7 @@ public class ConfigurationSecondRobot {
     public static int highBar = -1330;
     public static int bottom = 0;
     //todo is this right?
-    public static int lowBar = -150;
+    public static int lowBar = -415;
     public static int topBasket = -2300;
 
     //this is vertical wrist servo position

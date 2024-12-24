@@ -35,7 +35,7 @@ public class HorizontalIntakeActions {
             setPosition(0.2);
             if (System.currentTimeMillis() > openStartTime + 420) {
                 if (intakeServo.isPwmEnabled()) {
-                    intakeServo.setPwmDisable();
+//                    intakeServo.setPwmDisable();
                 }
             }
         } else {

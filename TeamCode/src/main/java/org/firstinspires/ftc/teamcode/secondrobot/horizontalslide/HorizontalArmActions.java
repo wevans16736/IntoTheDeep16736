@@ -16,6 +16,7 @@ public class HorizontalArmActions {
     public DcMotorEx armMotor = null;
     private Telemetry telemetry;
     double armLegLength = 10.75;
+    double startDistance = 5.0;
 
     //set up the slide with all the mode and hardware map
     public HorizontalArmActions(HardwareMap hardwareMap, Telemetry telemetry) {
@@ -46,7 +47,8 @@ public class HorizontalArmActions {
             //change the slide position by the input power times the change in time times the speed.
             //Multiplying by change in time makes sure the slide speed is more consistent
             double targetDistance = SlidePosition + power * (time - prevTime) * liftSpeedMultiplier;
-            targetDistance = Range.clip(targetDistance, 0, armLegLength * 2);
+//            targetDistance = Range.clip(targetDistance, 0, armLegLength * 2 - startDistance);
+            targetDistance = Range.clip(targetDistance, 0, 600);
             setSlideDistance((int) targetDistance, 3000 * liftSpeedMultiplier);
             RobotLog.dd("horizontal arm", "Target Position %f, time %f", SlidePosition, time);
         }
@@ -56,7 +58,7 @@ public class HorizontalArmActions {
         telemetry.addData("current position HS", armMotor.getCurrentPosition());
     }
     double SlidePosition = 0;
-    public void setSlideDistance(int distance, double velocity) {
+    public void setSlideDistanceMath(int distance, double velocity) {
         double targetRadians = Math.acos(distance / (2 * armLegLength));
         double targetRotations = targetRadians / (2 * Math.PI);
         double targetEncoderTics = targetRotations / 2786.2;
@@ -64,6 +66,12 @@ public class HorizontalArmActions {
         armMotor.setVelocity(velocity);
         SlidePosition = distance;
     }
+    public void setSlideDistance(int distance, double velocity) {
+        armMotor.setTargetPosition(distance);
+        armMotor.setVelocity(velocity);
+        SlidePosition = distance;
+    }
+
     public int getSlidePosition() {
         return armMotor.getCurrentPosition();
     }

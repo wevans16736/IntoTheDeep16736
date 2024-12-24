@@ -27,9 +27,9 @@ public class VerticalGrabberActions {
     }
     public void close() {
         //turn on the servo to close
-        if (!verticalGrabberServo.isPwmEnabled()) {
-            verticalGrabberServo.setPwmDisable();
-        }
+//        if (!verticalGrabberServo.isPwmEnabled()) {
+//            verticalGrabberServo.setPwmDisable();
+//        }
         verticalGrabberServo.setPosition(0.5);
         isClose = true;
     }
@@ -49,11 +49,11 @@ public class VerticalGrabberActions {
             }
         }
         //If it's been open for a while, turn off the servo
-        if (!isClose && System.currentTimeMillis() > openStartTime + 420) {
-            if (verticalGrabberServo.isPwmEnabled()) {
-                verticalGrabberServo.setPwmDisable();
-            }
-        }
+//        if (!isClose && System.currentTimeMillis() > openStartTime + 420) {
+//            if (verticalGrabberServo.isPwmEnabled()) {
+//                verticalGrabberServo.setPwmDisable();
+//            }
+//        }
         wasClose = close;
     }
 }

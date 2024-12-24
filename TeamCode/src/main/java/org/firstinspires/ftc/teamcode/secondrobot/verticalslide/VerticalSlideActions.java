@@ -39,17 +39,19 @@ public class VerticalSlideActions {
         double time = System.currentTimeMillis();
         if (power != 0) {
             //if line 55 is true then check if the motor is using run to encoder
-            if (verticalSlide.getMode() == DcMotor.RunMode.RUN_USING_ENCODER) {
+            if (verticalSlide.getMode() != DcMotor.RunMode.RUN_TO_POSITION) {
 
                 //if line 57 is true, then turn the motor to run to position which keep the slide stable
                 verticalSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                verticalSlide.setPower(1.0);
+                verticalSlide.setPower(0.0);
+                verticalSlide2.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                verticalSlide2.setPower(0.0);
             }
 
             //change the slide position by the input power times the change in time times the speed.
             //Multiplying by change in time makes sure the slide speed is more consistent
             double total = SlidePosition + power * (time - prevTime) * liftSpeedMultiplier;
-            total = Range.clip(total, -2300, 50);
+            total = Range.clip(total, -2300, 5);
             setSlidePosition((int) total, 3000 * liftSpeedMultiplier);
             RobotLog.dd("LiftyUppy", "Target Position %f, time %f", SlidePosition, time);
         }
@@ -75,9 +77,9 @@ public class VerticalSlideActions {
 
     public void goToPreset(boolean bottomRung, boolean bottom, boolean topRung, boolean topBasket) {
         if (bottomRung || bottom || topRung || topBasket){
-            if (verticalSlide.getMode() == DcMotor.RunMode.RUN_USING_ENCODER) {
+            if (verticalSlide.getMode() != DcMotor.RunMode.RUN_TO_POSITION) {
                 verticalSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                verticalSlide.setPower(1.0);
+                verticalSlide2.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             }
             if (!wasSet) {
                 if (bottomRung) {
@@ -96,23 +98,28 @@ public class VerticalSlideActions {
         } else {
             wasSet = false;
         }
-        isDown = (SlidePosition > -5);
-        //If the slide is at the button, turn it off
+    }
+
+    public void turnOffAtBottom() {
+        isDown = (verticalSlide.getCurrentPosition() > -5);
+        //If the slide is at the bottom, turn it off
         if(isDown && !wasDown) {
             downTo1 = false;
             at1 = true;
             at1StartTime = System.currentTimeMillis();
         }
         wasDown = isDown;
-        if (at1 && startMotor) {
-            at1 = false;
-        }
-        if (System.currentTimeMillis() > at1StartTime + 200 && at1) {
+        if ((System.currentTimeMillis() > (at1StartTime + 200)) && at1) {
             at1 = false;
             verticalSlide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             verticalSlide2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            verticalSlide.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            verticalSlide2.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            verticalSlide.setPower(0.0);
+            verticalSlide2.setPower(0.0);
         }
         telemetry.addData("vert position", verticalSlide.getCurrentPosition());
+        telemetry.addData("mode", verticalSlide.getMode());
     }
 
     double SlidePosition = 0;
