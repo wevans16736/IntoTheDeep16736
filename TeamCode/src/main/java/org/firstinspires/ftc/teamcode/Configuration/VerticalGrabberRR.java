@@ -23,14 +23,14 @@ public class VerticalGrabberRR {
         }
 
         public class VerticalGrabberPosition implements Action {
-            double position = Configuration.verticalClose;
+            double position = ConfigurationFirstRobot.verticalClose;
 
             public VerticalGrabberPosition(double position) {
                 this.position = position;
             }
 
             public VerticalGrabberPosition() {
-                this.position = Configuration.verticalClose;
+                this.position = ConfigurationFirstRobot.verticalClose;
             }
 
             @Override

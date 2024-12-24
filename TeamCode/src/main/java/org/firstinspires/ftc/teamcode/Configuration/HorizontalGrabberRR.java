@@ -18,18 +18,18 @@ public class HorizontalGrabberRR {
             this.telemetry = opModeTelemetry;
             this.hardwareMap = opModeHardware;
             intakeServo = hardwareMap.get(Servo.class, ConfigConstants.HORIZONTAL_INTAKE);
-            intakeServo.setPosition(Configuration.horizontalGrabberClose);
+            intakeServo.setPosition(ConfigurationFirstRobot.horizontalGrabberClose);
         }
 
         public class HorizontalIntakePosition implements Action {
-            double position = Configuration.horizontalGrabberClose;
+            double position = ConfigurationFirstRobot.horizontalGrabberClose;
 
             public HorizontalIntakePosition(double position) {
                 this.position = position;
             }
 
             public HorizontalIntakePosition() {
-                this.position = Configuration.horizontalGrabberClose;
+                this.position = ConfigurationFirstRobot.horizontalGrabberClose;
             }
 
             @Override

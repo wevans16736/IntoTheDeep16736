@@ -18,18 +18,18 @@ public class HorizontalWristRR {
             this.telemetry = opModeTelemetry;
             this.hardwareMap = opModeHardware;
             horizontalWristServo = hardwareMap.get(Servo.class, ConfigConstants.HORIZONTAL_WRIST);
-            horizontalWristServo.setPosition(Configuration.horizontalWristTransfer);
+            horizontalWristServo.setPosition(ConfigurationFirstRobot.horizontalWristTransfer);
         }
 
         public class HorizontalWristPosition implements Action {
-            double position = Configuration.horizontalWristTransfer;
+            double position = ConfigurationFirstRobot.horizontalWristTransfer;
 
             public HorizontalWristPosition(double position) {
                 this.position = position;
             }
 
             public HorizontalWristPosition() {
-                this.position = Configuration.horizontalWristTransfer;
+                this.position = ConfigurationFirstRobot.horizontalWristTransfer;
             }
 
             @Override

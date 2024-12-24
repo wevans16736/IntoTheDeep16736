@@ -19,18 +19,18 @@ public class VerticalWristRR {
             this.telemetry = opModeTelemetry;
             this.hardwareMap = opModeHardware;
             verticalWristServo = hardwareMap.get(Servo.class, ConfigConstants.VERTICAL_WRIST);
-            verticalWristServo.setPosition(Configuration.verticalWristIntake);
+            verticalWristServo.setPosition(ConfigurationFirstRobot.verticalWristIntake);
         }
 
         public class VerticalWristPosition implements Action {
-            double position = Configuration.verticalWristIntake;
+            double position = ConfigurationFirstRobot.verticalWristIntake;
 
             public VerticalWristPosition(double position) {
                 this.position = position;
             }
 
             public VerticalWristPosition() {
-                this.position = Configuration.verticalWristIntake;
+                this.position = ConfigurationFirstRobot.verticalWristIntake;
             }
 
             @Override

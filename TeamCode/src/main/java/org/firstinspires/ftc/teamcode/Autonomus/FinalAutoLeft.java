@@ -16,7 +16,7 @@ import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
-import org.firstinspires.ftc.teamcode.Configuration.Configuration;
+import org.firstinspires.ftc.teamcode.Configuration.ConfigurationFirstRobot;
 import org.firstinspires.ftc.teamcode.PinpointDrive;
 
 import org.firstinspires.ftc.teamcode.Configuration.VerticalWristRR;
@@ -63,92 +63,92 @@ public class FinalAutoLeft extends LinearOpMode {
                 if(pickLeft) {
                     Actions.runBlocking(new SequentialAction(
                             //let go of the butter on top
-                            verticalGrabberRR.verticalGrabberPosition(Configuration.verticalOpen),
+                            verticalGrabberRR.verticalGrabberPosition(ConfigurationFirstRobot.verticalOpen),
                             new SleepAction(.5),
-                            verticalWristRR.verticalWristPosition(Configuration.verticalWristIntake),
-                            verticalSlideRR.verticalSlidePosition(Configuration.bottom),
+                            verticalWristRR.verticalWristPosition(ConfigurationFirstRobot.verticalWristIntake),
+                            verticalSlideRR.verticalSlidePosition(ConfigurationFirstRobot.bottom),
                             new SleepAction(2),
                             //extend the horizontal Slide
-                            horizontalIntakeRR.horizontalIntakePosition(Configuration.horizontalSlideExtend),
-                            horizontalWristRR.horizontalWristPosition(Configuration.horizontalWristIntake),
-                            horizontalIntakeRR.horizontalIntakePosition(Configuration.horizontalGrabberOpen),
+                            horizontalIntakeRR.horizontalIntakePosition(ConfigurationFirstRobot.horizontalSlideExtend),
+                            horizontalWristRR.horizontalWristPosition(ConfigurationFirstRobot.horizontalWristIntake),
+                            horizontalIntakeRR.horizontalIntakePosition(ConfigurationFirstRobot.horizontalGrabberOpen),
                             new SleepAction(.5),
                             //grab the butter from the floor
-                            horizontalIntakeRR.horizontalIntakePosition(Configuration.horizontalGrabberClose),
-                            verticalGrabberRR.verticalGrabberPosition(Configuration.verticalOpen),
-                            verticalWristRR.verticalWristPosition(Configuration.verticalWristIntake),
+                            horizontalIntakeRR.horizontalIntakePosition(ConfigurationFirstRobot.horizontalGrabberClose),
+                            verticalGrabberRR.verticalGrabberPosition(ConfigurationFirstRobot.verticalOpen),
+                            verticalWristRR.verticalWristPosition(ConfigurationFirstRobot.verticalWristIntake),
                             new SleepAction(.5),
                             //retract the slide
-                            horizontalSlideRR.horizontalSlidePosition(Configuration.horizontalSlideRetract),
-                            horizontalWristRR.horizontalWristPosition(Configuration.horizontalWristTransfer),
-                            verticalWristRR.verticalWristPosition(Configuration.verticalWristIntake),
+                            horizontalSlideRR.horizontalSlidePosition(ConfigurationFirstRobot.horizontalSlideRetract),
+                            horizontalWristRR.horizontalWristPosition(ConfigurationFirstRobot.horizontalWristTransfer),
+                            verticalWristRR.verticalWristPosition(ConfigurationFirstRobot.verticalWristIntake),
                             new SleepAction(1),
                             //vertical grabber close
-                            verticalGrabberRR.verticalGrabberPosition(Configuration.verticalClose),
+                            verticalGrabberRR.verticalGrabberPosition(ConfigurationFirstRobot.verticalClose),
                             new SleepAction(.25),
                             //horizontal grabber open
-                            horizontalIntakeRR.horizontalIntakePosition(Configuration.horizontalGrabberOpen),
+                            horizontalIntakeRR.horizontalIntakePosition(ConfigurationFirstRobot.horizontalGrabberOpen),
                             new SleepAction(.25),
-                            verticalSlideRR.verticalSlidePosition(Configuration.topBasket),
-                            verticalWristRR.verticalWristPosition(Configuration.verticalWristBasket)
+                            verticalSlideRR.verticalSlidePosition(ConfigurationFirstRobot.topBasket),
+                            verticalWristRR.verticalWristPosition(ConfigurationFirstRobot.verticalWristBasket)
                     ));
                 }
                 if(!pickLeft) {
                     if (primeHorizontal) {
                         Actions.runBlocking(new SequentialAction(
                                 //let go of the butter if it is up ontop of the basket
-                                verticalGrabberRR.verticalGrabberPosition(Configuration.verticalOpen),
-                                verticalWristRR.verticalWristPosition(Configuration.verticalWristIntake),
-                                verticalSlideRR.verticalSlidePosition(Configuration.bottom),
+                                verticalGrabberRR.verticalGrabberPosition(ConfigurationFirstRobot.verticalOpen),
+                                verticalWristRR.verticalWristPosition(ConfigurationFirstRobot.verticalWristIntake),
+                                verticalSlideRR.verticalSlidePosition(ConfigurationFirstRobot.bottom),
                                 //grab the butter from the floor
-                                horizontalIntakeRR.horizontalIntakePosition(Configuration.horizontalGrabberClose),
-                                verticalGrabberRR.verticalGrabberPosition(Configuration.verticalOpen),
-                                verticalWristRR.verticalWristPosition(Configuration.verticalWristIntake),
+                                horizontalIntakeRR.horizontalIntakePosition(ConfigurationFirstRobot.horizontalGrabberClose),
+                                verticalGrabberRR.verticalGrabberPosition(ConfigurationFirstRobot.verticalOpen),
+                                verticalWristRR.verticalWristPosition(ConfigurationFirstRobot.verticalWristIntake),
                                 new SleepAction(.5),
                                 //retract the slide
-                                horizontalSlideRR.horizontalSlidePosition(Configuration.horizontalSlideRetract),
-                                horizontalWristRR.horizontalWristPosition(Configuration.horizontalWristTransfer),
-                                verticalWristRR.verticalWristPosition(Configuration.verticalWristIntake),
+                                horizontalSlideRR.horizontalSlidePosition(ConfigurationFirstRobot.horizontalSlideRetract),
+                                horizontalWristRR.horizontalWristPosition(ConfigurationFirstRobot.horizontalWristTransfer),
+                                verticalWristRR.verticalWristPosition(ConfigurationFirstRobot.verticalWristIntake),
                                 new SleepAction(1),
                                 //vertical grabber close
-                                verticalGrabberRR.verticalGrabberPosition(Configuration.verticalClose),
+                                verticalGrabberRR.verticalGrabberPosition(ConfigurationFirstRobot.verticalClose),
                                 new SleepAction(.25),
                                 //horizontal grabber open
-                                horizontalIntakeRR.horizontalIntakePosition(Configuration.horizontalGrabberOpen),
+                                horizontalIntakeRR.horizontalIntakePosition(ConfigurationFirstRobot.horizontalGrabberOpen),
                                 new SleepAction(.25),
                                 //butter go to the other side while priming the horizontal slide for other butter
-                                verticalWristRR.verticalWristPosition(Configuration.verticalWristWall),
-                                horizontalWristRR.horizontalWristPosition(Configuration.horizontalWristIntake),
-                                horizontalSlideRR.horizontalSlidePosition(Configuration.horizontalSlideExtend),
+                                verticalWristRR.verticalWristPosition(ConfigurationFirstRobot.verticalWristWall),
+                                horizontalWristRR.horizontalWristPosition(ConfigurationFirstRobot.horizontalWristIntake),
+                                horizontalSlideRR.horizontalSlidePosition(ConfigurationFirstRobot.horizontalSlideExtend),
                                 new SleepAction(1.5),
-                                verticalGrabberRR.verticalGrabberPosition(Configuration.verticalOpen),
+                                verticalGrabberRR.verticalGrabberPosition(ConfigurationFirstRobot.verticalOpen),
                                 new SleepAction(.5),
-                                verticalWristRR.verticalWristPosition(Configuration.verticalWristIntake)
+                                verticalWristRR.verticalWristPosition(ConfigurationFirstRobot.verticalWristIntake)
                         ));
                     }
                     if (!primeHorizontal) {
                         Actions.runBlocking(new SequentialAction(
                                 //grab the butter from the floor
-                                horizontalIntakeRR.horizontalIntakePosition(Configuration.horizontalGrabberClose),
-                                verticalGrabberRR.verticalGrabberPosition(Configuration.verticalOpen),
-                                verticalWristRR.verticalWristPosition(Configuration.verticalWristIntake),
+                                horizontalIntakeRR.horizontalIntakePosition(ConfigurationFirstRobot.horizontalGrabberClose),
+                                verticalGrabberRR.verticalGrabberPosition(ConfigurationFirstRobot.verticalOpen),
+                                verticalWristRR.verticalWristPosition(ConfigurationFirstRobot.verticalWristIntake),
                                 new SleepAction(.5),
                                 //retract the slide
-                                horizontalSlideRR.horizontalSlidePosition(Configuration.horizontalSlideRetract),
-                                horizontalWristRR.horizontalWristPosition(Configuration.horizontalWristTransfer),
-                                verticalWristRR.verticalWristPosition(Configuration.verticalWristIntake),
+                                horizontalSlideRR.horizontalSlidePosition(ConfigurationFirstRobot.horizontalSlideRetract),
+                                horizontalWristRR.horizontalWristPosition(ConfigurationFirstRobot.horizontalWristTransfer),
+                                verticalWristRR.verticalWristPosition(ConfigurationFirstRobot.verticalWristIntake),
                                 new SleepAction(1),
                                 //vertical grabber close
-                                verticalGrabberRR.verticalGrabberPosition(Configuration.verticalClose),
+                                verticalGrabberRR.verticalGrabberPosition(ConfigurationFirstRobot.verticalClose),
                                 new SleepAction(.25),
                                 //horizontal grabber open
-                                horizontalIntakeRR.horizontalIntakePosition(Configuration.horizontalGrabberOpen),
+                                horizontalIntakeRR.horizontalIntakePosition(ConfigurationFirstRobot.horizontalGrabberOpen),
                                 new SleepAction(.25),
-                                verticalWristRR.verticalWristPosition(Configuration.verticalWristWall),
+                                verticalWristRR.verticalWristPosition(ConfigurationFirstRobot.verticalWristWall),
                                 new SleepAction(1),
-                                verticalGrabberRR.verticalGrabberPosition(Configuration.verticalOpen),
+                                verticalGrabberRR.verticalGrabberPosition(ConfigurationFirstRobot.verticalOpen),
                                 new SleepAction(.25),
-                                verticalWristRR.verticalWristPosition(Configuration.verticalWristIntake)
+                                verticalWristRR.verticalWristPosition(ConfigurationFirstRobot.verticalWristIntake)
                         ));
                     }
                 }
@@ -162,27 +162,27 @@ public class FinalAutoLeft extends LinearOpMode {
 
         //initialize the robot before starting
         Actions.runBlocking(new SequentialAction(
-                horizontalSlideRR.horizontalSlidePosition(Configuration.horizontalSlideRetract),
-                verticalSlideRR.verticalSlidePosition(Configuration.bottom),
+                horizontalSlideRR.horizontalSlidePosition(ConfigurationFirstRobot.horizontalSlideRetract),
+                verticalSlideRR.verticalSlidePosition(ConfigurationFirstRobot.bottom),
 
-                horizontalIntakeRR.horizontalIntakePosition(Configuration.horizontalGrabberOpen),
-                verticalGrabberRR.verticalGrabberPosition(Configuration.verticalClose),
+                horizontalIntakeRR.horizontalIntakePosition(ConfigurationFirstRobot.horizontalGrabberOpen),
+                verticalGrabberRR.verticalGrabberPosition(ConfigurationFirstRobot.verticalClose),
 
-                horizontalWristRR.horizontalWristPosition(Configuration.horizontalWristTransfer),
-                verticalWristRR.verticalWristPosition(Configuration.verticalWristIntake),
-                horizontalRollRR.horizontalRollPosition(Configuration.flat)
+                horizontalWristRR.horizontalWristPosition(ConfigurationFirstRobot.horizontalWristTransfer),
+                verticalWristRR.verticalWristPosition(ConfigurationFirstRobot.verticalWristIntake),
+                horizontalRollRR.horizontalRollPosition(ConfigurationFirstRobot.flat)
         ));
 
         TrajectoryActionBuilder startPosition = drive.actionBuilder(currentPose);
 
         TrajectoryActionBuilder hang = drive.actionBuilder(currentPose)
-            .afterTime(0, verticalSlideRR.verticalSlidePosition(Configuration.highBar))
-                .afterTime(0, verticalWristRR.verticalWristPosition(Configuration.verticalWristWall))
+            .afterTime(0, verticalSlideRR.verticalSlidePosition(ConfigurationFirstRobot.highBar))
+                .afterTime(0, verticalWristRR.verticalWristPosition(ConfigurationFirstRobot.verticalWristWall))
                 .waitSeconds(.4)
                 .strafeTo(new Vector2d(-16, 28))
-                .afterTime(0, verticalGrabberRR.verticalGrabberPosition(Configuration.verticalOpen))
-                .afterTime(.25, verticalWristRR.verticalWristPosition(Configuration.verticalWristIntake))
-                .afterTime(.25, verticalSlideRR.verticalSlidePosition(Configuration.bottom))
+                .afterTime(0, verticalGrabberRR.verticalGrabberPosition(ConfigurationFirstRobot.verticalOpen))
+                .afterTime(.25, verticalWristRR.verticalWristPosition(ConfigurationFirstRobot.verticalWristIntake))
+                .afterTime(.25, verticalSlideRR.verticalSlidePosition(ConfigurationFirstRobot.bottom))
                 .strafeTo(new Vector2d(-16, 24));
 
         TrajectoryActionBuilder ButterLeft = drive.actionBuilder(currentPose);
@@ -197,13 +197,13 @@ public class FinalAutoLeft extends LinearOpMode {
         chosenTrajectory = startPosition;
 
         Action ActionHang = chosenTrajectory.endTrajectory().fresh()
-                .afterTime(0, verticalSlideRR.verticalSlidePosition(Configuration.highBar))
-                .afterTime(0, verticalWristRR.verticalWristPosition(Configuration.verticalWristWall))
+                .afterTime(0, verticalSlideRR.verticalSlidePosition(ConfigurationFirstRobot.highBar))
+                .afterTime(0, verticalWristRR.verticalWristPosition(ConfigurationFirstRobot.verticalWristWall))
                 .waitSeconds(.4)
                 .strafeTo(new Vector2d(-16, 28))
-                .afterDisp(0, verticalGrabberRR.verticalGrabberPosition(Configuration.verticalOpen))
-                .afterDisp(2, verticalWristRR.verticalWristPosition(Configuration.verticalWristIntake))
-                .afterDisp(2, verticalSlideRR.verticalSlidePosition(Configuration.bottom))
+                .afterDisp(0, verticalGrabberRR.verticalGrabberPosition(ConfigurationFirstRobot.verticalOpen))
+                .afterDisp(2, verticalWristRR.verticalWristPosition(ConfigurationFirstRobot.verticalWristIntake))
+                .afterDisp(2, verticalSlideRR.verticalSlidePosition(ConfigurationFirstRobot.bottom))
                 .strafeTo(new Vector2d(-16, 24))
                 .build();
 
@@ -211,11 +211,11 @@ public class FinalAutoLeft extends LinearOpMode {
         chosenTrajectory = hang;
 
         Action ActionButterLeft = chosenTrajectory.endTrajectory().fresh()
-                .afterDisp(0, verticalGrabberRR.verticalGrabberPosition(Configuration.verticalOpen))
-                .afterDisp(0, verticalWristRR.verticalWristPosition(Configuration.verticalWristIntake))
-                .afterDisp(5, horizontalSlideRR.horizontalSlidePosition(Configuration.horizontalSlideExtend))
-                .afterDisp(5, horizontalWristRR.horizontalWristPosition(Configuration.horizontalWristIntake))
-                .afterDisp(5, horizontalIntakeRR.horizontalIntakePosition(Configuration.horizontalGrabberOpen))
+                .afterDisp(0, verticalGrabberRR.verticalGrabberPosition(ConfigurationFirstRobot.verticalOpen))
+                .afterDisp(0, verticalWristRR.verticalWristPosition(ConfigurationFirstRobot.verticalWristIntake))
+                .afterDisp(5, horizontalSlideRR.horizontalSlidePosition(ConfigurationFirstRobot.horizontalSlideExtend))
+                .afterDisp(5, horizontalWristRR.horizontalWristPosition(ConfigurationFirstRobot.horizontalWristIntake))
+                .afterDisp(5, horizontalIntakeRR.horizontalIntakePosition(ConfigurationFirstRobot.horizontalGrabberOpen))
                 .strafeToSplineHeading(new Vector2d(-36, 27.45), Math.toRadians(-90))
                 .afterTime(0, robotSpecial.transferSystem(true, false))
                 .strafeToSplineHeading(new Vector2d(-40, 5), Math.toRadians(200))
@@ -224,9 +224,9 @@ public class FinalAutoLeft extends LinearOpMode {
                 .strafeToSplineHeading(new Vector2d(-48.25, 27.45), Math.toRadians(-90))
                 //maybe need a wait not sure
                 .strafeToSplineHeading(new Vector2d(-40, 5), Math.toRadians(200))
-                .afterTime(0, verticalGrabberRR.verticalGrabberPosition(Configuration.verticalOpen))
-                .afterDisp(1, verticalWristRR.verticalWristPosition(Configuration.verticalWristIntake))
-                .afterDisp(2, verticalSlideRR.verticalSlidePosition(Configuration.bottom))
+                .afterTime(0, verticalGrabberRR.verticalGrabberPosition(ConfigurationFirstRobot.verticalOpen))
+                .afterDisp(1, verticalWristRR.verticalWristPosition(ConfigurationFirstRobot.verticalWristIntake))
+                .afterDisp(2, verticalSlideRR.verticalSlidePosition(ConfigurationFirstRobot.bottom))
                 .strafeToSplineHeading(new Vector2d(-30, 10), Math.toRadians(-90))
                 .build();
 

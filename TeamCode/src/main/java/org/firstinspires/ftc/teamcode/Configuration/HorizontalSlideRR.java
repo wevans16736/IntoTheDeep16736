@@ -28,7 +28,7 @@ public class HorizontalSlideRR {
         private boolean initialized = false;
 
         public class HorizontalSLidePosition implements Action {
-            int position = Configuration.horizontalSlideRetract;
+            int position = ConfigurationFirstRobot.horizontalSlideRetract;
             private boolean initialized = false;
 
             public HorizontalSLidePosition(int position) {
@@ -36,7 +36,7 @@ public class HorizontalSlideRR {
             }
 
             public HorizontalSLidePosition() {
-                this.position = Configuration.horizontalSlideRetract;
+                this.position = ConfigurationFirstRobot.horizontalSlideRetract;
             }
 
             @Override

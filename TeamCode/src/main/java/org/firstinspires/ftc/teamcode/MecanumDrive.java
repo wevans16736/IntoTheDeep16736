@@ -41,7 +41,7 @@ import com.qualcomm.robotcore.hardware.VoltageSensor;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.YawPitchRollAngles;
-import org.firstinspires.ftc.teamcode.Configuration.Configuration;
+import org.firstinspires.ftc.teamcode.Configuration.ConfigurationFirstRobot;
 import org.firstinspires.ftc.teamcode.messages.DriveCommandMessage;
 import org.firstinspires.ftc.teamcode.messages.MecanumCommandMessage;
 import org.firstinspires.ftc.teamcode.messages.MecanumLocalizerInputsMessage;
@@ -74,13 +74,13 @@ public class MecanumDrive {
         public double kA = 0.00001;
 
         // path profile parameters (in inches)
-        public double maxWheelVel = Configuration.driveVelocity;
-        public double minProfileAccel = Configuration.driveMinAccel;
-        public double maxProfileAccel = Configuration.driveMaxAccel;
+        public double maxWheelVel = ConfigurationFirstRobot.driveVelocity;
+        public double minProfileAccel = ConfigurationFirstRobot.driveMinAccel;
+        public double maxProfileAccel = ConfigurationFirstRobot.driveMaxAccel;
 
         // turn profile parameters (in radians)
-        public double maxAngVel = Configuration.driveMinAngle; // shared with path
-        public double maxAngAccel = Configuration.driveMaxAccel;
+        public double maxAngVel = ConfigurationFirstRobot.driveMinAngle; // shared with path
+        public double maxAngAccel = ConfigurationFirstRobot.driveMaxAccel;
 
         // path controller gains
         public double axialGain = 4;

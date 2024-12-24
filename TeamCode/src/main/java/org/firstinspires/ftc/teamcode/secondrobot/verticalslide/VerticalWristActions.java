@@ -1,12 +1,12 @@
-package org.firstinspires.ftc.teamcode.robotverticalslides.VerticalSlide;
+package org.firstinspires.ftc.teamcode.secondrobot.verticalslide;
 
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.teamcode.robotverticalslides.constants.ConfigConstants;
 import org.firstinspires.ftc.teamcode.Configuration.ConfigurationFirstRobot;
+import org.firstinspires.ftc.teamcode.secondrobot.constants.ConfigConstants;
 
 public class VerticalWristActions {
     public Servo verticalWristServo;
