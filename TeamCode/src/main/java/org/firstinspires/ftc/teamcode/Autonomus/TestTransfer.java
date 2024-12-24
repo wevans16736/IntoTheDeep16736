@@ -5,6 +5,7 @@ import androidx.annotation.NonNull;
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.acmerobotics.roadrunner.Action;
+import com.acmerobotics.roadrunner.InstantAction;
 import com.acmerobotics.roadrunner.ParallelAction;
 import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.SequentialAction;
@@ -30,6 +31,7 @@ import org.firstinspires.ftc.teamcode.Configuration.HorizontalRollRR;
 @Config
 @Autonomous(name = "1. Test Transfer", group = "Autonomous")
 public class TestTransfer extends LinearOpMode {
+
     @Override
     public void runOpMode() throws InterruptedException {
         VerticalSlideRR verticalSlideRR = new VerticalSlideRR(hardwareMap);
@@ -44,52 +46,60 @@ public class TestTransfer extends LinearOpMode {
 
         //initialize the robot before starting
         Actions.runBlocking(new SequentialAction(
-                horizontalSlideRR.horizontalSlidePosition(Configuration.horizontalSlideRetract),
                 verticalSlideRR.verticalSlidePosition(Configuration.bottom),
-
-                horizontalIntakeRR.horizontalIntakePosition(Configuration.horizontalGrabberOpen),
+                        horizontalSlideRR.horizontalSlidePosition(Configuration.horizontalSlideRetract),
+                        horizontalWristRR.horizontalWristPosition(Configuration.horizontalWristTransfer),
+                        horizontalIntakeRR.horizontalIntakePosition(Configuration.horizontalGrabberOpen),
                 verticalGrabberRR.verticalGrabberPosition(Configuration.verticalClose),
 
-                horizontalWristRR.horizontalWristPosition(Configuration.horizontalWristTransfer),
                 verticalWristRR.verticalWristPosition(Configuration.verticalWristIntake),
                 horizontalRollRR.horizontalRollPosition(Configuration.flat)
         ));
 
-        TrajectoryActionBuilder transferSystem = drive.actionBuilder(initialPose)
-                //let go of the butter if it is up ontop of the basket
-                .afterTime(0, verticalGrabberRR.verticalGrabberPosition(Configuration.verticalOpen))
-                .afterTime(0, verticalWristRR.verticalWristPosition(Configuration.verticalWristIntake))
-                .afterTime(0, verticalSlideRR.verticalSlidePosition(Configuration.bottom))
-                //grab the butter from the floor
-                .afterTime(0, horizontalIntakeRR.horizontalIntakePosition(Configuration.horizontalGrabberClose))
-                .afterTime(0, verticalGrabberRR.verticalGrabberPosition(Configuration.verticalOpen))
-                .afterTime(0, verticalWristRR.verticalWristPosition(Configuration.verticalWristIntake))
-                .waitSeconds(.5)
-                //retract the slide
-                .afterTime(0, horizontalSlideRR.horizontalSlidePosition(Configuration.horizontalSlideRetract))
-                .afterTime(0, horizontalWristRR.horizontalWristPosition(Configuration.horizontalWristTransfer))
-                .afterTime(0, verticalWristRR.verticalWristPosition(Configuration.verticalWristIntake))
-                .waitSeconds(1)
-                //vertical grabber close
-                .afterTime(0, verticalGrabberRR.verticalGrabberPosition(Configuration.verticalClose))
-                .waitSeconds(.25)
-                //horizontal grabber open
-                .afterTime(0, horizontalIntakeRR.horizontalIntakePosition(Configuration.horizontalGrabberOpen))
-                .waitSeconds(.25)
-                //butter go to the other side while priming the horizontal slide for other butter
-                .afterTime(0, verticalWristRR.verticalWristPosition(Configuration.verticalWristWall))
-                .afterTime(0, horizontalWristRR.horizontalWristPosition(Configuration.horizontalWristIntake))
-                .afterTime(0, horizontalSlideRR.horizontalSlidePosition(Configuration.horizontalSlideExtend))
-                .waitSeconds(1.5)
-                .afterTime(0, verticalGrabberRR.verticalGrabberPosition(Configuration.verticalOpen))
-                .waitSeconds(.5)
-                .afterTime(0, verticalWristRR.verticalWristPosition(Configuration.verticalWristIntake));
+       TrajectoryActionBuilder transferSystem = drive.actionBuilder(initialPose)
+               //let go of the butter if it is up ontop of the basket
+               .afterTime(0, verticalGrabberRR.verticalGrabberPosition(Configuration.verticalOpen))
+               .afterTime(0, verticalWristRR.verticalWristPosition(Configuration.verticalWristIntake))
+               .afterTime(0, verticalSlideRR.verticalSlidePosition(Configuration.bottom))
+               //grab the butter from the floor
+               .afterTime(0, horizontalIntakeRR.horizontalIntakePosition(Configuration.horizontalGrabberClose))
+               .afterTime(0, verticalGrabberRR.verticalGrabberPosition(Configuration.verticalOpen))
+               .afterTime(0, verticalWristRR.verticalWristPosition(Configuration.verticalWristIntake))
+               .waitSeconds(.5)
+               //retract the slide
+               .afterTime(0, horizontalSlideRR.horizontalSlidePosition(Configuration.horizontalSlideRetract))
+               .afterTime(0, horizontalWristRR.horizontalWristPosition(Configuration.horizontalWristTransfer))
+               .afterTime(0, verticalWristRR.verticalWristPosition(Configuration.verticalWristIntake))
+               .waitSeconds(1)
+               //vertical grabber close
+               .afterTime(0, verticalGrabberRR.verticalGrabberPosition(Configuration.verticalClose))
+               .waitSeconds(.25)
+               //horizontal grabber open
+               .afterTime(0, horizontalIntakeRR.horizontalIntakePosition(Configuration.horizontalGrabberOpen))
+               .waitSeconds(.25)
+               //butter go to the other side while priming the horizontal slide for other butter
+               .afterTime(0, verticalWristRR.verticalWristPosition(Configuration.verticalWristWall))
+               .afterTime(0, horizontalWristRR.horizontalWristPosition(Configuration.horizontalWristIntake))
+               .afterTime(0, horizontalSlideRR.horizontalSlidePosition(Configuration.horizontalSlideExtend))
+               .waitSeconds(.5)
+               .afterTime(0, verticalGrabberRR.verticalGrabberPosition(Configuration.verticalOpen))
+               .waitSeconds(.5)
+               .afterTime(0, verticalWristRR.verticalWristPosition(Configuration.verticalWristIntake));
+
+       TrajectoryActionBuilder test = drive.actionBuilder(initialPose)
+               .afterTime(0, verticalSlideRR.verticalSlidePosition(Configuration.highBar))
+               .afterTime(1, verticalSlideRR.verticalSlidePosition(Configuration.bottom));
+
+        TrajectoryActionBuilder test2 = drive.actionBuilder(initialPose)
+                .afterTime(0, verticalSlideRR.verticalSlidePosition(Configuration.highBar))
+                .afterTime(1, verticalSlideRR.verticalSlidePosition(Configuration.bottom));
 
         TrajectoryActionBuilder startPosition = drive.actionBuilder(initialPose)
-                .afterTime(0, horizontalSlideRR.horizontalSlidePosition(Configuration.horizontalSlideExtend))
-                .afterTime(0, horizontalWristRR.horizontalWristPosition(Configuration.horizontalWristIntake))
-                .afterTime(0, horizontalIntakeRR.horizontalIntakePosition(Configuration.horizontalGrabberOpen))
-                .strafeTo(new Vector2d(0, 10));
+                .strafeTo(new Vector2d(0, 0));
+
+        TrajectoryActionBuilder transferMove = drive.actionBuilder(initialPose)
+                .waitSeconds(.5)
+                .strafeTo(new Vector2d(0, -10));
 
         //wait for the start button to be press
         waitForStart();
@@ -102,16 +112,17 @@ public class TestTransfer extends LinearOpMode {
 
         Action ActionTransferMove = chosenTrajectory.endTrajectory().fresh()
                 .waitSeconds(.5)
-                .strafeTo(new Vector2d(-10, 10))
+                .strafeTo(new Vector2d(0, -20))
                 .build();
 
-        Actions.runBlocking(new ParallelAction(
-                transferSystem.build(), ActionTransferMove
-        ));
+        chosenTrajectory = transferMove;
 
+        Action ActionTransferMoveOther = chosenTrajectory.endTrajectory().fresh()
+                .waitSeconds(.5)
+                .strafeTo(new Vector2d(0, 0))
+                .build();
 
-
-
-
+        Actions.runBlocking(new SequentialAction(new ParallelAction(test.build(), ActionTransferMove), new SleepAction(2), new ParallelAction(ActionTransferMoveOther, test2.build()), new SleepAction(2)));
+//        Actions.runBlocking(new SequentialAction(ActionTransferMove, ActionTransferMoveOther));
     }
 }
