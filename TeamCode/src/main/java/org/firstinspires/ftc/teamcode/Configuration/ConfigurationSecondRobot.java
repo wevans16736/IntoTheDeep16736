@@ -15,7 +15,6 @@ public class ConfigurationSecondRobot {
     //vertical slide position
     public static int highBar = -1330;
     public static int bottom = 0;
-    //todo is this right?
     public static int lowBar = -415;
     public static int topBasket = -2300;
 
