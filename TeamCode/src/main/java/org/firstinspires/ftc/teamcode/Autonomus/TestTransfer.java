@@ -17,7 +17,6 @@ import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
-//import org.firstinspires.ftc.teamcode.Configuration.ConfigurationFirstRobot;
 import org.firstinspires.ftc.teamcode.Configuration.ConfigurationFirstRobot;
 import org.firstinspires.ftc.teamcode.PinpointDrive;
 
@@ -88,19 +87,19 @@ public class TestTransfer extends LinearOpMode {
                 .afterTime(0, verticalWristRR.verticalWristPosition(ConfigurationFirstRobot.verticalWristIntake));
 
         TrajectoryActionBuilder test = drive.actionBuilder(initialPose)
-                .afterTime(0, verticalSlideRR.verticalSlidePosition(ConfigurationFirstRobot.highBar))
-                .afterTime(1, verticalSlideRR.verticalSlidePosition(ConfigurationFirstRobot.bottom));
+                .stopAndAdd(verticalSlideRR.verticalSlidePosition(ConfigurationFirstRobot.highBar))
+                .waitSeconds(1)
+                .stopAndAdd(verticalSlideRR.verticalSlidePosition(ConfigurationFirstRobot.bottom));
 
-        TrajectoryActionBuilder test2 = drive.actionBuilder(initialPose)
-                .afterTime(0, verticalSlideRR.verticalSlidePosition(ConfigurationFirstRobot.highBar))
-                .afterTime(1, verticalSlideRR.verticalSlidePosition(ConfigurationFirstRobot.bottom));
+//        TrajectoryActionBuilder test2 = drive.actionBuilder(initialPose)
+//                .afterTime(3, verticalSlideRR.verticalSlidePosition(ConfigurationFirstRobot.highBar))
+//                .afterTime(4, verticalSlideRR.verticalSlidePosition(ConfigurationFirstRobot.bottom));
 
         TrajectoryActionBuilder startPosition = drive.actionBuilder(initialPose)
                 .strafeTo(new Vector2d(0, 0));
 
         TrajectoryActionBuilder transferMove = drive.actionBuilder(initialPose)
-                .waitSeconds(.5)
-                .strafeTo(new Vector2d(0, -10));
+                .strafeTo(new Vector2d(0, -20));
 
         //wait for the start button to be press
         waitForStart();
@@ -112,7 +111,6 @@ public class TestTransfer extends LinearOpMode {
         chosenTrajectory = startPosition;
 
         Action ActionTransferMove = chosenTrajectory.endTrajectory().fresh()
-                .waitSeconds(.5)
                 .strafeTo(new Vector2d(0, -20))
                 .build();
 
@@ -123,7 +121,6 @@ public class TestTransfer extends LinearOpMode {
                 .strafeTo(new Vector2d(0, 0))
                 .build();
 
-        Actions.runBlocking(new SequentialAction(new ParallelAction(test.build(), ActionTransferMove), new SleepAction(2), new ParallelAction(ActionTransferMoveOther, test2.build()), new SleepAction(2)));
-//        Actions.runBlocking(new SequentialAction(ActionTransferMove, ActionTransferMoveOther));
+        Actions.runBlocking(new SequentialAction(new ParallelAction(test.build(), ActionTransferMove), new SleepAction(2), new ParallelAction(ActionTransferMoveOther, test.build()), new SleepAction(2)));
     }
 }
