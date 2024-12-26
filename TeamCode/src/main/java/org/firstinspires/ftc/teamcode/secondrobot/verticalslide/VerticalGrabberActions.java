@@ -5,7 +5,7 @@ import com.qualcomm.robotcore.hardware.ServoImplEx;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.teamcode.Configuration.ConfigurationFirstRobot;
+import org.firstinspires.ftc.teamcode.Configuration.ConfigurationSecondRobot;
 import org.firstinspires.ftc.teamcode.secondrobot.constants.ConfigConstants;
 
 public class VerticalGrabberActions {
@@ -19,10 +19,10 @@ public class VerticalGrabberActions {
 
         verticalGrabberServo = hardwareMap.get(ServoImplEx.class, ConfigConstants.VERTICAL_GRABBER);
 
-        verticalGrabberServo.setPosition(0.3);
+        verticalGrabberServo.setPosition(ConfigurationSecondRobot.verticalClose);
     }
     public void open() {
-        verticalGrabberServo.setPosition(ConfigurationFirstRobot.verticalOpen);
+        verticalGrabberServo.setPosition(ConfigurationSecondRobot.verticalOpen);
         isClose = false;
     }
     public void close() {
@@ -30,7 +30,7 @@ public class VerticalGrabberActions {
 //        if (!verticalGrabberServo.isPwmEnabled()) {
 //            verticalGrabberServo.setPwmDisable();
 //        }
-        verticalGrabberServo.setPosition(0.5);
+        verticalGrabberServo.setPosition(ConfigurationSecondRobot.verticalClose);
         isClose = true;
     }
     boolean isClose = true;

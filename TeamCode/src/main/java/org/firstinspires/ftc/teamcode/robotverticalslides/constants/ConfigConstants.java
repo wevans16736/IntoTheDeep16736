@@ -9,16 +9,6 @@ public class ConfigConstants {
     public static final String BACK_RIGHT = "rightRear"; //Expansion Hub 2
     public static final String BACK_LEFT = "leftRear"; //Control Hub 1
 
-    //Swerve Wheels WIP
-    public static final String FRONT_LEFT_DIRECTION = "leftFrontDirection";
-    public static final String FRONT_LEFT_POWER = "leftFrontPower";
-    public static final String FRONT_RIGHT_DIRECTION = "rightFrontDirection";
-    public static final String FRONT_RIGHT_POWER = "rightFrontPower";
-    public static final String BACK_RIGHT_DIRECTION = "rightRearDirection";
-    public static final String BACK_RIGHT_POWER = "rightRearPower";
-    public static final String BACK_LEFT_DIRECTION = "leftRearDirection";
-    public static final String BACK_LEFT_POWER = "leftRearPower";
-
     //Attachments
     public static final String HORIZONTAL_SLIDE1 = "horizontalSlide1";
     public static final String HORIZONTAL_SLIDE2 = "horizontalSlide2";

@@ -9,7 +9,6 @@ import com.qualcomm.robotcore.util.RobotLog;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
-import org.firstinspires.ftc.teamcode.Configuration.ConfigurationFirstRobot;
 import org.firstinspires.ftc.teamcode.Configuration.ConfigurationSecondRobot;
 import org.firstinspires.ftc.teamcode.secondrobot.constants.ConfigConstants;
 
@@ -24,12 +23,12 @@ public class VerticalSlideActions {
         verticalSlide = hardwareMap.get(DcMotorEx.class, ConfigConstants.VERTICAL_SLIDE1);
         verticalSlide2 = hardwareMap.get(DcMotorEx.class, ConfigConstants.VERTICAL_SLIDE2);
 
-        verticalSlide.setDirection(DcMotorSimple.Direction.FORWARD);
+        verticalSlide.setDirection(DcMotorSimple.Direction.REVERSE);
         verticalSlide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         verticalSlide.setTargetPosition(0);
         verticalSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
-        verticalSlide2.setDirection(DcMotorSimple.Direction.FORWARD);
+        verticalSlide2.setDirection(DcMotorSimple.Direction.REVERSE);
         verticalSlide2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         verticalSlide2.setTargetPosition(0);
         verticalSlide2.setMode(DcMotor.RunMode.RUN_TO_POSITION);
@@ -51,7 +50,7 @@ public class VerticalSlideActions {
             //change the slide position by the input power times the change in time times the speed.
             //Multiplying by change in time makes sure the slide speed is more consistent
             double total = SlidePosition + power * (time - prevTime) * liftSpeedMultiplier;
-            total = Range.clip(total, -2300, 5);
+            total = Range.clip(total, 0, ConfigurationSecondRobot.topBasket);
             setSlidePosition((int) total, 3000 * liftSpeedMultiplier);
             RobotLog.dd("LiftyUppy", "Target Position %f, time %f", SlidePosition, time);
         }
@@ -63,7 +62,6 @@ public class VerticalSlideActions {
         telemetry.addData("Current VS2", verticalSlide2.getCurrent(CurrentUnit.MILLIAMPS));
     }
 
-    boolean downTo1 = false;
     boolean at1 = false;
     double at1StartTime = 0;
     int preset1 = ConfigurationSecondRobot.highBar;
@@ -75,6 +73,7 @@ public class VerticalSlideActions {
     boolean wasDown = true;
     boolean isDown = true;
 
+    //Slide goes to preset that is set as true
     public void goToPreset(boolean bottomRung, boolean bottom, boolean topRung, boolean topBasket) {
         if (bottomRung || bottom || topRung || topBasket){
             if (verticalSlide.getMode() != DcMotor.RunMode.RUN_TO_POSITION) {
@@ -82,12 +81,12 @@ public class VerticalSlideActions {
                 verticalSlide2.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             }
             if (!wasSet) {
+                //one shot- when button is pressed, it only sets the position once
                 if (bottomRung) {
                     setSlidePosition(preset1, 1800);
                 }
                 if (bottom) {
                     setSlidePosition(preset2, 2500);
-                    downTo1 = true;
                 } else if (topRung) {
                     setSlidePosition(preset3, 2500);
                 } else if (topBasket) {
@@ -101,15 +100,16 @@ public class VerticalSlideActions {
     }
 
     public void turnOffAtBottom() {
-        isDown = (verticalSlide.getCurrentPosition() > -5);
-        //If the slide is at the bottom, turn it off
+        //If the slide is at the bottom, wait 200 millis to cancel bouncing and then turn off the motors to save power
+        isDown = (verticalSlide.getCurrentPosition() < 5);
         if(isDown && !wasDown) {
-            downTo1 = false;
+            //when the slide reaches the bottom, start a timer
             at1 = true;
             at1StartTime = System.currentTimeMillis();
         }
         wasDown = isDown;
-        if ((System.currentTimeMillis() > (at1StartTime + 200)) && at1) {
+        if ((System.currentTimeMillis() > (at1StartTime + 200)) && at1 && isDown) {
+            //when the timer is done, turn off the motors
             at1 = false;
             verticalSlide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             verticalSlide2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -123,14 +123,7 @@ public class VerticalSlideActions {
     }
 
     double SlidePosition = 0;
-
-    boolean startMotor = false;
     public void setSlidePosition(int position, double velocity) {
-        if (SlidePosition != position) {
-            startMotor = true;
-        } else {
-            startMotor = false;
-        }
         verticalSlide.setTargetPosition(position);
         verticalSlide.setVelocity(velocity);
         verticalSlide2.setTargetPosition(position);

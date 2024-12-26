@@ -12,14 +12,14 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.secondrobot.constants.ConfigConstants;
 
 @Disabled
-public class HorizontalArmActions {
+public class HorizontalSlideActions {
     public DcMotorEx armMotor = null;
     private Telemetry telemetry;
     double armLegLength = 10.75;
     double startDistance = 5.0;
 
     //set up the slide with all the mode and hardware map
-    public HorizontalArmActions(HardwareMap hardwareMap, Telemetry telemetry) {
+    public HorizontalSlideActions(HardwareMap hardwareMap, Telemetry telemetry) {
         this.telemetry = telemetry;
         armMotor = hardwareMap.get(DcMotorEx.class, ConfigConstants.HORIZONTAL_ARM);
         armMotor.setDirection(DcMotorSimple.Direction.FORWARD);

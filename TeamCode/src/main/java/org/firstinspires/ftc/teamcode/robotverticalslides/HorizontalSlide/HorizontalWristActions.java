@@ -24,43 +24,25 @@ public class HorizontalWristActions {
 
         horizontalWristServo.setPosition(backwardPosIn);
     }
-    public void forward() {
-//        horizontalWristServo.setPosition(0.2);
-        forward = true;
-    }
-    public void backward() {
-//        horizontalWristServo.setPosition(0.9);
-        forward = false;
-    }
     public boolean override = true;
     boolean wasOverride = false;
     public void override(boolean input) {
         if (input &! wasOverride) {
             override = !override;
-            forward();
+            forward = true;
         }
         wasOverride = input;
     }
 
+    //if the override is on or the slide is in, set the servo to go up.
+    //otherwise, the servo goes down and is either forward or backward depending on how the driver selects.
     public void update() {
-        if (override) {
+        if (override || isSlideIn) {
             horizontalWristServo.setPosition(backwardPosIn);
         } else if (forward) {
-            if (!isSlideIn) {
-                horizontalWristServo.setPosition(forwardPosOut);
-            } else {
-                horizontalWristServo.setPosition(backwardPosIn);
-            }
+            horizontalWristServo.setPosition(forwardPosOut);
         } else {
-            if (isSlideIn) {
-                horizontalWristServo.setPosition(backwardPosIn);
-            } else {
-                if (override) {
-                    horizontalWristServo.setPosition(backwardPosIn);
-                } else {
-                    horizontalWristServo.setPosition(backwardPosOut);
-                }
-            }
+            horizontalWristServo.setPosition(backwardPosOut);
         }
     }
     boolean isSlideIn = true;
@@ -70,17 +52,21 @@ public class HorizontalWristActions {
     boolean wasInput = false;
     public boolean forward = false;
     public void flipping(boolean input) {
+        //if the driver presses the button, flip the servo between forwards and backwards
         if (input && !wasInput) {
             if (!forward && !isSlideIn) {
-                forward();
+                forward = true;
             } else if (forward){
-                backward();
+                forward = false;
             }
         }
         wasInput = input;
         update();
     }
 
+    public void setForward(boolean forward) {
+        this.forward = forward;
+    }
     double position = 0.9;
     public void manual(boolean activate, boolean reverse) {
         if (activate) {

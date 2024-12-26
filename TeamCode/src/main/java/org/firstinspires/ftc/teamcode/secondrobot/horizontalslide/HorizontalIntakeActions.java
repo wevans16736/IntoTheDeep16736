@@ -39,10 +39,10 @@ public class HorizontalIntakeActions {
                 }
             }
         } else {
-            setPosition(0.0);
             if (!intakeServo.isPwmEnabled()) {
                 intakeServo.setPwmEnable();
             }
+            setPosition(0.0);
         }
 
     }

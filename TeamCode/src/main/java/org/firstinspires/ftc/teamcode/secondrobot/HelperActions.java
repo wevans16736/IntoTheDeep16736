@@ -2,8 +2,8 @@ package org.firstinspires.ftc.teamcode.secondrobot;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
-import org.firstinspires.ftc.teamcode.secondrobot.horizontalslide.HorizontalIntakeActions;
-import org.firstinspires.ftc.teamcode.secondrobot.horizontalslide.HorizontalArmActions;
+import org.firstinspires.ftc.teamcode.Configuration.ConfigurationSecondRobot;
+import org.firstinspires.ftc.teamcode.secondrobot.horizontalslide.HorizontalSlideActions;
 import org.firstinspires.ftc.teamcode.secondrobot.horizontalslide.HorizontalWristActions;
 import org.firstinspires.ftc.teamcode.secondrobot.verticalslide.VerticalGrabberActions;
 import org.firstinspires.ftc.teamcode.secondrobot.verticalslide.VerticalSlideActions;
@@ -88,12 +88,12 @@ public abstract class HelperActions extends LinearOpMode {
      /**slide configuration?**/
     boolean wasOverrideSlide = true;
     boolean overrideSlide = true;
-    double overrideSlideThreshold = 325;
-    public void updateExchangeAssembly(VerticalGrabberActions grabber, VerticalWristActions verticalWrist, HorizontalWristActions horizontalWrist, HorizontalArmActions horizontalArm, VerticalSlideActions verticalSlide) {
+    double overrideSlideThreshold = 5;
+    public void updateExchangeAssembly(VerticalGrabberActions grabber, VerticalWristActions verticalWrist, HorizontalWristActions horizontalWrist, HorizontalSlideActions horizontalArm, VerticalSlideActions verticalSlide) {
         //tells the vertical wrist when the grabber is closed
         verticalWrist.setGrabberClosed(grabber.isClose());
         //tells the vertical wrist when the slide is up
-        verticalWrist.setSlideUp(verticalSlide.getSlidePosition() < -800);
+        verticalWrist.setSlideUp(verticalSlide.getSlidePosition() > ConfigurationSecondRobot.topBasket - 100);
         //tells the horizontal slide to stop and let the horizontal wrist flip up or flip down when going in or out
         overrideSlide = horizontalArm.getSlidePosition() < overrideSlideThreshold && !horizontalWrist.override;
         horizontalWrist.setIsSlideIn(overrideSlide);
@@ -101,7 +101,7 @@ public abstract class HelperActions extends LinearOpMode {
         wasOverrideSlide = overrideSlide;
     }
     double startTime = 0;
-    public void overrideSlide(HorizontalArmActions horizontalArm) {
+    public void overrideSlide(HorizontalSlideActions horizontalArm) {
         if (overrideSlide && !wasOverrideSlide) {
             startTime = System.currentTimeMillis();
         }

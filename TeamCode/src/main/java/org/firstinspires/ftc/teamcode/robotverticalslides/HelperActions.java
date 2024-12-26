@@ -158,7 +158,7 @@ public abstract class HelperActions extends LinearOpMode {
         if (horizontalSlide.getSlidePosition() > 1) {
             if (horizontalWrist.forward && horizontalSlide.getSlidePosition() > overrideSlideThreshold) {
                 horizontalFlipBackStartTime = currentTime;
-                horizontalWrist.backward();
+                horizontalWrist.setForward(false);
             }
             if (currentTime > horizontalFlipBackStartTime + 420) {
                 horizontalSlide.teleOpHorizontalSlide(-1, 2);

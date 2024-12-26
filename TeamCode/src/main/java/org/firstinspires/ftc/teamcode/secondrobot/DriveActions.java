@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.secondrobot;
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -13,7 +14,6 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.YawPitchRollAngles;
 import org.firstinspires.ftc.teamcode.secondrobot.constants.ConfigConstants;
-import org.firstinspires.ftc.teamcode.secondrobot.constants.MotorConstants;
 
 import java.util.Collections;
 import java.util.LinkedList;
@@ -139,11 +139,11 @@ public class DriveActions {
      */
     public void driveUsingJoyStick(double speedX, double speedY, double rotation) {
 
-        double frontLeft = speedX + speedY + rotation;
-        double frontRight = -speedX + speedY - rotation;
+        double frontLeft = speedX + speedY - rotation;
+        double frontRight = -speedX + speedY + rotation;
 
-        double backLeft = -speedX + speedY + rotation;
-        double backRight = speedX + speedY - rotation;
+        double backLeft = -speedX + speedY - rotation;
+        double backRight = speedX + speedY + rotation;
 
 //        double fl = speedX + speedY + rotation;
 //        double fr = -speedX + speedY - rotation;
@@ -192,11 +192,11 @@ public class DriveActions {
 
     //This methods is meant for AUTONOMOUS
     public void setMotorDirection_Forward() {
-        leftFront.setDirection(MotorConstants.FORWARD);
-        leftRear.setDirection(MotorConstants.FORWARD);
+        leftFront.setDirection(DcMotorSimple.Direction.FORWARD);
+        leftRear.setDirection(DcMotorSimple.Direction.FORWARD);
 
-        rightFront.setDirection(MotorConstants.REVERSE);
-        rightRear.setDirection(MotorConstants.REVERSE);
+        rightFront.setDirection(DcMotorSimple.Direction.REVERSE);
+        rightRear.setDirection(DcMotorSimple.Direction.REVERSE);
     }
 
     public double getSteeringCorrection(double desiredHeading, double proportionalGain) {

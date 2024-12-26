@@ -5,7 +5,7 @@ import com.qualcomm.robotcore.hardware.ServoImplEx;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.teamcode.Configuration.ConfigurationFirstRobot;
+import org.firstinspires.ftc.teamcode.Configuration.ConfigurationSecondRobot;
 import org.firstinspires.ftc.teamcode.secondrobot.constants.ConfigConstants;
 
 public class HorizontalIRollActions {
@@ -13,7 +13,7 @@ public class HorizontalIRollActions {
     private Telemetry telemetry;
     private HardwareMap hardwareMap;
     private ElapsedTime runtime = new ElapsedTime();
-    private double flat = ConfigurationFirstRobot.flat;
+    private double flat = ConfigurationSecondRobot.flat;
 
     public HorizontalIRollActions(Telemetry opModeTelemetry, HardwareMap opModeHardware) {
         this.telemetry = opModeTelemetry;
@@ -32,7 +32,7 @@ public class HorizontalIRollActions {
             }
             changePosStartTime = System.currentTimeMillis();
             position = Math.abs(position);
-            rollServo.setPosition(position + ConfigurationFirstRobot.flat);
+            rollServo.setPosition(position + flat);
         }
         if (System.currentTimeMillis() > changePosStartTime + 420 && rollServo.isPwmEnabled()) {
 //            rollServo.setPwmDisable();
@@ -41,16 +41,16 @@ public class HorizontalIRollActions {
         }
         prevPos = position;
     }
-    boolean forward = true;
+    boolean isFlat = true;
     boolean wasOperate = false;
     public void teleOp(boolean operate){
         if (operate && !wasOperate) {
-            forward = !forward;
+            isFlat = !isFlat;
         }
-        if (forward) {
-            setPosition(0.3);
+        if (isFlat) {
+            setPosition(0.0);
         } else {
-            setPosition(0);
+            setPosition(0.3);
         }
         wasOperate = operate;
     }
