@@ -8,6 +8,7 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.Configuration.ConfigurationSecondRobot;
 import org.firstinspires.ftc.teamcode.secondrobot.constants.ConfigConstants;
 
+//todo is this spell wrong?
 public class HorizontalIRollActions {
     public ServoImplEx rollServo;
     private Telemetry telemetry;

@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.Configuration;
+package org.firstinspires.ftc.teamcode.Configuration.firstRobot;
 
 import androidx.annotation.NonNull;
 
@@ -10,13 +10,15 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.teamcode.robotverticalslides.constants.ConfigConstants;
+
+@Deprecated
 public class VerticalSlideRR {
         public DcMotorEx verticalSlide1 = null;
         public DcMotorEx verticalSlide2 = null;
 
         public VerticalSlideRR(HardwareMap hardwareMap) {
             verticalSlide1 = hardwareMap.get(DcMotorEx.class, ConfigConstants.VERTICAL_SLIDE1);
-            verticalSlide1.setDirection(DcMotorSimple.Direction.REVERSE);
+            verticalSlide1.setDirection(DcMotorSimple.Direction.FORWARD);
             verticalSlide1.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             verticalSlide1.setTargetPosition(0);
             verticalSlide1.setMode(DcMotor.RunMode.RUN_TO_POSITION);
@@ -28,18 +30,17 @@ public class VerticalSlideRR {
             verticalSlide2.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         }
 
-        private boolean initialized = false;
-
         public class VerticalSlidePosition implements Action {
             int position = 0;
             private boolean initialized = false;
+            double currentPosition = verticalSlide1.getCurrentPosition();
 
             public VerticalSlidePosition(int position) {
-                this.position = position;
+                this.position = Math.abs(position);
             }
 
             public VerticalSlidePosition() {
-                this.position = ConfigurationFirstRobot.bottom;
+                this.position = Math.abs(ConfigurationFirstRobot.bottom);
             }
 
             @Override
@@ -48,13 +49,18 @@ public class VerticalSlideRR {
                 if (!initialized) {
                     verticalSlide1.setTargetPosition(position);
                     verticalSlide1.setVelocity(velocity);
-                    verticalSlide2.setTargetPosition(-position);
-                    verticalSlide2.setVelocity(-velocity);
+                    verticalSlide2.setTargetPosition(position);
+                    verticalSlide2.setVelocity(velocity);
                     initialized = true;
                 }
-                double currentPosition = verticalSlide1.getCurrentPosition();
 
-                return currentPosition > position;
+                currentPosition = verticalSlide1.getCurrentPosition();
+                if(Math.abs(currentPosition) > position){
+                    initialized = false;
+                    return false;
+                }else{
+                    return true;
+                }
             }
         }
 

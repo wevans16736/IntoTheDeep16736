@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.Autonomus;
+package org.firstinspires.ftc.teamcode.Autonomus.firstRobot;
 
 // RR-specific imports
 import androidx.annotation.NonNull;
@@ -15,16 +15,16 @@ import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
-import org.firstinspires.ftc.teamcode.Configuration.ConfigurationFirstRobot;
+import org.firstinspires.ftc.teamcode.Configuration.firstRobot.ConfigurationFirstRobot;
 import org.firstinspires.ftc.teamcode.PinpointDrive;
 
-import org.firstinspires.ftc.teamcode.Configuration.VerticalWristRR;
-import org.firstinspires.ftc.teamcode.Configuration.VerticalSlideRR;
-import org.firstinspires.ftc.teamcode.Configuration.VerticalGrabberRR;
-import org.firstinspires.ftc.teamcode.Configuration.HorizontalSlideRR;
-import org.firstinspires.ftc.teamcode.Configuration.HorizontalGrabberRR;
-import org.firstinspires.ftc.teamcode.Configuration.HorizontalWristRR;
-import org.firstinspires.ftc.teamcode.Configuration.HorizontalRollRR;
+import org.firstinspires.ftc.teamcode.Configuration.firstRobot.VerticalWristRR;
+import org.firstinspires.ftc.teamcode.Configuration.firstRobot.VerticalSlideRR;
+import org.firstinspires.ftc.teamcode.Configuration.firstRobot.VerticalGrabberRR;
+import org.firstinspires.ftc.teamcode.Configuration.firstRobot.HorizontalSlideRR;
+import org.firstinspires.ftc.teamcode.Configuration.firstRobot.HorizontalGrabberRR;
+import org.firstinspires.ftc.teamcode.Configuration.firstRobot.HorizontalWristRR;
+import org.firstinspires.ftc.teamcode.Configuration.firstRobot.HorizontalRollRR;
 
 @Config
 @Autonomous(name = "1. Final Auto", group = "Autonomous")

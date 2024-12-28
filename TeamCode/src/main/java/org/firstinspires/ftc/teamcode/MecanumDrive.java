@@ -41,7 +41,7 @@ import com.qualcomm.robotcore.hardware.VoltageSensor;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.YawPitchRollAngles;
-import org.firstinspires.ftc.teamcode.Configuration.ConfigurationFirstRobot;
+import org.firstinspires.ftc.teamcode.Configuration.ConfigurationSecondRobot;
 import org.firstinspires.ftc.teamcode.messages.DriveCommandMessage;
 import org.firstinspires.ftc.teamcode.messages.MecanumCommandMessage;
 import org.firstinspires.ftc.teamcode.messages.MecanumLocalizerInputsMessage;
@@ -61,31 +61,37 @@ public class MecanumDrive {
         public RevHubOrientationOnRobot.LogoFacingDirection logoFacingDirection =
                 RevHubOrientationOnRobot.LogoFacingDirection.UP;
         public RevHubOrientationOnRobot.UsbFacingDirection usbFacingDirection =
-                RevHubOrientationOnRobot.UsbFacingDirection.BACKWARD;
+                RevHubOrientationOnRobot.UsbFacingDirection.LEFT;
 
         // drive model parameters
         public double inPerTick = 1; // SparkFun OTOS Note: you can probably leave this at 1
-        public double lateralInPerTick = 0.5826805898649675;
-        public double trackWidthTicks = 14.768639684767576;
+
+//        public double lateralInPerTick = 0.5826805898649675;OLD
+        public double lateralInPerTick = 0.7110239197923209;
+//        public double trackWidthTicks = 14.768639684767576; OLD
+        public double trackWidthTicks = 14.276713023041097;
 
         // feedforward parameters (in tick units)
-        public double kS = 1.312598752395592;
-        public double kV = 0.12627343205960265;
-        public double kA = 0.00001;
+//        public double kS = 1.312598752395592; OLD
+        public double kS = 1.4497474230965328;
+//        public double kV = 0.12627343205960265; OLD
+        public double kV = 0.1279660180914318;
+//        public double kA = 0.00001; OLD
+        public double kA = 0;
 
         // path profile parameters (in inches)
-        public double maxWheelVel = ConfigurationFirstRobot.driveVelocity;
-        public double minProfileAccel = ConfigurationFirstRobot.driveMinAccel;
-        public double maxProfileAccel = ConfigurationFirstRobot.driveMaxAccel;
+        public double maxWheelVel = ConfigurationSecondRobot.driveVelocity;
+        public double minProfileAccel = ConfigurationSecondRobot.driveMinAccel;
+        public double maxProfileAccel = ConfigurationSecondRobot.driveMaxAccel;
 
         // turn profile parameters (in radians)
-        public double maxAngVel = ConfigurationFirstRobot.driveMinAngle; // shared with path
-        public double maxAngAccel = ConfigurationFirstRobot.driveMaxAccel;
+        public double maxAngVel = ConfigurationSecondRobot.driveMinAngle; // shared with path
+        public double maxAngAccel = ConfigurationSecondRobot.driveMaxAccel;
 
         // path controller gains
-        public double axialGain = 4;
-        public double lateralGain = 2;
-        public double headingGain = 4; // shared with turn
+        public double axialGain = 0; //Old 4
+        public double lateralGain = 0;// Old 2
+        public double headingGain = 0; // shared with turn, old 4
 
         public double axialVelGain = 0.0;
         public double lateralVelGain = 0.0;
@@ -140,7 +146,7 @@ public class MecanumDrive {
             imu = lazyImu.get();
 
             // TODO: reverse encoders if needed
-            //   leftFront.setDirection(DcMotorSimple.Direction.REVERSE);
+//               leftFront.setDirection(DcMotorSimple.Direction.REVERSE);
         }
 
         @Override
@@ -218,10 +224,10 @@ public class MecanumDrive {
 
         // TODO: make sure your config has motors with these names (or change them)
         //   see https://ftc-docs.firstinspires.org/en/latest/hardware_and_software_configuration/configuring/index.html
-        leftFront = hardwareMap.get(DcMotorEx.class, "leftFront");
-        leftBack = hardwareMap.get(DcMotorEx.class, "leftRear");
-        rightBack = hardwareMap.get(DcMotorEx.class, "rightRear");
-        rightFront = hardwareMap.get(DcMotorEx.class, "rightFront");
+        leftFront = hardwareMap.get(DcMotorEx.class, "LeftFront");
+        leftBack = hardwareMap.get(DcMotorEx.class, "LeftRear" );
+        rightBack = hardwareMap.get(DcMotorEx.class, "RightRear");
+        rightFront = hardwareMap.get(DcMotorEx.class, "RightFront");
 
         leftFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         leftBack.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -229,8 +235,10 @@ public class MecanumDrive {
         rightFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         // TODO: reverse motor directions if needed
-        rightFront.setDirection(DcMotorSimple.Direction.REVERSE);
-        rightBack.setDirection(DcMotorSimple.Direction.REVERSE);
+        rightFront.setDirection(DcMotorSimple.Direction.FORWARD);
+        rightBack.setDirection(DcMotorSimple.Direction.FORWARD);
+        leftFront.setDirection(DcMotorSimple.Direction.REVERSE);
+        leftBack.setDirection(DcMotorSimple.Direction.REVERSE);
 
         // TODO: make sure your config has an IMU with this name (can be BNO or BHI)
         //   see https://ftc-docs.firstinspires.org/en/latest/hardware_and_software_configuration/configuring/index.html

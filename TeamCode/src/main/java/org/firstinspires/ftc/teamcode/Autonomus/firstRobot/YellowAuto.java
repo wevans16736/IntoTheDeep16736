@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.Autonomus;
+package org.firstinspires.ftc.teamcode.Autonomus.firstRobot;
 
 // RR-specific imports
 
@@ -27,7 +27,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.teamcode.Configuration.ConfigurationFirstRobot;
+import org.firstinspires.ftc.teamcode.Configuration.firstRobot.ConfigurationFirstRobot;
 import org.firstinspires.ftc.teamcode.PinpointDrive;
 import org.firstinspires.ftc.teamcode.robotverticalslides.constants.ConfigConstants;
 
@@ -36,6 +36,7 @@ import java.util.Arrays;
 
 @Config
 @Autonomous(name = "yellow Main Auto", group = "Autonomous")
+@Deprecated
 public class YellowAuto extends LinearOpMode {
 //    private VerticalSlideRR verticalSlideRR = null;
     private HorizontalSlideRR horizontalSlideRR = null;

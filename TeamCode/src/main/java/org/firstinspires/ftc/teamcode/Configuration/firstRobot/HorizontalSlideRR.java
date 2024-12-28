@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.Configuration;
+package org.firstinspires.ftc.teamcode.Configuration.firstRobot;
 
 import androidx.annotation.NonNull;
 
@@ -12,6 +12,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.robotverticalslides.constants.ConfigConstants;
 
+@Deprecated
 public class HorizontalSlideRR {
         public DcMotorEx horizontalSlide2 = null;
         private Telemetry telemetry;

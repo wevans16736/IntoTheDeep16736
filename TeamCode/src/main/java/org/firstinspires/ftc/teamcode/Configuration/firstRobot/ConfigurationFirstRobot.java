@@ -1,8 +1,9 @@
-package org.firstinspires.ftc.teamcode.Configuration;
+package org.firstinspires.ftc.teamcode.Configuration.firstRobot;
 
 import com.acmerobotics.dashboard.config.Config;
 
 @Config
+@Deprecated
 public class ConfigurationFirstRobot {
     //drive default movement
     public static double driveVelocity = 50; //default is 50
@@ -13,11 +14,11 @@ public class ConfigurationFirstRobot {
 
 
     //vertical slide position
-    public static int highBar = -480;
+    public static int highBar = 480;
     public static int bottom = 0;
     //todo is this right?
-    public static int lowBar = -55;
-    public static int topBasket = -830;
+    public static int lowBar = 55;
+    public static int topBasket = 830;
 
     //this is vertical wrist servo position
     //this is a position to place it on the basket
