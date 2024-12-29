@@ -2,7 +2,7 @@ package org.firstinspires.ftc.teamcode.secondrobot;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
-import org.firstinspires.ftc.teamcode.Configuration.ConfigurationSecondRobot;
+import org.firstinspires.ftc.teamcode.Configuration.secondRobot.ConfigurationSecondRobot;
 import org.firstinspires.ftc.teamcode.secondrobot.horizontalslide.HorizontalSlideActions;
 import org.firstinspires.ftc.teamcode.secondrobot.horizontalslide.HorizontalWristActions;
 import org.firstinspires.ftc.teamcode.secondrobot.verticalslide.VerticalGrabberActions;
