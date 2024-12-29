@@ -21,30 +21,37 @@ public class HorizontalIntakeActions {
         intakeServo.setPosition(0);
     }
 
+    boolean isVertGrabberClosed = false;
+    boolean wasVertGrabberClosed = false;
+    public void setIsVertGrabberClosed(boolean vertGrabberClosed) {
+        isVertGrabberClosed = vertGrabberClosed;
+    }
     double openStartTime = 0;
     public void close() {
         closed = true;
     }
     public void open() {
         closed = false;
-        openStartTime = System.currentTimeMillis();
     }
-    //After opening, turn off the servo until it needs to close
+    boolean vertGrabberClosing = false;
+    double vertGrabberClosingStartTime = 0;
     public void update() {
         if (!closed) {
-            setPosition(0.2);
-            if (System.currentTimeMillis() > openStartTime + 420) {
-                if (intakeServo.isPwmEnabled()) {
-//                    intakeServo.setPwmDisable();
-                }
-            }
-        } else {
-            if (!intakeServo.isPwmEnabled()) {
-                intakeServo.setPwmEnable();
-            }
             setPosition(0.0);
+        } else {
+            setPosition(0.2);
         }
 
+        //if the vertical grabber is closing, start a timer for .4 seconds. at the end of the .4 seconds, open the intake
+        if (isVertGrabberClosed && !wasVertGrabberClosed){
+            vertGrabberClosing = true;
+            vertGrabberClosingStartTime = System.currentTimeMillis();
+        }
+        if (vertGrabberClosing && System.currentTimeMillis() > vertGrabberClosingStartTime + 420 && isVertGrabberClosed) {
+            vertGrabberClosing = false;
+            closed = false;
+        }
+        wasVertGrabberClosed = isVertGrabberClosed;
     }
     public void setPosition(double position) {
         if (intakeServo.isPwmEnabled()) {

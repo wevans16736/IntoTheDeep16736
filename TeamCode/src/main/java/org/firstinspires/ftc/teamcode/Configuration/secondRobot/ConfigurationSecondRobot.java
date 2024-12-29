@@ -22,14 +22,14 @@ public class ConfigurationSecondRobot {
     //this is a position to place it on the basket
     public static double verticalWristBasket = 0.5;
     //this is a position to grab the butter from the wall or set it on the lower basket or either rung
-    public static double verticalWristWall = 0.24;
+    public static double verticalWristWall = 0.3;
     //this is the position to grab the butter from the intake
     public static double verticalWristIntake = 0.95;
 
 
     //vertical grabber servo position
     public static double verticalOpen = 0.2;
-    public static double verticalClose = 0.05;
+    public static double verticalClose = 0.09;
 
 
     //horizontal wrist servo position

@@ -3,6 +3,8 @@ package org.firstinspires.ftc.teamcode.secondrobot;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.Configuration.secondRobot.ConfigurationSecondRobot;
+import org.firstinspires.ftc.teamcode.secondrobot.horizontalslide.HorizontalIntakeActions;
+import org.firstinspires.ftc.teamcode.secondrobot.horizontalslide.HorizontalIRollActions;
 import org.firstinspires.ftc.teamcode.secondrobot.horizontalslide.HorizontalSlideActions;
 import org.firstinspires.ftc.teamcode.secondrobot.horizontalslide.HorizontalWristActions;
 import org.firstinspires.ftc.teamcode.secondrobot.verticalslide.VerticalGrabberActions;
@@ -85,20 +87,40 @@ public abstract class HelperActions extends LinearOpMode {
          prevToggle = toggle;
     }
 
+    public boolean reverseSpeed = false;
+    public void setReverseSpeed(boolean toggle) {
+        reverseSpeed = toggle;
+    }
+    public int getReverseSpeed() {
+        if (reverseSpeed) {
+            return -1;
+        } else {
+            return 1;
+        }
+    }
+
      /**slide configuration?**/
     boolean wasOverrideSlide = true;
     boolean overrideSlide = true;
     double overrideSlideThreshold = 5;
-    public void updateExchangeAssembly(VerticalGrabberActions grabber, VerticalWristActions verticalWrist, HorizontalWristActions horizontalWrist, HorizontalSlideActions horizontalArm, VerticalSlideActions verticalSlide) {
+    public void updateExchangeAssembly(VerticalGrabberActions grabber, VerticalWristActions verticalWrist, HorizontalWristActions horizontalWrist, HorizontalSlideActions horizontalArm, VerticalSlideActions verticalSlide, HorizontalIRollActions horizontalIRoll, HorizontalIntakeActions intake) {
         //tells the vertical wrist when the grabber is closed
         verticalWrist.setGrabberClosed(grabber.isClose());
+
+        //tells the horizontal intake to be open when the vertical grabber grabs
+        intake.setIsVertGrabberClosed(grabber.isClose());
+
         //tells the vertical wrist when the slide is up
         verticalWrist.setSlideUp(verticalSlide.getSlidePosition() > ConfigurationSecondRobot.topBasket - 100);
+
         //tells the horizontal slide to stop and let the horizontal wrist flip up or flip down when going in or out
         overrideSlide = horizontalArm.getSlidePosition() < overrideSlideThreshold && !horizontalWrist.override;
         horizontalWrist.setIsSlideIn(overrideSlide);
         overrideSlide(horizontalArm);
         wasOverrideSlide = overrideSlide;
+
+        //tells the horizontal roll to go straight up when transfering from grabber to grabber
+        horizontalIRoll.setTransfer(horizontalWrist.override || overrideSlide);
     }
     double startTime = 0;
     public void overrideSlide(HorizontalSlideActions horizontalArm) {
@@ -110,5 +132,99 @@ public abstract class HelperActions extends LinearOpMode {
         } else {
             horizontalArm.setOverride(false);
         }
+    }
+
+    double verticalGrabberStartCloseTime = 0;
+    double verticalGrabberStartOpenTime = 0;
+    double verticalFlipBackStartTime = 0;
+    double horizontalFlipBackStartTime = 0;
+    boolean flipBack = false;
+    public boolean close(VerticalGrabberActions verticalGrabber, VerticalWristActions verticalWrist, VerticalSlideActions verticalSlide, HorizontalWristActions horizontalWrist, HorizontalSlideActions horizontalSlide) {
+        boolean close = true;
+        double currentTime = System.currentTimeMillis();
+        if (verticalWrist.forward) {
+            if (!verticalGrabber.isClose()) {
+                verticalGrabberStartCloseTime = currentTime;
+                verticalGrabber.close();
+            }
+            if (currentTime > verticalGrabberStartCloseTime + 420) {
+                verticalWrist.backward();
+                verticalWrist.update();
+                flipBack = true;
+                verticalFlipBackStartTime = currentTime;
+            }
+            close = false;
+            telemetry.addData("close", 1);
+        }
+        if (currentTime > verticalFlipBackStartTime + 420) {
+            if (verticalGrabber.isClose()) {
+                verticalGrabber.open();
+                verticalGrabberStartOpenTime = currentTime;
+                close = false;
+                telemetry.addData("close", 2);
+            }
+        } else {
+            close = false;
+            telemetry.addData("close", 3);
+        }
+        if (currentTime < verticalGrabberStartOpenTime + 420) {
+            close = false;
+            telemetry.addData("close", 4);
+        }
+        if (verticalSlide.getSlidePosition() < -10) {
+            verticalSlide.setSlidePosition(10, 2000);
+            close = false;
+            telemetry.addData("close", 5);
+        }
+
+        if (horizontalSlide.getSlidePosition() > 1) {
+            if (horizontalWrist.forward && horizontalSlide.getSlidePosition() > overrideSlideThreshold) {
+                horizontalFlipBackStartTime = currentTime;
+                horizontalWrist.setForward(false);
+            }
+            if (currentTime > horizontalFlipBackStartTime + 420) {
+                horizontalSlide.teleOpArmMotor(-1, 2);
+            }
+            close = false;
+            telemetry.addData("close", 6);
+        }
+        telemetry.addData("close", close);
+        return close;
+    }
+    double placeState = 0;
+    double startTimePlace = 0;
+    public void placeSample(VerticalGrabberActions verticalGrabber, VerticalWristActions verticalWrist, VerticalSlideActions verticalSlide, HorizontalWristActions horizontalWrist, HorizontalSlideActions horizontalSlide, HorizontalIntakeActions intake) {
+        if (placeState == 0) {
+            if (close(verticalGrabber, verticalWrist, verticalSlide, horizontalWrist, horizontalSlide)){
+                placeState = 1;
+            }
+        } else if (placeState == 1) {
+            verticalGrabber.close();
+            intake.close();
+            startTimePlace = System.currentTimeMillis();
+            placeState = 2;
+        } else if (placeState == 2) {
+            intake.close();
+            if (System.currentTimeMillis() > startTimePlace + 420) {
+                placeState = 3;
+                verticalWrist.autoFlipForwardDown();
+                verticalSlide.setSlidePosition(0, 2000);
+            } else {
+                intake.close();
+            }
+        }
+    }
+    public void resetPlaceState() {
+        placeState = 0;
+    }
+    boolean wasActivatePlaceSample = false;
+    public void managePlaceSample(boolean activate, VerticalGrabberActions verticalGrabber, VerticalWristActions verticalWrist, VerticalSlideActions verticalSlide, HorizontalWristActions horizontalWrist, HorizontalSlideActions horizontalSlide, HorizontalIntakeActions intake) {
+        if (activate && !wasActivatePlaceSample) {
+            resetPlaceState();
+        }
+        if(activate) {
+            placeSample(verticalGrabber, verticalWrist, verticalSlide, horizontalWrist, horizontalSlide, intake);
+        }
+        wasActivatePlaceSample = activate;
     }
 }
