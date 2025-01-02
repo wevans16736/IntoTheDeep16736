@@ -58,22 +58,12 @@ public class Auto extends LinearOpMode {
                         trajectory.getHangTrajectory().build(),
                 trajectory.getButterPickUpTrajectory().build(),
                 new ParallelAction(
-                        trajectory.getButterPickUpAttachment().build()
-                )
-                ));
+                        trajectory.getButterPickUpAttachment().build(),
+                        trajectory.getSecondButterPickUpTrajectory().build()
+                ),
+                trajectory.getButterPickUpAttachment().build(),
+                trajectory.getPostHangTrajectory().build()
 
-//        //pick all the butter and drop the behind
-//        Actions.runBlocking(new SequentialAction(
-//                new ParallelAction(
-//                        trajectory.runButterPickUp(),
-//                        new SequentialAction(
-//                                trajectory.ButterPickUpAttachment.build(),
-//                                trajectory.ButterPickUpAttachment.build()
-//                        )
-//                )
-//        ));
-//
-//        //update the current pose in trajectory
-//        trajectory.setCurrentPose(trajectory.ButterPickUp);
+                ));
     }
 }

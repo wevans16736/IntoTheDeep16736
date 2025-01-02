@@ -72,8 +72,16 @@ public class Trajectory{
         return ButterPickUpTrajectory;
     }
 
+    public TrajectoryActionBuilder getSecondButterPickUpTrajectory(){
+        TrajectoryActionBuilder SecondButterPickUpTrajectory = currentTrajectory
+                .waitSeconds(1)
+                .strafeTo(new Vector2d(XAxis + 10, YAxis));
+        currentTrajectory = SecondButterPickUpTrajectory.endTrajectory().fresh();
+        return SecondButterPickUpTrajectory;
+    }
+
     public TrajectoryActionBuilder getButterPickUpAttachment(){
-        TrajectoryActionBuilder ButterPickUpAttachment = currentTrajectory
+        return currentTrajectory
                 //priming the horizontal to grab the butter
                 .stopAndAdd(horizontalSlideRR.horizontalSlideActions(ConfigurationSecondRobot.horizontalSlideExtend))
                 .stopAndAdd(horizontalGrabberRR.horizontalGrabberAction(ConfigurationSecondRobot.horizontalGrabberOpen))
@@ -96,6 +104,30 @@ public class Trajectory{
                 //vertical wrist move to the other side
                 .stopAndAdd(verticalWristRR.VerticalWristAction(ConfigurationSecondRobot.verticalWristWall))
                 .waitSeconds(.5);
-        return ButterPickUpAttachment;
+    }
+
+    public TrajectoryActionBuilder getPostHangLocationTrajectory(){
+        TrajectoryActionBuilder PostHangLocationTrajectory = currentTrajectory
+                //strafe to human pick up
+                .strafeToSplineHeading(new Vector2d(45, 20), Math.toRadians(-90))
+                .waitSeconds(1);
+        currentTrajectory = PostHangLocationTrajectory.endTrajectory().fresh();
+        return  PostHangLocationTrajectory;
+    }
+
+    public TrajectoryActionBuilder getPostHangTrajectory(){
+        TrajectoryActionBuilder PostHangTrajectory = currentTrajectory
+                //strafe to the hanging place
+                .strafeToSplineHeading(new Vector2d(-8, 15),Math.toRadians(0))
+                .strafeTo(new Vector2d(-8, 23))
+                .strafeTo(new Vector2d(-8, 15))
+                .strafeToSplineHeading(new Vector2d(45, 20), Math.toRadians(-90));
+        currentTrajectory = PostHangTrajectory;
+        return PostHangTrajectory.endTrajectory().fresh();
+    }
+
+    public TrajectoryActionBuilder getPostHangAttachment(){
+        return currentTrajectory
+                ;
     }
 }
