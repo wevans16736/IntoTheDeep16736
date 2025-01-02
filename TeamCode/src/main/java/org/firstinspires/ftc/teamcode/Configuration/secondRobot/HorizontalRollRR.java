@@ -14,7 +14,7 @@ public class HorizontalRollRR {
 
     public HorizontalRollRR(HardwareMap hardwareMap){
         HorizontalRollServo = hardwareMap.get(Servo.class, ConfigConstants.HORIZONTAL_ROLL);
-        HorizontalRollServo.setPosition(0);
+        HorizontalRollServo.setPosition(ConfigurationSecondRobot.flat);
     }
 
     public class HorizontalRollAction implements Action{

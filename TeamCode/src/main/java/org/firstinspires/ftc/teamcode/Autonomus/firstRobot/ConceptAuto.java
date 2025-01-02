@@ -29,6 +29,7 @@ import org.firstinspires.ftc.teamcode.Configuration.firstRobot.HorizontalWristRR
 import org.firstinspires.ftc.teamcode.Configuration.firstRobot.HorizontalRollRR;
 
 @Config
+@Deprecated
 @Autonomous(name = "1. Concept Auto", group = "Autonomous")
 public class ConceptAuto extends LinearOpMode {
 

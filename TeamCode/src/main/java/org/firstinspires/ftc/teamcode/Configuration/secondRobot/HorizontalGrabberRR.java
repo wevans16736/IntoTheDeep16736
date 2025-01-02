@@ -14,7 +14,7 @@ public class HorizontalGrabberRR {
     Servo HorizontalGrabberServo;
     public HorizontalGrabberRR(HardwareMap hardwareMap){
         HorizontalGrabberServo = hardwareMap.get(Servo.class, ConfigConstants.HORIZONTAL_INTAKE);
-        HorizontalGrabberServo.setPosition(0);
+        HorizontalGrabberServo.setPosition(ConfigurationSecondRobot.horizontalGrabberOpen);
     }
 
     public class HorizontalGrabberAction implements Action {

@@ -13,6 +13,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import org.firstinspires.ftc.teamcode.PinpointDrive;
 
 @Config
+@Deprecated
 @Autonomous(name = "1. Test Transfer", group = "Autonomous")
 public class TestTransfer extends LinearOpMode {
 

@@ -12,8 +12,8 @@ import org.firstinspires.ftc.teamcode.secondrobot.constants.ConfigConstants;
 public class VerticalGrabberRR {
     Servo verticalGrabberServo;
     public VerticalGrabberRR(HardwareMap hardwareMap){
-        verticalGrabberServo = hardwareMap.get(Servo.class, ConfigConstants.VERTICAL_WRIST);
-        verticalGrabberServo.setPosition(0);
+        verticalGrabberServo = hardwareMap.get(Servo.class, ConfigConstants.VERTICAL_GRABBER);
+        verticalGrabberServo.setPosition(ConfigurationSecondRobot.verticalClose);
     }
 
     public class VerticalGrabberAction implements Action{

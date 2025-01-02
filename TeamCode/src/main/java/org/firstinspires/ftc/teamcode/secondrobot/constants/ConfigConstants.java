@@ -1,4 +1,4 @@
-package/**/ org.firstinspires.ftc.teamcode.secondrobot.constants;
+package org.firstinspires.ftc.teamcode.secondrobot.constants;
 
 public class ConfigConstants {
 

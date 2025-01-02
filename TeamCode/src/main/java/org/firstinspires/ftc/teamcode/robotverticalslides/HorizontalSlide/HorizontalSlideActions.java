@@ -13,7 +13,6 @@ import org.firstinspires.ftc.teamcode.robotverticalslides.constants.ConfigConsta
 
 public class HorizontalSlideActions {
 
-    public DcMotorEx HorizontalSlide1 = null;
     public DcMotorEx HorizontalSlide2 = null;
     private Telemetry telemetry;
 

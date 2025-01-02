@@ -13,7 +13,7 @@ public class HorizontalWristRR {
     Servo HorizontalWristServo;
     public HorizontalWristRR(HardwareMap hardwareMap){
         HorizontalWristServo = hardwareMap.get(Servo.class, ConfigConstants.HORIZONTAL_WRIST);
-        HorizontalWristServo.setPosition(0);
+        HorizontalWristServo.setPosition(ConfigurationSecondRobot.horizontalWristTransfer);
     }
 
     public class HorizontalWristAction implements Action{

@@ -17,26 +17,34 @@ public class HorizontalSlideRR {
         horizontalSlideMotor = hardwareMap.get(DcMotorEx.class, ConfigConstants.HORIZONTAL_ARM);
         horizontalSlideMotor.setDirection(DcMotorSimple.Direction.FORWARD);
         horizontalSlideMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        horizontalSlideMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         horizontalSlideMotor.setTargetPosition(0);
         horizontalSlideMotor.setVelocity(3000);
-        horizontalSlideMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
     }
     public class HorizontalSlideActions implements Action {
-        private int position;
-        private boolean Int = false;
+        private final int position;
+        private boolean intizilize = false;
         public HorizontalSlideActions(int position){
             this.position = position;
         }
 
         @Override
         public boolean run(@NonNull TelemetryPacket telemetryPacket) {
-            if(!Int) {
+            if(!intizilize) {
                 horizontalSlideMotor.setTargetPosition(position);
-                Int = true;
+                intizilize = true;
             }
             int pos = horizontalSlideMotor.getCurrentPosition();
 
-            return !(pos>position);
+//            if(pos > position){
+//                Int = false;
+//                return false;
+//            }else {
+//                return true;
+//            }
+//            return !(pos>position);
+            return false;
         }
     }
     public Action horizontalSlideActions(int position) {return new HorizontalSlideActions(position);}
