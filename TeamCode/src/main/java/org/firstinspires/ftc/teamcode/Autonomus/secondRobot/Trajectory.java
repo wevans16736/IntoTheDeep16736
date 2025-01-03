@@ -109,21 +109,13 @@ public class Trajectory{
     public TrajectoryActionBuilder getPostHangLocationTrajectory(){
         TrajectoryActionBuilder PostHangLocationTrajectory = currentTrajectory
                 //strafe to human pick up
+                .stopAndAdd(verticalWristRR.VerticalWristAction(ConfigurationSecondRobot.verticalWristWall))
+                .stopAndAdd(verticalGrabberRR.verticalGrabberAction(ConfigurationSecondRobot.verticalOpen))
+
                 .strafeToSplineHeading(new Vector2d(45, 20), Math.toRadians(-90))
                 .waitSeconds(1);
         currentTrajectory = PostHangLocationTrajectory.endTrajectory().fresh();
         return  PostHangLocationTrajectory;
-    }
-
-    public TrajectoryActionBuilder getPostHangTrajectory(){
-        TrajectoryActionBuilder PostHangTrajectory = currentTrajectory
-                //strafe to the hanging place
-                .strafeToSplineHeading(new Vector2d(-8, 15),Math.toRadians(0))
-                .strafeTo(new Vector2d(-8, 23))
-                .strafeTo(new Vector2d(-8, 15))
-                .strafeToSplineHeading(new Vector2d(45, 20), Math.toRadians(-90));
-        currentTrajectory = PostHangTrajectory;
-        return PostHangTrajectory.endTrajectory().fresh();
     }
 
     public TrajectoryActionBuilder getPostHangAttachment(){
