@@ -61,20 +61,20 @@ public class Auto extends LinearOpMode {
                 trajectory.getButterPickUpTrajectory().build(),
 //                pick up both butter
                 new ParallelAction(
-                        trajectory.getButterPickUpAttachment().build(),
+                        trajectory.getButterPickUpAttachment(false).build(),
                         trajectory.getSecondButterPickUpTrajectory().build()
                 ),
-                trajectory.getButterPickUpAttachment().build(),
+                trajectory.getButterPickUpAttachment(false).build(),
                 //go to human place
                 trajectory.getPostHangLocationTrajectory().build(),
                 new ParallelAction(
                         trajectory.getPostHangAttachment().build(),
-                        trajectory.getHangTrajectory2().build()
+                        trajectory.getHangTrajectory(false).build()
                 ),
                 trajectory.getPostHangLocationTrajectory().build(),
                 new ParallelAction(
                         trajectory.getPostHangAttachment().build(),
-                        trajectory.getHangTrajectory3().build()
+                        trajectory.getHangTrajectory(false).build()
                 ),
                 trajectory.getPark(false).build()
                 ));

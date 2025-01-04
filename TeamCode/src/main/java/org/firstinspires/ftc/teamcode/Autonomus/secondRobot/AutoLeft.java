@@ -52,10 +52,9 @@ public class AutoLeft extends LinearOpMode {
 //        run hanging trajectory
         Actions.runBlocking(new SequentialAction(
                 //hang the butter
-                        trajectory.getHangTrajectory(true).build(),
+                trajectory.getHangTrajectory(true).build(),
                 //park left side
                 trajectory.getPark(true).build()
                 ));
-//        Actions.runBlocking(new SequentialAction(trajectory.setSplineTestTrajectory().build()));
     }
 }

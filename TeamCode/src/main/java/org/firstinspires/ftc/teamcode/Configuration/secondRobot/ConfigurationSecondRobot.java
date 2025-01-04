@@ -4,7 +4,7 @@ import com.acmerobotics.dashboard.config.Config;
 
 @Config
 public class ConfigurationSecondRobot {
-    public static double adriveMultiplyer = 1.5;
+    public static double adriveMultiplyer = 2;
     //drive default movement
     public static double driveVelocity = 50* adriveMultiplyer; //default is 50
     public static double driveMinAccel =  -30* adriveMultiplyer; //default is -30
@@ -15,6 +15,7 @@ public class ConfigurationSecondRobot {
 
     //vertical slide position
     public static int highBar = 750;
+    public static int autoHighBar = 900;
     public static int bottom = 0;
     public static int lowBar = 0;
     public static int topBasket = 2360;
@@ -26,7 +27,7 @@ public class ConfigurationSecondRobot {
     //this is a position to grab the butter from the wall or set it on the lower basket or either rung
     public static double verticalWristWall = 0.275;
     //this is the position to grab the butter from the intake
-    public static double verticalWristIntake = 0.94;
+    public static double verticalWristIntake = 0.935;
     //this is the position to hang the butter to the bar
     public static double verticalWristBar = .375;
 
