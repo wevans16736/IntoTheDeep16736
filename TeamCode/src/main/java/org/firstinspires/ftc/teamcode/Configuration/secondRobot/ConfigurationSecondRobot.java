@@ -14,14 +14,15 @@ public class ConfigurationSecondRobot {
 
 
     //vertical slide position
-    public static int highBar = 950;
+    public static int highBar = 750;
     public static int bottom = 0;
     public static int lowBar = 0;
-    public static int topBasket = 2080;
+    public static int topBasket = 2360;
+    //added 280 on 1/3/2024
 
     //this is vertical wrist servo position
     //this is a position to place it on the basket
-    public static double verticalWristBasket = 0.5;
+    public static double verticalWristBasket = 0.43;
     //this is a position to grab the butter from the wall or set it on the lower basket or either rung
     public static double verticalWristWall = 0.275;
     //this is the position to grab the butter from the intake
