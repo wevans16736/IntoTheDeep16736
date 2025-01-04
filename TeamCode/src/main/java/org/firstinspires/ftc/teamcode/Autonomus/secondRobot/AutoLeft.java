@@ -4,9 +4,6 @@ import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.ParallelAction;
 import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.SequentialAction;
-import com.acmerobotics.roadrunner.SleepAction;
-import com.acmerobotics.roadrunner.TrajectoryActionBuilder;
-import com.acmerobotics.roadrunner.Vector2d;
 import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -21,12 +18,12 @@ import org.firstinspires.ftc.teamcode.Configuration.secondRobot.VerticalWristRR;
 import org.firstinspires.ftc.teamcode.PinpointDrive;
 
 @Config
-@Autonomous(name="TestHang", group = "SecondRobot")
-public class TestHang extends LinearOpMode {
+@Autonomous(name="AutoLeft", group = "SecondRobot")
+public class AutoLeft extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
         //set up Pinpoint and Pose2d class
-        Pose2d pose = new Pose2d(0, 0, Math.toRadians(90));
+        Pose2d pose = new Pose2d(0,0,Math.toRadians(90));
         PinpointDrive drive = new PinpointDrive(hardwareMap, pose);
 
         //all of these class is under Configuration.secondRobot
@@ -41,9 +38,9 @@ public class TestHang extends LinearOpMode {
 
         //set up a trajectory class
         Trajectory trajectory = new Trajectory();
-        trajectory.setTrajectory(drive, pose, verticalSlideRR, verticalWristRR, verticalGrabberRR,
-                horizontalSlideRR, horizontalRollRR, horizontalGrabberRR, horizontalWristRR);
-        trajectory.setCurrentTrajectory(drive.actionBuilder(pose));
+        trajectory.setTrajectory(drive, pose, verticalSlideRR, verticalWristRR, verticalGrabberRR, horizontalSlideRR,
+                horizontalRollRR, horizontalGrabberRR, horizontalWristRR);
+        trajectory.setStartTrajectory();
 
         //todo ask the driver which trajectory to use
 
@@ -54,8 +51,11 @@ public class TestHang extends LinearOpMode {
 
 //        run hanging trajectory
         Actions.runBlocking(new SequentialAction(
-                trajectory.getHangTrajectory(false).build(),
-                new SleepAction(3)
-        ));
+                //hang the butter
+                        trajectory.getHangTrajectory(true).build(),
+                //park left side
+                trajectory.getPark(true).build()
+                ));
+//        Actions.runBlocking(new SequentialAction(trajectory.setSplineTestTrajectory().build()));
     }
 }

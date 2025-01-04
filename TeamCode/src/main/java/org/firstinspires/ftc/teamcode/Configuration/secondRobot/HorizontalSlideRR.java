@@ -17,6 +17,7 @@ public class HorizontalSlideRR {
         horizontalSlideMotor = hardwareMap.get(DcMotorEx.class, ConfigConstants.HORIZONTAL_ARM);
         horizontalSlideMotor.setDirection(DcMotorSimple.Direction.FORWARD);
         horizontalSlideMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        horizontalSlideMotor.setTargetPosition(0);
         horizontalSlideMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         horizontalSlideMotor.setTargetPosition(0);
         horizontalSlideMotor.setVelocity(3000);

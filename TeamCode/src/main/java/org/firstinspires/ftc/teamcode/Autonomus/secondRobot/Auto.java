@@ -56,18 +56,28 @@ public class Auto extends LinearOpMode {
 //        run hanging trajectory
         Actions.runBlocking(new SequentialAction(
                 //hang the butter
-                        trajectory.getHangTrajectory().build(),
+                        trajectory.getHangTrajectory(false).build(),
                 //move to butter pick up
                 trajectory.getButterPickUpTrajectory().build(),
-                //pick up both butter
+//                pick up both butter
                 new ParallelAction(
                         trajectory.getButterPickUpAttachment().build(),
                         trajectory.getSecondButterPickUpTrajectory().build()
                 ),
                 trajectory.getButterPickUpAttachment().build(),
                 //go to human place
-                trajectory.getPostHangLocationTrajectory().build()
-
+                trajectory.getPostHangLocationTrajectory().build(),
+                new ParallelAction(
+                        trajectory.getPostHangAttachment().build(),
+                        trajectory.getHangTrajectory2().build()
+                ),
+                trajectory.getPostHangLocationTrajectory().build(),
+                new ParallelAction(
+                        trajectory.getPostHangAttachment().build(),
+                        trajectory.getHangTrajectory3().build()
+                ),
+                trajectory.getPark(false).build()
                 ));
+//        Actions.runBlocking(new SequentialAction(trajectory.setSplineTestTrajectory().build()));
     }
 }

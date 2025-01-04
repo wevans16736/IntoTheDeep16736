@@ -15,7 +15,7 @@ public class VerticalWristRR {
     public VerticalWristRR(HardwareMap hardwareMap){
         VerticalWristServo = hardwareMap.get(Servo.class, ConfigConstants.VERTICAL_WRIST);
 //        VerticalWristServo.setPosition(ConfigurationSecondRobot.verticalWristIntake);
-        VerticalWristServo.setPosition(ConfigurationSecondRobot.verticalWristBar);
+        VerticalWristServo.setPosition(.8);
     }
 
     public class VerticalWristAction implements Action {
