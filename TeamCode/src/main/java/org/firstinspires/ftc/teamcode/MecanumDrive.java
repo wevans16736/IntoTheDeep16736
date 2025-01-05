@@ -86,7 +86,7 @@ public class MecanumDrive {
 
         // turn profile parameters (in radians)
         public double maxAngVel = ConfigurationSecondRobot.driveMinAngle; // shared with path
-        public double maxAngAccel = ConfigurationSecondRobot.driveMaxAccel;
+        public double maxAngAccel = ConfigurationSecondRobot.driveMaxAngle;
 
         // path controller gains
         public double axialGain = 1; //Old 4

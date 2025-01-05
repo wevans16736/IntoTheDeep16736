@@ -39,7 +39,7 @@ public class AutoLeft extends LinearOpMode {
         //set up a trajectory class
         Trajectory trajectory = new Trajectory();
         trajectory.setTrajectory(drive, pose, verticalSlideRR, verticalWristRR, verticalGrabberRR, horizontalSlideRR,
-                horizontalRollRR, horizontalGrabberRR, horizontalWristRR);
+                horizontalRollRR, horizontalGrabberRR, horizontalWristRR, true);
         trajectory.setStartTrajectory();
 
         //todo ask the driver which trajectory to use
@@ -52,9 +52,20 @@ public class AutoLeft extends LinearOpMode {
 //        run hanging trajectory
         Actions.runBlocking(new SequentialAction(
                 //hang the butter
-                trajectory.getHangTrajectory(true).build(),
+                trajectory.getHangTrajectory().build(),
+                //go to the first butter pick up
+                trajectory.getButterPickUpTrajectory().build(),
+                //pick the butter up
+                new ParallelAction(
+                        trajectory.getButterPickUpAttachment().build(),
+                        trajectory.getSecondButterPickUpTrajectory().build()
+                ),
+                new ParallelAction(
+                        trajectory.getButterPickUpAttachment().build(),
+                        trajectory.getSecondButterPickUpTrajectory().build()
+                ),
                 //park left side
-                trajectory.getPark(true).build()
+                trajectory.getPark().build()
                 ));
     }
 }

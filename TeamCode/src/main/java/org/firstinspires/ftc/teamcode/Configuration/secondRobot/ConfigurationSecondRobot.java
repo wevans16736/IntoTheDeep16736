@@ -6,11 +6,11 @@ import com.acmerobotics.dashboard.config.Config;
 public class ConfigurationSecondRobot {
     public static double adriveMultiplyer = 2;
     //drive default movement
-    public static double driveVelocity = 50* adriveMultiplyer; //default is 50
-    public static double driveMinAccel =  -30* adriveMultiplyer; //default is -30
-    public static double driveMaxAccel = 50* adriveMultiplyer; //default is 50
-    public static double driveMinAngle = Math.PI* adriveMultiplyer; //default is Math.PI
-    public static double driveMaxAngle = Math.PI* adriveMultiplyer; //default is Math.PI
+    public static double driveVelocity = (50* adriveMultiplyer); //default is 50
+    public static double driveMinAccel =  (-30* adriveMultiplyer); //default is -30
+    public static double driveMaxAccel = (50* adriveMultiplyer); //default is 50
+    public static double driveMinAngle = (Math.PI* adriveMultiplyer); //default is Math.PI
+    public static double driveMaxAngle = (Math.PI* adriveMultiplyer); //default is Math.PI
 
 
     //vertical slide position
@@ -23,7 +23,7 @@ public class ConfigurationSecondRobot {
 
     //this is vertical wrist servo position
     //this is a position to place it on the basket
-    public static double verticalWristBasket = 0.43;
+    public static double verticalWristBasket = 0.5;
     //this is a position to grab the butter from the wall or set it on the lower basket or either rung
     public static double verticalWristWall = 0.275;
     //this is the position to grab the butter from the intake

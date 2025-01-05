@@ -43,7 +43,7 @@ public class Auto extends LinearOpMode {
         //set up a trajectory class
         Trajectory trajectory = new Trajectory();
         trajectory.setTrajectory(drive, pose, verticalSlideRR, verticalWristRR, verticalGrabberRR, horizontalSlideRR,
-                horizontalRollRR, horizontalGrabberRR, horizontalWristRR);
+                horizontalRollRR, horizontalGrabberRR, horizontalWristRR, false);
         trajectory.setStartTrajectory();
 
         //todo ask the driver which trajectory to use
@@ -56,27 +56,27 @@ public class Auto extends LinearOpMode {
 //        run hanging trajectory
         Actions.runBlocking(new SequentialAction(
                 //hang the butter
-                        trajectory.getHangTrajectory(false).build(),
+                        trajectory.getHangTrajectory().build(),
                 //move to butter pick up
                 trajectory.getButterPickUpTrajectory().build(),
 //                pick up both butter
                 new ParallelAction(
-                        trajectory.getButterPickUpAttachment(false).build(),
+                        trajectory.getButterPickUpAttachment().build(),
                         trajectory.getSecondButterPickUpTrajectory().build()
                 ),
-                trajectory.getButterPickUpAttachment(false).build(),
+                trajectory.getButterPickUpAttachment().build(),
                 //go to human place
                 trajectory.getPostHangLocationTrajectory().build(),
                 new ParallelAction(
                         trajectory.getPostHangAttachment().build(),
-                        trajectory.getHangTrajectory(false).build()
+                        trajectory.getHangTrajectory().build()
                 ),
                 trajectory.getPostHangLocationTrajectory().build(),
                 new ParallelAction(
                         trajectory.getPostHangAttachment().build(),
-                        trajectory.getHangTrajectory(false).build()
+                        trajectory.getHangTrajectory().build()
                 ),
-                trajectory.getPark(false).build()
+                trajectory.getPark().build()
                 ));
 //        Actions.runBlocking(new SequentialAction(trajectory.setSplineTestTrajectory().build()));
     }

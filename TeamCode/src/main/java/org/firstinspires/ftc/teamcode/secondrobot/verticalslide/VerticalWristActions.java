@@ -37,8 +37,13 @@ public class VerticalWristActions {
     public void setSlideUp(boolean isIt) {
         isSlideUp = isIt;
     }
+    boolean isSlideMiddle = false;
+    public void setSlideMiddle(boolean isIt) {
+        isSlideMiddle = isIt;
+    }
     //this is a position to place it on the basket
     double forwardUp = ConfigurationSecondRobot.verticalWristBasket;
+    double forwardMiddle = (ConfigurationSecondRobot.verticalWristBar+.1);
     //this is a position to grab the butter from the wall or set it on the lower basket or either rung
     double forwardDown = ConfigurationSecondRobot.verticalWristWall;
     //this is the position to grab the butter from the intake
@@ -48,6 +53,8 @@ public class VerticalWristActions {
         if (forward) {
             if (isSlideUp) {
                 verticalWristServo.setPosition(forwardUp);
+            } else if (isSlideMiddle){
+                verticalWristServo.setPosition(forwardMiddle);
             } else {
                 verticalWristServo.setPosition(forwardDown);
             }
