@@ -18,7 +18,7 @@ public class HorizontalIntakeActions {
 
         intakeServo = hardwareMap.get(ServoImplEx.class, ConfigConstants.HORIZONTAL_INTAKE);
 
-        intakeServo.setPosition(0);
+        intakeServo.setPosition(0.2);
     }
 
     double openStartTime = 0;

@@ -29,10 +29,6 @@ public class VerticalWristActions {
 //        verticalWristServo.setPosition(0.9);
         forward = false;
     }
-    boolean isGrabberClosed = true;
-    public void setGrabberClosed(boolean isIt) {
-        isGrabberClosed = isIt;
-    }
     boolean isSlideUp = false;
     public void setSlideUp(boolean isIt) {
         isSlideUp = isIt;
@@ -43,7 +39,7 @@ public class VerticalWristActions {
     }
     //this is a position to place it on the basket
     double forwardUp = ConfigurationSecondRobot.verticalWristBasket;
-    double forwardMiddle = (ConfigurationSecondRobot.verticalWristBar+.1);
+    double forwardMiddle = (ConfigurationSecondRobot.verticalWristBar);
     //this is a position to grab the butter from the wall or set it on the lower basket or either rung
     double forwardDown = ConfigurationSecondRobot.verticalWristWall;
     //this is the position to grab the butter from the intake
@@ -67,13 +63,11 @@ public class VerticalWristActions {
     //If the grabber is open, do nothing
     //If the grabber is closed and the button is pushed, it flips between forward and back
     public void flipping(boolean input) {
-        if (isGrabberClosed) {
-            if (input && !wasInput) {
-                if (forward) {
-                    backward();
-                } else {
-                    forward();
-                }
+        if (input && !wasInput) {
+            if (forward) {
+                backward();
+            } else {
+                forward();
             }
         }
         wasInput = input;

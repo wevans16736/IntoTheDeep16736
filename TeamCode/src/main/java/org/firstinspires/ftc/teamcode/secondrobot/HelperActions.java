@@ -104,9 +104,6 @@ public abstract class HelperActions extends LinearOpMode {
     boolean overrideSlide = true;
     double overrideSlideThreshold = 5;
     public void updateExchangeAssembly(VerticalGrabberActions grabber, VerticalWristActions verticalWrist, HorizontalWristActions horizontalWrist, HorizontalSlideActions horizontalArm, VerticalSlideActions verticalSlide, HorizontalIRollActions horizontalIRoll, HorizontalIntakeActions intake) {
-        //tells the vertical wrist when the grabber is closed
-        verticalWrist.setGrabberClosed(grabber.isClose());
-
         //tells the horizontal intake to be open when the vertical grabber grabs
         intake.setIsVertGrabberClosed(grabber.isClose());
 
@@ -135,86 +132,71 @@ public abstract class HelperActions extends LinearOpMode {
         }
     }
 
-    double verticalGrabberStartCloseTime = 0;
-    double verticalGrabberStartOpenTime = 0;
-    double verticalFlipBackStartTime = 0;
-    double horizontalFlipBackStartTime = 0;
-    boolean flipBack = false;
-    public boolean close(VerticalGrabberActions verticalGrabber, VerticalWristActions verticalWrist, VerticalSlideActions verticalSlide, HorizontalWristActions horizontalWrist, HorizontalSlideActions horizontalSlide) {
-        boolean close = true;
-        double currentTime = System.currentTimeMillis();
+    public double verticalGrabberOpenStartTime = 0;
+    public double verticalWristBackwardStartTime = 0;
+    public boolean closeVerticalAssembly(VerticalGrabberActions verticalGrabber, VerticalWristActions verticalWrist, VerticalSlideActions verticalSlide){
+        //Assume the vertical assembly is closed until proven otherwise
+        boolean isClosed = true;
+        //Set the vertical slide to go to the bottom
+        verticalSlide.goToPreset(false, true, false, false);
+        //if the distance between the vertical slide and the bottom is significant, the vertical assembly is not closed
+        if (Math.abs(verticalSlide.getSlidePosition() - ConfigurationSecondRobot.bottom) > 5) {
+            isClosed = false;
+        }
+        //if the vertical grabber is closed, open it and start a timer to run until it's open
+        if (verticalGrabber.isClose()) {
+            verticalGrabber.open();
+            verticalGrabberOpenStartTime = System.currentTimeMillis();
+        }
+        //if the vertical grabber timer is not over, the vertical assembly is not closed
+        if (System.currentTimeMillis() < verticalGrabberOpenStartTime + ConfigurationSecondRobot.verticalOpenTime) {
+            isClosed = false;
+        }
+        //if the vertical wrist is flipped out, flip it back and start a timer to run until it's back
         if (verticalWrist.forward) {
-            if (!verticalGrabber.isClose()) {
-                verticalGrabberStartCloseTime = currentTime;
-                verticalGrabber.close();
-            }
-            if (currentTime > verticalGrabberStartCloseTime + 420) {
-                verticalWrist.backward();
-                verticalWrist.update();
-                flipBack = true;
-                verticalFlipBackStartTime = currentTime;
-            }
-            close = false;
-            telemetry.addData("close", 1);
+            verticalWrist.backward();
+            verticalWristBackwardStartTime = System.currentTimeMillis();
         }
-        if (currentTime > verticalFlipBackStartTime + 420) {
-            if (verticalGrabber.isClose()) {
-                verticalGrabber.open();
-                verticalGrabberStartOpenTime = currentTime;
-                close = false;
-                telemetry.addData("close", 2);
-            }
-        } else {
-            close = false;
-            telemetry.addData("close", 3);
+        //if the vertical wrist timer is not over, the vertical assembly is not closed
+        if (System.currentTimeMillis() < verticalWristBackwardStartTime + ConfigurationSecondRobot.verticalWristWalltoIntake) {
+            isClosed = false;
         }
-        if (currentTime < verticalGrabberStartOpenTime + 420) {
-            close = false;
-            telemetry.addData("close", 4);
-        }
-        if (verticalSlide.getSlidePosition() < -10) {
-            verticalSlide.setSlidePosition(10, 2000);
-            close = false;
-            telemetry.addData("close", 5);
-        }
-
-        if (horizontalSlide.getSlidePosition() > 1) {
-            if (horizontalWrist.forward && horizontalSlide.getSlidePosition() > overrideSlideThreshold) {
-                horizontalFlipBackStartTime = currentTime;
+        return isClosed;
+    }
+    public double horizontalWristMiddleStartTime = 0;
+    public boolean closeHorizontalAssembly(HorizontalWristActions horizontalWrist, HorizontalSlideActions horizontalSlide, HorizontalIntakeActions intake) {
+        //Assume the horizontal assembly is closed until proven otherwise
+        boolean isClosed = true;
+        //If the Horizontal slide is out, move the slide in and move the wrist to be able to pass through the submersible walls
+        if (horizontalSlide.getSlidePosition() > 5){
+            if (horizontalWrist.forward) {
                 horizontalWrist.setForward(false);
+                //Start a timer to go until the horizontal wrist is in the right position
+                horizontalWristMiddleStartTime = System.currentTimeMillis();
             }
-            if (currentTime > horizontalFlipBackStartTime + 420) {
+            //move the slide in, if the wrist is moving move the slide slower
+            if (System.currentTimeMillis() < horizontalWristMiddleStartTime + ConfigurationSecondRobot.horizontalWristtoMiddleTime) {
+                horizontalSlide.teleOpArmMotor(-0.5, 1);
+            } else {
                 horizontalSlide.teleOpArmMotor(-1, 2);
             }
-            close = false;
-            telemetry.addData("close", 6);
+            isClosed = false;
+        } else {
+            //if the slide is in, move the wrist to the transfer and set a timer to wait until it's done
+            if (horizontalWrist.forward) {
+
+            }
         }
-        telemetry.addData("close", close);
-        return close;
+
+
+        return isClosed;
     }
-    double placeState = 0;
-    double startTimePlace = 0;
     public void placeSample(VerticalGrabberActions verticalGrabber, VerticalWristActions verticalWrist, VerticalSlideActions verticalSlide, HorizontalWristActions horizontalWrist, HorizontalSlideActions horizontalSlide, HorizontalIntakeActions intake) {
         if (placeState == 0) {
-            if (close(verticalGrabber, verticalWrist, verticalSlide, horizontalWrist, horizontalSlide)){
-                placeState = 1;
-            }
-        } else if (placeState == 1) {
-            verticalGrabber.close();
-            intake.close();
-            startTimePlace = System.currentTimeMillis();
-            placeState = 2;
-        } else if (placeState == 2) {
-            intake.close();
-            if (System.currentTimeMillis() > startTimePlace + 420) {
-                placeState = 3;
-                verticalWrist.autoFlipForwardDown();
-                verticalSlide.setSlidePosition(0, 2000);
-            } else {
-                intake.close();
-            }
+            boolean closeVert = closeVerticalAssembly(verticalGrabber, verticalWrist, verticalSlide);
         }
     }
+    double placeState = 0;
     public void resetPlaceState() {
         placeState = 0;
     }
