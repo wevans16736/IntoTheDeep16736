@@ -47,6 +47,7 @@ public class ConfigurationSecondRobot {
     //servo position to have the wrist to be at vertical grabber position
     public static double horizontalWristTransfer = 0.075;
     //servo position to have grabber slightly above the ground
+    //TODO: axon servo change here
     public static double horizontalWristHover = 0.60;
     //servo position to have grabber grab the butter
     public static double horizontalWristIntake = 0.99;
