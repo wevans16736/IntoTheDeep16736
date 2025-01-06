@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.secondrobot.horizontalslide;
 
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.ServoImplEx;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -21,7 +22,6 @@ public class HorizontalWristActions {
         this.hardwareMap = opModeHardware;
 
         horizontalWristServo = hardwareMap.get(ServoImplEx.class, ConfigConstants.HORIZONTAL_WRIST);
-
         horizontalWristServo.setPosition(backwardPosIn);
     }
     public boolean override = true;

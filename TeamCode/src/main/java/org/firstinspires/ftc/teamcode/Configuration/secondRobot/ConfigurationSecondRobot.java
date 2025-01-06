@@ -41,16 +41,16 @@ public class ConfigurationSecondRobot {
 
     //Time to move vertical grabber, MS
     public static double verticalOpenTime = 350;
+    public static double verticalCloseTime = 350;
 
 
     //horizontal wrist servo position
     //servo position to have the wrist to be at vertical grabber position
-    public static double horizontalWristTransfer = 0.075;
+    public static double horizontalWristTransfer = 0.93;
     //servo position to have grabber slightly above the ground
-    //TODO: axon servo change here
-    public static double horizontalWristHover = 0.60;
+    public static double horizontalWristHover = .4;
     //servo position to have grabber grab the butter
-    public static double horizontalWristIntake = 0.99;
+    public static double horizontalWristIntake = 0.175;
 
     //horizontal wrist moving times, MS
     public static double horizontalWristtoMiddleTime = 750;
@@ -62,10 +62,12 @@ public class ConfigurationSecondRobot {
     public static double horizontalGrabberSoftClose = horizontalGrabberClose - 0.025;
     public static double horizontalGrabberOpen = horizontalGrabberClose - 0.35;
 
-    //horizontal roll servo position
-    public static double flat = 0.125;
-    public static double sideway = .34;
+    //todo horizontal grabber close time, MS
+    public static double horizontalGrabberCloseTime = 350; //Maybe this right?
 
+    //horizontal roll servo position
+    public static double flat = 0.15;
+    public static double sideway = .34;
 
     //horizontal slide motor position
     public static int horizontalSlideRetract = 0;
