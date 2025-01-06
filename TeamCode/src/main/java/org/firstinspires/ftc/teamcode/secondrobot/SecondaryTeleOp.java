@@ -92,11 +92,9 @@ public class SecondaryTeleOp extends HelperActions {
             updateExchangeAssembly(verticalGrabber, verticalWrist, horizontalWrist, horizontalSlide, verticalSlide, horizontalIRoll, horizontalIntake);
 
             //A button gamepad 2. Not yet working
-//            managePlaceSample(gamepad2.a, verticalGrabber, verticalWrist, verticalSlide, horizontalWrist, horizontalSlide, horizontalIntake);
+            managePlaceSample(gamepad2.a, verticalGrabber, verticalWrist, verticalSlide, horizontalWrist, horizontalSlide, horizontalIntake, horizontalIRoll);
 
-//            if (gamepad2.a) {
-//                closeHorizontalAssembly(horizontalWrist, horizontalSlide, horizontalIntake);
-//            }
+
             telemetry.update();
         }
     }

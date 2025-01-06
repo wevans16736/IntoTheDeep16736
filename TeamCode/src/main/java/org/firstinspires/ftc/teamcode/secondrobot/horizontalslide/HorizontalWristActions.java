@@ -33,6 +33,9 @@ public class HorizontalWristActions {
         }
         wasOverride = input;
     }
+    public void setOverride(boolean input){
+        override = input;
+    }
 
     //if the override is on or the slide is in, set the servo to go up.
     //otherwise, the servo goes down and is either forward or backward depending on how the driver selects.

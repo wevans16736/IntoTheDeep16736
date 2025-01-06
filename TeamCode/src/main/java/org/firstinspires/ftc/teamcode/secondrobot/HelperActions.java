@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.secondrobot;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.teamcode.Configuration.secondRobot.ConfigurationSecondRobot;
 import org.firstinspires.ftc.teamcode.secondrobot.horizontalslide.HorizontalIntakeActions;
@@ -164,11 +165,15 @@ public abstract class HelperActions extends LinearOpMode {
         return isClosed;
     }
     public double horizontalWristMiddleStartTime = 0;
-    public boolean closeHorizontalAssembly(HorizontalWristActions horizontalWrist, HorizontalSlideActions horizontalSlide, HorizontalIntakeActions intake) {
+    double timeTilWristIsUp = 0;
+    double horizontalWristUpStartTime = 0;
+    double horizontalRollTurnStartTime = 0;
+    public boolean closeHorizontalAssembly(HorizontalWristActions horizontalWrist, HorizontalSlideActions horizontalSlide, HorizontalIntakeActions intake, HorizontalIRollActions horizontalRoll) {
         //Assume the horizontal assembly is closed until proven otherwise
         boolean isClosed = true;
         //If the Horizontal slide is out, move the slide in and move the wrist to be able to pass through the submersible walls
-        if (horizontalSlide.getSlidePosition() > 5){
+        if (horizontalSlide.getSlidePosition() > 10){
+            isClosed = false;
             if (horizontalWrist.forward) {
                 horizontalWrist.setForward(false);
                 //Start a timer to go until the horizontal wrist is in the right position
@@ -178,35 +183,96 @@ public abstract class HelperActions extends LinearOpMode {
             if (System.currentTimeMillis() < horizontalWristMiddleStartTime + ConfigurationSecondRobot.horizontalWristtoMiddleTime) {
                 horizontalSlide.teleOpArmMotor(-0.5, 1);
             } else {
-                horizontalSlide.teleOpArmMotor(-1, 2);
+                horizontalSlide.setSlideDistance(0, 3000);
             }
-            isClosed = false;
         } else {
             //if the slide is in, move the wrist to the transfer and set a timer to wait until it's done
-            if (horizontalWrist.forward) {
-
+            if (!horizontalWrist.override) {
+                horizontalWrist.setOverride(true);
+                horizontalWristUpStartTime = System.currentTimeMillis();
+                //if the wrist is down, set the timer to the time it'll take to move all the way up
+                if (horizontalWrist.forward) {
+                    timeTilWristIsUp = ConfigurationSecondRobot.horizontalWristDowntoUpTime;
+                } else {
+                    //If the wrist is middle, the time it needs is the time from middle to up. if it's moving from down to middle, the time it has been moving needs to be subtracted from the timer
+                    if (System.currentTimeMillis() > horizontalWristMiddleStartTime + ConfigurationSecondRobot.horizontalWristtoMiddleTime) {
+                        timeTilWristIsUp = ConfigurationSecondRobot.horizontalWristtoMiddleTime;
+                    } else {
+                        double timeWristHasBeenTravelling = Range.clip(System.currentTimeMillis() - horizontalWristMiddleStartTime, 0, ConfigurationSecondRobot.horizontalWristtoMiddleTime);
+                        timeTilWristIsUp = ConfigurationSecondRobot.horizontalWristDowntoUpTime - timeWristHasBeenTravelling;
+                    }
+                }
+            }
+            if (System.currentTimeMillis() < horizontalWristUpStartTime + timeTilWristIsUp) {
+                //if the timer says the wrist is not up yet, the horizontal assembly isn't closed
+                isClosed = false;
             }
         }
 
+        //close the horizontal roll and set a timer to wait until it's done
+        if (!horizontalRoll.isFlat()) {
+            //going false then true switches the flat state, which we know is not flat, switching it to flat
+            horizontalRoll.teleOp(false);
+            horizontalRoll.teleOp(true);
+            horizontalRollTurnStartTime = System.currentTimeMillis();
+        }
+        if (System.currentTimeMillis() < horizontalRollTurnStartTime + ConfigurationSecondRobot.flatToSidewaysTime) {
+            isClosed = false;
+        }
 
         return isClosed;
     }
-    public void placeSample(VerticalGrabberActions verticalGrabber, VerticalWristActions verticalWrist, VerticalSlideActions verticalSlide, HorizontalWristActions horizontalWrist, HorizontalSlideActions horizontalSlide, HorizontalIntakeActions intake) {
+    double transferState = 0;
+    double verticalGrabberCloseStartTime = 0;
+    double horizontalIntakeOpenStartTime = 0;
+    public boolean transferSample(VerticalGrabberActions verticalGrabber, HorizontalIntakeActions horizontalIntake) {
+        if (transferState == 0) {
+            verticalGrabber.close();
+            verticalGrabberCloseStartTime = System.currentTimeMillis();
+            transferState = 1;
+        }
+        if (transferState == 1 && System.currentTimeMillis() > verticalGrabberCloseStartTime + ConfigurationSecondRobot.verticalCloseTime) {
+            horizontalIntake.open();
+            horizontalIntakeOpenStartTime = System.currentTimeMillis();
+            transferState = 2;
+        }
+        if (transferState == 2 && System.currentTimeMillis() > horizontalIntakeOpenStartTime + ConfigurationSecondRobot.horizontalGrabberOpen) {
+            transferState = 3;
+        }
+        return (transferState == 3);
+    }
+    public void placeSample(VerticalGrabberActions verticalGrabber, VerticalWristActions verticalWrist, VerticalSlideActions verticalSlide, HorizontalWristActions horizontalWrist, HorizontalSlideActions horizontalSlide, HorizontalIntakeActions intake, HorizontalIRollActions horizontalRoll) {
         if (placeState == 0) {
             boolean closeVert = closeVerticalAssembly(verticalGrabber, verticalWrist, verticalSlide);
+            boolean closeHorizontal = closeHorizontalAssembly(horizontalWrist, horizontalSlide, intake, horizontalRoll);
+            if (closeVert && closeHorizontal) {
+                placeState = 1;
+            }
+        } else if (placeState == 1) {
+            transferState = 0;
+            transferSample(verticalGrabber, intake);
+            placeState = 2;
+        } else if (placeState == 2) {
+            if (transferSample(verticalGrabber, intake)) {
+                placeState = 3;
+            }
+        } else if (placeState == 3) {
+            verticalWrist.forward();
+            verticalSlide.setSlidePosition(2300, 3000);
         }
+        telemetry.addData("placeState", placeState);
     }
     double placeState = 0;
     public void resetPlaceState() {
         placeState = 0;
     }
     boolean wasActivatePlaceSample = false;
-    public void managePlaceSample(boolean activate, VerticalGrabberActions verticalGrabber, VerticalWristActions verticalWrist, VerticalSlideActions verticalSlide, HorizontalWristActions horizontalWrist, HorizontalSlideActions horizontalSlide, HorizontalIntakeActions intake) {
+    public void managePlaceSample(boolean activate, VerticalGrabberActions verticalGrabber, VerticalWristActions verticalWrist, VerticalSlideActions verticalSlide, HorizontalWristActions horizontalWrist, HorizontalSlideActions horizontalSlide, HorizontalIntakeActions intake, HorizontalIRollActions horizontalRoll) {
         if (activate && !wasActivatePlaceSample) {
             resetPlaceState();
         }
         if(activate) {
-            placeSample(verticalGrabber, verticalWrist, verticalSlide, horizontalWrist, horizontalSlide, intake);
+            placeSample(verticalGrabber, verticalWrist, verticalSlide, horizontalWrist, horizontalSlide, intake, horizontalRoll);
         }
         wasActivatePlaceSample = activate;
     }

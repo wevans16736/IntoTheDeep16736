@@ -23,6 +23,9 @@ public class HorizontalIRollActions {
         rollServo.setPosition(flat);
     }
 
+    public boolean isFlat() {
+        return isFlat;
+    }
     double prevPos = 0;
     double changePosStartTime = 0;
     public void setPosition(double position) {

@@ -53,8 +53,8 @@ public class ConfigurationSecondRobot {
     public static double horizontalWristIntake = 0.175;
 
     //horizontal wrist moving times, MS
-    public static double horizontalWristtoMiddleTime = 750;
-    public static double horizontalWristDowntoUpTime = 1340;
+    public static double horizontalWristtoMiddleTime = 500;
+    public static double horizontalWristDowntoUpTime = 750;
 
 
     //horizontal grabber servo position
@@ -63,11 +63,14 @@ public class ConfigurationSecondRobot {
     public static double horizontalGrabberOpen = horizontalGrabberClose - 0.35;
 
     //todo horizontal grabber close time, MS
-    public static double horizontalGrabberCloseTime = 350; //Maybe this right?
+    public static double horizontalGrabberCloseTime = 200; //Maybe this right?
 
     //horizontal roll servo position
     public static double flat = 0.15;
     public static double sideway = .34;
+
+    //horizontal roll time to flip, MS
+    public static double flatToSidewaysTime = 600;
 
     //horizontal slide motor position
     public static int horizontalSlideRetract = 0;
