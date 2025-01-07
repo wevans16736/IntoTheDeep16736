@@ -65,28 +65,42 @@ public class Trajectory{
                 .splineTo(new Vector2d(0, 60), Math.PI);
     }
     VelConstraint baseVel = new MinVelConstraint(Arrays.asList(
-            new TranslationalVelConstraint(35),
-            new AngularVelConstraint(Math.PI*.9)
+            new TranslationalVelConstraint(25),
+            new AngularVelConstraint(Math.PI)
     ));
     VelConstraint speed = new MinVelConstraint(Arrays.asList(
             new TranslationalVelConstraint(120),
             new AngularVelConstraint(Math.PI)
     ));
 
-    public static double butterY = 16.75;
+    VelConstraint ramSpeed = new MinVelConstraint(Arrays.asList(
+            new TranslationalVelConstraint(50),
+            new AngularVelConstraint(Math.PI)
+    ));
+
+    public TrajectoryActionBuilder getTestTrajectory(){
+        return drive.actionBuilder(pose)
+                .strafeTo(new Vector2d(0, 40))
+                .strafeTo(new Vector2d(0,0), baseVel)
+                .strafeTo(new Vector2d(0, 40))
+                .strafeTo(new Vector2d(0,0));
+    }
+
+    public static double butterY = 17.5;
     public static double butterX = 37;
-    public static double hangX = -12;
+    public static double hangX = -15;
     public static double parkX = 49;
     public static double basketX = -47;
     public static double basketY = 7;
     public static double basketHeading = 200;
     public TrajectoryActionBuilder getHangTrajectory() {
         TrajectoryActionBuilder HangTrajectory = currentTrajectory
-                .afterTime(0, verticalSlideRR.verticalSlideAction((ConfigurationSecondRobot.highBar+185)))
+                .afterTime(0, verticalSlideRR.verticalSlideAction((ConfigurationSecondRobot.highBar)))
                 .afterTime(0, verticalWristRR.VerticalWristAction(ConfigurationSecondRobot.verticalWristBar))
                 .afterTime(0, verticalGrabberRR.verticalGrabberAction(ConfigurationSecondRobot.verticalClose))
-                .strafeToSplineHeading(new Vector2d(hangX, 19),Math.toRadians(90))
-                .strafeToSplineHeading(new Vector2d(hangX, 29),Math.toRadians(90))
+                .strafeToSplineHeading(new Vector2d(0,5), Math.toRadians(90))
+                .strafeTo(new Vector2d(hangX, 5))
+                .strafeTo(new Vector2d(hangX, 27), ramSpeed)
                 .stopAndAdd(verticalGrabberRR.verticalGrabberAction(ConfigurationSecondRobot.verticalOpen))
                 .strafeTo(new Vector2d(hangX, butterY))
                 .stopAndAdd(verticalSlideRR.verticalSlideAction(ConfigurationSecondRobot.bottom+5))
@@ -94,9 +108,9 @@ public class Trajectory{
                 .stopAndAdd(verticalWristRR.VerticalWristAction(ConfigurationSecondRobot.verticalWristBasket));
         currentTrajectory = HangTrajectory.endTrajectory().fresh();
         if(side) {
-            hangX = hangX - 3;
+            hangX = hangX - 1;
         } else {
-            hangX = hangX + 3;
+            hangX = hangX + 1;
         }
         return HangTrajectory;
     }
@@ -156,25 +170,25 @@ public class Trajectory{
                     .stopAndAdd(horizontalWristRR.horizontalWristAction(ConfigurationSecondRobot.horizontalWristIntake))
                     .stopAndAdd(verticalGrabberRR.verticalGrabberAction(ConfigurationSecondRobot.verticalOpen))
                     .stopAndAdd(verticalWristRR.VerticalWristAction(ConfigurationSecondRobot.verticalWristIntake))
-                    .waitSeconds(ConfigurationSecondRobot.verticalWristWalltoIntake)
+                    .waitSeconds(ConfigurationSecondRobot.horizontalWristIntaketoTransfer/1000)
                     //close the horizontal grabber
                     .stopAndAdd(horizontalGrabberRR.horizontalGrabberAction(ConfigurationSecondRobot.horizontalGrabberClose))
                     //retract the horizontal
-                    .waitSeconds(ConfigurationSecondRobot.horizontalGrabberCloseTime)
+                    .waitSeconds(ConfigurationSecondRobot.horizontalGrabberCloseTime/1000)
                     .stopAndAdd(horizontalSlideRR.horizontalSlideActions(ConfigurationSecondRobot.horizontalSlideRetract))
                     .stopAndAdd(horizontalWristRR.horizontalWristAction(ConfigurationSecondRobot.horizontalWristTransfer))
-                    .stopAndAdd(horizontalGrabberRR.horizontalGrabberAction(ConfigurationSecondRobot.horizontalGrabberSoftClose))
-                    .waitSeconds(1.25)
+                    .stopAndAdd(horizontalGrabberRR.horizontalGrabberAction(ConfigurationSecondRobot.horizontalGrabberClose))
+                    .waitSeconds(ConfigurationSecondRobot.horizontalWristIntaketoTransfer/1000)
                     //horizontal grabber let go and vertical grabber close
                     .stopAndAdd(verticalGrabberRR.verticalGrabberAction(ConfigurationSecondRobot.verticalClose))
-                    .waitSeconds(.25)
+                    .waitSeconds(ConfigurationSecondRobot.verticalCloseTime/1000)
                     .stopAndAdd(horizontalGrabberRR.horizontalGrabberAction(ConfigurationSecondRobot.horizontalGrabberOpen))
-                    .waitSeconds(.25)
+                    .waitSeconds(ConfigurationSecondRobot.horizontalGrabberCloseTime/1000)
                     //vertical wrist move to the other side
                     .stopAndAdd(verticalWristRR.VerticalWristAction(ConfigurationSecondRobot.verticalWristWall))
-                    .waitSeconds(ConfigurationSecondRobot.verticalWristWalltoIntake)
+                    .waitSeconds(ConfigurationSecondRobot.verticalWristWalltoIntake/1000)
                     .stopAndAdd(verticalGrabberRR.verticalGrabberAction(ConfigurationSecondRobot.verticalOpen))
-                    .waitSeconds(.25);
+                    .waitSeconds((ConfigurationSecondRobot.verticalCloseTime)/1000);
         }
     }
     public TrajectoryActionBuilder getPostHangLocationTrajectory(){
@@ -182,24 +196,25 @@ public class Trajectory{
                 //strafe to human pick up
                 .stopAndAdd(verticalWristRR.VerticalWristAction(ConfigurationSecondRobot.verticalWristWall))
                 .stopAndAdd(verticalGrabberRR.verticalGrabberAction(ConfigurationSecondRobot.verticalOpen))
-                .strafeToSplineHeading(new Vector2d(49, 12), Math.toRadians(-90))
-                .strafeToSplineHeading(new Vector2d(49, 8.25), Math.toRadians(-90))
+                .strafeToSplineHeading(new Vector2d(49, 25), Math.toRadians(-90))
+                .strafeToSplineHeading(new Vector2d(49, 9.75), Math.toRadians(-90))
                 .waitSeconds(.5)
-                .stopAndAdd(verticalGrabberRR.verticalGrabberAction(ConfigurationSecondRobot.verticalClose));
+                .stopAndAdd(verticalGrabberRR.verticalGrabberAction(ConfigurationSecondRobot.verticalClose))
+                .waitSeconds(ConfigurationSecondRobot.verticalCloseTime/1000);
         currentTrajectory = PostHangLocationTrajectory.endTrajectory().fresh();
         return  PostHangLocationTrajectory;
     }
 
     public TrajectoryActionBuilder getPark(){
         return currentTrajectory
-                .strafeTo(new Vector2d(parkX, 4), speed);
+                .strafeTo(new Vector2d(parkX, 4));
     }
 
     public TrajectoryActionBuilder getPostHangAttachment(){
         return currentTrajectory
                 .stopAndAdd(verticalWristRR.VerticalWristAction(ConfigurationSecondRobot.verticalWristWall))
                 .stopAndAdd(verticalGrabberRR.verticalGrabberAction(ConfigurationSecondRobot.verticalClose))
-                .waitSeconds(.5)
+                .waitSeconds(ConfigurationSecondRobot.verticalCloseTime/1000)
                 .stopAndAdd(verticalWristRR.VerticalWristAction(ConfigurationSecondRobot.verticalWristBar));
     }
 }

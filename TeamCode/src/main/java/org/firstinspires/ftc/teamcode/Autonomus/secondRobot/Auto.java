@@ -76,6 +76,11 @@ public class Auto extends LinearOpMode {
                         trajectory.getPostHangAttachment().build(),
                         trajectory.getHangTrajectory().build()
                 ),
+                trajectory.getPostHangLocationTrajectory().build(),
+                new ParallelAction(
+                        trajectory.getPostHangAttachment().build(),
+                        trajectory.getHangTrajectory().build()
+                ),
                 trajectory.getPark().build()
                 ));
     }

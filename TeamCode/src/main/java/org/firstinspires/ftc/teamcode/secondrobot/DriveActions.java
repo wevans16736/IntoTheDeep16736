@@ -39,7 +39,7 @@ public class DriveActions {
 
     public IMU imu;
     //the amount to throttle the power of the motors
-    public double THROTTLE = 1.0;
+    public double THROTTLE = 1.5;
 
     private double robotHeading = 0;
     public double headingOffset = 0;

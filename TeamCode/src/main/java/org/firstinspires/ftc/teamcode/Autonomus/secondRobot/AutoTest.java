@@ -17,6 +17,7 @@ import org.firstinspires.ftc.teamcode.Configuration.secondRobot.HorizontalWristR
 import org.firstinspires.ftc.teamcode.Configuration.secondRobot.VerticalGrabberRR;
 import org.firstinspires.ftc.teamcode.Configuration.secondRobot.VerticalSlideRR;
 import org.firstinspires.ftc.teamcode.Configuration.secondRobot.VerticalWristRR;
+import org.firstinspires.ftc.teamcode.MecanumDrive;
 import org.firstinspires.ftc.teamcode.PinpointDrive;
 
 @Config
@@ -42,6 +43,11 @@ public class AutoTest extends LinearOpMode {
         FtcDashboard dashboard = FtcDashboard.getInstance();
         Telemetry dashboardTelemetry = dashboard.getTelemetry();
 
+        MecanumDrive.Params params = new MecanumDrive.Params();
+
+        dashboardTelemetry.addData("driveVelocity", params.maxWheelVel);
+        dashboardTelemetry.update();
+
         //set up a trajectory class
         Trajectory trajectory = new Trajectory();
         trajectory.setTrajectory(drive, pose, verticalSlideRR, verticalWristRR, verticalGrabberRR, horizontalSlideRR,
@@ -57,10 +63,7 @@ public class AutoTest extends LinearOpMode {
 
 //        run hanging trajectory
         Actions.runBlocking(new SequentialAction(
-                //hang the butter
-                        trajectory.getHangTrajectory().build(),
-                //move to butter pick up
-                trajectory.getButterPickUpTrajectory().build()
+                trajectory.getTestTrajectory().build()
                 ));
         double x = drive.pose.position.x;
         double y = drive.pose.position.y;
