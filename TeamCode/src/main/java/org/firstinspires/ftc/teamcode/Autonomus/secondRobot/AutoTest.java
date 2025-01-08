@@ -49,10 +49,8 @@ public class AutoTest extends LinearOpMode {
         dashboardTelemetry.update();
 
         //set up a trajectory class
-        Trajectory trajectory = new Trajectory();
-        trajectory.setTrajectory(drive, pose, verticalSlideRR, verticalWristRR, verticalGrabberRR, horizontalSlideRR,
+        Trajectory trajectory = new Trajectory(drive, pose, verticalSlideRR, verticalWristRR, verticalGrabberRR, horizontalSlideRR,
                 horizontalRollRR, horizontalGrabberRR, horizontalWristRR, false);
-        trajectory.setStartTrajectory();
 
         //todo ask the driver which trajectory to use
 
@@ -63,7 +61,7 @@ public class AutoTest extends LinearOpMode {
 
 //        run hanging trajectory
         Actions.runBlocking(new SequentialAction(
-                trajectory.getTestTrajectory().build()
+//                trajectory.getTestTrajectory().build()
                 ));
         double x = drive.pose.position.x;
         double y = drive.pose.position.y;

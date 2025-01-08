@@ -40,10 +40,9 @@ public class TestHang extends LinearOpMode {
         HorizontalWristRR horizontalWristRR = new HorizontalWristRR(hardwareMap);
 
         //set up a trajectory class
-        Trajectory trajectory = new Trajectory();
-        trajectory.setTrajectory(drive, pose, verticalSlideRR, verticalWristRR, verticalGrabberRR,
+        Trajectory trajectory = new Trajectory(drive, pose, verticalSlideRR, verticalWristRR, verticalGrabberRR,
                 horizontalSlideRR, horizontalRollRR, horizontalGrabberRR, horizontalWristRR, true);
-        trajectory.setStartTrajectory();
+
 
         //todo ask the driver which trajectory to use
 
@@ -54,7 +53,7 @@ public class TestHang extends LinearOpMode {
 
 //        run hanging trajectory
         Actions.runBlocking(new SequentialAction(
-                trajectory.getHangTrajectory().build(),
+                trajectory.getHangTrajectory(),
                 new SleepAction(3)
         ));
     }

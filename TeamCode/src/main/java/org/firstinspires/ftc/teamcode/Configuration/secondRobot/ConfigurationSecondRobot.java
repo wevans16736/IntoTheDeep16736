@@ -21,6 +21,8 @@ public class ConfigurationSecondRobot {
     public static int topBasket = 2360;
     //added 280 on 1/3/2024
 
+    public static double verticalSlideBottomToHighBar = 3000;
+
     //this is vertical wrist servo position
     //this is a position to place it on the basket
     public static double verticalWristBasket = 0.43;

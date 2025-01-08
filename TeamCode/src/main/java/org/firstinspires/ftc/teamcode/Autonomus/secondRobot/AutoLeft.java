@@ -37,10 +37,8 @@ public class AutoLeft extends LinearOpMode {
         HorizontalWristRR horizontalWristRR = new HorizontalWristRR(hardwareMap);
 
         //set up a trajectory class
-        Trajectory trajectory = new Trajectory();
-        trajectory.setTrajectory(drive, pose, verticalSlideRR, verticalWristRR, verticalGrabberRR, horizontalSlideRR,
-                horizontalRollRR, horizontalGrabberRR, horizontalWristRR, true);
-        trajectory.setStartTrajectory();
+        Trajectory trajectory = new Trajectory(drive, pose, verticalSlideRR, verticalWristRR, verticalGrabberRR, horizontalSlideRR,
+        horizontalRollRR, horizontalGrabberRR, horizontalWristRR, true);
 
         //todo ask the driver which trajectory to use
 
@@ -52,20 +50,20 @@ public class AutoLeft extends LinearOpMode {
 //        run hanging trajectory
         Actions.runBlocking(new SequentialAction(
                 //hang the butter
-                trajectory.getHangTrajectory().build(),
-                //go to the first butter pick up
-                trajectory.getButterPickUpTrajectory().build(),
-                //pick the butter up
-                new ParallelAction(
-                        trajectory.getButterPickUpAttachment().build(),
-                        trajectory.getSecondButterPickUpTrajectory().build()
-                ),
-                new ParallelAction(
-                        trajectory.getButterPickUpAttachment().build(),
-                        trajectory.getSecondButterPickUpTrajectory().build()
-                ),
-                //park left side
-                trajectory.getPark().build()
+//                trajectory.getHangTrajectory().build(),
+//                //go to the first butter pick up
+//                trajectory.getButterPickUpTrajectory().build(),
+//                //pick the butter up
+//                new ParallelAction(
+//                        trajectory.getButterPickUpAttachment().build(),
+//                        trajectory.getSecondButterPickUpTrajectory().build()
+//                ),
+//                new ParallelAction(
+//                        trajectory.getButterPickUpAttachment().build(),
+//                        trajectory.getSecondButterPickUpTrajectory().build()
+//                ),
+//                //park left side
+//                trajectory.getPark().build()
                 ));
     }
 }

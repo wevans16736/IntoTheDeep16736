@@ -20,6 +20,7 @@ import org.firstinspires.ftc.teamcode.Configuration.secondRobot.VerticalGrabberR
 import org.firstinspires.ftc.teamcode.Configuration.secondRobot.VerticalSlideRR;
 import org.firstinspires.ftc.teamcode.Configuration.secondRobot.VerticalWristRR;
 import org.firstinspires.ftc.teamcode.PinpointDrive;
+import org.opencv.features2d.AffineFeature;
 
 @Config
 @Autonomous(name="Auto", group = "SecondRobot")
@@ -40,48 +41,59 @@ public class Auto extends LinearOpMode {
         HorizontalGrabberRR horizontalGrabberRR = new HorizontalGrabberRR(hardwareMap);
         HorizontalWristRR horizontalWristRR = new HorizontalWristRR(hardwareMap);
 
-        //set up a trajectory class
-        Trajectory trajectory = new Trajectory();
-        trajectory.setTrajectory(drive, pose, verticalSlideRR, verticalWristRR, verticalGrabberRR,
-                horizontalSlideRR, horizontalRollRR, horizontalGrabberRR, horizontalWristRR, false);
-        trajectory.setStartTrajectory();
-
         //todo ask the driver which trajectory to use
+        boolean side = false;
+        telemetry.clearAll();
+        while(!gamepad1.cross){
+        telemetry.addLine("which side is the robot park?");
+        telemetry.addData("dpad_left: ", side);
+        telemetry.addData("dpad_Right", !side);
+            if(gamepad1.dpad_left && !gamepad1.dpad_right){
+                side = !side;
+            }
+            telemetry.update();
+        }
+        telemetry.clearAll();
+        //set up a trajectory class
+        Trajectory trajectory = new Trajectory(drive, pose, verticalSlideRR, verticalWristRR, verticalGrabberRR,
+                horizontalSlideRR, horizontalRollRR, horizontalGrabberRR, horizontalWristRR, side);
 
         //wait for the start button to be press
         waitForStart();
         //if the stop button press then stop the robot
         if (isStopRequested()) return;
 
-//        run hanging trajectory
+        if(trajectory.side){
         Actions.runBlocking(new SequentialAction(
                 //hang the butter
-                        trajectory.getHangTrajectory().build(),
-                //move to butter pick up
-                trajectory.getButterPickUpTrajectory().build(),
-//                pick up both butter
+                trajectory.getHangTrajectory(),
+                //move to butter location position
+                trajectory.getButterLocationTrajectory(),
+                //pick up both butter
                 new ParallelAction(
-                        trajectory.getButterPickUpAttachment().build(),
-                        trajectory.getSecondButterPickUpTrajectory().build()
+                        trajectory.getButterPickUpTrajectory(),
+                        trajectory.getButterPickUpAttachment()
                 ),
-                trajectory.getButterPickUpAttachment().build(),
-                //go to human place
-                trajectory.getPostHangLocationTrajectory().build(),
-                new ParallelAction(
-                        trajectory.getPostHangAttachment().build(),
-                        trajectory.getHangTrajectory().build()
-                ),
-                trajectory.getPostHangLocationTrajectory().build(),
-                new ParallelAction(
-                        trajectory.getPostHangAttachment().build(),
-                        trajectory.getHangTrajectory().build()
-                ),
-                trajectory.getPostHangLocationTrajectory().build(),
-                new ParallelAction(
-                        trajectory.getPostHangAttachment().build(),
-                        trajectory.getHangTrajectory().build()
-                ),
-                trajectory.getPark().build()
+                //repeat this 3 time
+                trajectory.getHumanPickUpTrajectory(),
+                trajectory.getHangTrajectory(),
+                trajectory.getHumanPickUpTrajectory(),
+                trajectory.getHangTrajectory(),
+                trajectory.getHumanPickUpTrajectory(),
+                trajectory.getHangTrajectory(),
+                trajectory.getParkTrajectory()
                 ));
+        }
+        if(!trajectory.side){
+            Actions.runBlocking(new SequentialAction(
+                    trajectory.getHangTrajectory(),
+                    trajectory.getButterLocationTrajectory(),
+                    new ParallelAction(
+                            trajectory.getButterPickUpTrajectory(),
+                            trajectory.getButterPickUpAttachment()
+                    ),
+                    trajectory.getParkTrajectory()
+            ));
+        }
     }
 }
