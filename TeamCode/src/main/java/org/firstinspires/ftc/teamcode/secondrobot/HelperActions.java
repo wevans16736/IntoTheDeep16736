@@ -100,6 +100,19 @@ public abstract class HelperActions extends LinearOpMode {
         }
     }
 
+    public double adjustedHSlideSpeed(double inputSpeed) {
+        double workingSpeed = Math.abs(inputSpeed);
+        double startingSpeed = 0.1;
+        double endingSpeed = 5;
+        //0.1x = 5x + 9
+        double transitionPoint = 4.0 / 4.9;
+        if (workingSpeed < transitionPoint) {
+            workingSpeed = workingSpeed * startingSpeed;
+        } else {
+            workingSpeed = workingSpeed * endingSpeed + 9;
+        }
+        return workingSpeed * Math.signum(inputSpeed);
+    }
      /**slide configuration?**/
     boolean wasOverrideSlide = true;
     boolean overrideSlide = true;

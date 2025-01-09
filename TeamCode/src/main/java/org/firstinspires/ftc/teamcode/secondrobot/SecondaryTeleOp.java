@@ -69,7 +69,7 @@ public class SecondaryTeleOp extends HelperActions {
 
             /** Gamepad 2 **/
             //use the player 2 left joystick to run the horizontal slide
-            horizontalSlide.teleOpArmMotor(-gamepad2.left_stick_y * Math.abs(gamepad2.left_stick_y), 1.2);
+            horizontalSlide.teleOpArmMotor(-gamepad2.left_stick_y * Math.abs(gamepad2.left_stick_y), 1);
             //rotate the servo with intake in it
             horizontalWrist.flipping(gamepad2.left_bumper);
             //force the servo to flip bypassing the range limit apply

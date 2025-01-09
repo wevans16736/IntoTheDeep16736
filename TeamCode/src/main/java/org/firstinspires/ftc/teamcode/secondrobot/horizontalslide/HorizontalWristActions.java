@@ -62,6 +62,10 @@ public class HorizontalWristActions {
             } else if (forward){
                 forward = false;
             }
+            if (override) {
+                setOverride(false);
+                forward = false;
+            }
         }
         wasInput = input;
         update();
