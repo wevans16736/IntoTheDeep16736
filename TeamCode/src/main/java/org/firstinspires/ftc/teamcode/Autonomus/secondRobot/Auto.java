@@ -28,9 +28,8 @@ public class Auto extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
         //set up Pinpoint and Pose2d class
-        Pose2d pose = new Pose2d(0,0,Math.toRadians(90));
-        PinpointDrive drive = new PinpointDrive(hardwareMap, pose);
-
+        Pose2d pose;
+        PinpointDrive drive;
         //all of these class is under Configuration.secondRobot
         VerticalSlideRR verticalSlideRR = new VerticalSlideRR(hardwareMap);
         VerticalWristRR verticalWristRR = new VerticalWristRR(hardwareMap);
@@ -42,19 +41,29 @@ public class Auto extends LinearOpMode {
         HorizontalWristRR horizontalWristRR = new HorizontalWristRR(hardwareMap);
 
         //todo ask the driver which trajectory to use
-        boolean side = false;
-        telemetry.clearAll();
-        while(!gamepad1.cross){
-        telemetry.addLine("which side is the robot park?");
-        telemetry.addData("dpad_left: ", side);
-        telemetry.addData("dpad_Right", !side);
-            if(gamepad1.dpad_left && !gamepad1.dpad_right){
-                side = !side;
-            }
-            telemetry.update();
-        }
-        telemetry.clearAll();
+        boolean side = true;
+//        telemetry.clearAll();
+//        while(!gamepad1.cross){
+//        telemetry.addLine("which side is the robot park?");
+//        telemetry.addData("dpad_left: ", side);
+//        telemetry.addData("dpad_Right", !side);
+//            if(gamepad1.dpad_left && !gamepad1.dpad_right){
+//                side = !side;
+//            }
+//            telemetry.update();
+//        }
+//        telemetry.clearAll();
         //set up a trajectory class
+        if(!side){
+            //set up Pinpoint and Pose2d class
+            pose = new Pose2d(0,0,Math.toRadians(90));
+            drive = new PinpointDrive(hardwareMap, pose);
+        }else{
+            //set up Pinpoint and Pose2d class
+            pose = new Pose2d(0,0,Math.toRadians(180));
+            drive = new PinpointDrive(hardwareMap, pose);
+        }
+
         Trajectory trajectory = new Trajectory(drive, pose, verticalSlideRR, verticalWristRR, verticalGrabberRR,
                 horizontalSlideRR, horizontalRollRR, horizontalGrabberRR, horizontalWristRR, side);
 
@@ -63,7 +72,18 @@ public class Auto extends LinearOpMode {
         //if the stop button press then stop the robot
         if (isStopRequested()) return;
 
-        if(trajectory.side){
+        if(side){
+            Actions.runBlocking(new SequentialAction(
+                    trajectory.getHangTrajectory(),
+                    trajectory.getButterLocationTrajectory(),
+                    new ParallelAction(
+                            trajectory.getButterPickUpTrajectory(),
+                            trajectory.getButterPickUpAttachment()
+                    )
+//                    trajectory.getParkTrajectory()
+            ));
+        }
+        if(!side){
         Actions.runBlocking(new SequentialAction(
                 //hang the butter
                 trajectory.getHangTrajectory(),
@@ -81,19 +101,9 @@ public class Auto extends LinearOpMode {
                 trajectory.getHangTrajectory(),
                 trajectory.getHumanPickUpTrajectory(),
                 trajectory.getHangTrajectory(),
-                trajectory.getParkTrajectory()
+//                trajectory.getParkTrajectory()
+                new SleepAction(2)
                 ));
-        }
-        if(!trajectory.side){
-            Actions.runBlocking(new SequentialAction(
-                    trajectory.getHangTrajectory(),
-                    trajectory.getButterLocationTrajectory(),
-                    new ParallelAction(
-                            trajectory.getButterPickUpTrajectory(),
-                            trajectory.getButterPickUpAttachment()
-                    ),
-                    trajectory.getParkTrajectory()
-            ));
         }
     }
 }

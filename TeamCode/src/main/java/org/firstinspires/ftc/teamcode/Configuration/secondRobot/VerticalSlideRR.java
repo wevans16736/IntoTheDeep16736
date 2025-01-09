@@ -46,12 +46,13 @@ public class VerticalSlideRR {
             }
 
             int pos = verticalSlideMotorLeft.getCurrentPosition();
-            if(pos > position){
-                intizilize = false;
-                return false;
-            }else {
-                return true;
-            }
+//            if(pos > position){
+//                intizilize = false;
+//                return false;
+//            }else {
+//                return true;
+            return false;
+//            }
         }
     }
     public Action verticalSlideAction(int position){return new VerticalSlideAction(position);}
