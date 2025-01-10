@@ -21,6 +21,7 @@ import org.firstinspires.ftc.teamcode.Configuration.secondRobot.VerticalSlideRR;
 import org.firstinspires.ftc.teamcode.Configuration.secondRobot.VerticalWristRR;
 import org.firstinspires.ftc.teamcode.PinpointDrive;
 import org.opencv.features2d.AffineFeature;
+import org.opencv.features2d.ORB;
 
 @Config
 @Autonomous(name="Auto", group = "SecondRobot")
@@ -41,7 +42,7 @@ public class Auto extends LinearOpMode {
         HorizontalWristRR horizontalWristRR = new HorizontalWristRR(hardwareMap);
 
         //todo ask the driver which trajectory to use
-        boolean side = true;
+        boolean side = false;
 //        telemetry.clearAll();
 //        while(!gamepad1.cross){
 //        telemetry.addLine("which side is the robot park?");
@@ -72,17 +73,6 @@ public class Auto extends LinearOpMode {
         //if the stop button press then stop the robot
         if (isStopRequested()) return;
 
-        if(side){
-            Actions.runBlocking(new SequentialAction(
-                    trajectory.getHangTrajectory(),
-                    trajectory.getButterLocationTrajectory(),
-                    new ParallelAction(
-                            trajectory.getButterPickUpTrajectory(),
-                            trajectory.getButterPickUpAttachment()
-                    )
-//                    trajectory.getParkTrajectory()
-            ));
-        }
         if(!side){
         Actions.runBlocking(new SequentialAction(
                 //hang the butter
@@ -104,6 +94,28 @@ public class Auto extends LinearOpMode {
 //                trajectory.getParkTrajectory()
                 new SleepAction(2)
                 ));
+        }
+        if(side){
+            Actions.runBlocking(new SequentialAction(
+                    trajectory.getHangTrajectory(),
+                    trajectory.getButterLocationTrajectory(),
+                    new ParallelAction(
+                            trajectory.getButterPickUpTrajectory(),
+                            trajectory.getButterPickUpAttachment()
+                    ),
+                    trajectory.getButterLocationTrajectory(),
+                    new ParallelAction(
+                            trajectory.getButterPickUpTrajectory(),
+                            trajectory.getButterPickUpAttachment()
+                    ),
+
+                    trajectory.getThirdButterTrajectory(),
+                    new ParallelAction(
+                            trajectory.getButterPickUpTrajectory(),
+                            trajectory.getButterPickUpAttachment()
+                    ),
+                    trajectory.getParkTrajectory()
+            ));
         }
     }
 }

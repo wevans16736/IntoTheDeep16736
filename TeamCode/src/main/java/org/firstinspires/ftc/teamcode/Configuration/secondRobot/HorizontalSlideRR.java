@@ -20,8 +20,7 @@ public class HorizontalSlideRR {
         horizontalSlideMotor.setTargetPosition(0);
         horizontalSlideMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         horizontalSlideMotor.setTargetPosition(0);
-        horizontalSlideMotor.setVelocity(3000);
-
+        horizontalSlideMotor.setVelocity(2000);
     }
     public class HorizontalSlideActions implements Action {
         private final int position;

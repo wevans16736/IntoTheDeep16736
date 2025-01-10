@@ -17,10 +17,10 @@ public class ConfigurationSecondRobot {
     public static int highBar = 700;
     public static int bottom = 0;
     public static int lowBar = 0;
-    public static int topBasket = 2360;
+    public static int topBasket = 2300;
     //added 280 on 1/3/2024
 
-    public static double verticalSlideBottomToHighBar = 3000;
+    public static double verticalSlideBottomToHighBar = 1500;
 
     //this is vertical wrist servo position
     //this is a position to place it on the basket
@@ -39,6 +39,7 @@ public class ConfigurationSecondRobot {
     //vertical grabber servo position
     public static double verticalOpen = 0.53;
     public static double verticalClose = 0.41;
+    public static double verticalOpenWide = .6;
 
     //Time to move vertical grabber, MS
     public static double verticalOpenTime = 200;
@@ -49,7 +50,7 @@ public class ConfigurationSecondRobot {
     //servo position to have the wrist to be at vertical grabber position
     public static double horizontalWristTransfer = 0.91;
     //servo position to have grabber slightly above the ground
-    public static double horizontalWristHover = .4;
+    public static double horizontalWristHover = .52;
     //servo position to have grabber grab the butter
     public static double horizontalWristIntake = 0.175;
 
@@ -62,13 +63,14 @@ public class ConfigurationSecondRobot {
     public static double horizontalGrabberClose = .41;
     public static double horizontalGrabberSoftClose = horizontalGrabberClose - 0.025;
     public static double horizontalGrabberOpen = horizontalGrabberClose - 0.225;
+    public static double horizontalGrabberWide = horizontalGrabberClose - 0.3;
 
     //todo horizontal grabber close time, MS
     public static double horizontalGrabberCloseTime = 150; //Maybe this right?
 
     //horizontal roll servo position
     public static double flat = 0.175;
-    public static double sideway = .34;
+    public static double sideway = .51;
 
     //horizontal roll time to flip, MS
     public static double flatToSidewaysTime = 600;
