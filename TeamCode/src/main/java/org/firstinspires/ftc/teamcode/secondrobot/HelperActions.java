@@ -11,6 +11,7 @@ import org.firstinspires.ftc.teamcode.secondrobot.horizontalslide.HorizontalWris
 import org.firstinspires.ftc.teamcode.secondrobot.verticalslide.VerticalGrabberActions;
 import org.firstinspires.ftc.teamcode.secondrobot.verticalslide.VerticalSlideActions;
 import org.firstinspires.ftc.teamcode.secondrobot.verticalslide.VerticalWristActions;
+import org.opencv.core.Point;
 
 public abstract class HelperActions extends LinearOpMode {
     public final double SPEED = 0.5;
@@ -100,6 +101,17 @@ public abstract class HelperActions extends LinearOpMode {
         }
     }
 
+    public void moveToBlock(DetectBlockActions detectBlockActions, DriveActions driveActions, HorizontalSlideActions horizontalSlideActions, HorizontalIRollActions horizontalIRollActions) {
+        Point position = detectBlockActions.pixelToPosition();
+        driveActions.drive(0, position.x, 0);
+        horizontalSlideActions.teleOpArmMotor(position.y, 2);
+        double angle = detectBlockActions.angle;
+        while (angle > 180){
+            angle -= 180;
+        }
+        horizontalIRollActions.setPosition(angle / 180);
+    }
+
     public double adjustedHSlideSpeed(double inputSpeed) {
         double workingSpeed = Math.abs(inputSpeed);
         double startingSpeed = 0.1;
@@ -109,7 +121,7 @@ public abstract class HelperActions extends LinearOpMode {
         if (workingSpeed < transitionPoint) {
             workingSpeed = workingSpeed * startingSpeed;
         } else {
-            workingSpeed = workingSpeed * endingSpeed + 9;
+            workingSpeed = workingSpeed * endingSpeed - 4;
         }
         return workingSpeed * Math.signum(inputSpeed);
     }

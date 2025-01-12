@@ -22,4 +22,6 @@ public class ConfigConstants {
 
     //Sensors
     public static final String IMU = "IMU";
+
+    public static final String VSLIDE_MAGNETIC_LIMIT_SWITCH = "vSlideMagnet";
 }

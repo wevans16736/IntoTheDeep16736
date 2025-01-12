@@ -35,6 +35,7 @@ repositories {
 dependencies {
     implementation project(':FtcRobotController')
 
+    implementation 'junit:junit:4.12'
     implementation "com.acmerobotics.roadrunner:core:1.0.0"
     implementation "com.acmerobotics.roadrunner:actions:1.0.0"
     implementation "com.acmerobotics.dashboard:dashboard:0.4.16"

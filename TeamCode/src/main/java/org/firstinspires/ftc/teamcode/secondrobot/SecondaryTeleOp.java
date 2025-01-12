@@ -83,6 +83,7 @@ public class SecondaryTeleOp extends HelperActions {
             verticalSlide.goToPreset(gamepad2.dpad_left, gamepad2.dpad_down, gamepad2.dpad_right, gamepad2.dpad_up);
             //manually moves the vertical slide
             verticalSlide.teleOpVerticalSlide(-gamepad2.right_stick_y, 1);
+            verticalSlide.resetSlides(gamepad2.share);
             verticalSlide.turnOffAtBottom();
             //this set up a vertical wrist servo to down or up in a toggle way.
             verticalWrist.flipping(gamepad2.right_bumper);

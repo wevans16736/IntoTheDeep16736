@@ -4,6 +4,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.TouchSensor;
 import com.qualcomm.robotcore.util.Range;
 import com.qualcomm.robotcore.util.RobotLog;
 
@@ -15,6 +16,7 @@ import org.firstinspires.ftc.teamcode.secondrobot.constants.ConfigConstants;
 public class VerticalSlideActions {
     public DcMotorEx verticalSlide = null;
     public DcMotorEx verticalSlide2 = null;
+    public TouchSensor magnetSwitch = null;
     private Telemetry telemetry;
 
     //set up the slide with all the mode and hardware map
@@ -32,7 +34,26 @@ public class VerticalSlideActions {
         verticalSlide2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         verticalSlide2.setTargetPosition(0);
         verticalSlide2.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+        magnetSwitch = hardwareMap.get(TouchSensor.class, ConfigConstants.VSLIDE_MAGNETIC_LIMIT_SWITCH);
     }
+
+    public void resetSlides(boolean resetSlides) {
+        if (resetSlides){
+            if (magnetSwitch.isPressed()){
+                verticalSlide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+                verticalSlide2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            } else {
+                verticalSlide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+                verticalSlide2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+                verticalSlide.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+                verticalSlide2.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+                verticalSlide.setPower(-0.5);
+                verticalSlide2.setPower(-0.5);
+            }
+        }
+    }
+
     double prevTime = System.currentTimeMillis();
     public void teleOpVerticalSlide(double power, double liftSpeedMultiplier) { //  controls the lifty uppy (viper slides) which is being extended and retracted
         double time = System.currentTimeMillis();
