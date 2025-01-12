@@ -7,6 +7,7 @@ import com.acmerobotics.roadrunner.Action;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.DigitalChannel;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.teamcode.secondrobot.constants.ConfigConstants;
@@ -14,7 +15,9 @@ import org.firstinspires.ftc.teamcode.secondrobot.constants.ConfigConstants;
 public class VerticalSlideRR {
     DcMotorEx verticalSlideMotorLeft;
     DcMotorEx verticalSlideMotorRight;
+    DigitalChannel verticalSwitch;
     public VerticalSlideRR(HardwareMap hardwareMap){
+
         verticalSlideMotorLeft = hardwareMap.get(DcMotorEx.class, ConfigConstants.VERTICAL_SLIDE1);
         verticalSlideMotorLeft.setDirection(DcMotorSimple.Direction.REVERSE);
         verticalSlideMotorLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -30,6 +33,8 @@ public class VerticalSlideRR {
         verticalSlideMotorRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         verticalSlideMotorRight.setTargetPosition(0);
         verticalSlideMotorRight.setVelocity(5000);
+
+
     }
 
     public class VerticalSlideAction implements Action {

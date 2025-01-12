@@ -1,17 +1,14 @@
-package org.firstinspires.ftc.teamcode.Autonomus.secondRobot;
+package org.firstinspires.ftc.teamcode.Autonomus.secondRobot.Decapricated;
 
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.ParallelAction;
 import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.SequentialAction;
 import com.acmerobotics.roadrunner.SleepAction;
-import com.acmerobotics.roadrunner.TrajectoryActionBuilder;
-import com.acmerobotics.roadrunner.Vector2d;
 import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
-import org.firstinspires.ftc.teamcode.Configuration.secondRobot.ConfigurationSecondRobot;
 import org.firstinspires.ftc.teamcode.Configuration.secondRobot.HorizontalGrabberRR;
 import org.firstinspires.ftc.teamcode.Configuration.secondRobot.HorizontalRollRR;
 import org.firstinspires.ftc.teamcode.Configuration.secondRobot.HorizontalSlideRR;
@@ -20,12 +17,10 @@ import org.firstinspires.ftc.teamcode.Configuration.secondRobot.VerticalGrabberR
 import org.firstinspires.ftc.teamcode.Configuration.secondRobot.VerticalSlideRR;
 import org.firstinspires.ftc.teamcode.Configuration.secondRobot.VerticalWristRR;
 import org.firstinspires.ftc.teamcode.PinpointDrive;
-import org.opencv.features2d.AffineFeature;
-import org.opencv.features2d.ORB;
 
 @Config
-@Autonomous(name="AutoLeft", group = "SecondRobot")
-public class AutoLeft extends LinearOpMode {
+@Autonomous(name="BackUpAuto", group = "SecondRobot")
+public class Auto extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
         //set up Pinpoint and Pose2d class
@@ -42,7 +37,7 @@ public class AutoLeft extends LinearOpMode {
         HorizontalWristRR horizontalWristRR = new HorizontalWristRR(hardwareMap);
 
         //todo ask the driver which trajectory to use
-        boolean side = true;
+        boolean side = false;
 //        telemetry.clearAll();
 //        while(!gamepad1.cross){
 //        telemetry.addLine("which side is the robot park?");
@@ -73,6 +68,30 @@ public class AutoLeft extends LinearOpMode {
         //if the stop button press then stop the robot
         if (isStopRequested()) return;
 
+        wait();
+
+        if(!side){
+        Actions.runBlocking(new SequentialAction(
+                //hang the butter
+                trajectory.getHangTrajectory(),
+                //move to butter location position
+                trajectory.getButterLocationTrajectory(),
+                //pick up both butter
+                new ParallelAction(
+                        trajectory.getButterPickUpTrajectory(),
+                        trajectory.getButterPickUpAttachment()
+                ),
+                //repeat this 3 time
+                trajectory.getHumanPickUpTrajectory(),
+                trajectory.getHangTrajectory(),
+                trajectory.getHumanPickUpTrajectory(),
+                trajectory.getHangTrajectory(),
+                trajectory.getHumanPickUpTrajectory(),
+                trajectory.getHangTrajectory(),
+//                trajectory.getParkTrajectory()
+                new SleepAction(2)
+                ));
+        }
         if(side){
             Actions.runBlocking(new SequentialAction(
                     trajectory.getHangTrajectory(),
@@ -91,30 +110,8 @@ public class AutoLeft extends LinearOpMode {
                     new ParallelAction(
                             trajectory.getButterPickUpTrajectory(),
                             trajectory.getButterPickUpAttachment()
-                    )
-//                    trajectory.getParkTrajectory()
-            ));
-        }
-        if(!side){
-            Actions.runBlocking(new SequentialAction(
-                    //hang the butter
-                    trajectory.getHangTrajectory(),
-                    //move to butter location position
-                    trajectory.getButterLocationTrajectory(),
-                    //pick up both butter
-                    new ParallelAction(
-                            trajectory.getButterPickUpTrajectory(),
-                            trajectory.getButterPickUpAttachment()
                     ),
-                    //repeat this 3 time
-                    trajectory.getHumanPickUpTrajectory(),
-                    trajectory.getHangTrajectory(),
-                    trajectory.getHumanPickUpTrajectory(),
-                    trajectory.getHangTrajectory(),
-                    trajectory.getHumanPickUpTrajectory(),
-                    trajectory.getHangTrajectory(),
-//                trajectory.getParkTrajectory()
-                    new SleepAction(2)
+                    trajectory.getParkTrajectory()
             ));
         }
     }

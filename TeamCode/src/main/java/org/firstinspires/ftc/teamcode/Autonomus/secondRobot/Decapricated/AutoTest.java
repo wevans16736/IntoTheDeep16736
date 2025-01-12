@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.Autonomus.secondRobot;
+package org.firstinspires.ftc.teamcode.Autonomus.secondRobot.Decapricated;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
@@ -7,6 +7,7 @@ import com.acmerobotics.roadrunner.SequentialAction;
 import com.acmerobotics.roadrunner.SleepAction;
 import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
@@ -21,6 +22,8 @@ import org.firstinspires.ftc.teamcode.MecanumDrive;
 import org.firstinspires.ftc.teamcode.PinpointDrive;
 
 @Config
+@Deprecated
+@Disabled
 @Autonomous(name="AutoTest", group = "SecondRobot")
 public class AutoTest extends LinearOpMode {
     @Override
