@@ -35,15 +35,14 @@ public class VerticalSlideActions {
         verticalSlide2.setTargetPosition(0);
         verticalSlide2.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
-        magnetSwitch = hardwareMap.get(TouchSensor.class, ConfigConstants.VSLIDE_MAGNETIC_LIMIT_SWITCH);
+        magnetSwitch = hardwareMap.get(TouchSensor.class, ConfigConstants.VERTICAL_SWITCH);
     }
-
+    public boolean keepResettingSlide = false;
     public void resetSlides(boolean resetSlides) {
+        //if resetSlides is true, set the slide to go down until the magnetic limit switch is activated
         if (resetSlides){
-            if (magnetSwitch.isPressed()){
-                verticalSlide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-                verticalSlide2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            } else {
+            keepResettingSlide = true;
+            if (!magnetSwitch.isPressed()){
                 verticalSlide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
                 verticalSlide2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
                 verticalSlide.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
@@ -52,6 +51,25 @@ public class VerticalSlideActions {
                 verticalSlide2.setPower(-0.5);
             }
         }
+        if (keepResettingSlide) {
+            if (magnetSwitch.isPressed()) {
+                verticalSlide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+                verticalSlide2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+                keepResettingSlide = false;
+            }
+        }
+    }
+
+    boolean wasResetSlides = false;
+    boolean overrideStops = false;
+    public void manualResetSlides(boolean resetSlides) {
+        //If resetSlides, override the stop and let the slides go below 0. when resetSlides is released, reset the slide position
+        overrideStops = resetSlides;
+        if (!resetSlides && wasResetSlides) {
+            verticalSlide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            verticalSlide2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        }
+        wasResetSlides = resetSlides;
     }
 
     double prevTime = System.currentTimeMillis();
@@ -71,7 +89,9 @@ public class VerticalSlideActions {
             //change the slide position by the input power times the change in time times the speed.
             //Multiplying by change in time makes sure the slide speed is more consistent
             double total = SlidePosition + power * (time - prevTime) * liftSpeedMultiplier;
-            total = Range.clip(total, 0, ConfigurationSecondRobot.topBasket);
+            if (!overrideStops) {
+                total = Range.clip(total, 0, ConfigurationSecondRobot.topBasket);
+            }
             setSlidePosition((int) total, 3000 * liftSpeedMultiplier);
             RobotLog.dd("LiftyUppy", "Target Position %f, time %f", SlidePosition, time);
         }

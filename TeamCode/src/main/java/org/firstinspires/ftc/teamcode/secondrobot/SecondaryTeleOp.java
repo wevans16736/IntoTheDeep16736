@@ -6,6 +6,7 @@ import org.firstinspires.ftc.teamcode.secondrobot.horizontalslide.HorizontalIRol
 import org.firstinspires.ftc.teamcode.secondrobot.horizontalslide.HorizontalIntakeActions;
 import org.firstinspires.ftc.teamcode.secondrobot.horizontalslide.HorizontalWristActions;
 import org.firstinspires.ftc.teamcode.secondrobot.verticalslide.VerticalGrabberActions;
+import org.firstinspires.ftc.teamcode.secondrobot.verticalslide.VerticalHangerActions;
 import org.firstinspires.ftc.teamcode.secondrobot.verticalslide.VerticalSlideActions;
 import org.firstinspires.ftc.teamcode.secondrobot.verticalslide.VerticalWristActions;
 import org.firstinspires.ftc.teamcode.secondrobot.horizontalslide.HorizontalSlideActions;
@@ -18,6 +19,7 @@ public class SecondaryTeleOp extends HelperActions {
     private VerticalSlideActions verticalSlide = null;
     private VerticalWristActions verticalWrist = null;
     private VerticalGrabberActions verticalGrabber = null;
+    private VerticalHangerActions verticalHanger = null;
     private HorizontalSlideActions horizontalSlide = null;
 
     double liftSpdMult = 0.8 ;
@@ -32,6 +34,7 @@ public class SecondaryTeleOp extends HelperActions {
         verticalSlide = new VerticalSlideActions(hardwareMap, telemetry);
         verticalWrist = new VerticalWristActions(telemetry, hardwareMap);
         verticalGrabber = new VerticalGrabberActions(telemetry, hardwareMap);
+        verticalHanger = new VerticalHangerActions(hardwareMap);
         //Set Speed for teleOp. Mecannum wheel speed.
         //driveActions.setSpeed(1.0);
 
@@ -64,6 +67,11 @@ public class SecondaryTeleOp extends HelperActions {
             //allow you to use a d-pad to adjust the speed of the drive train
             changeSpeed(driveActions, gamepad1.dpad_up, gamepad1.dpad_down, false, false, gamepad1.right_trigger);
             toggleSpeed(gamepad1.a);
+            //toggles the hanger in and out, gamepad 1 x
+            verticalHanger.teleOpHanger(gamepad1.x);
+            //B button, overrides the coded stops on the vertical slide, resets slide perceived position on release
+//            verticalSlide.manualResetSlides(gamepad1.b);
+            verticalSlide.resetSlides(gamepad1.b);
 
 
             /** Gamepad 2 **/
@@ -82,7 +90,7 @@ public class SecondaryTeleOp extends HelperActions {
             verticalSlide.goToPreset(gamepad2.dpad_left, gamepad2.dpad_down, gamepad2.dpad_right, gamepad2.dpad_up);
             //manually moves the vertical slide
             verticalSlide.teleOpVerticalSlide(-gamepad2.right_stick_y, 1);
-            verticalSlide.resetSlides(gamepad2.share);
+//            verticalSlide.resetSlides(gamepad2.share);
             verticalSlide.turnOffAtBottom();
             //this set up a vertical wrist servo to down or up in a toggle way.
             verticalWrist.flipping(gamepad2.right_bumper);
