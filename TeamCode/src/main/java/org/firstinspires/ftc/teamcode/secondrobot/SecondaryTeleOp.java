@@ -48,7 +48,6 @@ public class SecondaryTeleOp extends HelperActions {
         waitForStart();
         while (opModeIsActive()) {
             /** Gamepad 1 **/
-
             driveActions.drive(
                     //joystick controlling strafe
                     (gamepad1.left_stick_x * Math.abs(gamepad1.left_stick_x) * getReverseSpeed()),
