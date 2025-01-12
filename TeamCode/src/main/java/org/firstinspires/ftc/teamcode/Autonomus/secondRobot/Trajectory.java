@@ -72,17 +72,17 @@ public class Trajectory {
     public static double parkX = 49;
     public static double butterY = 17;
     public static double postHangX = 49;
-    public static double postHangY = 8.5;
+    public static double postHangY = 8.15;
     public static double basketX = -37;
     public static double basketY = 7.5;
     public static double basketHeading = 220;
     int count = 0;
     public Action getHangTrajectory() {
         if(count==1){
-            hangX = -15;
+            hangX = -17;
         }
         if(count >= 2){
-            hangX += 2;
+            hangX += 3;
         }
         TrajectoryActionBuilder hangTrajectory;
         if(!side) {

@@ -73,6 +73,8 @@ public class Auto extends LinearOpMode {
         //if the stop button press then stop the robot
         if (isStopRequested()) return;
 
+        wait();
+
         if(!side){
         Actions.runBlocking(new SequentialAction(
                 //hang the butter
