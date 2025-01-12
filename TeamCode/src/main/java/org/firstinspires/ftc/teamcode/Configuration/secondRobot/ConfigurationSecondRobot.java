@@ -46,8 +46,8 @@ public class ConfigurationSecondRobot {
     public static double verticalCloseTime = 200;
 
     //this is the position to hang the robot
-    public static double verticalHangIn = .0;
-    public static double verticalHangOut = .5;
+    public static double verticalHangIn = .85;
+    public static double verticalHangOut = 0.0;
 
 
     //horizontal wrist servo position
