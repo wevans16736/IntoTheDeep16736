@@ -18,11 +18,11 @@ import org.firstinspires.ftc.teamcode.PinpointDrive;
 
 import java.util.Arrays;
 
-public class Trajectory {
+public class TrajectoryLeft {
     VerticalSlideRR verticalSlideRR; VerticalWristRR verticalWristRR; VerticalGrabberRR verticalGrabberRR;
     HorizontalSlideRR horizontalSlideRR; HorizontalRollRR horizontalRollRR; HorizontalGrabberRR horizontalGrabberRR;
     HorizontalWristRR horizontalWristRR; PinpointDrive drive; Pose2d pose; TrajectoryActionBuilder currentTrajectory;
-    public Trajectory(PinpointDrive drive, Pose2d pose, VerticalSlideRR verticalSlideRR,
+    public TrajectoryLeft(PinpointDrive drive, Pose2d pose, VerticalSlideRR verticalSlideRR,
                       VerticalWristRR verticalWristRR, VerticalGrabberRR verticalGrabberRR,
                       HorizontalSlideRR horizontalSlideRR, HorizontalRollRR horizontalRollRR,
                       HorizontalGrabberRR horizontalGrabberRR, HorizontalWristRR horizontalWristRR){
@@ -38,4 +38,5 @@ public class Trajectory {
 
         currentTrajectory = drive.actionBuilder(pose);
     }
+
 }

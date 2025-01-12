@@ -20,6 +20,9 @@ public class ConfigConstants {
     public static final String VERTICAL_WRIST = "verticalWrist";
     public static final String VERTICAL_GRABBER = "verticalGrabber";
 
+    public static final String VERTICAL_HANGER = "verticalHanger";
+
     //Sensors
     public static final String IMU = "IMU";
+    public static final String VerticalSwitch = "verticalSwitch";
 }
