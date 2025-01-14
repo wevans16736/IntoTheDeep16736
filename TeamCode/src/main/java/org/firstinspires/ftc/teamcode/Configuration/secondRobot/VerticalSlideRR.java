@@ -9,17 +9,19 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.DigitalChannel;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.TouchSensor;
 
 import org.firstinspires.ftc.teamcode.secondrobot.constants.ConfigConstants;
 
 public class VerticalSlideRR {
     DcMotorEx verticalSlideMotorLeft;
     DcMotorEx verticalSlideMotorRight;
-    DigitalChannel verticalSwitch;
+    TouchSensor magnetSwitch;
     public VerticalSlideRR(HardwareMap hardwareMap){
 
         verticalSlideMotorLeft = hardwareMap.get(DcMotorEx.class, ConfigConstants.VERTICAL_SLIDE1);
         verticalSlideMotorLeft.setDirection(DcMotorSimple.Direction.REVERSE);
+        verticalSlideMotorLeft.setPower(1);
         verticalSlideMotorLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         verticalSlideMotorLeft.setTargetPosition(0);
         verticalSlideMotorLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
@@ -28,6 +30,7 @@ public class VerticalSlideRR {
 
         verticalSlideMotorRight = hardwareMap.get(DcMotorEx.class, ConfigConstants.VERTICAL_SLIDE2);
         verticalSlideMotorRight.setDirection(DcMotorSimple.Direction.REVERSE);
+        verticalSlideMotorRight.setPower(1);
         verticalSlideMotorRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         verticalSlideMotorRight.setTargetPosition(0);
         verticalSlideMotorRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);

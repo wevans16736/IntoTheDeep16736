@@ -4,7 +4,7 @@ import com.acmerobotics.dashboard.config.Config;
 
 @Config
 public class ConfigurationSecondRobot {
-    public static double adriveMultiple = 8;
+    public static double adriveMultiple = 1;
     //drive default movement
     public static double driveVelocity = (50* adriveMultiple); //default is 50
     public static double driveMinAccel =  (-30* adriveMultiple); //default is -30
