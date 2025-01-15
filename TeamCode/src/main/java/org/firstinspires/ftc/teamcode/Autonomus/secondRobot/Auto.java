@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.Autonomus.secondRobot;
 
+import com.acmerobotics.roadrunner.ParallelAction;
 import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.SequentialAction;
 import com.acmerobotics.roadrunner.ftc.Actions;
@@ -54,9 +55,22 @@ public class Auto extends LinearOpMode {
 
         Actions.runBlocking(new SequentialAction(
                 trajectory.getHangTrajectory(),
-
-                trajectory.getButterLocation()
-//                trajectory.getPostHangTrajectory()
+                trajectory.getFirstButterTrajectory(),
+                new ParallelAction(
+                        trajectory.getButterAttachement(),
+                        trajectory.getSecondButterTrajectory()
+                ),
+                new ParallelAction(
+                        trajectory.getButterAttachement(),
+                        trajectory.getThirdButterTrajectory()
+                ),
+                new ParallelAction(
+                        trajectory.getThirdButterAttachment(),
+                        trajectory.getPostHangLocation()
+                ),
+                //repeat this how many there butter is
+                trajectory.getPostHangTrajectory(),
+                trajectory.getPostHangTrajectory()
         ));
     }
 }

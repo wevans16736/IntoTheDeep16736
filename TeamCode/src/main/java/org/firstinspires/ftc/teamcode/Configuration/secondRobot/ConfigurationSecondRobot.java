@@ -4,7 +4,7 @@ import com.acmerobotics.dashboard.config.Config;
 
 @Config
 public class ConfigurationSecondRobot {
-    public static double adriveMultiple = 1;
+    public static double adriveMultiple = 8;
     //drive default movement
     public static double driveVelocity = (50* adriveMultiple); //default is 50
     public static double driveMinAccel =  (-30* adriveMultiple); //default is -30
@@ -71,6 +71,7 @@ public class ConfigurationSecondRobot {
 
     //todo horizontal grabber close time, MS
     public static double horizontalGrabberCloseTime = 150; //Maybe this right?
+    public static double horizontalGrabberWideTime = 250;
 
     //horizontal roll servo position
     public static double flat = 0.175;

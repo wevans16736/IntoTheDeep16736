@@ -25,7 +25,7 @@ public class SlideTest extends LinearOpMode {
         horizontalSlide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
         DcMotorEx verticalSlide = hardwareMap.get(DcMotorEx.class, ConfigConstants.VERTICAL_SLIDE1);
-        verticalSlide.setDirection(DcMotorSimple.Direction.REVERSE);
+        verticalSlide.setDirection(DcMotorSimple.Direction.FORWARD);
         verticalSlide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
         FtcDashboard dashboard = FtcDashboard.getInstance();

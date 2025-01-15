@@ -20,7 +20,7 @@ public class VerticalSlideRR {
     public VerticalSlideRR(HardwareMap hardwareMap){
 
         verticalSlideMotorLeft = hardwareMap.get(DcMotorEx.class, ConfigConstants.VERTICAL_SLIDE1);
-        verticalSlideMotorLeft.setDirection(DcMotorSimple.Direction.REVERSE);
+        verticalSlideMotorLeft.setDirection(DcMotorSimple.Direction.FORWARD);
         verticalSlideMotorLeft.setPower(1);
         verticalSlideMotorLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         verticalSlideMotorLeft.setTargetPosition(0);
@@ -29,7 +29,7 @@ public class VerticalSlideRR {
         verticalSlideMotorLeft.setVelocity(5000);
 
         verticalSlideMotorRight = hardwareMap.get(DcMotorEx.class, ConfigConstants.VERTICAL_SLIDE2);
-        verticalSlideMotorRight.setDirection(DcMotorSimple.Direction.REVERSE);
+        verticalSlideMotorRight.setDirection(DcMotorSimple.Direction.FORWARD);
         verticalSlideMotorRight.setPower(1);
         verticalSlideMotorRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         verticalSlideMotorRight.setTargetPosition(0);
