@@ -86,7 +86,7 @@ public class Auto extends LinearOpMode {
                 trajectory.getHangTrajectory(),
                 trajectory.getHumanPickUpTrajectory(),
                 trajectory.getHangTrajectory(),
-//                trajectory.getParkTrajectory()
+                trajectory.getParkTrajectory(),
                 new SleepAction(2)
                 ));
         }

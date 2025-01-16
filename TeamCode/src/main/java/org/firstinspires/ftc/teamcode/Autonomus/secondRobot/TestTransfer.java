@@ -17,8 +17,8 @@ import org.firstinspires.ftc.teamcode.Configuration.secondRobot.VerticalWristRR;
 import org.firstinspires.ftc.teamcode.Configuration.secondRobot.VerticalHangerRR;
 import org.firstinspires.ftc.teamcode.PinpointDrive;
 
-@Autonomous(name="Auto")
-public class Auto extends LinearOpMode {
+@Autonomous(name="TestTransfer")
+public class TestTransfer extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
         //set up Pinpoint and Pose2d class
@@ -41,7 +41,7 @@ public class Auto extends LinearOpMode {
             pose = new Pose2d(0,0,Math.toRadians(180));
             drive = new PinpointDrive(hardwareMap, pose);
         }else{
-            pose = new Pose2d(9,-64,Math.toRadians(90));
+            pose = new Pose2d(0,0,Math.toRadians(90));
             drive = new PinpointDrive(hardwareMap, pose);
         }
 
@@ -54,7 +54,7 @@ public class Auto extends LinearOpMode {
         if (isStopRequested()) return;
 
         Actions.runBlocking(new SequentialAction(
-                trajectory.getAlltrajectory()
+                trajectory.testTransfer()
         ));
     }
 }
