@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.Autonomus.secondRobot;
 import com.acmerobotics.roadrunner.ParallelAction;
 import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.SequentialAction;
+import com.acmerobotics.roadrunner.SleepAction;
 import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -55,6 +56,24 @@ public class Auto extends LinearOpMode {
 
         Actions.runBlocking(new SequentialAction(
                 trajectory.getAlltrajectory()
+
+//                trajectory.getHang(),
+//                //get all the butter
+//                trajectory.getFirstButter(),
+//                new ParallelAction(
+//                        trajectory.ButterTransferAttachment(),
+//                        trajectory.getFirstButterDropOff()
+//                ),
+//                trajectory.getSecondButter(),
+//                new ParallelAction(
+//                        trajectory.ButterTransferAttachment(),
+//                        trajectory.getSecondButterDropOff()
+//                ),
+//                trajectory.getThirdButter(),
+//                trajectory.getThirdButterDropOff(),
+//                //postHang
+//                trajectory.getPostHang(),
+//                new SleepAction(2)
         ));
     }
 }
