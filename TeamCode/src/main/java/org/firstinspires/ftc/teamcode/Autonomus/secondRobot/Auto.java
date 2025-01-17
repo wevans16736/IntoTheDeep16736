@@ -25,7 +25,7 @@ public class Auto extends LinearOpMode {
         //set up Pinpoint and Pose2d class
         Pose2d pose;
         PinpointDrive drive;
-        boolean side = false;
+        boolean side = false; //determine which side
 
         //all of these class is under Configuration.secondRobot
         VerticalSlideRR verticalSlide = new VerticalSlideRR(hardwareMap);
@@ -38,24 +38,27 @@ public class Auto extends LinearOpMode {
         HorizontalWristRR horizontalWrist = new HorizontalWristRR(hardwareMap);
         VerticalHangerRR verticalHanger = new VerticalHangerRR(hardwareMap);
 
-        if(side){
-            pose = new Pose2d(0,0,Math.toRadians(180));
+        if(!side){
+            pose = new Pose2d(9,-64,Math.toRadians(180));
             drive = new PinpointDrive(hardwareMap, pose);
         }else{
-            pose = new Pose2d(9,-64,Math.toRadians(90));
+            pose = new Pose2d(-15,-64,Math.toRadians(180));
             drive = new PinpointDrive(hardwareMap, pose);
         }
 
         Trajectory trajectory = new Trajectory(drive, pose, verticalSlide, verticalWrist, verticalGrabber,
                 verticalHanger, horizontalSlide, horizontalRoll, horizontalGrabber, horizontalWrist);
 
+        TrajectoryLeft trajectoryLeft = new TrajectoryLeft(drive, pose, verticalSlide, verticalWrist, verticalGrabber,
+                verticalHanger, horizontalSlide, horizontalRoll, horizontalGrabber, horizontalWrist);
+
         //wait for the start button to be press
         waitForStart();
         //if the stop button press then stop the robot
         if (isStopRequested()) return;
-
-        Actions.runBlocking(new SequentialAction(
-                trajectory.getAlltrajectory()
+        if(!side) {
+            Actions.runBlocking(new SequentialAction(
+                    trajectory.getAlltrajectory()
 
 //                trajectory.getHang(),
 //                //get all the butter
@@ -74,6 +77,29 @@ public class Auto extends LinearOpMode {
 //                //postHang
 //                trajectory.getPostHang(),
 //                new SleepAction(2)
-        ));
+            ));
+        } if(side) {
+            Actions.runBlocking(new SequentialAction(
+                    trajectoryLeft.getAllTrajectory()
+
+//                    trajectoryLeft.getInitialBasket(),
+//                    trajectoryLeft.getFirstButter(),
+//                    new ParallelAction(
+//                            trajectoryLeft.getButterAttachment(),
+//                            trajectoryLeft.getBasket()
+//                    ),
+//                    trajectoryLeft.getSecondButter(),
+//                    new ParallelAction(
+//                            trajectoryLeft.getButterAttachment(),
+//                            trajectoryLeft.getBasket()
+//                    ),
+//                    trajectoryLeft.getThirdButter(),
+//                    new ParallelAction(
+//                            trajectoryLeft.getButterAttachment(),
+//                            trajectoryLeft.getBasket()
+//                    ),
+//                    trajectoryLeft.getPark()
+            ));
+        }
     }
 }
