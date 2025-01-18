@@ -8,6 +8,7 @@ import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
+import org.firstinspires.ftc.teamcode.Configuration.secondRobot.ConfigurationSecondRobot;
 import org.firstinspires.ftc.teamcode.Configuration.secondRobot.HorizontalGrabberRR;
 import org.firstinspires.ftc.teamcode.Configuration.secondRobot.HorizontalRollRR;
 import org.firstinspires.ftc.teamcode.Configuration.secondRobot.HorizontalSlideRR;
@@ -39,7 +40,7 @@ public class Auto extends LinearOpMode {
         VerticalHangerRR verticalHanger = new VerticalHangerRR(hardwareMap);
 
         if(!side){
-            pose = new Pose2d(9,-64,Math.toRadians(180));
+            pose = new Pose2d(9,-64,Math.toRadians(90));
             drive = new PinpointDrive(hardwareMap, pose);
         }else{
             pose = new Pose2d(-15,-64,Math.toRadians(180));
@@ -58,25 +59,27 @@ public class Auto extends LinearOpMode {
         if (isStopRequested()) return;
         if(!side) {
             Actions.runBlocking(new SequentialAction(
-                    trajectory.getAlltrajectory()
-
-//                trajectory.getHang(),
-//                //get all the butter
-//                trajectory.getFirstButter(),
-//                new ParallelAction(
-//                        trajectory.ButterTransferAttachment(),
-//                        trajectory.getFirstButterDropOff()
-//                ),
-//                trajectory.getSecondButter(),
-//                new ParallelAction(
-//                        trajectory.ButterTransferAttachment(),
-//                        trajectory.getSecondButterDropOff()
-//                ),
+//                    trajectory.getAlltrajectory()
+//                        trajectory.testTransfer()
+                trajectory.getHang(),
+                //get all the butter
+                trajectory.getFirstButter(),
+                new ParallelAction(
+                        trajectory.ButterTransferAttachment(),
+                        trajectory.getFirstButterDropOff()
+                ),
+                trajectory.getSecondButter(),
+                new ParallelAction(
+                        trajectory.ButterTransferAttachment(),
+                        trajectory.getSecondButterDropOff()
+                ),
 //                trajectory.getThirdButter(),
 //                trajectory.getThirdButterDropOff(),
-//                //postHang
-//                trajectory.getPostHang(),
-//                new SleepAction(2)
+                //postHang
+                    trajectory.getPostHang(),
+                    trajectory.getPostHang(),
+                    trajectory.getPostHang(),
+                new SleepAction(2)
             ));
         } if(side) {
             Actions.runBlocking(new SequentialAction(

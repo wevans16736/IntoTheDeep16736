@@ -67,8 +67,8 @@ public class Trajectory {
     public static double butterY = 16.125;
     public static double postHangX = 49;
     public static double postHangY = 8;
-    public static double basketX = -37;
-    public static double basketY = 7.5;
+    public static double basketX = -37.5;
+    public static double basketY = 7.75;
     public static double basketHeading = 220;
     int count = 0;
     public Action getHangTrajectory() {
@@ -122,7 +122,7 @@ public class Trajectory {
                     .afterDisp(0,horizontalSlideRR.horizontalSlideActions(ConfigurationSecondRobot.horizontalSlideExtend))
                     .afterDisp(0, horizontalWristRR.horizontalWristAction(ConfigurationSecondRobot.horizontalWristIntake))
                     .afterDisp(0, horizontalGrabberRR.horizontalGrabberAction(ConfigurationSecondRobot.horizontalGrabberWide))
-                    .strafeToSplineHeading(new Vector2d(butterX+4.25, butterY-.5), Math.toRadians(-90),slowVel)
+                    .strafeToSplineHeading(new Vector2d(butterX+4.25, butterY+.5), Math.toRadians(-90),slowVel)
                     .waitSeconds(.1);
             butterX -= 12;
         }
@@ -139,7 +139,7 @@ public class Trajectory {
         } else{
             butterPickUpTrajectory = currentTrajectory
                     .waitSeconds(2)
-                    .strafeToSplineHeading(new Vector2d(basketX-2, basketY-2), Math.toRadians(basketHeading),slowVel)
+                    .strafeToSplineHeading(new Vector2d(basketX-3, basketY-3), Math.toRadians(basketHeading),slowVel)
                     .waitSeconds(.5)
             ;
             basketX -=.5;
@@ -240,7 +240,7 @@ public class Trajectory {
                 .stopAndAdd(horizontalWristRR.horizontalWristAction(ConfigurationSecondRobot.horizontalWristIntake))
                 .stopAndAdd(horizontalRollRR.horizontalRollAction(ConfigurationSecondRobot.sideway))
                 .stopAndAdd(horizontalGrabberRR.horizontalGrabberAction(ConfigurationSecondRobot.horizontalGrabberWide))
-                .strafeTo(new Vector2d(-38.25, butterY+20), baseVel)
+                .strafeTo(new Vector2d(-38.25, butterY+22), baseVel)
                         ;
         currentTrajectory = thirdButterTrajectory.endTrajectory().fresh();
         return thirdButterTrajectory.build();
@@ -277,7 +277,7 @@ public class Trajectory {
             parkTrajectory = currentTrajectory
                     .stopAndAdd(verticalWristRR.VerticalWristAction(ConfigurationSecondRobot.verticalWristBasket))
                     .stopAndAdd(horizontalWristRR.horizontalWristAction(ConfigurationSecondRobot.horizontalWristIntake))
-                    .strafeTo(new Vector2d(-49, 9.75));
+                    .strafeTo(new Vector2d(-49, 11));
         }
         currentTrajectory = parkTrajectory.endTrajectory().fresh();
         return parkTrajectory.build();
