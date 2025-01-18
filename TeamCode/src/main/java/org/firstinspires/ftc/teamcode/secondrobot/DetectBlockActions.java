@@ -10,9 +10,7 @@ import org.opencv.core.Point;
 import org.opencv.core.RotatedRect;
 import org.opencv.core.Scalar;
 import org.opencv.core.Size;
-import org.opencv.imgcodecs.Imgcodecs;
 import org.opencv.imgproc.Imgproc;
-import org.opencv.photo.Photo;
 import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
@@ -27,43 +25,58 @@ public class DetectBlockActions {
     Point center = new Point(0,0);
     double angle = 0;
     boolean isRed = false;
+    int pixelWidth = 1920;
+    int pixelHeight = 1080;
 
-    public DetectBlockActions(HardwareMap hardwareMap) {
-        int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
-        camera = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class, "Webcam 1"), cameraMonitorViewId);
-
-        camera.setPipeline(new ContoursPipeline());
-
-        camera.setMillisecondsPermissionTimeout(5000); // Timeout for obtaining permission is configurable. Set before opening.
-        camera.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener()
-        {
-            @Override
-            public void onOpened()
-            {
-                camera.startStreaming(640, 480, OpenCvCameraRotation.UPRIGHT);
-            }
-
-            @Override
-            public void onError(int errorCode)
-            {
-                /*
-                 * This will be called if the camera could not be opened
-                 */
-            }
-        });
-        //Image MUST be png, to have same type as input
-        //Use UtilityFrameCapture to grab frame, USB-C to robot, grab VisionPortal-CameraFrameCapture- latest one
-        //Crop down to size
-
-    }
+//    public DetectBlockActions(HardwareMap hardwareMap) {
+//        int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
+//        camera = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class, "Webcam 1"), cameraMonitorViewId);
+//
+//        camera.setPipeline(new ContoursPipeline());
+//
+//        camera.setMillisecondsPermissionTimeout(5000); // Timeout for obtaining permission is configurable. Set before opening.
+//        camera.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener()
+//        {
+//            @Override
+//            public void onOpened()
+//            {
+//                camera.startStreaming(pixelWidth, pixelHeight, OpenCvCameraRotation.UPRIGHT);
+//            }
+//
+//            @Override
+//            public void onError(int errorCode)
+//            {
+//                /*
+//                 * This will be called if the camera could not be opened
+//                 */
+//            }
+//        });
+//        //Image MUST be png, to have same type as input
+//        //Use UtilityFrameCapture to grab frame, USB-C to robot, grab VisionPortal-CameraFrameCapture- latest one
+//        //Crop down to size
+//
+//    }
 
     public void setIsRed(boolean isRed) {
         this.isRed = isRed;
     }
+    public void setCenterTest(Point center){
+        this.center = center;
+    }
 
     public Point pixelToPosition() {
         //TODO
-        Point position = center;
+        double pixelX = center.x;
+        double pixelY = center.y;
+        double degreesPerPixel = 63.0 / (double) pixelWidth;
+        double YOffsetDegrees = 0.0; //TODO
+        double degreesX = (pixelX - (pixelWidth / 2)) * degreesPerPixel;
+        double degreesY = (pixelY - (pixelHeight / 2)) * degreesPerPixel - YOffsetDegrees;
+        double cameraHeight = 2.5; //Inches, from top of block to camera lens, TODO
+        double distanceFromCameraBase = cameraHeight * Math.tan(Math.toRadians(90 - degreesY));
+        double x = distanceFromCameraBase * Math.cos(Math.toRadians(90.0 - degreesX));
+        double y = distanceFromCameraBase * Math.sin(Math.toRadians(90.0 - degreesX));
+        Point position = new Point(x, y);
         return position;
     }
 

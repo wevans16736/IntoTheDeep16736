@@ -297,4 +297,23 @@ public class ImageProcessing {
 //        double angle = detectBlockActions.getAngle();
 //        Point center = detectBlockActions.getCenter();
     }
+    @Test
+    public void testPixelToInches() {
+        DetectBlockActions detectBlockActions = new DetectBlockActions();
+        Point center = new Point(1300,800);
+        double pixelX = center.x;
+        double pixelY = center.y;
+        double degreesPerPixel = 63.0 / 1920.0;
+        double YOffsetDegrees = -3; //TODO
+        double degreesX = (pixelX - (1920 / 2)) * degreesPerPixel;
+        double degreesY = (pixelY - (1080 / 2)) * degreesPerPixel - YOffsetDegrees;
+        double cameraHeight = 2.5; //Inches, TODO
+        double distanceFromCameraBase = cameraHeight * Math.tan(Math.toRadians(90 - degreesY));
+        double x = distanceFromCameraBase * Math.cos(Math.toRadians(90 - degreesX));
+        double y = distanceFromCameraBase * Math.sin(Math.toRadians(90 - degreesX));
+        Point position = new Point(x, y);
+//        detectBlockActions.setCenterTest(center);
+//        center = detectBlockActions.pixelToPosition();
+
+    }
 }
