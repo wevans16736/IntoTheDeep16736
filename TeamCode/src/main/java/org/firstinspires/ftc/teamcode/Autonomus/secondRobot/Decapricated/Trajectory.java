@@ -21,7 +21,6 @@ import org.firstinspires.ftc.teamcode.PinpointDrive;
 
 import java.util.Arrays;
 
-@Deprecated
 public class Trajectory {
     VerticalSlideRR verticalSlideRR; VerticalWristRR verticalWristRR; VerticalGrabberRR verticalGrabberRR;
     HorizontalSlideRR horizontalSlideRR; HorizontalRollRR horizontalRollRR; HorizontalGrabberRR horizontalGrabberRR;
@@ -122,9 +121,10 @@ public class Trajectory {
                     .afterDisp(0,horizontalSlideRR.horizontalSlideActions(ConfigurationSecondRobot.horizontalSlideExtend))
                     .afterDisp(0, horizontalWristRR.horizontalWristAction(ConfigurationSecondRobot.horizontalWristIntake))
                     .afterDisp(0, horizontalGrabberRR.horizontalGrabberAction(ConfigurationSecondRobot.horizontalGrabberWide))
-                    .strafeToSplineHeading(new Vector2d(butterX+4.25, butterY+.5), Math.toRadians(-90),slowVel)
+                    .strafeToSplineHeading(new Vector2d(butterX+4.5, butterY-.5), Math.toRadians(-90),slowVel)
                     .waitSeconds(.1);
             butterX -= 12;
+            butterY += .2;
         }
         currentTrajectory = butterLocationTrajectory.endTrajectory().fresh();
         return butterLocationTrajectory.build();
@@ -222,7 +222,7 @@ public class Trajectory {
                     .stopAndAdd(verticalSlideRR.verticalSlideAction(ConfigurationSecondRobot.topBasket))
                     .waitSeconds((ConfigurationSecondRobot.verticalSlideBottomToHighBar / 1000) + secondDelay)
                     //open the grabber
-                    .stopAndAdd(verticalGrabberRR.verticalGrabberAction(ConfigurationSecondRobot.verticalOpen))
+                    .stopAndAdd(verticalGrabberRR.verticalGrabberAction(ConfigurationSecondRobot.verticalOpenWide))
                     .waitSeconds(ConfigurationSecondRobot.verticalCloseTime / 1000)
                     //retract the vertical slide
                     .stopAndAdd(verticalSlideRR.verticalSlideAction(ConfigurationSecondRobot.bottom))
@@ -240,7 +240,7 @@ public class Trajectory {
                 .stopAndAdd(horizontalWristRR.horizontalWristAction(ConfigurationSecondRobot.horizontalWristIntake))
                 .stopAndAdd(horizontalRollRR.horizontalRollAction(ConfigurationSecondRobot.sideway))
                 .stopAndAdd(horizontalGrabberRR.horizontalGrabberAction(ConfigurationSecondRobot.horizontalGrabberWide))
-                .strafeTo(new Vector2d(-38.25, butterY+22), baseVel)
+                .strafeTo(new Vector2d(-38.25, butterY+22.5), baseVel)
                         ;
         currentTrajectory = thirdButterTrajectory.endTrajectory().fresh();
         return thirdButterTrajectory.build();

@@ -45,17 +45,21 @@ public class Trajectory {
             new AngularVelConstraint(Math.PI*25)
     ));
 
+    VelConstraint SuperSpeed = new MinVelConstraint(Arrays.asList(
+            new TranslationalVelConstraint(10000000),
+            new AngularVelConstraint(Math.PI*25000)
+    ));
     double hangX = 0;
     double hangY = -34;
     double firstButterX = 48.5;
-    double firstButterY = -35;
+    double firstButterY = -34.8;
     double secondButterX = 59;
-    double secondButterY = -35.125;
+    double secondButterY = -34.8;
     double thirdButterX = 60;
     double thirdButterY = -27;
-    double postHumanY = -44;
+    double postHumanY = -43.25;
     double humanX = 55;
-    double postHumanPickUpY = -55.25;
+    double postHumanPickUpY = -54.25;
     public Action getAlltrajectory() {
         return currentTrajectory
                 //hang
@@ -151,7 +155,7 @@ public class Trajectory {
         TrajectoryActionBuilder SecondButterDropOff = currentTrajectory
                 .waitSeconds(ConfigurationSecondRobot.horizontalGrabberWideTime/1000)
                 .waitSeconds(1)
-                .splineToLinearHeading(new Pose2d(secondButterX, postHumanPickUpY-.4, Math.toRadians(-90)), Math.toRadians(-90), slowerVel)
+                .splineToLinearHeading(new Pose2d(secondButterX, postHumanPickUpY, Math.toRadians(-90)), Math.toRadians(-90), slowerVel)
                 .stopAndAdd(verticalGrabberRR.verticalGrabberAction(ConfigurationSecondRobot.verticalOpenWide));
         currentTrajectory = SecondButterDropOff.endTrajectory().fresh();
         return SecondButterDropOff.build();
@@ -192,13 +196,38 @@ public class Trajectory {
                 .stopAndAdd(verticalGrabberRR.verticalGrabberAction(ConfigurationSecondRobot.verticalOpenWide))
                 .stopAndAdd(verticalSlideRR.verticalSlideAction(ConfigurationSecondRobot.bottom))
                 .stopAndAdd(verticalWristRR.VerticalWristAction(ConfigurationSecondRobot.verticalWristWall))
+//                .splineToLinearHeading(new Pose2d(barX,-35, Math.toRadians(90)), Math.toRadians(-90)) //todo add this
                 //move back to human player
                 .setReversed(true)
                 .splineToLinearHeading(new Pose2d(43, postHumanY, Math.toRadians(-90)), Math.toRadians(90), speed)
-                .splineToLinearHeading(new Pose2d(43, postHumanPickUpY+.2, Math.toRadians(-90)), Math.toRadians(-90));
-//        barX +=2;
+                .splineToLinearHeading(new Pose2d(43, postHumanPickUpY, Math.toRadians(-90)), Math.toRadians(-90));
+        barX +=2;
         currentTrajectory = PostHang.endTrajectory().fresh();
         return PostHang.build();
+    }
+    public Action getPark(){
+        TrajectoryActionBuilder Park = currentTrajectory
+                .stopAndAdd(verticalGrabberRR.verticalGrabberAction(ConfigurationSecondRobot.verticalClose))
+                .waitSeconds(ConfigurationSecondRobot.verticalCloseTime/1000)
+                .stopAndAdd(verticalWristRR.VerticalWristAction(ConfigurationSecondRobot.verticalWristBasket))
+                .stopAndAdd(horizontalWristRR.horizontalWristAction(ConfigurationSecondRobot.horizontalWristTransfer))
+                //move to semi circle trajectory
+                .setReversed(true)
+                .splineToLinearHeading(new Pose2d(43, postHumanY, Math.toRadians(-90)), Math.toRadians(90), speed)
+                .stopAndAdd(verticalWristRR.VerticalWristAction(ConfigurationSecondRobot.verticalWristBar))
+                .stopAndAdd(verticalSlideRR.verticalSlideAction(ConfigurationSecondRobot.highBar))
+                .setReversed(false)
+                .splineToLinearHeading(new Pose2d(barX, -33, Math.toRadians(90.0000001)), Math.toRadians(90), speed)
+                .stopAndAdd(verticalGrabberRR.verticalGrabberAction(ConfigurationSecondRobot.verticalOpenWide))
+                .stopAndAdd(verticalSlideRR.verticalSlideAction(ConfigurationSecondRobot.bottom))
+                .stopAndAdd(verticalWristRR.VerticalWristAction(ConfigurationSecondRobot.verticalWristWall))
+//                .splineToLinearHeading(new Pose2d(barX,-35, Math.toRadians(90)), Math.toRadians(-90)) //todo add this
+                //move back to human player
+                .setReversed(true)
+                .splineToLinearHeading(new Pose2d(45, postHumanPickUpY, Math.toRadians(-90)), Math.toRadians(-90));
+                ;
+        currentTrajectory.endTrajectory().fresh();
+        return Park.build();
     }
     public Action ButterTransferAttachment(){
         TrajectoryActionBuilder ButterTransferAttachment = currentTrajectory
