@@ -16,9 +16,10 @@ public class TrajectoryRight {
         double thirdButterX = 60;
         double thirdButterY = -27;
         double postHumanY = -43.25;
-        double humanX = 55;
         double postHumanPickUpY = -54.25;
         double barX = -3;
+        double humanX = 40;
+        double humanY = -60;
         MeepMeep meepMeep = new MeepMeep(600);
 
         RoadRunnerBotEntity myBot = new DefaultBotBuilder(meepMeep)
@@ -59,7 +60,7 @@ public class TrajectoryRight {
                 .splineToLinearHeading(new Pose2d(-3, hangY-5, Math.toRadians(90)), Math.toRadians(-90))
                 //go back to human player
                 .setReversed(true)
-                .splineToLinearHeading(new Pose2d(45, -60, Math.toRadians(-90.00001)), Math.toRadians(-90))
+                .splineToLinearHeading(new Pose2d(humanX, humanY, Math.toRadians(-90.00001)), Math.toRadians(-90))
                 .waitSeconds(.5)
                 //go to hang
                 .setTangent(Math.toRadians(90))
@@ -68,16 +69,7 @@ public class TrajectoryRight {
                 .splineToLinearHeading(new Pose2d(0, hangY-5, Math.toRadians(90)), Math.toRadians(-90))
                 //go to human player
                 .setReversed(true)
-                .splineToLinearHeading(new Pose2d(45, -60, Math.toRadians(-90.00001)), Math.toRadians(-90))
-                .waitSeconds(.5)
-                //go to hang
-                .setTangent(Math.toRadians(90))
-                .splineToLinearHeading(new Pose2d(0, hangY, Math.toRadians(90)), Math.toRadians(90))
-                        .setReversed(true)
-                .splineToLinearHeading(new Pose2d(0, hangY-5, Math.toRadians(90)), Math.toRadians(-90))
-                //go to human player
-                .setReversed(true)
-                .splineToLinearHeading(new Pose2d(45, -60, Math.toRadians(-90.00001)), Math.toRadians(-90))
+                .splineToLinearHeading(new Pose2d(humanX, humanY, Math.toRadians(-90.00001)), Math.toRadians(-90))
                 .waitSeconds(.5)
                 //go to hang
                 .setTangent(Math.toRadians(90))
@@ -86,7 +78,16 @@ public class TrajectoryRight {
                 .splineToLinearHeading(new Pose2d(0, hangY-5, Math.toRadians(90)), Math.toRadians(-90))
                 //go to human player
                 .setReversed(true)
-                .splineToLinearHeading(new Pose2d(45, -60, Math.toRadians(-90.00001)), Math.toRadians(-90))
+                .splineToLinearHeading(new Pose2d(humanX, humanY, Math.toRadians(-90.00001)), Math.toRadians(-90))
+                .waitSeconds(.5)
+                //go to hang
+                .setTangent(Math.toRadians(90))
+                .splineToLinearHeading(new Pose2d(0, hangY, Math.toRadians(90)), Math.toRadians(90))
+                .setReversed(true)
+                .splineToLinearHeading(new Pose2d(0, hangY-5, Math.toRadians(90)), Math.toRadians(-90))
+                //go to human player
+                .setReversed(true)
+                .splineToLinearHeading(new Pose2d(humanX, humanY, Math.toRadians(-90.00001)), Math.toRadians(-90))
                 .build());
         meepMeep.setBackground(MeepMeep.Background.FIELD_INTO_THE_DEEP_OFFICIAL)
                 .setDarkMode(false)

@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.Autonomus.secondRobot;
 
+import com.acmerobotics.roadrunner.Action;
 import com.acmerobotics.roadrunner.ParallelAction;
 import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.SequentialAction;
@@ -53,34 +54,27 @@ public class Auto extends LinearOpMode {
         TrajectoryLeft trajectoryLeft = new TrajectoryLeft(drive, pose, verticalSlide, verticalWrist, verticalGrabber,
                 verticalHanger, horizontalSlide, horizontalRoll, horizontalGrabber, horizontalWrist);
 
+        Action getHangBuilt = trajectory.getHang();
         //wait for the start button to be press
         waitForStart();
         //if the stop button press then stop the robot
         if (isStopRequested()) return;
         if(!side) {
             Actions.runBlocking(new SequentialAction(
-//                    trajectory.getAlltrajectory()
+                    trajectory.getAlltrajectory()
 //                        trajectory.testTransfer()
-                trajectory.getHang(),
-                //get all the butter
-                trajectory.getFirstButter(),
-                new ParallelAction(
-                        trajectory.ButterTransferAttachment(),
-                        trajectory.getFirstButterDropOff()
-                ),
-                trajectory.getSecondButter(),
-                new ParallelAction(
-                        trajectory.ButterTransferAttachment(),
-                        trajectory.getSecondButterDropOff()
-                ),
-//                trajectory.getThirdButter(),
-//                trajectory.getThirdButterDropOff(),
-                //postHang
-                    trajectory.getPostHang(),
-                    trajectory.getPostHang(),
-//                    trajectory.getPostHang(),
-                    trajectory.getPark(),
-                new SleepAction(2)
+//                    getHangBuilt,
+//                    trajectory.getFirstButter(),
+//                    new ParallelAction(
+//                            trajectory.getSecondButter(),
+//                            trajectory.getTransfer(true)
+//                    ),
+//                    trajectory.getTransfer(false),
+//                    trajectory.getThirdButter(),
+//                    trajectory.getHang(),
+//                    trajectory.getHang(),
+//                    trajectory.getHang(),
+//                    trajectory.getHang()
             ));
         } if(side) {
             Actions.runBlocking(new SequentialAction(

@@ -54,7 +54,8 @@ public class TestTransfer extends LinearOpMode {
         if (isStopRequested()) return;
 
         Actions.runBlocking(new SequentialAction(
-                trajectory.testTransfer()
+                trajectory.testTransfer(true),
+                trajectory.testTransfer(false)
         ));
     }
 }

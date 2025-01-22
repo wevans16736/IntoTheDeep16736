@@ -60,7 +60,7 @@ public class AutoLeft extends LinearOpMode {
             drive = new PinpointDrive(hardwareMap, pose);
         }
 
-        Trajectory trajectory = new Trajectory(drive, pose, verticalSlideRR, verticalWristRR, verticalGrabberRR,
+        TrajectoryLeft trajectory = new TrajectoryLeft(drive, pose, verticalSlideRR, verticalWristRR, verticalGrabberRR,
                 horizontalSlideRR, horizontalRollRR, horizontalGrabberRR, horizontalWristRR, side);
 
         //wait for the start button to be press
