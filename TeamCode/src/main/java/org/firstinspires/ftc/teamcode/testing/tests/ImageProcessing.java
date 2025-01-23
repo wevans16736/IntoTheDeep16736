@@ -12,6 +12,7 @@ import org.opencv.core.MatOfDMatch;
 import org.opencv.core.MatOfKeyPoint;
 import org.opencv.core.MatOfPoint;
 import org.opencv.core.Point;
+import org.opencv.core.RotatedRect;
 import org.opencv.core.Scalar;
 import org.opencv.core.Size;
 import org.opencv.imgcodecs.Imgcodecs;
@@ -286,7 +287,7 @@ public class ImageProcessing {
     public void testDetectBlockActions() {
         System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
 
-        String pathImg = "src/main/java/org/firstinspires/ftc/teamcode/testing/tests/data/blockfest3.jpg";
+        String pathImg = "src/main/java/org/firstinspires/ftc/teamcode/testing/tests/data/blueButter3.jpg";
 
         File fileImg = new File(pathImg);
         String absolutePathImg = fileImg.getAbsolutePath();
@@ -294,13 +295,20 @@ public class ImageProcessing {
         Mat img = Imgcodecs.imread(absolutePathImg, Imgcodecs.IMREAD_COLOR);
 //        DetectBlockActions detectBlockActions = new DetectBlockActions();
 //        detectBlockActions.contourAndOval(detectBlockActions.prepareForContours(img));
+//
 //        double angle = detectBlockActions.getAngle();
 //        Point center = detectBlockActions.getCenter();
+//        List<MatOfPoint> contours = detectBlockActions.contours;
+//        double contourArea[] = new double[contours.size()];
+//        for (int i = 0; i < contourArea.length; i++) {
+//            RotatedRect oval = Imgproc.fitEllipseAMS(contours.get(i));
+//            contourArea[i] = oval.size.area();
+//        }
     }
     @Test
     public void testPixelToInches() {
-        DetectBlockActions detectBlockActions = new DetectBlockActions();
-        Point center = new Point(1300,800);
+//        DetectBlockActions detectBlockActions = new DetectBlockActions();
+        Point center = new Point(0,0);
         double pixelX = center.x;
         double pixelY = center.y;
         double degreesPerPixel = 63.0 / 1920.0;
@@ -311,7 +319,7 @@ public class ImageProcessing {
         double distanceFromCameraBase = cameraHeight * Math.tan(Math.toRadians(90 - degreesY));
         double x = distanceFromCameraBase * Math.cos(Math.toRadians(90 - degreesX));
         double y = distanceFromCameraBase * Math.sin(Math.toRadians(90 - degreesX));
-        Point position = new Point(x, y);
+//        Point position = new Point(x, y);
 //        detectBlockActions.setCenterTest(center);
 //        center = detectBlockActions.pixelToPosition();
 

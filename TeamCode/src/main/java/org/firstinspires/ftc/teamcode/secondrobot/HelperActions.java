@@ -104,7 +104,7 @@ public abstract class HelperActions extends LinearOpMode {
     public void moveToBlock(DetectBlockActions detectBlockActions, DriveActions driveActions, HorizontalSlideActions horizontalSlideActions, HorizontalIRollActions horizontalIRollActions) {
         Point position = detectBlockActions.pixelToPosition();
         driveActions.drive(0, position.x, 0);
-        horizontalSlideActions.teleOpArmMotor(position.y, 2);
+        horizontalSlideActions.teleOpArmMotor(position.y / 5, 2);
         double angle = detectBlockActions.angle;
         while (angle > 180){
             angle -= 180;

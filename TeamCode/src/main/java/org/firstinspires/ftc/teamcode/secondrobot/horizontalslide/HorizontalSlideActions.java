@@ -22,7 +22,7 @@ public class HorizontalSlideActions {
     public HorizontalSlideActions(HardwareMap hardwareMap, Telemetry telemetry) {
         this.telemetry = telemetry;
         armMotor = hardwareMap.get(DcMotorEx.class, ConfigConstants.HORIZONTAL_ARM);
-        armMotor.setDirection(DcMotorSimple.Direction.FORWARD);
+        armMotor.setDirection(DcMotorSimple.Direction.REVERSE);
         armMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         armMotor.setTargetPosition(0);
         armMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
@@ -48,7 +48,7 @@ public class HorizontalSlideActions {
             //Multiplying by change in time makes sure the slide speed is more consistent
             double targetDistance = SlidePosition + power * (time - prevTime) * liftSpeedMultiplier;
 //            targetDistance = Range.clip(targetDistance, 0, armLegLength * 2 - startDistance);
-            targetDistance = Range.clip(targetDistance, 0, 600);
+            targetDistance = Range.clip(targetDistance, 0, 650);
             setSlideDistance((int) targetDistance, 3000 * liftSpeedMultiplier);
             RobotLog.dd("horizontal arm", "Target Position %f, time %f", SlidePosition, time);
         }
