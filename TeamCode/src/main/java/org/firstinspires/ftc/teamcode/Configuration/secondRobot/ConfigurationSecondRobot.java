@@ -4,13 +4,13 @@ import com.acmerobotics.dashboard.config.Config;
 
 @Config
 public class ConfigurationSecondRobot {
-    public static double adriveMultiple = 15;
+    public static double adriveMultiple = 45;
     //drive default movement
     public static double driveVelocity = (50* adriveMultiple); //default is 50
-    public static double driveMinAccel =  -30; //default is -30
+    public static double driveMinAccel =  -37; //default is -30
     public static double driveMaxAccel = (50* adriveMultiple); //default is 50
-    public static double driveMinAngle = (Math.PI* adriveMultiple); //default is Math.PI
-    public static double driveMaxAngle = (Math.PI* adriveMultiple); //default is Math.PI
+    public static double driveMinAngle = Math.PI * adriveMultiple; //default is Math.PI
+    public static double driveMaxAngle = Math.PI * adriveMultiple; //default is Math.PI
 
 
     //vertical slide position
@@ -82,7 +82,7 @@ public class ConfigurationSecondRobot {
 
     //horizontal slide motor position
     public static int horizontalSlideRetract = 0;
-    public static int horizontalSlideExtend = 550;
+    public static int horizontalSlideExtend = 440;
     public static double extendVelocity = 1800;
 
     public static double horizontalSlideTime = 0;

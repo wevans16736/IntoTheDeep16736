@@ -61,20 +61,20 @@ public class Auto extends LinearOpMode {
         if (isStopRequested()) return;
         if(!side) {
             Actions.runBlocking(new SequentialAction(
-                    trajectory.getAlltrajectory()
-//                        trajectory.testTransfer()
-//                    getHangBuilt,
-//                    trajectory.getFirstButter(),
-//                    new ParallelAction(
-//                            trajectory.getSecondButter(),
-//                            trajectory.getTransfer(true)
-//                    ),
-//                    trajectory.getTransfer(false),
-//                    trajectory.getThirdButter(),
-//                    trajectory.getHang(),
-//                    trajectory.getHang(),
-//                    trajectory.getHang(),
-//                    trajectory.getHang()
+//                    trajectory.getAlltrajectory()
+//                    trajectory.testTransfer(),
+                    getHangBuilt,
+                    trajectory.getFirstButter(),
+                    new ParallelAction(
+                            trajectory.getSecondButter(),
+                            trajectory.getTransfer(true)
+                    ),
+                    trajectory.getTransfer(false),
+                    trajectory.getThirdButter(),
+                    trajectory.getHang(),
+                    trajectory.getHang(),
+                    trajectory.getHang(),
+                    trajectory.getHang()
             ));
         } if(side) {
             Actions.runBlocking(new SequentialAction(
