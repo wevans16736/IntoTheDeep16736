@@ -5,6 +5,7 @@ import com.acmerobotics.roadrunner.AngularVelConstraint;
 import com.acmerobotics.roadrunner.MinVelConstraint;
 import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.TrajectoryActionBuilder;
+import com.acmerobotics.roadrunner.TrajectoryBuilderParams;
 import com.acmerobotics.roadrunner.TranslationalVelConstraint;
 import com.acmerobotics.roadrunner.Vector2d;
 import com.acmerobotics.roadrunner.VelConstraint;
@@ -35,188 +36,268 @@ public class Trajectory {
 
         currentTrajectory = drive.actionBuilder(pose);
     }
-    VelConstraint slowerVel = new MinVelConstraint(Arrays.asList(
-            new TranslationalVelConstraint(15),
-            new AngularVelConstraint(Math.PI)
-    ));
-
-    VelConstraint speed = new MinVelConstraint(Arrays.asList(
-            new TranslationalVelConstraint(1000),
-            new AngularVelConstraint(Math.PI*25)
-    ));
-
     double hangX = 0;
     double hangY = -34;
     double firstButterX = 48.5;
-    double firstButterY = -35;
+    double firstButterY = -40;
     double secondButterX = 59;
-    double secondButterY = -35.125;
+    double secondButterY = -40;
     double thirdButterX = 60;
     double thirdButterY = -27;
-    double postHumanY = -44;
-    double humanX = 55;
-    double postHumanPickUpY = -55.25;
-    public Action getAlltrajectory() {
-        return currentTrajectory
-                //hang
-                .splineToLinearHeading(new Pose2d(hangX, hangY, Math.toRadians(90)), Math.toRadians(90))
-                //move to first butter
-                .setReversed(true)
-                .splineToLinearHeading(new Pose2d(firstButterX, firstButterY, Math.toRadians(-90.00000001)), Math.toRadians(90))
-                //move to human player
-                .waitSeconds(.5)
-                .splineToLinearHeading(new Pose2d(49, -47, Math.toRadians(-90)), Math.toRadians(-90))
-                //move to second butter
-                .waitSeconds(.5)
-                .splineToLinearHeading(new Pose2d(secondButterX, secondButterY, Math.toRadians(-90)), Math.toRadians(0))
-                //move to human player
-                .waitSeconds(.5)
-                .splineToLinearHeading(new Pose2d(59, -47, Math.toRadians(-90)), Math.toRadians(-90))
-                //move to third butter
-                .waitSeconds(.5)
-                .setReversed(true)
-                .splineToLinearHeading(new Pose2d(thirdButterX, thirdButterY, Math.toRadians(180)), Math.toRadians(90))
-                //move to human player
-                .waitSeconds(.5)
-//               .splineToLinearHeading(new Pose2d(43, -55, Math.toRadians(-90)), Math.toRadians(-90))
-                .splineToLinearHeading(new Pose2d(humanX, -60, Math.toRadians(-.00000000001)), Math.toRadians(0))
-                //move to hang
-                .waitSeconds(.5)
-                .setReversed(true)
-                .splineToLinearHeading(new Pose2d(43, postHumanY, Math.toRadians(-90)), Math.toRadians(90))
-                .setReversed(false)
-                .splineToLinearHeading(new Pose2d(-5, -33, Math.toRadians(90.0000001)), Math.toRadians(90))
-                //move back to human player
-                .setReversed(true)
-                .splineToLinearHeading(new Pose2d(43, postHumanY, Math.toRadians(-90)), Math.toRadians(90))
-                .splineToLinearHeading(new Pose2d(43, -55, Math.toRadians(-90)), Math.toRadians(-90))
-                .build();
-    }
-    public Action testTransfer(){
-        return currentTrajectory
-                .stopAndAdd(horizontalGrabberRR.horizontalGrabberAction(ConfigurationSecondRobot.horizontalGrabberClose))
-                .stopAndAdd(verticalGrabberRR.verticalGrabberAction(ConfigurationSecondRobot.verticalOpenWide))
-                .stopAndAdd(verticalWristRR.VerticalWristAction(ConfigurationSecondRobot.verticalWristIntake))
-                .waitSeconds(ConfigurationSecondRobot.horizontalGrabberWideTime/1000)
-                .stopAndAdd(horizontalWristRR.horizontalWristAction(ConfigurationSecondRobot.horizontalWristTransfer))
-                .waitSeconds(ConfigurationSecondRobot.horizontalWristIntaketoTransfer/1000)
-                .stopAndAdd(verticalGrabberRR.verticalGrabberAction(ConfigurationSecondRobot.verticalClose))
-                .waitSeconds(ConfigurationSecondRobot.verticalCloseTime/1000)
-                .stopAndAdd(horizontalGrabberRR.horizontalGrabberAction(ConfigurationSecondRobot.horizontalGrabberWide))
-                .waitSeconds(ConfigurationSecondRobot.horizontalGrabberWideTime/1000)
-                .stopAndAdd(horizontalWristRR.horizontalWristAction(ConfigurationSecondRobot.horizontalWristIntake))
-                .stopAndAdd(verticalWristRR.VerticalWristAction(ConfigurationSecondRobot.verticalWristWall))
-                .waitSeconds(ConfigurationSecondRobot.verticalWristWalltoIntake/1000)
-                .stopAndAdd(verticalGrabberRR.verticalGrabberAction(ConfigurationSecondRobot.verticalOpenWide))
-                .build();
-    }
-
+    double humanX = 40;
+    double humanY = -60;
+    int counter = 0;
     public Action getHang(){
-        TrajectoryActionBuilder Hang = currentTrajectory
-                .afterTime(0, verticalSlideRR.verticalSlideAction(ConfigurationSecondRobot.highBar))
-                .afterTime(0, verticalGrabberRR.verticalGrabberAction(ConfigurationSecondRobot.verticalClose))
-                .afterTime(0, verticalWristRR.VerticalWristAction(ConfigurationSecondRobot.verticalWristBar))
-                .stopAndAdd(horizontalGrabberRR.horizontalGrabberAction(ConfigurationSecondRobot.horizontalGrabberWide))
-                .splineToLinearHeading(new Pose2d(hangX, hangY, Math.toRadians(90)), Math.toRadians(90));
-        currentTrajectory = Hang.endTrajectory().fresh();
-        return Hang.build();
+        if(counter == 0) {
+            TrajectoryActionBuilder Hang = currentTrajectory
+                    .afterTime(0, verticalSlideRR.verticalSlideAction(ConfigurationSecondRobot.highBar))
+                    .afterTime(0, verticalWristRR.VerticalWristAction(ConfigurationSecondRobot.verticalWristBar))
+                    .afterTime(0, verticalGrabberRR.verticalGrabberAction(ConfigurationSecondRobot.verticalClose))
+                    .splineToLinearHeading(new Pose2d(0, hangY, Math.toRadians(90)), Math.toRadians(90))
+                    .stopAndAdd(verticalGrabberRR.verticalGrabberAction(ConfigurationSecondRobot.verticalOpen))
+                    .stopAndAdd(verticalWristRR.VerticalWristAction(ConfigurationSecondRobot.verticalWristWall))
+                    .stopAndAdd(verticalSlideRR.verticalSlideAction(ConfigurationSecondRobot.bottom))
+                    .setReversed(true)
+                    .splineToLinearHeading(new Pose2d(0, hangY - 5, Math.toRadians(90)), Math.toRadians(-90));
+            currentTrajectory.endTrajectory().fresh();
+            counter++;
+            hangX = -5;
+            return Hang.build();
+        } if(counter == 1){
+            TrajectoryActionBuilder Hang = currentTrajectory
+                    .waitSeconds(.2)
+                    .stopAndAdd(verticalGrabberRR.verticalGrabberAction(ConfigurationSecondRobot.verticalClose))
+                    .waitSeconds(ConfigurationSecondRobot.verticalCloseTime/1000)
+                    .stopAndAdd(verticalSlideRR.verticalSlideAction(ConfigurationSecondRobot.highBar))
+                    .stopAndAdd(verticalWristRR.VerticalWristAction(ConfigurationSecondRobot.verticalWristBar))
+                    .stopAndAdd(horizontalWristRR.horizontalWristAction(ConfigurationSecondRobot.horizontalWristTransfer))
+                    .setTangent(Math.toRadians(90))
+                    .splineToLinearHeading(new Pose2d(45, -45, Math.toRadians(179.999)), Math.toRadians(180))
+                    .splineToLinearHeading(new Pose2d(hangX, hangY, Math.toRadians(90)), Math.toRadians(90))
+                    .stopAndAdd(verticalGrabberRR.verticalGrabberAction(ConfigurationSecondRobot.verticalOpenWide))
+                    .stopAndAdd(verticalWristRR.VerticalWristAction(ConfigurationSecondRobot.verticalWristWall))
+                    .stopAndAdd(verticalSlideRR.verticalSlideAction(ConfigurationSecondRobot.bottom))
+                    .setReversed(true)
+                    .splineToLinearHeading(new Pose2d(hangX, hangY-5, Math.toRadians(90)), Math.toRadians(-90))
+                    .setReversed(true)
+                    .splineToLinearHeading(new Pose2d(humanX, humanY, Math.toRadians(-90.00001)), Math.toRadians(-90));
+            currentTrajectory.endTrajectory().fresh();
+            counter++;
+            hangX += 2;
+            return Hang.build();
+        } else{
+            TrajectoryActionBuilder Hang = currentTrajectory
+                    .waitSeconds(.2)
+                    .stopAndAdd(verticalGrabberRR.verticalGrabberAction(ConfigurationSecondRobot.verticalClose))
+                    .waitSeconds(ConfigurationSecondRobot.verticalCloseTime/1000)
+                    .stopAndAdd(verticalSlideRR.verticalSlideAction(ConfigurationSecondRobot.highBar))
+                    .stopAndAdd(verticalWristRR.VerticalWristAction(ConfigurationSecondRobot.verticalWristBar))
+                    .stopAndAdd(horizontalWristRR.horizontalWristAction(ConfigurationSecondRobot.horizontalWristTransfer))
+                    .setTangent(Math.toRadians(90))
+                    .splineToLinearHeading(new Pose2d(hangX, hangY, Math.toRadians(90)), Math.toRadians(90))
+                    .stopAndAdd(verticalGrabberRR.verticalGrabberAction(ConfigurationSecondRobot.verticalOpenWide))
+                    .stopAndAdd(verticalWristRR.VerticalWristAction(ConfigurationSecondRobot.verticalWristWall))
+                    .stopAndAdd(verticalSlideRR.verticalSlideAction(ConfigurationSecondRobot.bottom))
+                    .setReversed(true)
+                    .splineToLinearHeading(new Pose2d(hangX, hangY-5, Math.toRadians(90)), Math.toRadians(-90))
+                    .setReversed(true)
+                    .splineToLinearHeading(new Pose2d(humanX, humanY, Math.toRadians(-90.00001)), Math.toRadians(-90));
+            currentTrajectory.endTrajectory().fresh();
+            hangX +=2;
+            return Hang.build();
+        }
     }
     public Action getFirstButter(){
         TrajectoryActionBuilder FirstButter = currentTrajectory
-                .stopAndAdd(verticalGrabberRR.verticalGrabberAction(ConfigurationSecondRobot.verticalOpenWide))
-                .stopAndAdd(verticalSlideRR.verticalSlideAction(ConfigurationSecondRobot.bottom))
-                .stopAndAdd(verticalWristRR.VerticalWristAction(ConfigurationSecondRobot.verticalWristWall))
-                .stopAndAdd(horizontalWristRR.horizontalWristAction(ConfigurationSecondRobot.horizontalWristIntake))
-                .afterTime(2, verticalWristRR.VerticalWristAction(ConfigurationSecondRobot.verticalWristIntake))
+                .afterDisp(20, horizontalSlideRR.horizontalSlideActions(ConfigurationSecondRobot.horizontalSlideExtend))
+                .afterDisp(20, horizontalGrabberRR.horizontalGrabberAction(ConfigurationSecondRobot.horizontalGrabberWide))
+                .afterDisp(20, horizontalWristRR.horizontalWristAction(ConfigurationSecondRobot.horizontalWristIntake))
+                //first butter
                 .setReversed(true)
-                .splineToLinearHeading(new Pose2d(firstButterX, firstButterY, Math.toRadians(-90.00000001)), Math.toRadians(90));
-        currentTrajectory = FirstButter.endTrajectory().fresh();
-        return  FirstButter.build();
-    }
-    public Action getFirstButterDropOff(){
-        TrajectoryActionBuilder FirstButterDropOff = currentTrajectory
-                .waitSeconds(ConfigurationSecondRobot.horizontalGrabberWideTime/1000)
-                .splineToLinearHeading(new Pose2d(firstButterX,-40,Math.toRadians(-90)), Math.toRadians(-90))
-                .splineToLinearHeading(new Pose2d(secondButterX, -48, Math.toRadians(-90)), Math.toRadians(-90));
-        currentTrajectory = FirstButterDropOff.endTrajectory().fresh();
-        return FirstButterDropOff.build();
+                .splineToLinearHeading(new Pose2d(firstButterX, firstButterY, Math.toRadians(-90.01)), Math.toRadians(90));
+        currentTrajectory.endTrajectory().fresh();
+        return FirstButter.build();
     }
     public Action getSecondButter(){
         TrajectoryActionBuilder SecondButter = currentTrajectory
+                .waitSeconds(ConfigurationSecondRobot.horizontalGrabberWideTime/1000)
+                .setTangent(Math.toRadians(0))
                 .splineToLinearHeading(new Pose2d(secondButterX, secondButterY, Math.toRadians(-90)), Math.toRadians(0));
         currentTrajectory = SecondButter.endTrajectory().fresh();
         return SecondButter.build();
     }
-    public Action getSecondButterDropOff(){
-        TrajectoryActionBuilder SecondButterDropOff = currentTrajectory
-                .waitSeconds(ConfigurationSecondRobot.horizontalGrabberWideTime/1000)
-                .waitSeconds(1)
-                .splineToLinearHeading(new Pose2d(secondButterX, postHumanPickUpY-.4, Math.toRadians(-90)), Math.toRadians(-90), slowerVel)
-                .stopAndAdd(verticalGrabberRR.verticalGrabberAction(ConfigurationSecondRobot.verticalOpenWide));
-        currentTrajectory = SecondButterDropOff.endTrajectory().fresh();
-        return SecondButterDropOff.build();
-    }
     public Action getThirdButter(){
         TrajectoryActionBuilder ThirdButter = currentTrajectory
-                .stopAndAdd(horizontalRollRR.horizontalRollAction(ConfigurationSecondRobot.sideway))
+                .stopAndAdd(horizontalWristRR.horizontalWristAction(ConfigurationSecondRobot.horizontalWristIntake))
+                .stopAndAdd(horizontalGrabberRR.horizontalGrabberAction(ConfigurationSecondRobot.horizontalGrabberWide))
                 .setReversed(true)
-                .splineToLinearHeading(new Pose2d(thirdButterX, thirdButterY, Math.toRadians(180)), Math.toRadians(90))
-                .stopAndAdd(horizontalGrabberRR.horizontalGrabberAction(ConfigurationSecondRobot.horizontalGrabberClose));
-        currentTrajectory = ThirdButter.endTrajectory().fresh();
+                .splineToLinearHeading(new Pose2d(thirdButterX, thirdButterY , Math.toRadians(180)), Math.toRadians(90))
+                .stopAndAdd(horizontalGrabberRR.horizontalGrabberAction(ConfigurationSecondRobot.horizontalGrabberClose))
+                .stopAndAdd(verticalWristRR.VerticalWristAction(ConfigurationSecondRobot.verticalWristWall))
+                .stopAndAdd(verticalGrabberRR.verticalGrabberAction(ConfigurationSecondRobot.verticalOpenWide))
+                .waitSeconds(ConfigurationSecondRobot.horizontalGrabberWideTime/1000)
+                //go to human pickup
+                .setTangent(Math.toRadians(180))
+                .splineToLinearHeading(new Pose2d(60, -60, Math.toRadians(-.000001)), Math.toRadians(0))
+                .stopAndAdd(horizontalGrabberRR.horizontalGrabberAction(ConfigurationSecondRobot.horizontalGrabberOpen));
+        currentTrajectory.endTrajectory().fresh();
         return ThirdButter.build();
     }
-    public Action getThirdButterDropOff(){
-        TrajectoryActionBuilder ThirdButterDropOff = currentTrajectory
-                .waitSeconds(ConfigurationSecondRobot.horizontalGrabberWideTime/1000)
-                .stopAndAdd(horizontalRollRR.horizontalRollAction(ConfigurationSecondRobot.flat))
-                .stopAndAdd(verticalWristRR.VerticalWristAction(ConfigurationSecondRobot.verticalWristWall))
-                .splineToLinearHeading(new Pose2d(humanX, -62, Math.toRadians(-.00000000001)), Math.toRadians(0))
-                .stopAndAdd(horizontalGrabberRR.horizontalGrabberAction(ConfigurationSecondRobot.horizontalGrabberOpen));
-        currentTrajectory = ThirdButterDropOff.endTrajectory().fresh();
-        return  ThirdButterDropOff.build();
+    public Action getTransfer(boolean extend){
+        if(!extend) {
+            return currentTrajectory
+                    .stopAndAdd(horizontalGrabberRR.horizontalGrabberAction(ConfigurationSecondRobot.horizontalGrabberClose))
+                    .waitSeconds(ConfigurationSecondRobot.horizontalGrabberWideTime/1000)
+                    .stopAndAdd(horizontalWristRR.horizontalWristAction(ConfigurationSecondRobot.horizontalWristTransfer))
+                    .stopAndAdd(horizontalSlideRR.horizontalSlideActions(ConfigurationSecondRobot.horizontalSlideRetract))
+                    .waitSeconds(ConfigurationSecondRobot.horizontalWristIntaketoTransfer/1000)
+                    .stopAndAdd(verticalGrabberRR.verticalGrabberAction(ConfigurationSecondRobot.verticalClose))
+                    .waitSeconds(ConfigurationSecondRobot.verticalCloseTime/1000)
+                    .stopAndAdd(horizontalGrabberRR.horizontalGrabberAction(ConfigurationSecondRobot.horizontalGrabberOpen))
+                    .waitSeconds(ConfigurationSecondRobot.horizontalGrabberCloseTime/1000)
+                    .stopAndAdd(verticalWristRR.VerticalWristAction(ConfigurationSecondRobot.verticalWristWall))
+                    .stopAndAdd(horizontalSlideRR.horizontalSlideActions(ConfigurationSecondRobot.horizontalSlideExtend))
+                    .stopAndAdd(horizontalWristRR.horizontalWristAction(ConfigurationSecondRobot.verticalWristIntake))
+                    .stopAndAdd(horizontalGrabberRR.horizontalGrabberAction(ConfigurationSecondRobot.horizontalGrabberWide))
+                    .waitSeconds(ConfigurationSecondRobot.verticalWristWalltoIntake/1000)
+                    .stopAndAdd(verticalGrabberRR.verticalGrabberAction(ConfigurationSecondRobot.verticalOpen))
+                    .waitSeconds(ConfigurationSecondRobot.verticalCloseTime/1000)
+                    .build();
+        } else{
+            return currentTrajectory
+                    .stopAndAdd(horizontalGrabberRR.horizontalGrabberAction(ConfigurationSecondRobot.horizontalGrabberClose))
+                    .waitSeconds(ConfigurationSecondRobot.horizontalGrabberWideTime/1000)
+                    .stopAndAdd(horizontalWristRR.horizontalWristAction(ConfigurationSecondRobot.horizontalWristTransfer))
+                    .stopAndAdd(horizontalSlideRR.horizontalSlideActions(ConfigurationSecondRobot.horizontalSlideRetract))
+                    .waitSeconds(ConfigurationSecondRobot.horizontalWristIntaketoTransfer/1000)
+                    .stopAndAdd(verticalGrabberRR.verticalGrabberAction(ConfigurationSecondRobot.verticalClose))
+                    .waitSeconds(ConfigurationSecondRobot.verticalCloseTime/1000)
+                    .stopAndAdd(horizontalGrabberRR.horizontalGrabberAction(ConfigurationSecondRobot.horizontalGrabberOpen))
+                    .waitSeconds(ConfigurationSecondRobot.horizontalGrabberCloseTime/1000)
+                    .stopAndAdd(verticalWristRR.VerticalWristAction(ConfigurationSecondRobot.verticalWristWall))
+//                   stopAndAdd(horizontalSlideRR.horizontalSlideActions(ConfigurationSecondRobot.horizontalSlideExtend))
+                    .stopAndAdd(horizontalWristRR.horizontalWristAction(ConfigurationSecondRobot.verticalWristIntake))
+                    .stopAndAdd(horizontalGrabberRR.horizontalGrabberAction(ConfigurationSecondRobot.horizontalGrabberWide))
+                    .waitSeconds(ConfigurationSecondRobot.verticalWristWalltoIntake/1000)
+                    .stopAndAdd(verticalGrabberRR.verticalGrabberAction(ConfigurationSecondRobot.verticalOpen))
+                    .waitSeconds(ConfigurationSecondRobot.verticalCloseTime/1000)
+                    .build();
+        }
     }
-    double barX = -3;
-    public Action getPostHang(){
-        TrajectoryActionBuilder PostHang = currentTrajectory
-                .stopAndAdd(verticalGrabberRR.verticalGrabberAction(ConfigurationSecondRobot.verticalClose))
-                .waitSeconds(ConfigurationSecondRobot.verticalCloseTime/1000)
-                .stopAndAdd(verticalWristRR.VerticalWristAction(ConfigurationSecondRobot.verticalWristBasket))
-                .stopAndAdd(horizontalWristRR.horizontalWristAction(ConfigurationSecondRobot.horizontalWristTransfer))
-                //move to semi circle trajectory
+    public Action getAlltrajectory() {
+        return currentTrajectory
+                //hang
+                .splineToLinearHeading(new Pose2d(0, hangY, Math.toRadians(90)), Math.toRadians(90))
+                .waitSeconds(.5)
+                //back up a little
                 .setReversed(true)
-                .splineToLinearHeading(new Pose2d(43, postHumanY, Math.toRadians(-90)), Math.toRadians(90), speed)
-                .stopAndAdd(verticalWristRR.VerticalWristAction(ConfigurationSecondRobot.verticalWristBar))
-                .stopAndAdd(verticalSlideRR.verticalSlideAction(ConfigurationSecondRobot.highBar))
-                .setReversed(false)
-                .splineToLinearHeading(new Pose2d(barX, -33, Math.toRadians(90.0000001)), Math.toRadians(90), speed)
-                .stopAndAdd(verticalGrabberRR.verticalGrabberAction(ConfigurationSecondRobot.verticalOpenWide))
-                .stopAndAdd(verticalSlideRR.verticalSlideAction(ConfigurationSecondRobot.bottom))
-                .stopAndAdd(verticalWristRR.VerticalWristAction(ConfigurationSecondRobot.verticalWristWall))
-                //move back to human player
+                .splineToLinearHeading(new Pose2d(0, hangY-5, Math.toRadians(90)), Math.toRadians(-90))
+                //first butter
                 .setReversed(true)
-                .splineToLinearHeading(new Pose2d(43, postHumanY, Math.toRadians(-90)), Math.toRadians(90), speed)
-                .splineToLinearHeading(new Pose2d(43, postHumanPickUpY+.2, Math.toRadians(-90)), Math.toRadians(-90));
-//        barX +=2;
-        currentTrajectory = PostHang.endTrajectory().fresh();
-        return PostHang.build();
+                .splineToLinearHeading(new Pose2d(firstButterX, firstButterY, Math.toRadians(-90.01)), Math.toRadians(90))
+                .waitSeconds(.5)
+                //second butter
+                .setTangent(Math.toRadians(0))
+                .splineToLinearHeading(new Pose2d(secondButterX, secondButterY, Math.toRadians(-90)), Math.toRadians(0))
+                .waitSeconds(.5)
+                //third butter
+                .setReversed(true)
+                .splineToLinearHeading(new Pose2d(thirdButterX, thirdButterY , Math.toRadians(180)), Math.toRadians(90))
+                .waitSeconds(.5)
+                //go to human pickup
+                .setTangent(Math.toRadians(180))
+                .splineToLinearHeading(new Pose2d(60, -60, Math.toRadians(-.000001)), Math.toRadians(0))
+                .waitSeconds(.5)
+                //go to hang
+                .setTangent(Math.toRadians(90))
+                .splineToLinearHeading(new Pose2d(45, -45, Math.toRadians(179.999)), Math.toRadians(180))
+                .splineToLinearHeading(new Pose2d(-3, hangY, Math.toRadians(90)), Math.toRadians(90))
+                .setReversed(true)
+                .splineToLinearHeading(new Pose2d(-3, hangY-5, Math.toRadians(90)), Math.toRadians(-90))
+                //go back to human player
+                .setReversed(true)
+                .splineToLinearHeading(new Pose2d(humanX, humanY, Math.toRadians(-90.00001)), Math.toRadians(-90))
+                .waitSeconds(.5)
+                //go to hang
+                .setTangent(Math.toRadians(90))
+                .splineToLinearHeading(new Pose2d(0, hangY, Math.toRadians(90)), Math.toRadians(90))
+                .setReversed(true)
+                .splineToLinearHeading(new Pose2d(0, hangY-5, Math.toRadians(90)), Math.toRadians(-90))
+                //go to human player
+                .setReversed(true)
+                .splineToLinearHeading(new Pose2d(humanX, humanY, Math.toRadians(-90.00001)), Math.toRadians(-90))
+                .waitSeconds(.5)
+                //go to hang
+                .setTangent(Math.toRadians(90))
+                .splineToLinearHeading(new Pose2d(0, hangY, Math.toRadians(90)), Math.toRadians(90))
+                .setReversed(true)
+                .splineToLinearHeading(new Pose2d(0, hangY-5, Math.toRadians(90)), Math.toRadians(-90))
+                //go to human player
+                .setReversed(true)
+                .splineToLinearHeading(new Pose2d(humanX, humanY, Math.toRadians(-90.00001)), Math.toRadians(-90))
+                .waitSeconds(.5)
+                //go to hang
+                .setTangent(Math.toRadians(90))
+                .splineToLinearHeading(new Pose2d(0, hangY, Math.toRadians(90)), Math.toRadians(90))
+                .setReversed(true)
+                .splineToLinearHeading(new Pose2d(0, hangY-5, Math.toRadians(90)), Math.toRadians(-90))
+                //go to human player
+                .setReversed(true)
+                .splineToLinearHeading(new Pose2d(humanX, humanY, Math.toRadians(-90.00001)), Math.toRadians(-90))
+                .build();
     }
-    public Action ButterTransferAttachment(){
-        TrajectoryActionBuilder ButterTransferAttachment = currentTrajectory
-                .stopAndAdd(horizontalGrabberRR.horizontalGrabberAction(ConfigurationSecondRobot.horizontalGrabberClose))
-                .stopAndAdd(verticalGrabberRR.verticalGrabberAction(ConfigurationSecondRobot.verticalOpenWide))
-                .stopAndAdd(verticalWristRR.VerticalWristAction(ConfigurationSecondRobot.verticalWristIntake))
-                .waitSeconds(ConfigurationSecondRobot.horizontalGrabberWideTime/1000)
-                .stopAndAdd(horizontalWristRR.horizontalWristAction(ConfigurationSecondRobot.horizontalWristTransfer))
-                .waitSeconds(ConfigurationSecondRobot.horizontalWristIntaketoTransfer/1000)
-                .stopAndAdd(verticalGrabberRR.verticalGrabberAction(ConfigurationSecondRobot.verticalClose))
-                .waitSeconds(ConfigurationSecondRobot.verticalCloseTime/1000)
-                .stopAndAdd(horizontalGrabberRR.horizontalGrabberAction(ConfigurationSecondRobot.horizontalGrabberWide))
-                .waitSeconds(ConfigurationSecondRobot.horizontalGrabberWideTime/1000)
-                .stopAndAdd(horizontalWristRR.horizontalWristAction(ConfigurationSecondRobot.horizontalWristIntake))
-                .stopAndAdd(verticalWristRR.VerticalWristAction(ConfigurationSecondRobot.verticalWristWall))
-                .waitSeconds(ConfigurationSecondRobot.verticalWristWalltoIntake/1000)
-                .stopAndAdd(verticalGrabberRR.verticalGrabberAction(ConfigurationSecondRobot.verticalOpenWide));
-        return ButterTransferAttachment.build();
+    public Action testTransfer(boolean extend){
+        if(extend){
+            return currentTrajectory
+                    .stopAndAdd(horizontalSlideRR.horizontalSlideActions(ConfigurationSecondRobot.horizontalSlideExtend))
+                    .stopAndAdd(horizontalWristRR.horizontalWristAction(ConfigurationSecondRobot.horizontalWristIntake))
+                    .stopAndAdd(horizontalGrabberRR.horizontalGrabberAction(ConfigurationSecondRobot.horizontalGrabberWide))
+                    .stopAndAdd(verticalWristRR.VerticalWristAction(ConfigurationSecondRobot.verticalWristIntake))
+                    .stopAndAdd(verticalGrabberRR.verticalGrabberAction(ConfigurationSecondRobot.verticalOpenWide))
+                    .waitSeconds(1)
+                    .stopAndAdd(horizontalGrabberRR.horizontalGrabberAction(ConfigurationSecondRobot.horizontalGrabberClose))
+                    .waitSeconds(ConfigurationSecondRobot.horizontalGrabberWideTime/1000)
+                    .stopAndAdd(horizontalWristRR.horizontalWristAction(ConfigurationSecondRobot.horizontalWristTransfer))
+                    .stopAndAdd(horizontalSlideRR.horizontalSlideActions(ConfigurationSecondRobot.horizontalSlideRetract))
+                    .waitSeconds(ConfigurationSecondRobot.horizontalWristIntaketoTransfer/1000)
+                    .stopAndAdd(verticalGrabberRR.verticalGrabberAction(ConfigurationSecondRobot.verticalClose))
+                    .waitSeconds(ConfigurationSecondRobot.verticalCloseTime/1000)
+                    .stopAndAdd(horizontalGrabberRR.horizontalGrabberAction(ConfigurationSecondRobot.horizontalGrabberOpen))
+                    .waitSeconds(ConfigurationSecondRobot.horizontalGrabberCloseTime/1000)
+                    .stopAndAdd(verticalWristRR.VerticalWristAction(ConfigurationSecondRobot.verticalWristWall))
+                    .stopAndAdd(horizontalSlideRR.horizontalSlideActions(ConfigurationSecondRobot.horizontalSlideExtend))
+                    .stopAndAdd(horizontalWristRR.horizontalWristAction(ConfigurationSecondRobot.verticalWristIntake))
+                    .stopAndAdd(horizontalGrabberRR.horizontalGrabberAction(ConfigurationSecondRobot.horizontalGrabberWide))
+                    .waitSeconds(ConfigurationSecondRobot.verticalWristWalltoIntake/1000)
+                    .stopAndAdd(verticalGrabberRR.verticalGrabberAction(ConfigurationSecondRobot.verticalOpen))
+                    .waitSeconds(ConfigurationSecondRobot.verticalCloseTime/1000)
+                    .build();
+        }
+        else{
+            return currentTrajectory
+                    .stopAndAdd(horizontalSlideRR.horizontalSlideActions(ConfigurationSecondRobot.horizontalSlideExtend))
+                    .stopAndAdd(horizontalWristRR.horizontalWristAction(ConfigurationSecondRobot.horizontalWristIntake))
+                    .stopAndAdd(horizontalGrabberRR.horizontalGrabberAction(ConfigurationSecondRobot.horizontalGrabberWide))
+                    .stopAndAdd(verticalWristRR.VerticalWristAction(ConfigurationSecondRobot.verticalWristIntake))
+                    .stopAndAdd(verticalGrabberRR.verticalGrabberAction(ConfigurationSecondRobot.verticalOpenWide))
+                    .waitSeconds(1)
+                    .stopAndAdd(horizontalGrabberRR.horizontalGrabberAction(ConfigurationSecondRobot.horizontalGrabberClose))
+                    .waitSeconds(ConfigurationSecondRobot.horizontalGrabberWideTime/1000)
+                    .stopAndAdd(horizontalWristRR.horizontalWristAction(ConfigurationSecondRobot.horizontalWristTransfer))
+                    .stopAndAdd(horizontalSlideRR.horizontalSlideActions(ConfigurationSecondRobot.horizontalSlideRetract))
+                    .waitSeconds(ConfigurationSecondRobot.horizontalWristIntaketoTransfer/1000)
+                    .stopAndAdd(verticalGrabberRR.verticalGrabberAction(ConfigurationSecondRobot.verticalClose))
+                    .waitSeconds(ConfigurationSecondRobot.verticalCloseTime/1000)
+                    .stopAndAdd(horizontalGrabberRR.horizontalGrabberAction(ConfigurationSecondRobot.horizontalGrabberOpen))
+                    .waitSeconds(ConfigurationSecondRobot.horizontalGrabberCloseTime/1000)
+                    .stopAndAdd(verticalWristRR.VerticalWristAction(ConfigurationSecondRobot.verticalWristWall))
+//                    .stopAndAdd(horizontalSlideRR.horizontalSlideActions(ConfigurationSecondRobot.horizontalSlideExtend))
+                    .stopAndAdd(horizontalWristRR.horizontalWristAction(ConfigurationSecondRobot.verticalWristIntake))
+                    .stopAndAdd(horizontalGrabberRR.horizontalGrabberAction(ConfigurationSecondRobot.horizontalGrabberWide))
+                    .waitSeconds(ConfigurationSecondRobot.verticalWristWalltoIntake/1000)
+                    .stopAndAdd(verticalGrabberRR.verticalGrabberAction(ConfigurationSecondRobot.verticalOpen))
+                    .waitSeconds(ConfigurationSecondRobot.verticalCloseTime/1000)
+                    .build();
+        }
     }
-
 }
