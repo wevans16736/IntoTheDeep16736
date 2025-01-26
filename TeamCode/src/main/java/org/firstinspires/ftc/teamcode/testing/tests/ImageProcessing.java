@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.testing.tests;
 
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
+import org.firstinspires.ftc.teamcode.secondrobot.ContourLocatorProcessor;
 import org.firstinspires.ftc.teamcode.secondrobot.DetectBlockActions;
 import org.junit.Assert;
 import org.junit.Test;
@@ -304,6 +305,22 @@ public class ImageProcessing {
 //            RotatedRect oval = Imgproc.fitEllipseAMS(contours.get(i));
 //            contourArea[i] = oval.size.area();
 //        }
+    }
+    @Test
+    public void testContourLocatorProcessor() {
+        System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
+
+        String pathImg = "src/main/java/org/firstinspires/ftc/teamcode/testing/tests/data/rgb.jpg";
+
+        File fileImg = new File(pathImg);
+        String absolutePathImg = fileImg.getAbsolutePath();
+        Mat img = Imgcodecs.imread(absolutePathImg, Imgcodecs.IMREAD_COLOR);
+        Imgproc.cvtColor(img, img, Imgproc.COLOR_BGR2XYZ);
+        Imgproc.cvtColor(img, img, Imgproc.COLOR_RGB2BGR);
+        int type = img.type();
+        ContourLocatorProcessor contourLocatorProcessor = new ContourLocatorProcessor.Builder()
+                .build();
+        contourLocatorProcessor.contourAndOval(img);
     }
     @Test
     public void testPixelToInches() {

@@ -35,15 +35,10 @@ public class DetectBlockActions {
     int pixelWidth = 640;
     int pixelHeight = 480;
     VisionPortal portal;
-    private ColorBlobLocatorProcessor colorLocator;
+    private ContourLocatorProcessor colorLocator;
 
     public DetectBlockActions(HardwareMap hardwareMap) {
-        colorLocator = new ColorBlobLocatorProcessor.Builder()
-                .setTargetColorRange(new ColorRange(ColorSpace.HSV, new Scalar(10, 70, 70), new Scalar(30, 255, 255)))
-                .setContourMode(ColorBlobLocatorProcessor.ContourMode.EXTERNAL_ONLY)    // exclude blobs inside blobs
-                .setErodeSize(32)
-                .setRoi(ImageRegion.asUnityCenterCoordinates(-1.0, 1.0, 1.0, -1.0))  // search central 1/4 of camera view
-                .setDrawContours(true)
+        colorLocator = new ContourLocatorProcessor.Builder()
                 .build();
 
         portal = new VisionPortal.Builder()
@@ -88,50 +83,51 @@ public class DetectBlockActions {
         exposureControl.setExposure((long) 30, TimeUnit.MILLISECONDS);
     }
 
-    public void colorLocator() {
-        List<ColorBlobLocatorProcessor.Blob> blobs = colorLocator.getBlobs();
-        if (blobs.size() > 0) {
-            double minDistance = 100000;
-            int minContour = 0;
-            RotatedRect minOval = new RotatedRect();
-            double maxArea = 100000000; //TODO
-            double minArea = 100000; //100,000
-            for (int i = 0; i < blobs.size(); i++) {
-                if (blobs.get(i).getContour().rows() > 5) {
-                    RotatedRect newOval = Imgproc.fitEllipseAMS(blobs.get(i).getContour());
-                    double distance = Math.sqrt(Math.pow(newOval.center.x - (pixelWidth / 2.0), 2.0) + Math.pow(newOval.center.y - (pixelHeight / 2.0), 2.0));
-                    double area = newOval.size.area();
-                    if (minArea < area && area < maxArea && distance < minDistance) {
-                        minOval = newOval;
-                        minDistance = distance;
-                    }
-                }
-            }
-
-            if (minOval != new RotatedRect()) {
-                Point center = minOval.center;
-                double angle = minOval.angle;
-                setCenterAndAngle(center, angle);
-//            RobotLog.dd("Camera", "center %f, %f", center.x, center.y);
-            } else {
-                Point center = new Point(pixelWidth / 2.0, pixelHeight / 2.0);
-                setCenterAndAngle(center, 0);
-            }
-        }
-    }
+//    public void colorLocator() {
+//        List<ColorBlobLocatorProcessor.Blob> blobs = colorLocator.getBlobs();
+//        if (blobs.size() > 0) {
+//            double minDistance = 100000;
+//            int minContour = 0;
+//            RotatedRect minOval = new RotatedRect();
+//            double maxArea = 100000000; //TODO
+//            double minArea = 100000; //100,000
+//            for (int i = 0; i < blobs.size(); i++) {
+//                if (blobs.get(i).getContour().rows() > 5) {
+//                    RotatedRect newOval = Imgproc.fitEllipseAMS(blobs.get(i).getContour());
+//                    double distance = Math.sqrt(Math.pow(newOval.center.x - (pixelWidth / 2.0), 2.0) + Math.pow(newOval.center.y - (pixelHeight / 2.0), 2.0));
+//                    double area = newOval.size.area();
+//                    if (minArea < area && area < maxArea && distance < minDistance) {
+//                        minOval = newOval;
+//                        minDistance = distance;
+//                    }
+//                }
+//            }
+//
+//            if (minOval != new RotatedRect()) {
+//                Point center = minOval.center;
+//                double angle = minOval.angle;
+//                setCenterAndAngle(center, angle);
+////            RobotLog.dd("Camera", "center %f, %f", center.x, center.y);
+//            } else {
+//                Point center = new Point(pixelWidth / 2.0, pixelHeight / 2.0);
+//                setCenterAndAngle(center, 0);
+//            }
+//        }
+//    }
 
     public void setIsRed(boolean isRed) {
-        this.isRed = isRed;
+        colorLocator.setIsRed(isRed);
     }
     public void setCenterTest(Point center){
         this.center = center;
     }
 
     public Point pixelToPosition() {
+        setCenterAndAngle(colorLocator.getCenter(), colorLocator.getAngle());
         double pixelX = center.x;
         double pixelY = center.y;
         double degreesPerPixel = 63.0 / (double) pixelWidth;
-        double YOffsetDegrees = 45.0; //TODO
+        double YOffsetDegrees = 10.0; //TODO
         double degreesX = (pixelX - ((double) pixelWidth / 2.0)) * degreesPerPixel;
         double degreesY = (pixelY - ((double) pixelHeight / 2.0)) * degreesPerPixel - YOffsetDegrees;
         double cameraHeight = 2.0; //Inches, from top of block to camera lens, TODO
