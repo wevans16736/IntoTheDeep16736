@@ -27,7 +27,7 @@ public class Auto extends LinearOpMode {
         //set up Pinpoint and Pose2d class
         Pose2d pose;
         PinpointDrive drive;
-        boolean side = false; //determine which side
+        boolean side = true; //determine which side
 
         //all of these class is under Configuration.secondRobot
         VerticalSlideRR verticalSlide = new VerticalSlideRR(hardwareMap);
@@ -54,49 +54,63 @@ public class Auto extends LinearOpMode {
         TrajectoryLeft trajectoryLeft = new TrajectoryLeft(drive, pose, verticalSlide, verticalWrist, verticalGrabber,
                 verticalHanger, horizontalSlide, horizontalRoll, horizontalGrabber, horizontalWrist);
 
-        Action getHangBuilt = trajectory.getHang();
+        Action getHang1Built = trajectory.getHang();
+        Action getFirstButterBuilt = trajectory.getFirstButter();
+        Action getSecondButterBuilt = trajectory.getSecondButter();
+        Action getTransferFalseBuilt = trajectory.getTransfer(false);
+        Action getTransferTrueBuilt = trajectory.getTransfer(true);
+        Action getThirdButterBuilt = trajectory.getThirdButter();
+        Action getHang2Built = trajectory.getHang();
+        Action getHang3Built = trajectory.getHang();
+        Action getHang4Built = trajectory.getHang();
+        Action getHang5Built = trajectory.getHang();
+
+
+        telemetry.clearAll();
+        telemetry.addLine("ready :)");
+        telemetry.update();
         //wait for the start button to be press
         waitForStart();
         //if the stop button press then stop the robot
         if (isStopRequested()) return;
-        if(!side) {
+        if(side) {
+            Actions.runBlocking(new SequentialAction(
+//                    trajectoryLeft.getAllTrajectory()
+
+                    trajectoryLeft.getInitialBasket(),
+                    trajectoryLeft.getFirstButter(),
+                    new ParallelAction(
+                            trajectoryLeft.getButterAttachment(),
+                            trajectoryLeft.getBasket()
+                    ),
+                    trajectoryLeft.getSecondButter(),
+                    new ParallelAction(
+                            trajectoryLeft.getButterAttachment(),
+                            trajectoryLeft.getBasket()
+                    ),
+                    trajectoryLeft.getThirdButter(),
+                    new ParallelAction(
+                            trajectoryLeft.getButterAttachment(),
+                            trajectoryLeft.getBasket()
+                    ),
+                    trajectoryLeft.getPark()
+            ));
+        }  if(!side) {
             Actions.runBlocking(new SequentialAction(
 //                    trajectory.getAlltrajectory()
 //                    trajectory.testTransfer(),
-                    getHangBuilt,
-                    trajectory.getFirstButter(),
+                    getHang1Built,
+                    getFirstButterBuilt,
                     new ParallelAction(
-                            trajectory.getSecondButter(),
-                            trajectory.getTransfer(true)
+                            getSecondButterBuilt,
+                            getTransferTrueBuilt
                     ),
-                    trajectory.getTransfer(false),
-                    trajectory.getThirdButter(),
-                    trajectory.getHang(),
-                    trajectory.getHang(),
-                    trajectory.getHang(),
-                    trajectory.getHang()
-            ));
-        } if(side) {
-            Actions.runBlocking(new SequentialAction(
-                    trajectoryLeft.getAllTrajectory()
-
-//                    trajectoryLeft.getInitialBasket(),
-//                    trajectoryLeft.getFirstButter(),
-//                    new ParallelAction(
-//                            trajectoryLeft.getButterAttachment(),
-//                            trajectoryLeft.getBasket()
-//                    ),
-//                    trajectoryLeft.getSecondButter(),
-//                    new ParallelAction(
-//                            trajectoryLeft.getButterAttachment(),
-//                            trajectoryLeft.getBasket()
-//                    ),
-//                    trajectoryLeft.getThirdButter(),
-//                    new ParallelAction(
-//                            trajectoryLeft.getButterAttachment(),
-//                            trajectoryLeft.getBasket()
-//                    ),
-//                    trajectoryLeft.getPark()
+                    getTransferFalseBuilt,
+                    getThirdButterBuilt,
+                    getHang2Built,
+                    getHang3Built,
+                    getHang4Built,
+                    getHang5Built
             ));
         }
     }
