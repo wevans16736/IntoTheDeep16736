@@ -27,7 +27,6 @@ public class Auto extends LinearOpMode {
         //set up Pinpoint and Pose2d class
         Pose2d pose;
         PinpointDrive drive;
-        boolean side = true; //determine which side
 
         //all of these class is under Configuration.secondRobot
         VerticalSlideRR verticalSlide = new VerticalSlideRR(hardwareMap);
@@ -40,6 +39,38 @@ public class Auto extends LinearOpMode {
         HorizontalWristRR horizontalWrist = new HorizontalWristRR(hardwareMap);
         VerticalHangerRR verticalHanger = new VerticalHangerRR(hardwareMap);
 
+//        DriverRequest driverRequest = new DriverRequest();
+        boolean side = false; //determine which side
+        boolean sideway = false; //determine roll if left choosen
+        boolean attempt = true; //determine if we even want to try blind pick
+        telemetry.clearAll();
+        while(!gamepad1.right_bumper){
+            telemetry.addLine("Choose which side? (circle)");
+            telemetry.addData("Left Side ", side);
+            telemetry.addData("Right Side", !side);
+            if(gamepad1.circle){
+                side = !side;
+            }
+            telemetry.update();
+            sleep(500);
+        }
+        sleep(1000);
+        telemetry.clearAll();
+        if(side){
+            while(!gamepad1.right_bumper) {
+                telemetry.addLine("Sideway required? (circle)");
+                telemetry.addData("Sideway: ", sideway);
+                telemetry.addData("Attempt blind grab? (square)", attempt);
+                if(gamepad1.circle){
+                    sideway = !sideway;
+                }
+                if(gamepad1.square){
+                    attempt = !attempt;
+                }
+                telemetry.update();
+                sleep(500);
+            }
+        }
         if(!side){
             pose = new Pose2d(9,-64,Math.toRadians(90));
             drive = new PinpointDrive(hardwareMap, pose);
@@ -54,6 +85,7 @@ public class Auto extends LinearOpMode {
         TrajectoryLeft trajectoryLeft = new TrajectoryLeft(drive, pose, verticalSlide, verticalWrist, verticalGrabber,
                 verticalHanger, horizontalSlide, horizontalRoll, horizontalGrabber, horizontalWrist);
 
+
         Action getHang1Built = trajectory.getHang();
         Action getFirstButterBuilt = trajectory.getFirstButter();
         Action getSecondButterBuilt = trajectory.getSecondButter();
@@ -64,7 +96,6 @@ public class Auto extends LinearOpMode {
         Action getHang3Built = trajectory.getHang();
         Action getHang4Built = trajectory.getHang();
         Action getHang5Built = trajectory.getHang();
-
 
         telemetry.clearAll();
         telemetry.addLine("ready :)");
@@ -80,18 +111,23 @@ public class Auto extends LinearOpMode {
                     trajectoryLeft.getInitialBasket(),
                     trajectoryLeft.getFirstButter(),
                     new ParallelAction(
-                            trajectoryLeft.getButterAttachment(),
-                            trajectoryLeft.getBasket()
+                            trajectoryLeft.getButterAttachment(false, true),
+                            trajectoryLeft.getBasket(false, true)
                     ),
                     trajectoryLeft.getSecondButter(),
                     new ParallelAction(
-                            trajectoryLeft.getButterAttachment(),
-                            trajectoryLeft.getBasket()
+                            trajectoryLeft.getButterAttachment(false, true),
+                            trajectoryLeft.getBasket(false, true)
                     ),
                     trajectoryLeft.getThirdButter(),
                     new ParallelAction(
-                            trajectoryLeft.getButterAttachment(),
-                            trajectoryLeft.getBasket()
+                            trajectoryLeft.getButterAttachment(false, true),
+                            trajectoryLeft.getBasket(false, true)
+                    ),
+                    trajectoryLeft.getSubmersible(sideway, attempt),
+                    new ParallelAction(
+                            trajectoryLeft.getButterAttachment(true, attempt),
+                            trajectoryLeft.getBasket(true, attempt)
                     ),
                     trajectoryLeft.getPark()
             ));
