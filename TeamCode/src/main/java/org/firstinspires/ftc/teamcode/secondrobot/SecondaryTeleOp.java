@@ -38,7 +38,7 @@ public class SecondaryTeleOp extends HelperActions {
         verticalWrist = new VerticalWristActions(telemetry, hardwareMap);
         verticalGrabber = new VerticalGrabberActions(telemetry, hardwareMap);
         verticalHanger = new VerticalHangerActions(hardwareMap);
-//        detectBlockActions = new DetectBlockActions(hardwareMap);
+        //detectBlockActions = new DetectBlockActions(hardwareMap);
         //Set Speed for teleOp. Mecannum wheel speed.
         //driveActions.setSpeed(1.0);
 
@@ -85,7 +85,7 @@ public class SecondaryTeleOp extends HelperActions {
 
             /** Gamepad 2 **/
             //use the player 2 left joystick to run the horizontal slide
-            horizontalSlide.teleOpArmMotor(-gamepad2.left_stick_y * Math.abs(gamepad2.left_stick_y), 1);
+            horizontalSlide.teleOpArmMotor(-gamepad2.left_stick_y * Math.abs(gamepad2.left_stick_y), 1.5);
             //rotate the servo with intake in it
             horizontalWrist.flipping(gamepad2.left_bumper);
             //force the servo to flip bypassing the range limit apply
