@@ -41,15 +41,15 @@ public class Trajectory {
             new AngularVelConstraint(Math.PI*8)
     ));
     double hangX = 0;
-    double hangY = -34.5;
-    double firstButterX = 48.15;
-    double firstButterY = -35.5;
+    double hangY = -32;
+    double firstButterX = 49.5;
+    double firstButterY = -35.25;
     double secondButterX = 58.75;
-    double secondButterY = -45.75;
+    double secondButterY = -45.5;
     double thirdButterX = 56.5;
     double thirdButterY = -26.75;
     double humanX = 42;
-    double humanY = -54.75;
+    double humanY = -50;
     int counter = 0;
     public Action getHang(){
         if(counter == 0) {
@@ -59,11 +59,12 @@ public class Trajectory {
                     .afterTime(0, verticalGrabberRR.verticalGrabberAction(ConfigurationSecondRobot.verticalClose))
                     .splineToLinearHeading(new Pose2d(0, hangY-.1, Math.toRadians(90)), Math.toRadians(90))
                     .stopAndAdd(verticalGrabberRR.verticalGrabberAction(ConfigurationSecondRobot.verticalOpenWide))
+                    .stopAndAdd(verticalWristRR.VerticalWristAction(ConfigurationSecondRobot.verticalWristWall))
                     .setReversed(true)
                     .splineToLinearHeading(new Pose2d(0, hangY-3, Math.toRadians(90)), Math.toRadians(-90));
             currentTrajectory = Hang.endTrajectory().fresh();
             counter++;
-            hangX = -11;
+            hangX = -13;
             return Hang.build();
         } if(counter == 1){
             TrajectoryActionBuilder Hang = currentTrajectory
@@ -74,20 +75,19 @@ public class Trajectory {
                     .stopAndAdd(horizontalWristRR.horizontalWristAction(ConfigurationSecondRobot.horizontalWristTransfer))
                     .setTangent(Math.toRadians(90))
                     .splineToLinearHeading(new Pose2d(45, -45, Math.toRadians(179.999)), Math.toRadians(180), butterSpeed)
-                    .splineToLinearHeading(new Pose2d(hangX, hangY+.25, Math.toRadians(90)), Math.toRadians(90), butterSpeed)
+                    .splineToLinearHeading(new Pose2d(hangX, hangY, Math.toRadians(90)), Math.toRadians(90), butterSpeed)
                     .stopAndAdd(verticalGrabberRR.verticalGrabberAction(ConfigurationSecondRobot.verticalOpen))
                     .setReversed(true)
                     .splineToLinearHeading(new Pose2d(hangX, hangY-3, Math.toRadians(90)), Math.toRadians(-90))
-                    .afterDisp(8, verticalGrabberRR.verticalGrabberAction(ConfigurationSecondRobot.verticalClose))
                     .afterTime(1, verticalSlideRR.verticalSlideAction(ConfigurationSecondRobot.bottom))
-                    .afterTime(1, verticalWristRR.VerticalWristAction(ConfigurationSecondRobot.verticalWristWall))
+                    .afterTime(0, verticalWristRR.VerticalWristAction(ConfigurationSecondRobot.verticalWristWall))
                     .afterTime(1, verticalGrabberRR.verticalGrabberAction(ConfigurationSecondRobot.verticalOpenWide))
                     .setReversed(true)
 //                    .splineToLinearHeading(new Pose2d(humanX, humanY+2.25, Math.toRadians(-90.00001)), Math.toRadians(-90))
                     .splineToLinearHeading(new Pose2d(humanX, humanY, Math.toRadians(-90.00001)), Math.toRadians(-90));
             currentTrajectory = Hang.endTrajectory().fresh();
             counter++;
-            hangX += 2;
+            hangX += 3;
             return Hang.build();
         } else{
             TrajectoryActionBuilder Hang = currentTrajectory
@@ -97,25 +97,24 @@ public class Trajectory {
                     .stopAndAdd(verticalWristRR.VerticalWristAction(ConfigurationSecondRobot.verticalWristBar))
                     .stopAndAdd(horizontalWristRR.horizontalWristAction(ConfigurationSecondRobot.horizontalWristTransfer))
                     .setTangent(Math.toRadians(90))
-                    .splineToLinearHeading(new Pose2d(hangX, hangY+.25, Math.toRadians(90)), Math.toRadians(90))
+                    .splineToLinearHeading(new Pose2d(hangX, hangY, Math.toRadians(90)), Math.toRadians(90))
                     .stopAndAdd(verticalGrabberRR.verticalGrabberAction(ConfigurationSecondRobot.verticalOpen))
                     .setReversed(true)
                     .splineToLinearHeading(new Pose2d(hangX, hangY-3, Math.toRadians(90)), Math.toRadians(-90))
-                    .afterDisp(8, verticalGrabberRR.verticalGrabberAction(ConfigurationSecondRobot.verticalClose))
                     .afterTime(1, verticalSlideRR.verticalSlideAction(ConfigurationSecondRobot.bottom))
-                    .afterTime(1, verticalWristRR.VerticalWristAction(ConfigurationSecondRobot.verticalWristWall))
+                    .afterTime(0, verticalWristRR.VerticalWristAction(ConfigurationSecondRobot.verticalWristWall))
                     .afterTime(1, verticalGrabberRR.verticalGrabberAction(ConfigurationSecondRobot.verticalOpenWide))
                     .setReversed(true)
 //                    .splineToLinearHeading(new Pose2d(humanX, humanY+2.25, Math.toRadians(-90.00001)), Math.toRadians(-90))
                     .splineToLinearHeading(new Pose2d(humanX, humanY, Math.toRadians(-90.00001)), Math.toRadians(-90));
             currentTrajectory = Hang.endTrajectory().fresh();
-            hangX +=2;
+            hangX += 3;
             return Hang.build();
         }
     }
     public Action getFirstButter(){
         TrajectoryActionBuilder FirstButter = currentTrajectory
-                .afterTime(0, verticalWristRR.VerticalWristAction(ConfigurationSecondRobot.verticalWristIntake))
+                .afterTime(.5, verticalWristRR.VerticalWristAction(ConfigurationSecondRobot.verticalWristIntake))
                 .afterTime(.5, verticalSlideRR.verticalSlideAction(ConfigurationSecondRobot.bottom))
 //                .afterDisp(30, horizontalSlideRR.horizontalSlideActions(ConfigurationSecondRobot.horizontalSlideExtend))
                 .afterDisp(30, horizontalGrabberRR.horizontalGrabberAction(ConfigurationSecondRobot.horizontalGrabberWide))
@@ -129,6 +128,7 @@ public class Trajectory {
     public Action getSecondButter(){
         TrajectoryActionBuilder SecondButter = currentTrajectory
                 .waitSeconds(ConfigurationSecondRobot.horizontalGrabberWideTime/1000)
+                .waitSeconds(.1)
                 .setTangent(Math.toRadians(-90))
                 .splineToLinearHeading(new Pose2d(secondButterX, secondButterY, Math.toRadians(-90)), Math.toRadians(0),butterSpeed);
         currentTrajectory = SecondButter.endTrajectory().fresh();

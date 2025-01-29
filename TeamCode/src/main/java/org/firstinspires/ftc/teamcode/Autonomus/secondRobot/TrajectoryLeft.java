@@ -55,10 +55,10 @@ public class TrajectoryLeft {
     ));
     double BasketX = -56.5;
     double BasketY = -55;
-    double FirstButterX = -50.5;
+    double FirstButterX = -48.5;
     double FirstButterY = -35;
     double SecondButterX = -60.75;
-    double SecondButterY = -34.75;
+    double SecondButterY = -35;
     double ThirdButterX = -60.5;
     double ThirdButterY = -24;
     public Action getAllTrajectory(){
@@ -123,7 +123,7 @@ public class TrajectoryLeft {
                         .stopAndAdd(horizontalGrabberRR.horizontalGrabberAction(ConfigurationSecondRobot.horizontalGrabberClose))
                         .waitSeconds(2)
                         .setTangent(Math.toRadians(-45))
-                        .splineToLinearHeading(new Pose2d(BasketX, BasketY, Math.toRadians(225)), Math.toRadians(225), butterSpeed);
+                        .splineToLinearHeading(new Pose2d(BasketX+2, BasketY-2, Math.toRadians(225)), Math.toRadians(225), butterSpeed);
                 currentTrajectory = Basket.endTrajectory().fresh();
                 return Basket.build();
             } else {
@@ -267,7 +267,7 @@ public class TrajectoryLeft {
                 .splineToLinearHeading(new Pose2d(BasketX,0, Math.toRadians(0)), Math.toRadians(90))
                 .stopAndAdd(verticalGrabberRR.verticalGrabberAction(ConfigurationSecondRobot.verticalClose))
                 .setTangent(0)
-                .splineToLinearHeading(new Pose2d(-30.5, 0, Math.toRadians(0)), Math.toRadians(0), slow)
+                .splineToLinearHeading(new Pose2d(-30, 0, Math.toRadians(0)), Math.toRadians(0), slow)
                 .waitSeconds(.1)
                 .stopAndAdd(verticalWristRR.VerticalWristAction(ConfigurationSecondRobot.verticalWristBar))
                 .waitSeconds(1);
