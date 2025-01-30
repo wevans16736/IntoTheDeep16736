@@ -97,7 +97,7 @@ public class Trajectory {
                     .stopAndAdd(verticalWristRR.VerticalWristAction(ConfigurationSecondRobot.verticalWristBar))
                     .stopAndAdd(horizontalWristRR.horizontalWristAction(ConfigurationSecondRobot.horizontalWristTransfer))
                     .setTangent(Math.toRadians(90))
-                    .splineToLinearHeading(new Pose2d(hangX, hangY, Math.toRadians(90)), Math.toRadians(90))
+                    .splineToLinearHeading(new Pose2d(hangX, hangY+2, Math.toRadians(90)), Math.toRadians(90))
                     .stopAndAdd(verticalGrabberRR.verticalGrabberAction(ConfigurationSecondRobot.verticalOpen))
                     .setReversed(true)
                     .splineToLinearHeading(new Pose2d(hangX, hangY-3, Math.toRadians(90)), Math.toRadians(-90))

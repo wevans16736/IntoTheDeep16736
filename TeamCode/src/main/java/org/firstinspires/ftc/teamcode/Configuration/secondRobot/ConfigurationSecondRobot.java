@@ -17,7 +17,7 @@ public class ConfigurationSecondRobot {
     public static int highBar = 800;
     public static int bottom = 0;
     public static int lowBar = 2000;
-    public static int topBasket = 2300;
+    public static int topBasket = 2360;
     //added 280 on 1/3/2024
 
     public static double verticalSlideBottomToHighBar = 1500;

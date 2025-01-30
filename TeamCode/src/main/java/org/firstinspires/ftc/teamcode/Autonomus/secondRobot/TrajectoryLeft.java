@@ -9,6 +9,7 @@ import com.acmerobotics.roadrunner.TranslationalVelConstraint;
 import com.acmerobotics.roadrunner.Vector2d;
 import com.acmerobotics.roadrunner.VelConstraint;
 
+import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.Configuration.secondRobot.ConfigurationSecondRobot;
 import org.firstinspires.ftc.teamcode.Configuration.secondRobot.HorizontalGrabberRR;
 import org.firstinspires.ftc.teamcode.Configuration.secondRobot.HorizontalRollRR;
@@ -49,6 +50,11 @@ public class TrajectoryLeft {
             new TranslationalVelConstraint(ConfigurationSecondRobot.driveVelocity),
             new AngularVelConstraint(Math.PI*8)
     ));
+    VelConstraint basketSpeed = new MinVelConstraint(Arrays.asList(
+            new TranslationalVelConstraint(100),
+            new AngularVelConstraint(Math.PI*4)
+    ));
+
     VelConstraint slow = new MinVelConstraint(Arrays.asList(
             new TranslationalVelConstraint(15),
             new AngularVelConstraint(Math.PI)
@@ -60,7 +66,7 @@ public class TrajectoryLeft {
     double SecondButterX = -60.75;
     double SecondButterY = -35;
     double ThirdButterX = -60.5;
-    double ThirdButterY = -24;
+    double ThirdButterY = -24.5;
     public Action getAllTrajectory(){
         return currentTrajectory
                 //get to the basket
@@ -131,8 +137,10 @@ public class TrajectoryLeft {
                         .stopAndAdd(horizontalGrabberRR.horizontalGrabberAction(ConfigurationSecondRobot.horizontalGrabberClose))
                         .setReversed(true)
                         .splineToLinearHeading(new Pose2d(BasketX + 15, 0, Math.toRadians(180)), Math.toRadians(-90), butterSpeed)
-                        .splineToLinearHeading(new Pose2d(BasketX+1, BasketY, Math.toRadians(225)), Math.toRadians(225), butterSpeed);
+                        .splineToLinearHeading(new Pose2d(BasketX+5, BasketY + 5, Math.toRadians(225)), Math.toRadians(225), butterSpeed)
+                        .splineToLinearHeading(new Pose2d(BasketX+1, BasketY, Math.toRadians(225)), Math.toRadians(225), basketSpeed);
                 currentTrajectory = Basket.endTrajectory().fresh();
+
                 return Basket.build();
             }
         } else {
@@ -194,6 +202,7 @@ public class TrajectoryLeft {
                         .stopAndAdd(horizontalSlideRR.horizontalSlideActions(ConfigurationSecondRobot.horizontalSlideRetract))
                         .stopAndAdd(horizontalRollRR.horizontalRollAction(ConfigurationSecondRobot.flat))
                         .waitSeconds(ConfigurationSecondRobot.horizontalWristIntaketoTransfer / 1000)
+                        .waitSeconds(.5)
                         .stopAndAdd(verticalGrabberRR.verticalGrabberAction(ConfigurationSecondRobot.verticalClose))
                         .waitSeconds(ConfigurationSecondRobot.verticalCloseTime / 1000)
                         .stopAndAdd(horizontalGrabberRR.horizontalGrabberAction(ConfigurationSecondRobot.horizontalGrabberWide))
@@ -231,7 +240,6 @@ public class TrajectoryLeft {
                 TrajectoryActionBuilder Submersible = currentTrajectory
                         .stopAndAdd(verticalGrabberRR.verticalGrabberAction(ConfigurationSecondRobot.verticalOpen))
                         .waitSeconds(ConfigurationSecondRobot.verticalCloseTime / 1000)
-                        .stopAndAdd(verticalGrabberRR.verticalGrabberAction(ConfigurationSecondRobot.verticalClose))
                         .stopAndAdd(verticalSlideRR.verticalSlideAction(ConfigurationSecondRobot.bottom))
                         .stopAndAdd(verticalWristRR.VerticalWristAction(ConfigurationSecondRobot.verticalWristIntake))
                         .setTangent(Math.toRadians(45))
@@ -239,11 +247,13 @@ public class TrajectoryLeft {
                         .stopAndAdd(horizontalSlideRR.horizontalSlideActions(ConfigurationSecondRobot.horizontalSlideExtend))
                         .stopAndAdd(horizontalWristRR.horizontalWristAction(ConfigurationSecondRobot.horizontalWristHover))
                         .stopAndAdd(horizontalGrabberRR.horizontalGrabberAction(ConfigurationSecondRobot.horizontalGrabberWide))
-                        .stopAndAdd(horizontalRollRR.horizontalRollAction(ConfigurationSecondRobot.sideway))
                         .setTangent(0)
                         .splineToLinearHeading(new Pose2d(-25, 0, Math.toRadians(180)), Math.toRadians(0), slow)
                         .stopAndAdd(horizontalWristRR.horizontalWristAction(ConfigurationSecondRobot.horizontalWristIntake))
-                        .waitSeconds(.5);
+                        .waitSeconds(.25)
+                        .stopAndAdd(horizontalRollRR.horizontalRollAction(ConfigurationSecondRobot.sideway))
+                        .waitSeconds(.25)
+                ;
                 currentTrajectory = Submersible.endTrajectory().fresh();
                 return Submersible.build();
             }
