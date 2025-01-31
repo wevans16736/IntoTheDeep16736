@@ -27,7 +27,6 @@ public class Auto extends LinearOpMode {
         //set up Pinpoint and Pose2d class
         Pose2d pose;
         PinpointDrive drive;
-        boolean side = false; //determine which side
 
         //all of these class is under Configuration.secondRobot
         VerticalSlideRR verticalSlide = new VerticalSlideRR(hardwareMap);
@@ -40,6 +39,38 @@ public class Auto extends LinearOpMode {
         HorizontalWristRR horizontalWrist = new HorizontalWristRR(hardwareMap);
         VerticalHangerRR verticalHanger = new VerticalHangerRR(hardwareMap);
 
+//        DriverRequest driverRequest = new DriverRequest();
+        boolean side = false; //determine which side
+        boolean sideway = false; //determine roll if left choosen
+        boolean attempt = true; //determine if we even want to try blind pick
+        telemetry.clearAll();
+        while(!gamepad1.right_bumper){
+            telemetry.addLine("Choose which side? (circle)");
+            telemetry.addData("Left Side ", side);
+            telemetry.addData("Right Side", !side);
+            if(gamepad1.circle){
+                side = !side;
+            }
+            telemetry.update();
+            sleep(500);
+        }
+        sleep(1000);
+        telemetry.clearAll();
+        if(side){
+            while(!gamepad1.right_bumper) {
+                telemetry.addLine("Sideway required? (circle)");
+                telemetry.addData("Sideway: ", sideway);
+                telemetry.addData("Attempt blind grab? (square)", attempt);
+                if(gamepad1.circle){
+                    sideway = !sideway;
+                }
+                if(gamepad1.square){
+                    attempt = !attempt;
+                }
+                telemetry.update();
+                sleep(500);
+            }
+        }
         if(!side){
             pose = new Pose2d(9,-64,Math.toRadians(90));
             drive = new PinpointDrive(hardwareMap, pose);
@@ -54,49 +85,68 @@ public class Auto extends LinearOpMode {
         TrajectoryLeft trajectoryLeft = new TrajectoryLeft(drive, pose, verticalSlide, verticalWrist, verticalGrabber,
                 verticalHanger, horizontalSlide, horizontalRoll, horizontalGrabber, horizontalWrist);
 
-        Action getHangBuilt = trajectory.getHang();
+
+        Action getHang1Built = trajectory.getHang();
+        Action getFirstButterBuilt = trajectory.getFirstButter();
+        Action getSecondButterBuilt = trajectory.getSecondButter();
+        Action getTransferFalseBuilt = trajectory.getTransfer(false);
+        Action getTransferTrueBuilt = trajectory.getTransfer(true);
+        Action getThirdButterBuilt = trajectory.getThirdButter();
+        Action getHang2Built = trajectory.getHang();
+        Action getHang3Built = trajectory.getHang();
+        Action getHang4Built = trajectory.getHang();
+        Action getHang5Built = trajectory.getHang();
+
+        telemetry.clearAll();
+        telemetry.addLine("ready :)");
+        telemetry.update();
         //wait for the start button to be press
         waitForStart();
         //if the stop button press then stop the robot
         if (isStopRequested()) return;
-        if(!side) {
+        if(side) {
+            Actions.runBlocking(new SequentialAction(
+//                    trajectoryLeft.getAllTrajectory()
+
+                    trajectoryLeft.getInitialBasket(),
+                    trajectoryLeft.getFirstButter(),
+                    new ParallelAction(
+                            trajectoryLeft.getButterAttachment(false, true),
+                            trajectoryLeft.getBasket(false, true)
+                    ),
+                    trajectoryLeft.getSecondButter(),
+                    new ParallelAction(
+                            trajectoryLeft.getButterAttachment(false, true),
+                            trajectoryLeft.getBasket(false, true)
+                    ),
+                    trajectoryLeft.getThirdButter(),
+                    new ParallelAction(
+                            trajectoryLeft.getButterAttachment(false, true),
+                            trajectoryLeft.getBasket(false, true)
+                    ),
+                    trajectoryLeft.getSubmersible(sideway, attempt),
+                    new ParallelAction(
+                            trajectoryLeft.getButterAttachment(true, attempt),
+                            trajectoryLeft.getBasket(true, attempt)
+                    ),
+                    trajectoryLeft.getPark()
+            ));
+        }  if(!side) {
             Actions.runBlocking(new SequentialAction(
 //                    trajectory.getAlltrajectory()
 //                    trajectory.testTransfer(),
-                    getHangBuilt,
-                    trajectory.getFirstButter(),
+                    getHang1Built,
+                    getFirstButterBuilt,
                     new ParallelAction(
-                            trajectory.getSecondButter(),
-                            trajectory.getTransfer(true)
+                            getSecondButterBuilt,
+                            getTransferTrueBuilt
                     ),
-                    trajectory.getTransfer(false),
-                    trajectory.getThirdButter(),
-                    trajectory.getHang(),
-                    trajectory.getHang(),
-                    trajectory.getHang(),
-                    trajectory.getHang()
-            ));
-        } if(side) {
-            Actions.runBlocking(new SequentialAction(
-                    trajectoryLeft.getAllTrajectory()
-
-//                    trajectoryLeft.getInitialBasket(),
-//                    trajectoryLeft.getFirstButter(),
-//                    new ParallelAction(
-//                            trajectoryLeft.getButterAttachment(),
-//                            trajectoryLeft.getBasket()
-//                    ),
-//                    trajectoryLeft.getSecondButter(),
-//                    new ParallelAction(
-//                            trajectoryLeft.getButterAttachment(),
-//                            trajectoryLeft.getBasket()
-//                    ),
-//                    trajectoryLeft.getThirdButter(),
-//                    new ParallelAction(
-//                            trajectoryLeft.getButterAttachment(),
-//                            trajectoryLeft.getBasket()
-//                    ),
-//                    trajectoryLeft.getPark()
+                    getTransferFalseBuilt,
+                    getThirdButterBuilt,
+                    getHang2Built,
+                    getHang3Built,
+                    getHang4Built,
+                    getHang5Built
             ));
         }
     }

@@ -20,7 +20,7 @@ public class TrajectoryRight {
         double barX = -3;
         double humanX = 40;
         double humanY = -60;
-        MeepMeep meepMeep = new MeepMeep(600);
+        MeepMeep meepMeep = new MeepMeep(800);
 
         RoadRunnerBotEntity myBot = new DefaultBotBuilder(meepMeep)
                 // Set bot constraints: maxVel, maxAccel, maxAngVel, maxAngAccel, track width
@@ -35,7 +35,7 @@ public class TrajectoryRight {
                 .waitSeconds(.5)
                 //back up a little
                 .setReversed(true)
-                .splineToLinearHeading(new Pose2d(0, hangY-5, Math.toRadians(90)), Math.toRadians(-90))
+                .splineToLinearHeading(new Pose2d(0, hangY - 5, Math.toRadians(90)), Math.toRadians(-90))
                 //first butter
                 .setReversed(true)
                 .splineToLinearHeading(new Pose2d(firstButterX, firstButterY, Math.toRadians(-90.01)), Math.toRadians(90))
@@ -46,7 +46,7 @@ public class TrajectoryRight {
                 .waitSeconds(.5)
                 //third butter
                 .setReversed(true)
-                .splineToLinearHeading(new Pose2d(thirdButterX, thirdButterY , Math.toRadians(180)), Math.toRadians(90))
+                .splineToLinearHeading(new Pose2d(thirdButterX, thirdButterY, Math.toRadians(180)), Math.toRadians(90))
                 .waitSeconds(.5)
                 //go to human pickup
                 .setTangent(Math.toRadians(180))
@@ -57,7 +57,7 @@ public class TrajectoryRight {
                 .splineToLinearHeading(new Pose2d(45, -45, Math.toRadians(179.999)), Math.toRadians(180))
                 .splineToLinearHeading(new Pose2d(-3, hangY, Math.toRadians(90)), Math.toRadians(90))
                 .setReversed(true)
-                .splineToLinearHeading(new Pose2d(-3, hangY-5, Math.toRadians(90)), Math.toRadians(-90))
+                .splineToLinearHeading(new Pose2d(-3, hangY - 5, Math.toRadians(90)), Math.toRadians(-90))
                 //go back to human player
                 .setReversed(true)
                 .splineToLinearHeading(new Pose2d(humanX, humanY, Math.toRadians(-90.00001)), Math.toRadians(-90))
@@ -66,7 +66,7 @@ public class TrajectoryRight {
                 .setTangent(Math.toRadians(90))
                 .splineToLinearHeading(new Pose2d(0, hangY, Math.toRadians(90)), Math.toRadians(90))
                 .setReversed(true)
-                .splineToLinearHeading(new Pose2d(0, hangY-5, Math.toRadians(90)), Math.toRadians(-90))
+                .splineToLinearHeading(new Pose2d(0, hangY - 5, Math.toRadians(90)), Math.toRadians(-90))
                 //go to human player
                 .setReversed(true)
                 .splineToLinearHeading(new Pose2d(humanX, humanY, Math.toRadians(-90.00001)), Math.toRadians(-90))
@@ -75,7 +75,7 @@ public class TrajectoryRight {
                 .setTangent(Math.toRadians(90))
                 .splineToLinearHeading(new Pose2d(0, hangY, Math.toRadians(90)), Math.toRadians(90))
                 .setReversed(true)
-                .splineToLinearHeading(new Pose2d(0, hangY-5, Math.toRadians(90)), Math.toRadians(-90))
+                .splineToLinearHeading(new Pose2d(0, hangY - 5, Math.toRadians(90)), Math.toRadians(-90))
                 //go to human player
                 .setReversed(true)
                 .splineToLinearHeading(new Pose2d(humanX, humanY, Math.toRadians(-90.00001)), Math.toRadians(-90))
@@ -84,7 +84,7 @@ public class TrajectoryRight {
                 .setTangent(Math.toRadians(90))
                 .splineToLinearHeading(new Pose2d(0, hangY, Math.toRadians(90)), Math.toRadians(90))
                 .setReversed(true)
-                .splineToLinearHeading(new Pose2d(0, hangY-5, Math.toRadians(90)), Math.toRadians(-90))
+                .splineToLinearHeading(new Pose2d(0, hangY - 5, Math.toRadians(90)), Math.toRadians(-90))
                 //go to human player
                 .setReversed(true)
                 .splineToLinearHeading(new Pose2d(humanX, humanY, Math.toRadians(-90.00001)), Math.toRadians(-90))

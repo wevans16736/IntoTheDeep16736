@@ -7,7 +7,7 @@ public class ConfigurationSecondRobot {
     public static double adriveMultiple = 45;
     //drive default movement
     public static double driveVelocity = (50* adriveMultiple); //default is 50
-    public static double driveMinAccel =  -37; //default is -30
+    public static double driveMinAccel =  -40; //default is -30
     public static double driveMaxAccel = (50* adriveMultiple); //default is 50
     public static double driveMinAngle = Math.PI * adriveMultiple; //default is Math.PI
     public static double driveMaxAngle = Math.PI * adriveMultiple; //default is Math.PI
@@ -17,27 +17,28 @@ public class ConfigurationSecondRobot {
     public static int highBar = 800;
     public static int bottom = 0;
     public static int lowBar = 2000;
-    public static int topBasket = 2300;
+    public static int topBasket = 2360;
     //added 280 on 1/3/2024
 
     public static double verticalSlideBottomToHighBar = 1500;
 
     //this is vertical wrist servo position
     //this is a position to place it on the basket
-    public static double verticalWristBasket = 0.475;
+    public static double verticalWristBasket = 0.45;
     //this is a position to grab the butter from the wall or set it on the lower basket or either rung
     public static double verticalWristWall = 0.275;
     //this is the position to grab the butter from the intake
     public static double verticalWristIntake = 0.93;
     //this is the position to hang the butter to the bar
     public static double verticalWristBar = .4;
+    public static double verticalWristUp = .7;
 
     //Time to move vertical wrist, MS
     public static double verticalWristWalltoIntake = 650;
     public static double verticalWristIntaketoBar = 500;
 
     //vertical grabber servo position
-    public static double verticalOpen = .6;
+    public static double verticalOpen = .55;
     public static double verticalClose = 0.41;
     public static double verticalOpenWide = .6;
 
@@ -56,7 +57,7 @@ public class ConfigurationSecondRobot {
     //servo position to have grabber slightly above the ground
     public static double horizontalWristHover = .52;
     //servo position to have grabber grab the butter
-    public static double horizontalWristIntake = 0.155;
+    public static double horizontalWristIntake = 0.17;
 
     //horizontal wrist moving times, MS
     public static double horizontalWristtoMiddleTime = 300;

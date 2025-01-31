@@ -23,7 +23,7 @@ public class SecondaryTeleOp extends HelperActions {
     private VerticalGrabberActions verticalGrabber = null;
     private VerticalHangerActions verticalHanger = null;
     private HorizontalSlideActions horizontalSlide = null;
-    private DetectBlockActions detectBlockActions = null;
+//    private DetectBlockActions detectBlockActions = null;
 
     double liftSpdMult = 0.8 ;
 
@@ -38,7 +38,7 @@ public class SecondaryTeleOp extends HelperActions {
         verticalWrist = new VerticalWristActions(telemetry, hardwareMap);
         verticalGrabber = new VerticalGrabberActions(telemetry, hardwareMap);
         verticalHanger = new VerticalHangerActions(hardwareMap);
-        detectBlockActions = new DetectBlockActions(hardwareMap);
+        //detectBlockActions = new DetectBlockActions(hardwareMap);
         //Set Speed for teleOp. Mecannum wheel speed.
         //driveActions.setSpeed(1.0);
 
@@ -55,10 +55,10 @@ public class SecondaryTeleOp extends HelperActions {
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
         while (opModeIsActive()) {
-            if (doSetExposure) {
-                detectBlockActions.setExposure();
-                doSetExposure = false;
-            }
+//            if (doSetExposure) {
+//                detectBlockActions.setExposure();
+//                doSetExposure = false;
+//            }
             /** Gamepad 1 **/
             driveActions.drive(
                     //joystick controlling strafe
@@ -85,7 +85,7 @@ public class SecondaryTeleOp extends HelperActions {
 
             /** Gamepad 2 **/
             //use the player 2 left joystick to run the horizontal slide
-            horizontalSlide.teleOpArmMotor(-gamepad2.left_stick_y * Math.abs(gamepad2.left_stick_y), 1);
+            horizontalSlide.teleOpArmMotor(-gamepad2.left_stick_y * Math.abs(gamepad2.left_stick_y), 1.5);
             //rotate the servo with intake in it
             horizontalWrist.flipping(gamepad2.left_bumper);
             //force the servo to flip bypassing the range limit apply
@@ -111,8 +111,8 @@ public class SecondaryTeleOp extends HelperActions {
             //A button gamepad 2. Not yet working
             managePlaceSample(gamepad2.a, verticalGrabber, verticalWrist, verticalSlide, horizontalWrist, horizontalSlide, horizontalIntake, horizontalIRoll);
 
-            Point blockCenter = detectBlockActions.pixelToPosition(detectBlockActions.getCenter());
-            telemetry.addData("block x %f, block y %f", blockCenter);
+//            Point blockCenter = detectBlockActions.pixelToPosition();
+//            telemetry.addData("block x %f, block y %f", blockCenter);
 //            if (gamepad2.share) {
 //                detectBlockActions.setExposure();
 ////                moveToBlock(detectBlockActions, driveActions, horizontalSlide, horizontalIRoll);
