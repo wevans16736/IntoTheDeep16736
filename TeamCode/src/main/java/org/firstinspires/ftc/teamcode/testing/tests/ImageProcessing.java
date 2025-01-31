@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.testing.tests;
 
+import static org.opencv.core.CvType.CV_8UC1;
+
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.teamcode.secondrobot.ContourLocatorProcessor;
@@ -315,12 +317,23 @@ public class ImageProcessing {
         File fileImg = new File(pathImg);
         String absolutePathImg = fileImg.getAbsolutePath();
         Mat img = Imgcodecs.imread(absolutePathImg, Imgcodecs.IMREAD_COLOR);
-        Imgproc.cvtColor(img, img, Imgproc.COLOR_BGR2XYZ);
+
         Imgproc.cvtColor(img, img, Imgproc.COLOR_RGB2BGR);
+        Imgcodecs.imwrite("src/main/java/org/firstinspires/ftc/teamcode/testing/tests/data/bgr.jpg", img);
+        Imgproc.cvtColor(img, img, Imgproc.COLOR_BGR2HSV);
+        Imgcodecs.imwrite("src/main/java/org/firstinspires/ftc/teamcode/testing/tests/data/hsv.jpg", img);
+
         int type = img.type();
         ContourLocatorProcessor contourLocatorProcessor = new ContourLocatorProcessor.Builder()
                 .build();
-        contourLocatorProcessor.contourAndOval(img);
+        contourLocatorProcessor.setIsRed(false);
+        contourLocatorProcessor.contourAndOval(contourLocatorProcessor.prepareForContours(img));
+        List<MatOfPoint> contours = contourLocatorProcessor.getContours();
+        double contourArea[] = new double[contours.size()];
+        for (int i = 0; i < contourArea.length; i++) {
+            RotatedRect oval = Imgproc.fitEllipseAMS(contours.get(i));
+            contourArea[i] = oval.size.area();
+        }
     }
     @Test
     public void testPixelToInches() {

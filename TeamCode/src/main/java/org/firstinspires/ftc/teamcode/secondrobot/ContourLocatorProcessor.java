@@ -64,5 +64,8 @@ public abstract class ContourLocatorProcessor implements VisionProcessor
     public abstract double getAngle();
     public abstract void setIsRed(boolean isRed);
     public abstract void contourAndOval(Mat canny);
+    public abstract Mat prepareForContours(Mat input);
+    public abstract List<MatOfPoint> getContours();
+    public abstract Point pixelToPosition(Point center);
 
 }

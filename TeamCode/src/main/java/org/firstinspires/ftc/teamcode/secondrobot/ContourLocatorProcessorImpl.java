@@ -43,31 +43,45 @@ class ContourLocatorProcessorImpl extends ContourLocatorProcessor implements Vis
     @Override
     public void init(int width, int height, CameraCalibration calibration) {}
 
+    public Point pixelToPosition(Point center) {
+        double pixelX = center.x;
+        double pixelY = center.y;
+        double degreesPerPixel = 63.0 / (double) pixelWidth;
+        double YOffsetDegrees = 10.0; //TODO
+        double degreesX = (pixelX - ((double) pixelWidth / 2.0)) * degreesPerPixel;
+        double degreesY = (pixelY - ((double) pixelHeight / 2.0)) * degreesPerPixel - YOffsetDegrees;
+        double cameraHeight = 2.0; //Inches, from top of block to camera lens, TODO
+        double distanceFromCameraBase = cameraHeight * Math.tan(Math.toRadians(90 - degreesY));
+        double x = distanceFromCameraBase * Math.cos(Math.toRadians(90.0 - degreesX));
+        double y = distanceFromCameraBase * Math.sin(Math.toRadians(90.0 - degreesX));
+        Point position = new Point(x, y);
+        return position;
+    }
 
     public Mat getColorThreshold(Mat hsv) {
+        Mat blue = new Mat();
+        Core.inRange(hsv, new Scalar(0, 70, 160), new Scalar(110, 205, 245), blue);
         if (isRed) {
             Mat mask1 = new Mat();
             Mat mask2 = new Mat();
-            Core.inRange(hsv, new Scalar(0, 70, 50), new Scalar(10, 255, 255), mask1);
-            Core.inRange(hsv, new Scalar(170, 70, 50), new Scalar(180, 255, 255), mask2);
-            Mat mask = new Mat();
-            Core.bitwise_or(mask1, mask2, mask);
-            return mask;
+            Core.inRange(hsv, new Scalar(0, 10, 190), new Scalar(100, 255, 255), mask1);
+            Core.inRange(hsv, new Scalar(170, 10, 200), new Scalar(255, 135, 255), mask2);
+            Mat combinedMask = new Mat();
+            Core.bitwise_or(mask1, mask2, combinedMask);
+            Mat notBlue = new Mat();
+            Core.inRange(blue, new Scalar(0,0,0), new Scalar(1,1,1), notBlue);
+            Mat finalMask = new Mat();
+            Core.bitwise_and(combinedMask, notBlue, finalMask);
+            Imgcodecs.imwrite("src/main/java/org/firstinspires/ftc/teamcode/testing/tests/data/red.jpg", finalMask);
+            return finalMask;
         } else {
-            Mat mask1 = new Mat();
-            Core.inRange(hsv, new Scalar(60, 50, 0), new Scalar(140, 255, 255), mask1);
-            Mat floor = new Mat();
-            Core.inRange(hsv, new Scalar(0, 50, 110), new Scalar(255, 60, 255), floor);
-            Core.inRange(floor, new Scalar(0, 0, 0), new Scalar(1, 1, 1), floor);
-            Mat mask = new Mat();
-            Core.bitwise_and(mask1, floor, mask);
-            Imgcodecs.imwrite("src/main/java/org/firstinspires/ftc/teamcode/testing/tests/data/blue.jpg", mask);
-            return floor;
+            Imgcodecs.imwrite("src/main/java/org/firstinspires/ftc/teamcode/testing/tests/data/blue.jpg", blue);
+            return blue;
         }
     }
     public Mat getYellowThreshold(Mat hsv) {
         Mat mask = new Mat();
-        Core.inRange(hsv, new Scalar(10, 70, 70), new Scalar(30, 255, 255), mask);
+        Core.inRange(hsv, new Scalar(10, 200, 160), new Scalar(45, 245, 255), mask);
         Imgcodecs.imwrite("src/main/java/org/firstinspires/ftc/teamcode/testing/tests/data/yellow.jpg", mask);
         return mask;
     }
@@ -76,14 +90,14 @@ class ContourLocatorProcessorImpl extends ContourLocatorProcessor implements Vis
         img = img.submat(0, img.rows(), 0, img.cols());
 
         Mat hsv = new Mat();
-        Imgproc.cvtColor(img, hsv, Imgproc.COLOR_RGB2HSV);
+        Imgproc.cvtColor(img, hsv, Imgproc.COLOR_BGR2HSV);
 
         Mat colorMask = getColorThreshold(hsv);
         Mat yellowMask = getYellowThreshold(hsv);
         Mat mask = new Mat();
         Core.bitwise_or(colorMask, yellowMask, mask);
 
-        Imgproc.blur(mask, mask, new Size(mask.width() / 30, mask.width() / 30));
+        Imgproc.blur(mask, mask, new Size(mask.width() / 80, mask.width() / 80));
 
         Mat secondRoundMasking = new Mat();
         Core.inRange(mask, new Scalar(254, 254, 254), new Scalar(255, 255, 255), secondRoundMasking);
@@ -100,6 +114,9 @@ class ContourLocatorProcessorImpl extends ContourLocatorProcessor implements Vis
     }
 
     public List<MatOfPoint> contours = new ArrayList<>();
+    public List<MatOfPoint> getContours() {
+        return contours;
+    }
     public void contourAndOval(Mat canny) {
         contours = new ArrayList<>();
         Mat hierarchy = new Mat();
@@ -108,14 +125,15 @@ class ContourLocatorProcessorImpl extends ContourLocatorProcessor implements Vis
         double minDistance = 100000;
         int minContour = 0;
         RotatedRect minOval = new RotatedRect();
-        double maxArea = 100000000; //TODO
-        double minArea = 100000; //100,000
+        double maxArea = 15000;
+        double minArea = 1000;
+        double maxHeight = 220;
         for (int i = 0; i < contours.size(); i++) {
             if (contours.get(i).rows() > 5) {
                 RotatedRect newOval = Imgproc.fitEllipseAMS(contours.get(i));
-                double distance = Math.sqrt(Math.pow(newOval.center.x - (canny.cols() / 2.0), 2.0) + Math.pow(newOval.center.y - (canny.rows() / 2.0), 2.0));
+                double distance = Math.sqrt(Math.pow(newOval.center.x - (canny.cols() / 2.0), 2.0) + Math.pow(newOval.center.y - (canny.rows()), 2.0));
                 double area = newOval.size.area();
-                if (minArea < area && area < maxArea && distance < minDistance) {
+                if (minArea < area && area < maxArea && distance < minDistance && newOval.center.y > maxHeight) {
                     minOval = newOval;
                     minDistance = distance;
                 }

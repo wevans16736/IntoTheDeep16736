@@ -122,20 +122,8 @@ public class DetectBlockActions {
         this.center = center;
     }
 
-    public Point pixelToPosition() {
-        setCenterAndAngle(colorLocator.getCenter(), colorLocator.getAngle());
-        double pixelX = center.x;
-        double pixelY = center.y;
-        double degreesPerPixel = 63.0 / (double) pixelWidth;
-        double YOffsetDegrees = 10.0; //TODO
-        double degreesX = (pixelX - ((double) pixelWidth / 2.0)) * degreesPerPixel;
-        double degreesY = (pixelY - ((double) pixelHeight / 2.0)) * degreesPerPixel - YOffsetDegrees;
-        double cameraHeight = 2.0; //Inches, from top of block to camera lens, TODO
-        double distanceFromCameraBase = cameraHeight * Math.tan(Math.toRadians(90 - degreesY));
-        double x = distanceFromCameraBase * Math.cos(Math.toRadians(90.0 - degreesX));
-        double y = distanceFromCameraBase * Math.sin(Math.toRadians(90.0 - degreesX));
-        Point position = new Point(x, y);
-        return position;
+    public Point pixelToPosition(Point center) {
+        return colorLocator.pixelToPosition(center);
     }
 
     public Mat getColorThreshold(Mat hsv) {
@@ -232,9 +220,11 @@ public class DetectBlockActions {
         this.angle = angle;
     }
     public Point getCenter() {
+        setCenterAndAngle(colorLocator.getCenter(), colorLocator.getAngle());
         return center;
     }
     public double getAngle() {
+        setCenterAndAngle(colorLocator.getCenter(), colorLocator.getAngle());
         return angle;
     }
     class ContoursPipeline extends OpenCvPipeline {
