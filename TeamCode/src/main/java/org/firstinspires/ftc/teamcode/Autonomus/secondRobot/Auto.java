@@ -5,6 +5,7 @@ import com.acmerobotics.roadrunner.ParallelAction;
 import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.SequentialAction;
 import com.acmerobotics.roadrunner.SleepAction;
+import com.acmerobotics.roadrunner.TrajectoryActionBuilder;
 import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -41,34 +42,36 @@ public class Auto extends LinearOpMode {
 
 //        DriverRequest driverRequest = new DriverRequest();
         boolean side = false; //determine which side
-        boolean sideway = false; //determine roll if left choosen
+        boolean sideway = false; //determine roll if left chosen
         boolean attempt = true; //determine if we even want to try blind pick
         telemetry.clearAll();
-        while(!gamepad1.right_bumper){
-            telemetry.addLine("Choose which side? (circle)");
-            telemetry.addData("Left Side ", side);
-            telemetry.addData("Right Side", !side);
-            if(gamepad1.circle){
-                side = !side;
+        telemetry.addLine("Choose which side?");
+        telemetry.addLine("Left Side: dpad-left");
+        telemetry.addLine("Right Side: dpad-right");
+        telemetry.update();
+        boolean wasPress = false;
+        while(!(gamepad1.dpad_left || gamepad1.dpad_right)){
+            if(gamepad1.dpad_left){
+                side = true;
+                wasPress = true;
+            } else if (gamepad1.dpad_right) {
+                side = false;
             }
-            telemetry.update();
-            sleep(500);
         }
-        sleep(1000);
-        telemetry.clearAll();
+        sleep(2000);
         if(side){
-            while(!gamepad1.right_bumper) {
-                telemetry.addLine("Sideway required? (circle)");
-                telemetry.addData("Sideway: ", sideway);
-                telemetry.addData("Attempt blind grab? (square)", attempt);
-                if(gamepad1.circle){
-                    sideway = !sideway;
-                }
-                if(gamepad1.square){
-                    attempt = !attempt;
-                }
+            while(!(gamepad1.dpad_left || gamepad1.dpad_right || gamepad1.dpad_up)) {
+                telemetry.clearAll();
+                telemetry.addLine("left side chosen");
+                telemetry.addData("attempt? dpad-left", attempt);
+                telemetry.addData("sideway? dpad-right", sideway);
+                telemetry.addLine("Good? dpad-up");
                 telemetry.update();
-                sleep(500);
+                if(gamepad1.dpad_left){
+                    attempt = false;
+                } else if(gamepad1.dpad_right){
+                    sideway = true;
+                }
             }
         }
         if(!side){
@@ -98,8 +101,12 @@ public class Auto extends LinearOpMode {
         Action getHang5Built = trajectory.getHang();
 
         telemetry.clearAll();
-        telemetry.addLine("ready :)");
+        telemetry.addData("side", side);
+        telemetry.addData("attempt", attempt);
+        telemetry.addData("sideway", sideway);
         telemetry.update();
+
+
         //wait for the start button to be press
         waitForStart();
         //if the stop button press then stop the robot

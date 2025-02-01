@@ -41,7 +41,7 @@ public class Trajectory {
             new AngularVelConstraint(Math.PI*8)
     ));
     double hangX = 0;
-    double hangY = -32;
+    double hangY = -33;
     double firstButterX = 49.5;
     double firstButterY = -35.25;
     double secondButterX = 58.75;
@@ -49,7 +49,7 @@ public class Trajectory {
     double thirdButterX = 56.5;
     double thirdButterY = -26.75;
     double humanX = 42;
-    double humanY = -50;
+    double humanY = -50.5;
     int counter = 0;
     public Action getHang(){
         if(counter == 0) {
@@ -73,8 +73,8 @@ public class Trajectory {
                     .stopAndAdd(verticalSlideRR.verticalSlideAction(ConfigurationSecondRobot.highBar))
                     .stopAndAdd(verticalWristRR.VerticalWristAction(ConfigurationSecondRobot.verticalWristBar))
                     .stopAndAdd(horizontalWristRR.horizontalWristAction(ConfigurationSecondRobot.horizontalWristTransfer))
-                    .setTangent(Math.toRadians(90))
-                    .splineToLinearHeading(new Pose2d(45, -45, Math.toRadians(179.999)), Math.toRadians(180), butterSpeed)
+                    .setTangent(Math.toRadians(180))
+                    .splineToLinearHeading(new Pose2d(45, -45, Math.toRadians(179.999)), Math.toRadians(180))
                     .splineToLinearHeading(new Pose2d(hangX, hangY, Math.toRadians(90)), Math.toRadians(90), butterSpeed)
                     .stopAndAdd(verticalGrabberRR.verticalGrabberAction(ConfigurationSecondRobot.verticalOpen))
                     .setReversed(true)
@@ -149,7 +149,7 @@ public class Trajectory {
                 .waitSeconds(ConfigurationSecondRobot.horizontalGrabberWideTime/1000)
                 //go to human pickup
                 .setTangent(Math.toRadians(180))
-                .splineToLinearHeading(new Pose2d(55.85, -63, Math.toRadians(-.000001)), Math.toRadians(0),butterSpeed)
+                .splineToLinearHeading(new Pose2d(55.25, -63.5, Math.toRadians(-.000001)), Math.toRadians(0),butterSpeed)
                 .stopAndAdd(horizontalGrabberRR.horizontalGrabberAction(ConfigurationSecondRobot.horizontalGrabberOpen))
                 .stopAndAdd(horizontalRollRR.horizontalRollAction(ConfigurationSecondRobot.flat))
                 .stopAndAdd(horizontalSlideRR.horizontalSlideActions(ConfigurationSecondRobot.horizontalSlideRetract));

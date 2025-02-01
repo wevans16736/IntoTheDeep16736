@@ -129,7 +129,7 @@ public class TrajectoryLeft {
                         .stopAndAdd(horizontalGrabberRR.horizontalGrabberAction(ConfigurationSecondRobot.horizontalGrabberClose))
                         .waitSeconds(2)
                         .setTangent(Math.toRadians(-45))
-                        .splineToLinearHeading(new Pose2d(BasketX+2, BasketY-2, Math.toRadians(225)), Math.toRadians(225), butterSpeed);
+                        .splineToLinearHeading(new Pose2d(BasketX, BasketY, Math.toRadians(225)), Math.toRadians(225), butterSpeed);
                 currentTrajectory = Basket.endTrajectory().fresh();
                 return Basket.build();
             } else {
@@ -137,8 +137,8 @@ public class TrajectoryLeft {
                         .stopAndAdd(horizontalGrabberRR.horizontalGrabberAction(ConfigurationSecondRobot.horizontalGrabberClose))
                         .setReversed(true)
                         .splineToLinearHeading(new Pose2d(BasketX + 15, 0, Math.toRadians(180)), Math.toRadians(-90), butterSpeed)
-                        .splineToLinearHeading(new Pose2d(BasketX+5, BasketY + 5, Math.toRadians(225)), Math.toRadians(225), butterSpeed)
-                        .splineToLinearHeading(new Pose2d(BasketX+1, BasketY, Math.toRadians(225)), Math.toRadians(225), basketSpeed);
+                        .splineToLinearHeading(new Pose2d(BasketX+10, BasketY + 10, Math.toRadians(225)), Math.toRadians(225), butterSpeed)
+                        .splineToLinearHeading(new Pose2d(BasketX, BasketY, Math.toRadians(225)), Math.toRadians(225), basketSpeed);
                 currentTrajectory = Basket.endTrajectory().fresh();
 
                 return Basket.build();
