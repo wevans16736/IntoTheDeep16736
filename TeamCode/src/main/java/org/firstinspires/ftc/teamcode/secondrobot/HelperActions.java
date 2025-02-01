@@ -139,7 +139,7 @@ public abstract class HelperActions extends LinearOpMode {
 
         //tells the horizontal slide to stop and let the horizontal wrist flip up or flip down when going in or out
         overrideSlide = horizontalArm.getSlidePosition() < overrideSlideThreshold && !horizontalWrist.override;
-        horizontalWrist.setIsSlideIn(overrideSlide);
+        horizontalWrist.setIsSlideIn(horizontalArm.getSlidePosition() < overrideSlideThreshold);
         overrideSlide(horizontalArm);
         wasOverrideSlide = overrideSlide;
 
@@ -151,11 +151,7 @@ public abstract class HelperActions extends LinearOpMode {
         if (overrideSlide && !wasOverrideSlide) {
             startTime = System.currentTimeMillis();
         }
-        if (System.currentTimeMillis() < startTime + 420) {
-            horizontalArm.setOverride(true);
-        } else {
-            horizontalArm.setOverride(false);
-        }
+        horizontalArm.setOverride(System.currentTimeMillis() < startTime + 420);
     }
 
     public double verticalGrabberOpenStartTime = 0;
@@ -208,7 +204,7 @@ public abstract class HelperActions extends LinearOpMode {
             if (System.currentTimeMillis() < horizontalWristMiddleStartTime + ConfigurationSecondRobot.horizontalWristtoMiddleTime) {
                 horizontalSlide.teleOpArmMotor(-0.5, 1);
             } else {
-                horizontalSlide.setSlideDistance(0, 3000);
+                horizontalSlide.setSlideDistance(0, 6000);
             }
         } else {
             //if the slide is in, move the wrist to the transfer and set a timer to wait until it's done

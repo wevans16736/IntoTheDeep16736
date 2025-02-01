@@ -1,7 +1,6 @@
 package org.firstinspires.ftc.teamcode.secondrobot.horizontalslide;
 
 import com.qualcomm.robotcore.hardware.HardwareMap;
-import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.ServoImplEx;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -40,28 +39,30 @@ public class HorizontalWristActions {
     //if the override is on or the slide is in, set the servo to go up.
     //otherwise, the servo goes down and is either forward or backward depending on how the driver selects.
     public void update() {
-        if (override || isSlideIn) {
+        if (override) {
             horizontalWristServo.setPosition(backwardPosIn);
         } else if (forward) {
             horizontalWristServo.setPosition(forwardPosOut);
         } else {
             horizontalWristServo.setPosition(backwardPosOut);
         }
+        telemetry.addData("override", override);
+        telemetry.addData("forward", forward);
     }
-    boolean isSlideIn = true;
+    boolean wasSlideIn = false;
     public void setIsSlideIn(boolean isIt) {
-        isSlideIn = isIt;
+        if (isIt && !wasSlideIn) {
+            override = true;
+        }
+        wasSlideIn = isIt;
+        telemetry.addData("wasslidein", wasSlideIn);
     }
     boolean wasInput = false;
     public boolean forward = false;
     public void flipping(boolean input) {
         //if the driver presses the button, flip the servo between forwards and backwards
         if (input && !wasInput) {
-            if (!forward && !isSlideIn) {
-                forward = true;
-            } else if (forward){
-                forward = false;
-            }
+            forward =! forward;
             if (override) {
                 setOverride(false);
                 forward = false;
