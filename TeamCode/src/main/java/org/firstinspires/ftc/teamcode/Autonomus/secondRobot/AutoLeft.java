@@ -4,25 +4,22 @@ import com.acmerobotics.roadrunner.Action;
 import com.acmerobotics.roadrunner.ParallelAction;
 import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.SequentialAction;
-import com.acmerobotics.roadrunner.SleepAction;
-import com.acmerobotics.roadrunner.TrajectoryActionBuilder;
 import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
-import org.firstinspires.ftc.teamcode.Configuration.secondRobot.ConfigurationSecondRobot;
 import org.firstinspires.ftc.teamcode.Configuration.secondRobot.HorizontalGrabberRR;
 import org.firstinspires.ftc.teamcode.Configuration.secondRobot.HorizontalRollRR;
 import org.firstinspires.ftc.teamcode.Configuration.secondRobot.HorizontalSlideRR;
 import org.firstinspires.ftc.teamcode.Configuration.secondRobot.HorizontalWristRR;
 import org.firstinspires.ftc.teamcode.Configuration.secondRobot.VerticalGrabberRR;
+import org.firstinspires.ftc.teamcode.Configuration.secondRobot.VerticalHangerRR;
 import org.firstinspires.ftc.teamcode.Configuration.secondRobot.VerticalSlideRR;
 import org.firstinspires.ftc.teamcode.Configuration.secondRobot.VerticalWristRR;
-import org.firstinspires.ftc.teamcode.Configuration.secondRobot.VerticalHangerRR;
 import org.firstinspires.ftc.teamcode.PinpointDrive;
 
-@Autonomous(name="Auto")
-public class Auto extends LinearOpMode {
+@Autonomous(name="AutoLeft")
+public class AutoLeft extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
         //set up Pinpoint and Pose2d class
@@ -41,7 +38,7 @@ public class Auto extends LinearOpMode {
         VerticalHangerRR verticalHanger = new VerticalHangerRR(hardwareMap);
 
 //        DriverRequest driverRequest = new DriverRequest();
-        boolean side = false; //determine which side
+        boolean side = true; //determine which side
         boolean sideway = false; //determine roll if left chosen
         boolean attempt = true; //determine if we even want to try blind pick
 //        telemetry.clearAll();
@@ -59,21 +56,21 @@ public class Auto extends LinearOpMode {
 //            }
 //        }
 //        sleep(2000);
-//        if(side){
-//            while(!(gamepad1.dpad_left || gamepad1.dpad_right || gamepad1.dpad_up)) {
-//                telemetry.clearAll();
-//                telemetry.addLine("left side chosen");
-//                telemetry.addData("attempt? dpad-left", attempt);
-//                telemetry.addData("sideway? dpad-right", sideway);
-//                telemetry.addLine("Good? dpad-up");
-//                telemetry.update();
-//                if(gamepad1.dpad_left){
-//                    attempt = false;
-//                } else if(gamepad1.dpad_right){
-//                    sideway = true;
-//                }
-//            }
-//        }
+        if(side){
+            while(!(gamepad1.dpad_left || gamepad1.dpad_right || gamepad1.dpad_up)) {
+                telemetry.clearAll();
+                telemetry.addLine("left side chosen");
+                telemetry.addData("attempt? dpad-left", attempt);
+                telemetry.addData("sideway? dpad-right", sideway);
+                telemetry.addLine("Good? dpad-up");
+                telemetry.update();
+                if(gamepad1.dpad_left){
+                    attempt = false;
+                } else if(gamepad1.dpad_right){
+                    sideway = true;
+                }
+            }
+        }
         if(!side){
             pose = new Pose2d(9,-64,Math.toRadians(90));
             drive = new PinpointDrive(hardwareMap, pose);

@@ -35,7 +35,7 @@ public class HorizontalSlideActions {
 
     public void teleOpArmMotor(double power, double liftSpeedMultiplier) {
         if (power < 0) {
-            liftSpeedMultiplier *= 2;
+            liftSpeedMultiplier *= 2.2;
         }
         double time = System.currentTimeMillis();
         //check if the joystick is being use and the overide is off

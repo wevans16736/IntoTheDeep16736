@@ -63,10 +63,10 @@ public class TrajectoryLeft {
     double BasketY = -55;
     double FirstButterX = -48.5;
     double FirstButterY = -35;
-    double SecondButterX = -60.75;
-    double SecondButterY = -35;
+    double SecondButterX = -63;
+    double SecondButterY = -34.5;
     double ThirdButterX = -60.5;
-    double ThirdButterY = -24.5;
+    double ThirdButterY = -24;
     public Action getAllTrajectory(){
         return currentTrajectory
                 //get to the basket
@@ -116,7 +116,7 @@ public class TrajectoryLeft {
         TrajectoryActionBuilder FirstButter = currentTrajectory
                 .waitSeconds(ConfigurationSecondRobot.verticalCloseTime/1000)
                 .stopAndAdd(verticalWristRR.VerticalWristAction(ConfigurationSecondRobot.verticalWristIntake))
-                .stopAndAdd(verticalSlideRR.verticalSlideAction(ConfigurationSecondRobot.bottom))
+                .afterTime(.5, verticalSlideRR.verticalSlideAction(ConfigurationSecondRobot.bottom))
                 .setReversed(true)
                 .splineToLinearHeading(new Pose2d(FirstButterX, FirstButterY, Math.toRadians(-90)), Math.toRadians(90),butterSpeed);
         currentTrajectory = FirstButter.endTrajectory().fresh();
@@ -128,7 +128,7 @@ public class TrajectoryLeft {
                 TrajectoryActionBuilder Basket = currentTrajectory
                         .stopAndAdd(horizontalGrabberRR.horizontalGrabberAction(ConfigurationSecondRobot.horizontalGrabberClose))
                         .waitSeconds(2)
-                        .setTangent(Math.toRadians(-45))
+                        .setTangent(Math.toRadians(0))
                         .splineToLinearHeading(new Pose2d(BasketX, BasketY, Math.toRadians(225)), Math.toRadians(225), butterSpeed);
                 currentTrajectory = Basket.endTrajectory().fresh();
                 return Basket.build();
@@ -153,7 +153,7 @@ public class TrajectoryLeft {
                 .waitSeconds(ConfigurationSecondRobot.verticalCloseTime/1000)
                 .waitSeconds(.25)
                 .stopAndAdd(verticalWristRR.VerticalWristAction(ConfigurationSecondRobot.verticalWristIntake))
-                .stopAndAdd(verticalSlideRR.verticalSlideAction(ConfigurationSecondRobot.bottom))
+                .afterTime(.5,verticalSlideRR.verticalSlideAction(ConfigurationSecondRobot.bottom))
                 .stopAndAdd(horizontalWristRR.horizontalWristAction(ConfigurationSecondRobot.horizontalWristIntake))
                 .stopAndAdd(horizontalGrabberRR.horizontalGrabberAction(ConfigurationSecondRobot.horizontalGrabberWide))
                 .setReversed(true)
@@ -167,7 +167,7 @@ public class TrajectoryLeft {
                 .waitSeconds(ConfigurationSecondRobot.verticalCloseTime/1000)
                 .waitSeconds(.25)
                 .stopAndAdd(verticalWristRR.VerticalWristAction(ConfigurationSecondRobot.verticalWristIntake))
-                .stopAndAdd(verticalSlideRR.verticalSlideAction(ConfigurationSecondRobot.bottom))
+                .afterTime(.5, verticalSlideRR.verticalSlideAction(ConfigurationSecondRobot.bottom))
                 .stopAndAdd(horizontalWristRR.horizontalWristAction(ConfigurationSecondRobot.horizontalWristIntake))
                 .stopAndAdd(horizontalGrabberRR.horizontalGrabberAction(ConfigurationSecondRobot.horizontalGrabberWide))
                 .stopAndAdd(horizontalSlideRR.horizontalSlideActions(300))

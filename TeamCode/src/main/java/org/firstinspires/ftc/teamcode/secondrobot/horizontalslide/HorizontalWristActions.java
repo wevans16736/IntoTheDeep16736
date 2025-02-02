@@ -51,11 +51,11 @@ public class HorizontalWristActions {
     }
     boolean wasSlideIn = false;
     public void setIsSlideIn(boolean isIt) {
-        if (isIt && !wasSlideIn) {
-            override = true;
-        }
-        wasSlideIn = isIt;
-        telemetry.addData("wasslidein", wasSlideIn);
+//        if (isIt && !wasSlideIn) {
+//            override = true;
+//        }
+//        wasSlideIn = isIt;
+//        telemetry.addData("wasslidein", wasSlideIn);
     }
     boolean wasInput = false;
     public boolean forward = false;
