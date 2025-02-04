@@ -12,6 +12,7 @@ import org.firstinspires.ftc.teamcode.Configuration.secondRobot.HorizontalGrabbe
 import org.firstinspires.ftc.teamcode.Configuration.secondRobot.HorizontalRollRR;
 import org.firstinspires.ftc.teamcode.Configuration.secondRobot.HorizontalSlideRR;
 import org.firstinspires.ftc.teamcode.Configuration.secondRobot.HorizontalWristRR;
+import org.firstinspires.ftc.teamcode.Configuration.secondRobot.RobotSensor;
 import org.firstinspires.ftc.teamcode.Configuration.secondRobot.VerticalGrabberRR;
 import org.firstinspires.ftc.teamcode.Configuration.secondRobot.VerticalHangerRR;
 import org.firstinspires.ftc.teamcode.Configuration.secondRobot.VerticalSlideRR;
@@ -79,8 +80,10 @@ public class AutoLeft extends LinearOpMode {
             drive = new PinpointDrive(hardwareMap, pose);
         }
 
+        RobotSensor robotSensor = new RobotSensor(telemetry, drive);
+
         Trajectory trajectory = new Trajectory(drive, pose, verticalSlide, verticalWrist, verticalGrabber,
-                verticalHanger, horizontalSlide, horizontalRoll, horizontalGrabber, horizontalWrist);
+                verticalHanger, horizontalSlide, horizontalRoll, horizontalGrabber, horizontalWrist, robotSensor);
 
         TrajectoryLeft trajectoryLeft = new TrajectoryLeft(drive, pose, verticalSlide, verticalWrist, verticalGrabber,
                 verticalHanger, horizontalSlide, horizontalRoll, horizontalGrabber, horizontalWrist);

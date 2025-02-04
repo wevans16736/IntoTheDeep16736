@@ -14,6 +14,7 @@ import com.acmerobotics.roadrunner.TrajectoryActionBuilder;
 import com.acmerobotics.roadrunner.Vector2d;
 import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.Configuration.firstRobot.ConfigurationFirstRobot;
@@ -28,7 +29,7 @@ import org.firstinspires.ftc.teamcode.Configuration.firstRobot.HorizontalWristRR
 import org.firstinspires.ftc.teamcode.Configuration.firstRobot.HorizontalRollRR;
 
 @Config
-@Deprecated
+@Disabled
 @Autonomous(name = "1. Final Left Auto", group = "Autonomous")
 public class FinalAutoLeft extends LinearOpMode {
 

@@ -19,6 +19,7 @@ import com.acmerobotics.roadrunner.Vector2d;
 import com.acmerobotics.roadrunner.VelConstraint;
 import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
@@ -36,7 +37,7 @@ import java.util.Arrays;
 
 @Config
 @Autonomous(name = "yellow Main Auto", group = "Autonomous")
-@Deprecated
+@Disabled
 public class YellowAuto extends LinearOpMode {
 //    private VerticalSlideRR verticalSlideRR = null;
     private HorizontalSlideRR horizontalSlideRR = null;

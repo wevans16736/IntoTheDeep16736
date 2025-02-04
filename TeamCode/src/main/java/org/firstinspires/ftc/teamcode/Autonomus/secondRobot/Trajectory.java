@@ -18,11 +18,11 @@ import java.util.Arrays;
 public class Trajectory {
     VerticalSlideRR verticalSlideRR; VerticalWristRR verticalWristRR; VerticalGrabberRR verticalGrabberRR; VerticalHangerRR verticalHangerRR;
     HorizontalSlideRR horizontalSlideRR; HorizontalRollRR horizontalRollRR; HorizontalGrabberRR horizontalGrabberRR;
-    HorizontalWristRR horizontalWristRR; PinpointDrive drive; Pose2d pose; TrajectoryActionBuilder currentTrajectory;
+    HorizontalWristRR horizontalWristRR; PinpointDrive drive; Pose2d pose; TrajectoryActionBuilder currentTrajectory; RobotSensor robotSensor;
     public Trajectory(PinpointDrive drive, Pose2d pose, VerticalSlideRR verticalSlideRR,
                       VerticalWristRR verticalWristRR, VerticalGrabberRR verticalGrabberRR,
                       VerticalHangerRR verticalHangerRR, HorizontalSlideRR horizontalSlideRR, HorizontalRollRR horizontalRollRR,
-                      HorizontalGrabberRR horizontalGrabberRR, HorizontalWristRR horizontalWristRR){
+                      HorizontalGrabberRR horizontalGrabberRR, HorizontalWristRR horizontalWristRR, RobotSensor robotSensor){
         this.drive = drive;
         this.pose = pose;
         this.verticalSlideRR = verticalSlideRR;
@@ -33,6 +33,7 @@ public class Trajectory {
         this.horizontalRollRR = horizontalRollRR;
         this.horizontalGrabberRR = horizontalGrabberRR;
         this.horizontalWristRR = horizontalWristRR;
+        this.robotSensor = robotSensor;
 
         currentTrajectory = drive.actionBuilder(pose);
     }
@@ -42,11 +43,11 @@ public class Trajectory {
     ));
     double hangX = 0;
     double hangY = -33;
-    double firstButterX = 49.5;
-    double firstButterY = -35.25;
+    double firstButterX = 47;
+    double firstButterY = -36;
     double secondButterX = 58.75;
-    double secondButterY = -44.25;
-    double thirdButterX = 56.5;
+    double secondButterY = -43;
+    double thirdButterX = 58;
     double thirdButterY = -25.75;
     double humanX = 42;
     double humanY = -50.125;
@@ -57,14 +58,15 @@ public class Trajectory {
                     .afterTime(0, verticalSlideRR.verticalSlideAction(ConfigurationSecondRobot.highBar))
                     .afterTime(0, verticalWristRR.VerticalWristAction(ConfigurationSecondRobot.verticalWristBar))
                     .afterTime(0, verticalGrabberRR.verticalGrabberAction(ConfigurationSecondRobot.verticalClose))
-                    .splineToLinearHeading(new Pose2d(0, hangY-.1, Math.toRadians(90)), Math.toRadians(90))
+                    .splineToLinearHeading(new Pose2d(0, hangY, Math.toRadians(90)), Math.toRadians(90))
                     .stopAndAdd(verticalGrabberRR.verticalGrabberAction(ConfigurationSecondRobot.verticalOpen))
                     .stopAndAdd(verticalWristRR.VerticalWristAction(ConfigurationSecondRobot.verticalWristWall))
                     .setReversed(true)
-                    .splineToLinearHeading(new Pose2d(0, hangY-3, Math.toRadians(90)), Math.toRadians(-90));
+                    .splineToLinearHeading(new Pose2d(0, hangY-3, Math.toRadians(90)), Math.toRadians(-90))
+                    .stopAndAdd(robotSensor.robotSensorAction("first_hang",0, hangY-3, 90));
             currentTrajectory = Hang.endTrajectory().fresh();
             counter++;
-            hangX = -13;
+            hangX = -11;
             return Hang.build();
         } if(counter == 1){
             TrajectoryActionBuilder Hang = currentTrajectory
@@ -84,7 +86,8 @@ public class Trajectory {
                     .afterTime(1, verticalGrabberRR.verticalGrabberAction(ConfigurationSecondRobot.verticalOpenWide))
                     .setReversed(true)
 //                    .splineToLinearHeading(new Pose2d(humanX, humanY+2.25, Math.toRadians(-90.00001)), Math.toRadians(-90))
-                    .splineToLinearHeading(new Pose2d(humanX, humanY, Math.toRadians(-90.00001)), Math.toRadians(-90));
+                    .splineToLinearHeading(new Pose2d(humanX, humanY, Math.toRadians(-90.00001)), Math.toRadians(-90))
+                    .stopAndAdd(robotSensor.robotSensorAction("hang "+counter, humanX, humanY, -90));
             currentTrajectory = Hang.endTrajectory().fresh();
             counter++;
             hangX += 3;
@@ -106,7 +109,8 @@ public class Trajectory {
                     .afterTime(1, verticalGrabberRR.verticalGrabberAction(ConfigurationSecondRobot.verticalOpenWide))
                     .setReversed(true)
 //                    .splineToLinearHeading(new Pose2d(humanX, humanY+2.25, Math.toRadians(-90.00001)), Math.toRadians(-90))
-                    .splineToLinearHeading(new Pose2d(humanX, humanY-.35, Math.toRadians(-90.00001)), Math.toRadians(-90));
+                    .splineToLinearHeading(new Pose2d(humanX, humanY-.35, Math.toRadians(-90.00001)), Math.toRadians(-90))
+                    .stopAndAdd(robotSensor.robotSensorAction("hang "+counter, humanX, humanY, -90));
             currentTrajectory = Hang.endTrajectory().fresh();
             hangX += 3;
             return Hang.build();
@@ -121,7 +125,8 @@ public class Trajectory {
                 .afterDisp(30, horizontalWristRR.horizontalWristAction(ConfigurationSecondRobot.horizontalWristIntake))
                 //first butter
                 .setReversed(true)
-                .splineToLinearHeading(new Pose2d(firstButterX, firstButterY, Math.toRadians(-90.01)), Math.toRadians(90),butterSpeed);
+                .splineToLinearHeading(new Pose2d(firstButterX, firstButterY, Math.toRadians(-90.01)), Math.toRadians(90),butterSpeed)
+                .stopAndAdd(robotSensor.robotSensorAction("first_butter", firstButterX, firstButterY, -90));
         currentTrajectory = FirstButter.endTrajectory().fresh();
         return FirstButter.build();
     }
@@ -130,7 +135,8 @@ public class Trajectory {
                 .waitSeconds(ConfigurationSecondRobot.horizontalGrabberWideTime/1000)
                 .waitSeconds(.1)
                 .setTangent(Math.toRadians(-90))
-                .splineToLinearHeading(new Pose2d(secondButterX, secondButterY, Math.toRadians(-90)), Math.toRadians(0),butterSpeed);
+                .splineToLinearHeading(new Pose2d(secondButterX, secondButterY, Math.toRadians(-90)), Math.toRadians(0),butterSpeed)
+                .stopAndAdd(robotSensor.robotSensorAction("second_butter", secondButterX, secondButterY, -90));
         currentTrajectory = SecondButter.endTrajectory().fresh();
         return SecondButter.build();
     }
@@ -143,16 +149,18 @@ public class Trajectory {
                 .afterTime(.25, horizontalSlideRR.horizontalSlideActions(350))
                 .setTangent(Math.toRadians(90))
                 .splineToLinearHeading(new Pose2d(thirdButterX, thirdButterY , Math.toRadians(180)), Math.toRadians(90),butterSpeed)
+                .stopAndAdd(robotSensor.robotSensorAction("third_butter", thirdButterX, thirdButterY, 180))
                 .stopAndAdd(horizontalGrabberRR.horizontalGrabberAction(ConfigurationSecondRobot.horizontalGrabberClose))
                 .stopAndAdd(verticalWristRR.VerticalWristAction(ConfigurationSecondRobot.verticalWristWall))
                 .stopAndAdd(verticalGrabberRR.verticalGrabberAction(ConfigurationSecondRobot.verticalOpenWide))
                 .waitSeconds(ConfigurationSecondRobot.horizontalGrabberWideTime/1000)
                 //go to human pickup
                 .setTangent(Math.toRadians(180))
-                .splineToLinearHeading(new Pose2d(56, -63.5, Math.toRadians(-.000001)), Math.toRadians(0),butterSpeed)
+                .splineToLinearHeading(new Pose2d(56, -60, Math.toRadians(-.000001)), Math.toRadians(0),butterSpeed)
                 .stopAndAdd(horizontalGrabberRR.horizontalGrabberAction(ConfigurationSecondRobot.horizontalGrabberOpen))
                 .stopAndAdd(horizontalRollRR.horizontalRollAction(ConfigurationSecondRobot.flat))
-                .stopAndAdd(horizontalSlideRR.horizontalSlideActions(ConfigurationSecondRobot.horizontalSlideRetract));
+                .stopAndAdd(horizontalSlideRR.horizontalSlideActions(ConfigurationSecondRobot.horizontalSlideRetract))
+                .stopAndAdd(robotSensor.robotSensorAction("side_wall", 56, -60, 0));
         currentTrajectory = ThirdButter.endTrajectory().fresh();
         return ThirdButter.build();
     }

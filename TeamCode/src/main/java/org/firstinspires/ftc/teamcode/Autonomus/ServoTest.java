@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.Autonomus;
 
 import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -11,6 +12,7 @@ import org.firstinspires.ftc.teamcode.Configuration.secondRobot.ConfigurationSec
 import org.firstinspires.ftc.teamcode.secondrobot.constants.ConfigConstants;
 
 @Config
+//@Disabled
 @TeleOp(name="ServoTest", group = "SecondRobot")
 public class ServoTest extends LinearOpMode {
     public static double VerticalWrist = ConfigurationSecondRobot.verticalWristIntake;
