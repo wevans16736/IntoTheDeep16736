@@ -25,4 +25,5 @@ public class ConfigConstants {
     //Sensors
     public static final String IMU = "IMU";
     public static final String VERTICAL_SWITCH = "verticalSwitch";
+    public static final String COLOR_SENSOR = "colorSensor";
 }

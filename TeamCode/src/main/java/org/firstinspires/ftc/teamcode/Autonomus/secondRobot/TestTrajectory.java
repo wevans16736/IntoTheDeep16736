@@ -54,7 +54,6 @@ public class TestTrajectory {
             new AngularVelConstraint(Math.PI)
     ));
 
-
         public Action getTest(){
             TrajectoryActionBuilder Test = currentTrajectory
 //                    .splineToLinearHeading(new Pose2d(-47.25/2, 15, Math.toRadians(180)), Math.toRadians(180), basketSpeed)
@@ -70,5 +69,8 @@ public class TestTrajectory {
                     .strafeTo(new Vector2d(0,0));
             currentTrajectory = Test2.endTrajectory().fresh();
             return Test2.build();
+        }
+        public TrajectoryActionBuilder getCurrentTrajectory(){
+            return currentTrajectory;
         }
 }
