@@ -65,5 +65,6 @@ public class Test extends LinearOpMode {
                 TestTrajectory.getTest(),
                 TestTrajectory.getTest2()
         ));
+
     }
 }
