@@ -84,8 +84,8 @@ public class ConfigurationSecondRobot {
     public static double flatToSidewaysTime = 600;
 
     //horizontal slide motor position
-    public static int horizontalSlideRetract = 0;
-    public static int horizontalSlideExtend = 440;
+    public static int horizontalSlideRetract = -5;
+    public static int horizontalSlideExtend = 640;
     public static double extendVelocity = 1800;
 
     public static double horizontalSlideTime = 0;
