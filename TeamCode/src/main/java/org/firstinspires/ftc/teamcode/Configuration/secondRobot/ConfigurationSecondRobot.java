@@ -77,6 +77,7 @@ public class ConfigurationSecondRobot {
 
     //horizontal roll servo position
     public static double flat = 0.175;
+    public static double slant = .335;
     public static double sideway = .51;
 
     //horizontal roll time to flip, MS

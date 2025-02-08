@@ -30,4 +30,8 @@ public class HorizontalRollRR {
         }
     }
     public Action horizontalRollAction(double position){return new HorizontalRollAction(position);}
+
+    public void setPose(double pose){
+        HorizontalRollServo.setPosition(pose);
+    }
 }

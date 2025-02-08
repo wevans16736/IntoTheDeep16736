@@ -29,4 +29,8 @@ public class HorizontalWristRR {
         }
     }
     public Action horizontalWristAction(double position){return new HorizontalWristAction(position);}
+
+    public void setPose(double pose){
+        HorizontalWristServo.setPosition(pose);
+    }
 }

@@ -30,4 +30,8 @@ public class HorizontalGrabberRR {
         }
     }
     public Action horizontalGrabberAction(double position) {return new HorizontalGrabberAction(position);}
+
+    public void setPose(double pose){
+        HorizontalGrabberServo.setPosition(pose);
+    }
 }

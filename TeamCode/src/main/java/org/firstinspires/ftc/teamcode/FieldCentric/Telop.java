@@ -1,7 +1,5 @@
 package org.firstinspires.ftc.teamcode.FieldCentric;
 
-import android.provider.Settings;
-
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.acmerobotics.roadrunner.Action;
@@ -9,25 +7,21 @@ import com.acmerobotics.roadrunner.InstantAction;
 import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.SequentialAction;
 import com.acmerobotics.roadrunner.SleepAction;
-import com.acmerobotics.roadrunner.ftc.Actions;
-import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.robotcore.hardware.Servo;
-import com.sun.source.tree.DoWhileLoopTree;
 
 import org.firstinspires.ftc.teamcode.Configuration.secondRobot.ConfigurationSecondRobot;
 import org.firstinspires.ftc.teamcode.Configuration.secondRobot.HorizontalGrabberRR;
 import org.firstinspires.ftc.teamcode.Configuration.secondRobot.HorizontalRollRR;
 import org.firstinspires.ftc.teamcode.Configuration.secondRobot.HorizontalSlideRR;
 import org.firstinspires.ftc.teamcode.Configuration.secondRobot.HorizontalWristRR;
-import org.firstinspires.ftc.teamcode.Configuration.secondRobot.VerticalGrabberRR;
 import org.firstinspires.ftc.teamcode.Configuration.secondRobot.VerticalHangerRR;
 import org.firstinspires.ftc.teamcode.Configuration.secondRobot.VerticalSlideRR;
 import org.firstinspires.ftc.teamcode.Configuration.secondRobot.VerticalWristRR;
+import org.firstinspires.ftc.teamcode.Configuration.secondRobot.VerticalGrabberRR;
 import org.firstinspires.ftc.teamcode.PinpointDrive;
 import org.firstinspires.ftc.teamcode.secondrobot.constants.ConfigConstants;
 
@@ -38,7 +32,10 @@ import java.util.List;
 public class Telop extends OpMode {
     private FtcDashboard dash = FtcDashboard.getInstance();
     private List<Action> runningActions = new ArrayList<>();
-    Servo VG;
+    VerticalSlideRR verticalSlide; VerticalWristRR verticalWrist; VerticalGrabberRR verticalGrabber;
+    VerticalHangerRR verticalHanger; HorizontalSlideRR horizontalSlide;
+    HorizontalRollRR horizontalRoll; HorizontalGrabberRR horizontalGrabber;
+    HorizontalWristRR horizontalWrist;
     DriveTrain driveTrain;
 
     @Override
@@ -48,18 +45,16 @@ public class Telop extends OpMode {
         PinpointDrive drive;
 
         //all of these class is under Configuration.secondRobot
-        VerticalSlideRR verticalSlide = new VerticalSlideRR(hardwareMap);
-        VerticalWristRR verticalWrist = new VerticalWristRR(hardwareMap);
-//        VerticalGrabberRR verticalGrabber = new VerticalGrabberRR(hardwareMap);
+         verticalSlide = new VerticalSlideRR(hardwareMap);
+         verticalWrist = new VerticalWristRR(hardwareMap);
+         verticalGrabber = new VerticalGrabberRR(hardwareMap);
 
-        HorizontalSlideRR horizontalSlide = new HorizontalSlideRR(hardwareMap);
-        HorizontalRollRR horizontalRoll = new HorizontalRollRR(hardwareMap);
-        HorizontalGrabberRR horizontalGrabber = new HorizontalGrabberRR(hardwareMap);
-        HorizontalWristRR horizontalWrist = new HorizontalWristRR(hardwareMap);
-        VerticalHangerRR verticalHanger = new VerticalHangerRR(hardwareMap);
+         horizontalSlide = new HorizontalSlideRR(hardwareMap);
+         horizontalRoll = new HorizontalRollRR(hardwareMap);
+         horizontalGrabber = new HorizontalGrabberRR(hardwareMap);
+         horizontalWrist = new HorizontalWristRR(hardwareMap);
+         verticalHanger = new VerticalHangerRR(hardwareMap);
 
-        VG = hardwareMap.get(Servo.class, ConfigConstants.VERTICAL_GRABBER);
-        VG.setPosition(.55);
 
         //todo localization after auto?
         pose = new Pose2d(0, 0, Math.toRadians(90));
@@ -73,38 +68,85 @@ public class Telop extends OpMode {
         IMU imu = hardwareMap.get(IMU.class, ConfigConstants.IMU);
         driveTrain = new DriveTrain(frontLeft, frontRight, rearLeft, rearRight, imu);
     }
-    double startTime = 0; double currTime = 0; double prevTime = 0; double loopTime = 0.0;
+    //time
+    double startTime = 0; double currTime = 0;
+    double prevTimeRB = 0; double loopTimeRB = 0.0; boolean wasRB = false;
+    double prevTimeTriangle = 0.0; double loopTimeTriangle = 0.0; boolean wasTriangle = false;
+    double prevTimeRT = 0.0; double loopTimeRT = 0.0; boolean wasRT;
+
+    //how long is the delay between press
     double desiredLoopms = 250.0;
-
-    boolean wasX = false;
-
     @Override
     public  void loop(){
         TelemetryPacket packet = new TelemetryPacket();
         //vertical grabber
         currTime = System.currentTimeMillis();
-        loopTime = currTime - prevTime;
+        loopTimeRB = currTime - prevTimeRB;
         //update need from gamepads
-        if(gamepad1.x) {
-            if (loopTime >= desiredLoopms) {
-                if (!wasX) {
+        if(gamepad1.right_bumper) {
+            if (loopTimeRB >= desiredLoopms) {
+                if (!wasRB) {
                     runningActions.add(new SequentialAction(
-                            new InstantAction(() -> VG.setPosition(.55))
+                            new InstantAction(() -> verticalGrabber.setPose(ConfigurationSecondRobot.verticalOpen))
                     ));
                 } else {
-                    if (wasX) {
+                    if (wasRB) {
                         runningActions.add(new SequentialAction(
-                                new InstantAction(() -> VG.setPosition(0.41))
+                                new InstantAction(() -> verticalGrabber.setPose(ConfigurationSecondRobot.verticalClose))
                         ));
                     }
                 }
-                prevTime = currTime;
-                wasX = !wasX;
+                prevTimeRB = currTime;
+                wasRB = !wasRB;
+            }
+        }
+        //horizontal slide
+        loopTimeTriangle = currTime - prevTimeTriangle;
+        //update need from gamepads
+        if(gamepad1.triangle){
+            if (loopTimeTriangle >= desiredLoopms){
+                if (!wasTriangle){
+                    runningActions.add(new SequentialAction(
+                            new InstantAction(() -> horizontalSlide.setPose(ConfigurationSecondRobot.horizontalSlideExtend)),
+                            new InstantAction(() -> horizontalWrist.setPose(ConfigurationSecondRobot.horizontalWristIntake)),
+                            new InstantAction(() -> horizontalRoll.setPose(ConfigurationSecondRobot.slant))
+                    ));
+                } else {
+                    if (wasTriangle){
+                        runningActions.add(new SequentialAction(
+                                new InstantAction(() -> horizontalSlide.setPose(ConfigurationSecondRobot.horizontalSlideRetract)),
+                                new InstantAction(() -> horizontalWrist.setPose(ConfigurationSecondRobot.horizontalWristTransfer)),
+                                new InstantAction(() -> horizontalRoll.setPose(ConfigurationSecondRobot.flat))
+                        ));
+                    }
+                }
+                prevTimeTriangle = currTime;
+                wasTriangle = !wasTriangle;
+            }
+        }
+        //horizontal grabber
+        loopTimeRT = currTime - prevTimeTriangle;
+        //update input from gamepad
+        if(gamepad1.right_trigger != 0){
+            if (loopTimeRT >= desiredLoopms){
+                if (!wasRT){
+                    runningActions.add(new SequentialAction(
+                            new InstantAction(() -> horizontalGrabber.setPose(ConfigurationSecondRobot.horizontalGrabberClose))
+                    ));
+                } else{
+                    if (wasRT){
+                        runningActions.add(new SequentialAction(
+                                new InstantAction(() -> horizontalGrabber.setPose(ConfigurationSecondRobot.horizontalGrabberOpen))
+                        ));
+                    }
+                }
+                prevTimeRT = currTime;
+                wasRT = !wasRT;
             }
         }
         //field centric robot control
         if(gamepad1.left_stick_x != 0 || gamepad1.left_stick_y != 0 || gamepad1.right_stick_x != 0 || gamepad1.right_bumper){
-            driveTrain.drive(gamepad1.left_stick_y, gamepad1.left_stick_x, gamepad1.right_stick_x, gamepad1.right_bumper);
+            driveTrain.drive(gamepad1.left_stick_y, gamepad1.left_stick_x, gamepad1.right_stick_x, gamepad1.left_bumper);
         } else{
             driveTrain.drive(0,0,0, false);
         }

@@ -28,4 +28,7 @@ public class VerticalGrabberRR {
         }
     }
     public Action verticalGrabberAction(double position){return new VerticalGrabberAction(position);}
+    public void setPose(double pose){
+        verticalGrabberServo.setPosition(pose);
+    }
 }

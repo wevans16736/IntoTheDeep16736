@@ -48,4 +48,8 @@ public class HorizontalSlideRR {
         }
     }
     public Action horizontalSlideActions(int position) {return new HorizontalSlideActions(position);}
+
+    public void setPose(int pose){
+        horizontalSlideMotor.setTargetPosition(pose);
+    }
 }
