@@ -7,7 +7,7 @@ public class ConfigurationSecondRobot {
     public static double adriveMultiple = 1;
     //drive default movement
     public static double driveVelocity = (50* adriveMultiple); //default is 50
-    public static double driveMinAccel =  -40; //default is -30
+    public static double driveMinAccel =  -30; //default is -30
     public static double driveMaxAccel = (50* adriveMultiple); //default is 50
     public static double driveMinAngle = Math.PI * adriveMultiple; //default is Math.PI
     public static double driveMaxAngle = Math.PI * adriveMultiple; //default is Math.PI
