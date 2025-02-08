@@ -31,4 +31,8 @@ public class VerticalWristRR {
         }
     }
     public Action VerticalWristAction(double position){return new VerticalWristAction(position);}
+
+    public void setPose(double pose){
+        VerticalWristServo.setPosition(pose);
+    }
 }

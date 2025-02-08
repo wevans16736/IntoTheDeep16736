@@ -29,11 +29,22 @@ public class DriveTrain {
         ));
         this.imu.initialize(parameters);
     }
-    public void drive(double leftStickY, double leftStickX,double rightStickX, boolean reset){
+    public void drive(double leftStickY, double leftStickX,double rightStickX, boolean reset, double percise, boolean wasSqaure){
         //take input from gamepad
         double y = -leftStickY;
         double x = leftStickX;
         double rx = rightStickX;
+        if(wasSqaure){
+            flActive = 0;
+            rlActive = 0;
+            frActive = 0;
+            rrActive = 0;
+        } else {
+            flActive = 1;
+            rlActive = 1;
+            frActive = 1;
+            rrActive = 1;
+        }
 
         if(reset){
             imu.resetYaw();
@@ -52,10 +63,10 @@ public class DriveTrain {
         double frontRightPower = (rotY - rotX + rx) / denominator;
         double rearRightPower = (rotY + rotX - rx) / denominator;
 
-        frontLeft.setPower(frontLeftPower * flActive);
-        frontRight.setPower(frontRightPower * frActive);
-        rearRight.setPower(rearRightPower * rrActive);
-        rearLeft.setPower(rearLeftPower * rlActive);
+        frontLeft.setPower((frontLeftPower * flActive)/ percise);
+        frontRight.setPower((frontRightPower * frActive)/ percise);
+        rearRight.setPower((rearRightPower * rrActive)/percise);
+        rearLeft.setPower((rearLeftPower * rlActive)/percise);
     }
 
 

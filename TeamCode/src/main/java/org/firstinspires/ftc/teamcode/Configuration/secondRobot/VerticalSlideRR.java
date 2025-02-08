@@ -64,4 +64,13 @@ public class VerticalSlideRR {
         }
     }
     public Action verticalSlideAction(int position){return new VerticalSlideAction(position);}
+
+    public void setPose(int pose){
+        verticalSlideMotorRight.setTargetPosition(pose);
+        verticalSlideMotorLeft.setTargetPosition(pose);
+    }
+
+    public int returnPose(){
+        return verticalSlideMotorLeft.getCurrentPosition();
+    }
 }

@@ -26,4 +26,8 @@ public class VerticalHangerRR {
         }
     }
     public Action verticalHangAction(double position){return new VerticalHangAction(position);}
+
+    public void setPose(double pose){
+        verticalHanger.setPosition(pose);
+    }
 }
