@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.FieldCentric;
 
 import com.acmerobotics.dashboard.config.Config;
+import com.acmerobotics.roadrunner.Pose2d;
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
@@ -11,7 +12,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 public class DriveTrain {
     DcMotorEx frontLeft; DcMotorEx rearLeft; DcMotorEx frontRight; DcMotorEx rearRight; IMU imu;
 
-    double flActive = 1; double rlActive = 1; double frActive = 1; double rrActive = 1;
+    double flActive = 1; double rlActive = 1; double frActive = 1; double rrActive = 1; double botHeading;
 
     public DriveTrain(DcMotorEx frontLeft, DcMotorEx rearLeft, DcMotorEx frontRight, DcMotorEx rearRight, IMU imu){
         this.frontLeft = frontLeft;
@@ -29,16 +30,16 @@ public class DriveTrain {
         ));
         this.imu.initialize(parameters);
     }
-    public void drive(double leftStickY, double leftStickX,double rightStickX, boolean reset, double percise, boolean wasSqaure){
+    public void drive(double leftStickY, double leftStickX, double rightStickX, boolean reset, boolean percise, Pose2d curentPose){
         //take input from gamepad
         double y = -leftStickY;
         double x = leftStickX;
         double rx = rightStickX;
-        if(wasSqaure){
-            flActive = 0;
-            rlActive = 0;
-            frActive = 0;
-            rrActive = 0;
+        if(percise){
+            flActive = .5;
+            rlActive = .5;
+            frActive = .5;
+            rrActive = .5;
         } else {
             flActive = 1;
             rlActive = 1;
@@ -49,8 +50,8 @@ public class DriveTrain {
         if(reset){
             imu.resetYaw();
         }
-        //take input from heading
-        double botHeading = imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS);
+            //take input from heading
+            botHeading = imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS) + curentPose.heading.toDouble();
         //Rotate the movment direction counter to the bot's rotation
         double rotX = x * Math.cos(-botHeading) - y * Math.sin(-botHeading);
         double rotY = x * Math.sin(-botHeading) + y * Math.cos(-botHeading);
@@ -63,10 +64,10 @@ public class DriveTrain {
         double frontRightPower = (rotY - rotX + rx) / denominator;
         double rearRightPower = (rotY + rotX - rx) / denominator;
 
-        frontLeft.setPower((frontLeftPower * flActive)/ percise);
-        frontRight.setPower((frontRightPower * frActive)/ percise);
-        rearRight.setPower((rearRightPower * rrActive)/percise);
-        rearLeft.setPower((rearLeftPower * rlActive)/percise);
+        frontLeft.setPower((frontLeftPower * flActive));
+        frontRight.setPower((frontRightPower * frActive));
+        rearRight.setPower((rearRightPower * rrActive));
+        rearLeft.setPower((rearLeftPower * rlActive));
     }
 
 

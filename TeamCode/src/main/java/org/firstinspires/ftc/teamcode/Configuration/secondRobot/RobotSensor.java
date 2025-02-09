@@ -5,6 +5,7 @@ import androidx.annotation.NonNull;
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.acmerobotics.roadrunner.Action;
+import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.TrajectoryActionBuilder;
 import com.qualcomm.hardware.adafruit.AdafruitI2cColorSensor;
 import com.qualcomm.robotcore.hardware.ColorSensor;
@@ -17,6 +18,8 @@ import org.firstinspires.ftc.teamcode.MecanumDrive;
 import org.firstinspires.ftc.teamcode.PinpointDrive;
 
 public class RobotSensor {
+
+    public static Pose2d currentPose = new Pose2d(0,0,Math.toRadians(0));
     Telemetry telemetry; PinpointDrive drive; FtcDashboard dashboard; Telemetry dashboardTelemetry; ColorSensor line;
     public RobotSensor(Telemetry telemetry, PinpointDrive drive, ColorSensor line){
         this.telemetry = telemetry;

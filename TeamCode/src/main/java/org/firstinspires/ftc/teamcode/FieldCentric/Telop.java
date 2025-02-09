@@ -21,6 +21,7 @@ import org.firstinspires.ftc.teamcode.Configuration.secondRobot.VerticalHangerRR
 import org.firstinspires.ftc.teamcode.Configuration.secondRobot.VerticalSlideRR;
 import org.firstinspires.ftc.teamcode.Configuration.secondRobot.VerticalWristRR;
 import org.firstinspires.ftc.teamcode.Configuration.secondRobot.VerticalGrabberRR;
+import org.firstinspires.ftc.teamcode.GlobalVarable;
 import org.firstinspires.ftc.teamcode.PinpointDrive;
 import org.firstinspires.ftc.teamcode.secondrobot.constants.ConfigConstants;
 
@@ -40,6 +41,7 @@ public class Telop extends OpMode {
     HorizontalGrabberRR horizontalGrabber;
     HorizontalWristRR horizontalWrist;
     DriveTrain driveTrain;
+    Pose2d currentPose;
 
     @Override
     public void init() {
@@ -49,7 +51,7 @@ public class Telop extends OpMode {
 
         //all of these class is under Configuration.secondRobot
         verticalSlide = new VerticalSlideRR(hardwareMap);
-        verticalWrist = new VerticalWristRR(hardwareMap);
+        verticalWrist = new VerticalWristRR(hardwareMap , true);
         verticalGrabber = new VerticalGrabberRR(hardwareMap);
 
         horizontalSlide = new HorizontalSlideRR(hardwareMap);
@@ -70,6 +72,12 @@ public class Telop extends OpMode {
         DcMotorEx rearRight = hardwareMap.get(DcMotorEx.class, ConfigConstants.BACK_RIGHT);
         IMU imu = hardwareMap.get(IMU.class, ConfigConstants.IMU);
         driveTrain = new DriveTrain(frontLeft, frontRight, rearLeft, rearRight, imu);
+        if(!GlobalVarable.autoStarted){
+            this.currentPose = new Pose2d(0,0,0);
+        } else{
+            this.currentPose = GlobalVarable.currentPose;
+        }
+        GlobalVarable.autoStarted = false;
     }
 
     //time
@@ -84,15 +92,15 @@ public class Telop extends OpMode {
     double prevTimeRT = 0.0;
     double loopTimeRT = 0.0;
     boolean wasRT;
-    double prevTimeDP = 0.0;
-    double loopTimeDP = 0.0;
-    int wasDP = 0;
+    double prevTimeLeft = 0.0;
+    double loopTimeLeft = 0.0;
+    int wasLeft = 0;
     double prevTimeCircle = 0.0;
     double loopTimeCircle = 0.0;
     boolean wasCircle = false;
-    double prevTimeLB = 0.0;
-    double loopTimeLB = 0.0;
-    boolean wasLB = false;
+    double prevTimeDPU = 0.0;
+    double loopTimeDPU = 0.0;
+    boolean wasDPU = false;
     double prevTimeSquare = 0.0;
     double loopTimeSquare = 0.0;
     boolean wasSquare = false;
@@ -137,6 +145,7 @@ public class Telop extends OpMode {
                 if (!wasTriangle) {
                     runningActions.add(new SequentialAction(
                             new InstantAction(() -> horizontalSlide.setPose(ConfigurationSecondRobot.horizontalSlideExtend)),
+                            new SleepAction(.5),
                             new InstantAction(() -> horizontalWrist.setPose(ConfigurationSecondRobot.horizontalWristIntake)),
                             new InstantAction(() -> horizontalRoll.setPose(ConfigurationSecondRobot.slant)),
                             new InstantAction(() -> verticalGrabber.setPose(ConfigurationSecondRobot.verticalOpen)),
@@ -145,12 +154,16 @@ public class Telop extends OpMode {
                 } else {
                     if (wasTriangle) {
                         runningActions.add(new SequentialAction(
-                                new InstantAction(() -> horizontalSlide.setPose(ConfigurationSecondRobot.horizontalSlideRetract)),
-                                new InstantAction(() -> horizontalWrist.setPose(ConfigurationSecondRobot.horizontalWristTransfer)),
+                                new InstantAction(() -> horizontalWrist.setPose(ConfigurationSecondRobot.horizontalWristHover)),
                                 new InstantAction(() -> horizontalRoll.setPose(ConfigurationSecondRobot.flat)),
-                                new SleepAction(ConfigurationSecondRobot.horizontalWristTransfer / 1000),
+                                new InstantAction(() -> horizontalSlide.setPose(ConfigurationSecondRobot.horizontalSlideRetract)),
+                                new InstantAction(() -> verticalGrabber.setPose(ConfigurationSecondRobot.verticalOpen)),
+                                new InstantAction(() -> verticalWrist.setPose(ConfigurationSecondRobot.verticalWristIntake)),
+                                new SleepAction(ConfigurationSecondRobot.horizontalSlideTime/1000),
+                                new InstantAction(() -> horizontalWrist.setPose(ConfigurationSecondRobot.horizontalWristTransfer)),
+                                new SleepAction(.5),
                                 new InstantAction(() -> verticalGrabber.setPose(ConfigurationSecondRobot.verticalClose)),
-                                new SleepAction(ConfigurationSecondRobot.verticalCloseTime / 1000),
+                                new SleepAction(ConfigurationSecondRobot.verticalCloseTime /1000),
                                 new InstantAction(() -> horizontalGrabber.setPose(ConfigurationSecondRobot.horizontalGrabberOpen))
                         ));
                     }
@@ -160,7 +173,7 @@ public class Telop extends OpMode {
             }
         }
         //horizontal grabber
-        loopTimeRT = currTime - prevTimeTriangle;
+        loopTimeRT = currTime - prevTimeRT;
         //update input from gamepad
         if (gamepad1.right_trigger >= .5) {
             if (loopTimeRT >= RTms) {
@@ -180,48 +193,59 @@ public class Telop extends OpMode {
             }
         }
         //vertical preset
-        loopTimeDP = currTime - prevTimeDP;
+        loopTimeLeft = currTime - prevTimeLeft;
         //update input from gamepad
-        if (gamepad1.dpad_up || gamepad1.dpad_down) {
-            if (loopTimeDP >= desiredLoopms) {
-                if (gamepad1.dpad_down) {
-                    wasDP -= 1;
-                    if (wasDP <= 0) {
-                        wasDP = 0;
+        if (gamepad1.left_trigger >= .5 || gamepad1.left_bumper) {
+            if (loopTimeLeft >= desiredLoopms) {
+                if (gamepad1.left_trigger >= .5) {
+                    wasLeft -= 1;
+                    if (wasLeft <= 0) {
+                        wasLeft = 0;
                     }
                 }
-                if (gamepad1.dpad_up) {
-                    wasDP += 1;
-                    if (wasDP >= 3) {
-                        wasDP = 3;
+                if (gamepad1.left_bumper) {
+                    wasLeft += 1;
+                    if (wasLeft >= 3) {
+                        wasLeft = 3;
                     }
                 }
-                if (wasDP == 0) {
-                    runningActions.add(new SequentialAction(
-                            new InstantAction(() -> verticalSlide.setPose(ConfigurationSecondRobot.bottom)),
-                            new InstantAction(() -> verticalWrist.setPose(ConfigurationSecondRobot.verticalWristIntake))
-                    ));
-                }
-                if (wasDP == 1) {
-                    runningActions.add(new SequentialAction(
-                            new InstantAction(() -> verticalSlide.setPose(ConfigurationSecondRobot.highBar)),
-                            new InstantAction(() -> verticalWrist.setPose(ConfigurationSecondRobot.verticalWristBar))
-                    ));
-                }
-                if (wasDP == 2) {
-                    runningActions.add(new SequentialAction(
-                            new InstantAction(() -> verticalWrist.setPose(ConfigurationSecondRobot.verticalWristBasket)),
-                            new InstantAction(() -> verticalSlide.setPose(ConfigurationSecondRobot.topBasket))
-                    ));
-                }
-                prevTimeRT = currTime;
+
+
+            if (wasLeft == 0) {
+                runningActions.add(new SequentialAction(
+                        new InstantAction(() -> verticalSlide.setPose(ConfigurationSecondRobot.bottom)),
+                        new InstantAction(() -> verticalWrist.setPose(ConfigurationSecondRobot.verticalWristIntake)),
+                        new InstantAction(() -> verticalGrabber.setPose(ConfigurationSecondRobot.verticalOpen))
+                ));
+            }
+            if(wasLeft == 1){
+                runningActions.add(new SequentialAction(
+                        new InstantAction(() -> verticalWrist.setPose(ConfigurationSecondRobot.verticalWristWall)),
+                        new InstantAction(() -> verticalSlide.setPose(ConfigurationSecondRobot.bottom)),
+                        new InstantAction(() -> verticalGrabber.setPose(ConfigurationSecondRobot.verticalClose))
+                ));
+            }
+            if (wasLeft == 2) {
+                runningActions.add(new SequentialAction(
+                        new InstantAction(() -> verticalSlide.setPose(ConfigurationSecondRobot.highBar)),
+                        new InstantAction(() -> verticalWrist.setPose(ConfigurationSecondRobot.verticalWristBar))
+                ));
+            }
+            if (wasLeft == 3) {
+                runningActions.add(new SequentialAction(
+                        new InstantAction(() -> verticalWrist.setPose(ConfigurationSecondRobot.verticalWristBasket)),
+                        new InstantAction(() -> verticalSlide.setPose(ConfigurationSecondRobot.topBasket))
+                ));
+            }
+            prevTimeLeft = currTime;
             }
         }
+
         //transfer wrist
         loopTimeCircle = currTime - prevTimeCircle;
         //update input from gamepad
         if (gamepad1.circle) {
-            if (loopTimeCircle >= desiredLoopms) {
+            if (loopTimeCircle <= desiredLoopms) {
                 if (wasCircle) {
                     runningActions.add(new SequentialAction(
                             new InstantAction(() -> verticalWrist.setPose(ConfigurationSecondRobot.verticalWristIntake))
@@ -234,40 +258,35 @@ public class Telop extends OpMode {
                         ));
                     }
                 }
-                prevTimeRT = currTime;
+                prevTimeCircle = currTime;
                 wasCircle = !wasCircle;
             }
         }
         //hook
-        loopTimeLB = currTime - prevTimeLB;
+        loopTimeDPU = currTime - prevTimeDPU;
         //update input from gamepad
-        if (gamepad1.left_bumper) {
-            if (loopTimeLB >= desiredLoopms) {
-                if (wasLB) {
+        if (gamepad1.dpad_up) {
+            if (loopTimeDPU >= desiredLoopms) {
+                if (wasDPU) {
                     runningActions.add(new SequentialAction(
                             new InstantAction(() -> verticalHanger.setPose(ConfigurationSecondRobot.verticalHangIn))
                     ));
                 } else {
-                    if (!wasLB) {
+                    if (!wasDPU) {
                         runningActions.add(new SequentialAction(
                                 new InstantAction(() -> verticalHanger.setPose(ConfigurationSecondRobot.verticalHangOut))
                         ));
                     }
                 }
+                prevTimeDPU = currTime;
+                wasDPU = !wasDPU;
             }
         }
         //percise mode
-        loopTimeLB = currTime - prevTimeSquare;
+        loopTimeSquare = currTime - prevTimeSquare;
         //update input from gamepad
         if (gamepad1.square) {
             if (loopTimeSquare >= desiredLoopms) {
-                if (wasSquare) {
-                    percise = .25;
-                } else {
-                    if (!wasSquare) {
-                        percise = 1;
-                    }
-                }
                 prevTimeSquare = currTime;
                 wasSquare = !wasSquare;
             }
@@ -276,20 +295,26 @@ public class Telop extends OpMode {
         loopTimeCross = currTime - prevTimeCross;
         //update input from gamepad
         if (gamepad1.cross) {
-            slidePose = verticalSlide.returnPose();
-            if (gamepad1.left_stick_y != 0) {
-                slidePose -= (int) (gamepad1.left_stick_y * 5);
-                runningActions.add(new SequentialAction(
-                        new InstantAction(() -> verticalSlide.setPose(slidePose))
-                ));
-            }
+           if(loopTimeCross >= desiredLoopms){
+               if(wasCross){
+                   slidePose = verticalSlide.returnPose();
+                   if (gamepad1.left_stick_y != 0) {
+                       slidePose -= (int) (gamepad1.left_stick_y * 5);
+                       runningActions.add(new SequentialAction(
+                               new InstantAction(() -> verticalSlide.setPose(slidePose))
+                       ));
+                   }
+               }
+               prevTimeCross = currTime;
+               wasCross = !wasCross;
+           }
         }
 
         //field centric robot control
         if(gamepad1.left_stick_x != 0 || gamepad1.left_stick_y != 0 || gamepad1.right_stick_x != 0 || gamepad1.right_bumper){
-            driveTrain.drive(gamepad1.left_stick_y, gamepad1.left_stick_x, gamepad1.right_stick_x, gamepad1.options, percise, gamepad1.cross);
+            driveTrain.drive(gamepad1.left_stick_y, gamepad1.left_stick_x, gamepad1.right_stick_x, gamepad1.options, wasSquare, currentPose);
         } else{
-            driveTrain.drive(0,0,0, false, percise, gamepad1.cross);
+            driveTrain.drive(0,0,0, false, wasSquare, currentPose);
         }
 
         //update runing actions

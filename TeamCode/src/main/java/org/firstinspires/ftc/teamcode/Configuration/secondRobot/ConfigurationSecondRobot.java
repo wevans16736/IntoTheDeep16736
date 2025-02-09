@@ -56,7 +56,7 @@ public class ConfigurationSecondRobot {
     //servo position to have the wrist to be at vertical grabber position
     public static double horizontalWristTransfer = 0.91;
     //servo position to have grabber slightly above the ground
-    public static double horizontalWristHover = .52;
+    public static double horizontalWristHover = .32;
     //servo position to have grabber grab the butter
     public static double horizontalWristIntake = 0.17;
 
@@ -77,7 +77,7 @@ public class ConfigurationSecondRobot {
 
     //horizontal roll servo position
     public static double flat = 0.175;
-    public static double slant = .335;
+    public static double slant = .3;
     public static double sideway = .51;
 
     //horizontal roll time to flip, MS
@@ -88,5 +88,5 @@ public class ConfigurationSecondRobot {
     public static int horizontalSlideExtend = 640;
     public static double extendVelocity = 1800;
 
-    public static double horizontalSlideTime = 0;
+    public static double horizontalSlideTime = 640;
 }

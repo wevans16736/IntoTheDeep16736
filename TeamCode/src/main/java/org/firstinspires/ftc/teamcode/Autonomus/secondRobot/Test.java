@@ -24,6 +24,7 @@ import org.firstinspires.ftc.teamcode.Configuration.secondRobot.VerticalGrabberR
 import org.firstinspires.ftc.teamcode.Configuration.secondRobot.VerticalSlideRR;
 import org.firstinspires.ftc.teamcode.Configuration.secondRobot.VerticalWristRR;
 import org.firstinspires.ftc.teamcode.Configuration.secondRobot.VerticalHangerRR;
+import org.firstinspires.ftc.teamcode.GlobalVarable;
 import org.firstinspires.ftc.teamcode.PinpointDrive;
 import org.firstinspires.ftc.teamcode.secondrobot.constants.ConfigConstants;
 
@@ -65,6 +66,8 @@ public class Test extends LinearOpMode {
                 TestTrajectory.getTest(),
                 TestTrajectory.getTest2()
         ));
+        GlobalVarable.currentPose = drive.getLastPinpointPose();
+        GlobalVarable.autoStarted = true;
 
     }
 }

@@ -17,6 +17,12 @@ public class VerticalWristRR {
 //        VerticalWristServo.setPosition(ConfigurationSecondRobot.verticalWristIntake);
         VerticalWristServo.setPosition(.8);
     }
+    public VerticalWristRR(HardwareMap hardwareMap, boolean teleop){
+        if(teleop){
+            VerticalWristServo = hardwareMap.get(Servo.class, ConfigConstants.VERTICAL_WRIST);
+            VerticalWristServo. setPosition(ConfigurationSecondRobot.verticalWristIntake);
+        }
+    }
 
     public class VerticalWristAction implements Action {
         double position;
