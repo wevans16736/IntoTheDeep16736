@@ -21,7 +21,7 @@ import org.firstinspires.ftc.teamcode.Configuration.secondRobot.VerticalHangerRR
 import org.firstinspires.ftc.teamcode.Configuration.secondRobot.VerticalSlideRR;
 import org.firstinspires.ftc.teamcode.Configuration.secondRobot.VerticalWristRR;
 import org.firstinspires.ftc.teamcode.Configuration.secondRobot.VerticalGrabberRR;
-import org.firstinspires.ftc.teamcode.GlobalVarable;
+import org.firstinspires.ftc.teamcode.GlobalVariables;
 import org.firstinspires.ftc.teamcode.PinpointDrive;
 import org.firstinspires.ftc.teamcode.secondrobot.constants.ConfigConstants;
 
@@ -75,12 +75,12 @@ public class Telop extends OpMode {
         DcMotorEx rearRight = hardwareMap.get(DcMotorEx.class, ConfigConstants.BACK_RIGHT);
         IMU imu = hardwareMap.get(IMU.class, ConfigConstants.IMU);
         driveTrain = new DriveTrain(frontLeft, frontRight, rearLeft, rearRight, imu);
-        if(!GlobalVarable.autoStarted){
+        if(!GlobalVariables.autoStarted){
             this.currentPose = new Pose2d(0,0,0);
         } else{
-            this.currentPose = GlobalVarable.currentPose;
+            this.currentPose = GlobalVariables.currentPose;
         }
-        GlobalVarable.autoStarted = false;
+        GlobalVariables.autoStarted = false;
     }
     boolean percise = false;
     @Override
