@@ -23,7 +23,7 @@ public class SecondaryTeleOp extends HelperActions {
     private VerticalGrabberActions verticalGrabber = null;
     private VerticalHangerActions verticalHanger = null;
     private HorizontalSlideActions horizontalSlide = null;
-//    private DetectBlockActions detectBlockActions = null;
+    private DetectBlockActions detectBlockActions = null;
 
     double liftSpdMult = 0.8 ;
 
@@ -38,14 +38,14 @@ public class SecondaryTeleOp extends HelperActions {
         verticalWrist = new VerticalWristActions(telemetry, hardwareMap);
         verticalGrabber = new VerticalGrabberActions(telemetry, hardwareMap);
         verticalHanger = new VerticalHangerActions(hardwareMap);
-        //detectBlockActions = new DetectBlockActions(hardwareMap);
+        detectBlockActions = new DetectBlockActions(hardwareMap);
         //Set Speed for teleOp. Mecannum wheel speed.
         //driveActions.setSpeed(1.0);
 
         telemetry.addData("reverse speed?", "press down");
         telemetry.addData("normal speed?", "press up");
         telemetry.update();
-        while (!(gamepad1.dpad_up || gamepad1.dpad_down));
+        while (!(gamepad1.dpad_up || gamepad1.dpad_down) && opModeInInit());
         if (gamepad1.dpad_down) {
             setReverseSpeed(true);
         }
@@ -90,7 +90,7 @@ public class SecondaryTeleOp extends HelperActions {
             horizontalWrist.flipping(gamepad2.left_bumper);
             //force the servo to flip bypassing the range limit apply
             horizontalWrist.override(gamepad1.b || gamepad2.b);
-            //right trigger make the servo negative and left make the servo postivie.
+            //right trigger make the servo negative and left make the servo positive.
             horizontalIntake.teleop(gamepad2.right_trigger > 0.05);
             //use the player two left joystick to run the horizonal roller
             horizontalIRoll.teleOp(gamepad2.y);
@@ -111,8 +111,8 @@ public class SecondaryTeleOp extends HelperActions {
             //A button gamepad 2. Not yet working
             managePlaceSample(gamepad2.a, verticalGrabber, verticalWrist, verticalSlide, horizontalWrist, horizontalSlide, horizontalIntake, horizontalIRoll);
 
-//            Point blockCenter = detectBlockActions.pixelToPosition();
-//            telemetry.addData("block x %f, block y %f", blockCenter);
+            Point blockCenter = detectBlockActions.pixelToPosition(detectBlockActions.getCenter());
+            telemetry.addData("block x %f, block y %f", blockCenter);
 //            if (gamepad2.share) {
 //                detectBlockActions.setExposure();
 ////                moveToBlock(detectBlockActions, driveActions, horizontalSlide, horizontalIRoll);

@@ -312,14 +312,14 @@ public class ImageProcessing {
     public void testContourLocatorProcessor() {
         System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
 
-        String pathImg = "src/main/java/org/firstinspires/ftc/teamcode/testing/tests/data/rgb.jpg";
+        String pathImg = "src/main/java/org/firstinspires/ftc/teamcode/testing/tests/data/submersibleNormal0.jpg";
 
         File fileImg = new File(pathImg);
         String absolutePathImg = fileImg.getAbsolutePath();
         Mat img = Imgcodecs.imread(absolutePathImg, Imgcodecs.IMREAD_COLOR);
 
-        Imgproc.cvtColor(img, img, Imgproc.COLOR_RGB2BGR);
-        Imgcodecs.imwrite("src/main/java/org/firstinspires/ftc/teamcode/testing/tests/data/bgr.jpg", img);
+//        Imgproc.cvtColor(img, img, Imgproc.COLOR_RGB2BGR);
+//        Imgcodecs.imwrite("src/main/java/org/firstinspires/ftc/teamcode/testing/tests/data/bgr.jpg", img);
         Imgproc.cvtColor(img, img, Imgproc.COLOR_BGR2HSV);
         Imgcodecs.imwrite("src/main/java/org/firstinspires/ftc/teamcode/testing/tests/data/hsv.jpg", img);
 

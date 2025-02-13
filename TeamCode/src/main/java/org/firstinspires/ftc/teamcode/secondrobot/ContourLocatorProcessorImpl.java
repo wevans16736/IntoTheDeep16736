@@ -47,9 +47,10 @@ class ContourLocatorProcessorImpl extends ContourLocatorProcessor implements Vis
         double pixelX = center.x;
         double pixelY = center.y;
         double degreesPerPixel = 63.0 / (double) pixelWidth;
-        double YOffsetDegrees = 10.0; //TODO
+        double YOffsetDegrees = 45.0; //TODO
+        double middleY = pixelHeight / 2.0;
         double degreesX = (pixelX - ((double) pixelWidth / 2.0)) * degreesPerPixel;
-        double degreesY = (pixelY - ((double) pixelHeight / 2.0)) * degreesPerPixel - YOffsetDegrees;
+        double degreesY = (pixelY - middleY) * degreesPerPixel - YOffsetDegrees;
         double cameraHeight = 2.0; //Inches, from top of block to camera lens, TODO
         double distanceFromCameraBase = cameraHeight * Math.tan(Math.toRadians(90 - degreesY));
         double x = distanceFromCameraBase * Math.cos(Math.toRadians(90.0 - degreesX));

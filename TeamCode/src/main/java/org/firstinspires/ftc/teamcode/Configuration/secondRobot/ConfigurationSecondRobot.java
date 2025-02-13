@@ -14,7 +14,7 @@ public class ConfigurationSecondRobot {
 
 
     //vertical slide position
-    public static int highBar = 800;
+    public static int highBar = 1350;
     public static int bottom = 0;
     public static int lowBar = 2000;
     public static int topBasket = 2360;
@@ -30,7 +30,7 @@ public class ConfigurationSecondRobot {
     //this is the position to grab the butter from the intake
     public static double verticalWristIntake = 0.93;
     //this is the position to hang the butter to the bar
-    public static double verticalWristBar = .4;
+    public static double verticalWristBar = .28;
     public static double verticalWristUp = .7;
 
     //Time to move vertical wrist, MS
@@ -39,7 +39,7 @@ public class ConfigurationSecondRobot {
 
     //vertical grabber servo position
     public static double verticalOpen = .55;
-    public static double verticalClose = 0.41;
+    public static double verticalClose = 0.3;
     public static double verticalOpenWide = .7;
 
     //Time to move vertical grabber, MS
