@@ -1,12 +1,13 @@
-package org.firstinspires.ftc.teamcode.Autonomus.secondRobot;
+package org.firstinspires.ftc.teamcode.Autonomus.secondRobot.Decapricated;
 
-import com.acmerobotics.roadrunner.ParallelAction;
 import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.SequentialAction;
 import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.ColorSensor;
+import com.qualcomm.robotcore.hardware.DistanceSensor;
 
 import org.firstinspires.ftc.teamcode.Configuration.secondRobot.HorizontalGrabberRR;
 import org.firstinspires.ftc.teamcode.Configuration.secondRobot.HorizontalRollRR;
@@ -14,22 +15,23 @@ import org.firstinspires.ftc.teamcode.Configuration.secondRobot.HorizontalSlideR
 import org.firstinspires.ftc.teamcode.Configuration.secondRobot.HorizontalWristRR;
 import org.firstinspires.ftc.teamcode.Configuration.secondRobot.RobotSensor;
 import org.firstinspires.ftc.teamcode.Configuration.secondRobot.VerticalGrabberRR;
+import org.firstinspires.ftc.teamcode.Configuration.secondRobot.VerticalHangerRR;
 import org.firstinspires.ftc.teamcode.Configuration.secondRobot.VerticalSlideRR;
 import org.firstinspires.ftc.teamcode.Configuration.secondRobot.VerticalWristRR;
-import org.firstinspires.ftc.teamcode.Configuration.secondRobot.VerticalHangerRR;
+import org.firstinspires.ftc.teamcode.GlobalVariables;
 import org.firstinspires.ftc.teamcode.PinpointDrive;
-import org.firstinspires.ftc.teamcode.R;
 import org.firstinspires.ftc.teamcode.secondrobot.constants.ConfigConstants;
 
-@Autonomous(name="TestTransfer")
-public class TestTransfer extends LinearOpMode {
+@Disabled
+@Deprecated
+@Autonomous(name = "1. Test")
+public class Test extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
         //set up Pinpoint and Pose2d class
         Pose2d pose;
         PinpointDrive drive;
-        boolean side = false;
-        ColorSensor line = hardwareMap.get(ColorSensor.class, ConfigConstants.COLOR_SENSOR);
+        DistanceSensor distance = hardwareMap.get(DistanceSensor.class, ConfigConstants.COLOR_SENSOR);
 
         //all of these class is under Configuration.secondRobot
         VerticalSlideRR verticalSlide = new VerticalSlideRR(hardwareMap);
@@ -42,17 +44,13 @@ public class TestTransfer extends LinearOpMode {
         HorizontalWristRR horizontalWrist = new HorizontalWristRR(hardwareMap);
         VerticalHangerRR verticalHanger = new VerticalHangerRR(hardwareMap);
 
-        if(side){
-            pose = new Pose2d(0,0,Math.toRadians(180));
-            drive = new PinpointDrive(hardwareMap, pose);
-        }else{
-            pose = new Pose2d(0,0,Math.toRadians(90));
-            drive = new PinpointDrive(hardwareMap, pose);
-        }
+        pose = new Pose2d(0, 0, Math.toRadians(90));
+        drive = new PinpointDrive(hardwareMap, pose);
 
-        RobotSensor robotSensor = new RobotSensor(telemetry, drive, line);
+        RobotSensor robotSensor = new RobotSensor(telemetry, drive, distance);
 
-        Trajectory trajectory = new Trajectory(drive, pose, verticalSlide, verticalWrist, verticalGrabber,
+
+        TestTrajectory TestTrajectory = new TestTrajectory(drive, pose, verticalSlide, verticalWrist, verticalGrabber,
                 verticalHanger, horizontalSlide, horizontalRoll, horizontalGrabber, horizontalWrist, robotSensor);
 
         //wait for the start button to be press
@@ -61,8 +59,11 @@ public class TestTransfer extends LinearOpMode {
         if (isStopRequested()) return;
 
         Actions.runBlocking(new SequentialAction(
-                trajectory.testTransfer(true),
-                trajectory.testTransfer(false)
+                TestTrajectory.getTest(),
+                TestTrajectory.getTest2()
         ));
+        GlobalVariables.currentPose = drive.getLastPinpointPose();
+        GlobalVariables.autoStarted = true;
+
     }
 }

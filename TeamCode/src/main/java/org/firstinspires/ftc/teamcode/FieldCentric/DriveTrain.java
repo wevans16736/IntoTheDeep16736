@@ -35,6 +35,7 @@ public class DriveTrain {
         double y = -leftStickY;
         double x = leftStickX;
         double rx = rightStickX;
+
         if(percise){
             flActive = .5;
             rlActive = .5;
@@ -50,8 +51,8 @@ public class DriveTrain {
         if(reset){
             imu.resetYaw();
         }
-            //take input from heading
-            botHeading = imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS) + curentPose.heading.toDouble();
+        //take input from heading
+        botHeading = imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS) + curentPose.heading.toDouble();
         //Rotate the movment direction counter to the bot's rotation
         double rotX = x * Math.cos(-botHeading) - y * Math.sin(-botHeading);
         double rotY = x * Math.sin(-botHeading) + y * Math.cos(-botHeading);
@@ -69,6 +70,4 @@ public class DriveTrain {
         rearRight.setPower((rearRightPower * rrActive));
         rearLeft.setPower((rearLeftPower * rlActive));
     }
-
-
 }

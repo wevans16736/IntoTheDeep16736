@@ -6,34 +6,37 @@ import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.acmerobotics.roadrunner.Action;
 import com.acmerobotics.roadrunner.Pose2d;
+import com.acmerobotics.roadrunner.PoseVelocity2d;
+import com.acmerobotics.roadrunner.TimeTrajectory;
 import com.acmerobotics.roadrunner.TrajectoryActionBuilder;
+import com.acmerobotics.roadrunner.Vector2d;
 import com.qualcomm.hardware.adafruit.AdafruitI2cColorSensor;
 import com.qualcomm.robotcore.hardware.ColorSensor;
+import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.LightSensor;
 import com.qualcomm.robotcore.hardware.TouchSensor;
 
+
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.MecanumDrive;
 import org.firstinspires.ftc.teamcode.PinpointDrive;
 
 public class RobotSensor {
 
     public static Pose2d currentPose = new Pose2d(0,0,Math.toRadians(0));
-    Telemetry telemetry; PinpointDrive drive; FtcDashboard dashboard; Telemetry dashboardTelemetry; ColorSensor line;
-    public RobotSensor(Telemetry telemetry, PinpointDrive drive, ColorSensor line){
+    Telemetry telemetry; PinpointDrive drive; FtcDashboard dashboard; Telemetry dashboardTelemetry; DistanceSensor distance;
+    public RobotSensor(Telemetry telemetry, PinpointDrive drive, DistanceSensor distance){
         this.telemetry = telemetry;
         this.drive = drive;
-        this.line = line;
+        this.distance = distance;
         dashboard = FtcDashboard.getInstance();
         dashboardTelemetry = dashboard.getTelemetry();
     }
 
     public class RobotSensorAction implements Action{
-        String Location;
-        double x;
-        double y;
-        double heading;
+        String Location; double x; double y; double heading;
         public RobotSensorAction(String Location, double x, double y, double heading){
             this.Location = Location;
             this.x = x;
@@ -61,17 +64,19 @@ public class RobotSensor {
             return false;
         }
     }
-    public class LightSensorAction implements Action{
-        TrajectoryActionBuilder currentTrajectory;
-        public LightSensorAction(TrajectoryActionBuilder currentTrajectory){
-            this.currentTrajectory = currentTrajectory;
-        }
+    public class DistanceSensorAction implements Action{
 
         @Override
         public boolean run(@NonNull TelemetryPacket telemetryPacket) {
-            return false;
+            if (distance.getDistance(DistanceUnit.MM) < 50) {
+                drive.setDrivePowers(new PoseVelocity2d(new Vector2d(0, 0), 0));
+                return false;
+            } else {
+                return true;
+            }
         }
     }
+    public Action distanceSensorAction(){return new DistanceSensorAction();}
     public Action robotSensorAction(String Location, double x, double y, double heading){return new RobotSensorAction(Location, x, y, heading);}
 
 }
