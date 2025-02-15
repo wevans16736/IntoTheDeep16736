@@ -31,7 +31,7 @@ public class Auto5Butter extends LinearOpMode {
         //set up Pinpoint and Pose2d class
         Pose2d pose;
         PinpointDrive drive;
-        DistanceSensor distance = hardwareMap.get(DistanceSensor.class, ConfigConstants.COLOR_SENSOR);
+//        DistanceSensor distance = hardwareMap.get(DistanceSensor.class, ConfigConstants.COLOR_SENSOR);
         boolean side = false;
 
         //all of these class is under Configuration.secondRobot
@@ -53,7 +53,7 @@ public class Auto5Butter extends LinearOpMode {
         HorizontalWristRR horizontalWrist = new HorizontalWristRR(hardwareMap);
         VerticalHangerRR verticalHanger = new VerticalHangerRR(hardwareMap);
 
-        RobotSensor robotSensor = new RobotSensor(telemetry, drive, distance);
+        RobotSensor robotSensor = new RobotSensor(telemetry, drive);
 
         Trajectory trajectory = new Trajectory(drive, pose, verticalSlide, verticalWrist, verticalGrabber,
                 verticalHanger, horizontalSlide, horizontalRoll, horizontalGrabber, horizontalWrist, robotSensor);
@@ -81,18 +81,18 @@ public class Auto5Butter extends LinearOpMode {
         GlobalVariables.autoStarted = true;
 
         Actions.runBlocking(new SequentialAction(
-                firstHang,
-                firstButter,
-                secondButter,
-                thirdButter,
-                firstHuman,
-                secondHang,
-                secondHuman,
-                thirdHang,
-                thirdHuman,
-                fourthHang,
-                fourthHuman,
-                fifthHang
+                firstHang
+//                firstButter,
+//                secondButter,
+//                thirdButter,
+//                firstHuman,
+//                secondHang,
+//                secondHuman,
+//                thirdHang,
+//                thirdHuman,
+//                fourthHang,
+//                fourthHuman,
+//                fifthHang
         ));
         GlobalVariables.currentPose = drive.getLastPinpointPose();
     }

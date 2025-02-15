@@ -57,11 +57,7 @@ public class Telop extends OpMode {
         verticalHanger = new VerticalHangerRR(hardwareMap);
         attachment = new Attachment(verticalSlide, verticalWrist, verticalGrabber,
                 horizontalSlide, horizontalRoll, horizontalGrabber, horizontalWrist, verticalHanger,
-                runningActions);
-
-        //todo localization after auto?
-        pose = new Pose2d(0, 0, Math.toRadians(90));
-        drive = new PinpointDrive(hardwareMap, pose);
+                runningActions, dash);
 
         //setup the drive train
         DcMotorEx frontLeft = hardwareMap.get(DcMotorEx.class, ConfigConstants.FRONT_LEFT);
@@ -80,7 +76,6 @@ public class Telop extends OpMode {
     boolean percise = false;
     @Override
     public void loop() {
-        TelemetryPacket packet = new TelemetryPacket();
         //verticalGrabber
         attachment.verticalGrabber(gamepad1.right_bumper);
         //horizontal slide
@@ -106,15 +101,6 @@ public class Telop extends OpMode {
         }
 
         //update runing actions
-        List<Action> newActions = new ArrayList<>();
-        for (Action action : runningActions) {
-            action.preview(packet.fieldOverlay());
-            if (action.run(packet)) {
-                newActions.add(action);
-            }
-        }
-        runningActions = newActions;
-
-        dash.sendTelemetryPacket(packet);
+        attachment.updateAction();
     }
 }

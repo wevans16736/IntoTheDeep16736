@@ -43,7 +43,7 @@ public class Trajectory{
 
         currentTrajectory = drive.actionBuilder(pose);
     }
-    double hangX = 0; double hangY = -30; boolean firstHang = true;
+    double hangX = 0; double hangY = -32; boolean firstHang = true;
     double firstButterX = 35; double firstButterY = -45; double butterCounter = 0;
     double secondButterX = 45; double secondButterY = firstButterY;
     double thirdButterX = 55; double thirdButterY = firstButterY;

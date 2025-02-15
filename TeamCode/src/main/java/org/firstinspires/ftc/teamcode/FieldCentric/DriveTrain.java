@@ -11,7 +11,6 @@ import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 @Config
 public class DriveTrain {
     DcMotorEx frontLeft; DcMotorEx rearLeft; DcMotorEx frontRight; DcMotorEx rearRight; IMU imu;
-
     double flActive = 1; double rlActive = 1; double frActive = 1; double rrActive = 1; double botHeading;
 
     public DriveTrain(DcMotorEx frontLeft, DcMotorEx rearLeft, DcMotorEx frontRight, DcMotorEx rearRight, IMU imu){
@@ -53,7 +52,7 @@ public class DriveTrain {
         }
         //take input from heading
         botHeading = imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS) + curentPose.heading.toDouble();
-        //Rotate the movment direction counter to the bot's rotation
+        //Rotate the movement direction counter to the bot's rotation
         double rotX = x * Math.cos(-botHeading) - y * Math.sin(-botHeading);
         double rotY = x * Math.sin(-botHeading) + y * Math.cos(-botHeading);
         //counter robot imperfect strafing

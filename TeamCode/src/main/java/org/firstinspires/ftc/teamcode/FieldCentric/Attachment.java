@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.FieldCentric;
 
+import com.acmerobotics.dashboard.FtcDashboard;
+import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.acmerobotics.roadrunner.Action;
 import com.acmerobotics.roadrunner.InstantAction;
 import com.acmerobotics.roadrunner.SequentialAction;
@@ -15,6 +17,7 @@ import org.firstinspires.ftc.teamcode.Configuration.secondRobot.VerticalHangerRR
 import org.firstinspires.ftc.teamcode.Configuration.secondRobot.VerticalSlideRR;
 import org.firstinspires.ftc.teamcode.Configuration.secondRobot.VerticalWristRR;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Attachment {
@@ -22,12 +25,15 @@ public class Attachment {
     VerticalGrabberRR verticalGrabber; HorizontalSlideRR horizontalSlide;
     HorizontalRollRR horizontalRoll; HorizontalGrabberRR horizontalGrabber;
     HorizontalWristRR horizontalWrist; VerticalHangerRR verticalHanger;
-    double currTime; double desiredLoopms = 250; List<Action> runningActions;
+    double currTime; double desiredLoopms = 250;
+    private List<Action> runningActions; private FtcDashboard dash;
+    TelemetryPacket packet = new TelemetryPacket();
 
     public Attachment(VerticalSlideRR verticalSlide, VerticalWristRR verticalWrist,
                       VerticalGrabberRR verticalGrabber, HorizontalSlideRR horizontalSlide,
                       HorizontalRollRR horizontalRoll, HorizontalGrabberRR horizontalGrabber,
-                      HorizontalWristRR horizontalWrist, VerticalHangerRR verticalHanger, List<Action> runningActions){
+                      HorizontalWristRR horizontalWrist, VerticalHangerRR verticalHanger,
+                      List<Action> runningActions, FtcDashboard dash){
         this.verticalSlide = verticalSlide;
         this.verticalWrist = verticalWrist;
         this.verticalGrabber = verticalGrabber;
@@ -38,7 +44,8 @@ public class Attachment {
         this.verticalHanger = verticalHanger;
 
         this.runningActions = runningActions;
-        currTime =System.currentTimeMillis();
+        this.dash = dash;
+        currTime = System.currentTimeMillis();
     }
     boolean wasRB = false; double prevTimeRB = 0.0; double LoopTimeRB;
     public void verticalGrabber(boolean right_bumper) {
@@ -260,5 +267,17 @@ public class Attachment {
                 wasCross = !wasCross;
             }
         }
+    }
+    public void updateAction(){
+        List<Action> newActions = new ArrayList<>();
+        for (Action action : runningActions) {
+            action.preview(packet.fieldOverlay());
+            if (action.run(packet)) {
+                newActions.add(action);
+            }
+        }
+        runningActions = newActions;
+
+        dash.sendTelemetryPacket(packet);
     }
 }

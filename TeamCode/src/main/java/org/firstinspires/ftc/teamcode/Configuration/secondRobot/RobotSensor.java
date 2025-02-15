@@ -34,6 +34,12 @@ public class RobotSensor {
         dashboard = FtcDashboard.getInstance();
         dashboardTelemetry = dashboard.getTelemetry();
     }
+    public RobotSensor(Telemetry telemetry, PinpointDrive drive){
+        this.telemetry = telemetry;
+        this.drive = drive;
+        dashboard = FtcDashboard.getInstance();
+        dashboardTelemetry = dashboard.getTelemetry();
+    }
 
     public class RobotSensorAction implements Action{
         String Location; double x; double y; double heading;
