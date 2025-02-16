@@ -272,6 +272,26 @@ public class Attachment {
             }
         }
     }
+    double loopTimeDpad_left = 0; double prevTimeDpad_left = 0; boolean wasDpad_left = false;
+    public void roll(boolean DPad_left){
+        loopTimeDpad_left = currTime - prevTimeDpad_left;
+        if(DPad_left){
+            if(loopTimeDpad_left >= desiredLoopms){
+                if(wasDpad_left){
+                    runningActions.add(new SequentialAction(
+                            new InstantAction(() -> horizontalRoll.setPose(ConfigurationSecondRobot.flat))
+                            ));
+                }
+                if(!wasDpad_left){
+                    runningActions.add(new SequentialAction(
+                            new InstantAction(() -> horizontalRoll.setPose(ConfigurationSecondRobot.slant))
+                    ));
+                }
+                prevTimeDpad_left = currTime;
+                wasDpad_left = !wasDpad_left;
+            }
+        }
+    }
 
     public void updateTime(long time){
         currTime = time;

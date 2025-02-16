@@ -56,10 +56,10 @@ public class Trajectory{
     double thirdButterX = 48; double thirdButterY = firstButterY;
     double humanX = 40; double humanY = -59; int human = 0;
 
-    public void getHang(){
-        if(hang == 0){
-            TrajectoryActionBuilder firstHang = currentTrajectory
-                    .afterTime(0, verticalSlideRR.verticalSlideAction(ConfigurationSecondRobot.))
-        }
-    }
+//    public void getHang(){
+//        if(hang == 0){
+//            TrajectoryActionBuilder firstHang = currentTrajectory
+//                    .afterTime(0, verticalSlideRR.verticalSlideAction(ConfigurationSecondRobot.))
+//        }
+//    }
 }
