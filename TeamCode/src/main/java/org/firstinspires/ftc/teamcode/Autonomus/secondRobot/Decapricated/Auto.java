@@ -22,8 +22,6 @@ import org.firstinspires.ftc.teamcode.Configuration.secondRobot.VerticalWristRR;
 import org.firstinspires.ftc.teamcode.PinpointDrive;
 import org.firstinspires.ftc.teamcode.secondrobot.constants.ConfigConstants;
 
-@Disabled
-@Deprecated
 @Autonomous(name = "Auto")
 public class Auto extends LinearOpMode {
     @Override
@@ -31,7 +29,7 @@ public class Auto extends LinearOpMode {
         //set up Pinpoint and Pose2d class
         Pose2d pose;
         PinpointDrive drive;
-        DistanceSensor line = hardwareMap.get(DistanceSensor.class, ConfigConstants.COLOR_SENSOR);
+//        DistanceSensor line = hardwareMap.get(DistanceSensor.class, ConfigConstants.COLOR_SENSOR);
 
         //all of these class is under Configuration.secondRobot
         VerticalSlideRR verticalSlide = new VerticalSlideRR(hardwareMap);
@@ -86,10 +84,10 @@ public class Auto extends LinearOpMode {
             drive = new PinpointDrive(hardwareMap, pose);
         }
 
-        RobotSensor robotSensor = new RobotSensor(telemetry, drive, line);
+        RobotSensor robotSensor = new RobotSensor(telemetry, drive);
 
         Trajectory trajectory = new Trajectory(drive, pose, verticalSlide, verticalWrist, verticalGrabber,
-                verticalHanger, horizontalSlide, horizontalRoll, horizontalGrabber, horizontalWrist);
+                verticalHanger, horizontalSlide, horizontalRoll, horizontalGrabber, horizontalWrist, robotSensor);
 
         TrajectoryLeft trajectoryLeft = new TrajectoryLeft(drive, pose, verticalSlide, verticalWrist, verticalGrabber,
                 verticalHanger, horizontalSlide, horizontalRoll, horizontalGrabber, horizontalWrist);

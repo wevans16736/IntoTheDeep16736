@@ -23,15 +23,24 @@ import org.firstinspires.ftc.teamcode.PinpointDrive;
 
 import java.util.Arrays;
 
-public class Trajectory{
-    VerticalSlideRR verticalSlideRR; VerticalWristRR verticalWristRR; VerticalGrabberRR verticalGrabberRR; VerticalHangerRR verticalHangerRR;
-    HorizontalSlideRR horizontalSlideRR; HorizontalRollRR horizontalRollRR; HorizontalGrabberRR horizontalGrabberRR;
-    HorizontalWristRR horizontalWristRR; PinpointDrive drive; Pose2d pose; TrajectoryActionBuilder currentTrajectory;
+public class TrajectoryTest {
+    VerticalSlideRR verticalSlideRR;
+    VerticalWristRR verticalWristRR;
+    VerticalGrabberRR verticalGrabberRR;
+    VerticalHangerRR verticalHangerRR;
+    HorizontalSlideRR horizontalSlideRR;
+    HorizontalRollRR horizontalRollRR;
+    HorizontalGrabberRR horizontalGrabberRR;
+    HorizontalWristRR horizontalWristRR;
+    PinpointDrive drive;
+    Pose2d pose;
+    TrajectoryActionBuilder currentTrajectory;
     RobotSensor robotSensor;
-    public Trajectory(PinpointDrive drive, Pose2d pose, VerticalSlideRR verticalSlideRR,
-                      VerticalWristRR verticalWristRR, VerticalGrabberRR verticalGrabberRR,
-                      VerticalHangerRR verticalHangerRR, HorizontalSlideRR horizontalSlideRR, HorizontalRollRR horizontalRollRR,
-                      HorizontalGrabberRR horizontalGrabberRR, HorizontalWristRR horizontalWristRR, RobotSensor robotSensor){
+
+    public TrajectoryTest(PinpointDrive drive, Pose2d pose, VerticalSlideRR verticalSlideRR,
+                          VerticalWristRR verticalWristRR, VerticalGrabberRR verticalGrabberRR,
+                          VerticalHangerRR verticalHangerRR, HorizontalSlideRR horizontalSlideRR, HorizontalRollRR horizontalRollRR,
+                          HorizontalGrabberRR horizontalGrabberRR, HorizontalWristRR horizontalWristRR, RobotSensor robotSensor) {
         this.drive = drive;
         this.pose = pose;
         this.verticalSlideRR = verticalSlideRR;
@@ -46,20 +55,19 @@ public class Trajectory{
 
         currentTrajectory = drive.actionBuilder(pose);
     }
+
     VelConstraint butterSpeed = new MinVelConstraint(Arrays.asList(
             new TranslationalVelConstraint(50),
             new AngularVelConstraint(Math.PI)
     ));
-    double hangX = 0; double hangY = -35; int hang = 0; int attachment = 0;
-    double firstButterX = 48; double firstButterY = -35; double butterCounter = 0;
-    double secondButterX = 45; double secondButterY = firstButterY;
-    double thirdButterX = 48; double thirdButterY = firstButterY;
-    double humanX = 40; double humanY = -59; int human = 0;
+    public Action getTest(){
+        TrajectoryActionBuilder Test = currentTrajectory
+                .setTangent(Math.toRadians(0))
+                .splineToLinearHeading(new Pose2d(50, 0, Math.toRadians(0)), Math.toRadians(0))
+                .setTangent(Math.toRadians(180))
+                .splineToLinearHeading(new Pose2d(0, 0, Math.toRadians(0)), Math.toRadians(180));
 
-    public void getHang(){
-        if(hang == 0){
-            TrajectoryActionBuilder firstHang = currentTrajectory
-                    .afterTime(0, verticalSlideRR.verticalSlideAction(ConfigurationSecondRobot.))
-        }
+        currentTrajectory = Test.endTrajectory().fresh();
+        return Test.build();
     }
 }

@@ -69,7 +69,6 @@ public class VerticalSlideRR {
         verticalSlideMotorRight.setTargetPosition(pose);
         verticalSlideMotorLeft.setTargetPosition(pose);
     }
-
     public int returnPose(){
         return verticalSlideMotorLeft.getCurrentPosition();
     }

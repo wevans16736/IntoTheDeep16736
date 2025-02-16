@@ -55,7 +55,7 @@ public class TestTransfer extends LinearOpMode {
         RobotSensor robotSensor = new RobotSensor(telemetry, drive, line);
 
         Trajectory trajectory = new Trajectory(drive, pose, verticalSlide, verticalWrist, verticalGrabber,
-                verticalHanger, horizontalSlide, horizontalRoll, horizontalGrabber, horizontalWrist);
+                verticalHanger, horizontalSlide, horizontalRoll, horizontalGrabber, horizontalWrist, robotSensor);
 
         //wait for the start button to be press
         waitForStart();

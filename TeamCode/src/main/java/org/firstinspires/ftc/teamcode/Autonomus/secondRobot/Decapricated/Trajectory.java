@@ -23,8 +23,6 @@ import org.firstinspires.ftc.teamcode.PinpointDrive;
 
 import java.util.Arrays;
 
-@Disabled
-@Deprecated
 public class Trajectory {
     VerticalSlideRR verticalSlideRR;
     VerticalWristRR verticalWristRR;
@@ -56,7 +54,7 @@ public class Trajectory {
     public Trajectory(PinpointDrive drive, Pose2d pose, VerticalSlideRR verticalSlideRR,
                       VerticalWristRR verticalWristRR, VerticalGrabberRR verticalGrabberRR,
                       VerticalHangerRR verticalHangerRR, HorizontalSlideRR horizontalSlideRR, HorizontalRollRR horizontalRollRR,
-                      HorizontalGrabberRR horizontalGrabberRR, HorizontalWristRR horizontalWristRR) {
+                      HorizontalGrabberRR horizontalGrabberRR, HorizontalWristRR horizontalWristRR, RobotSensor robotSensor) {
         this.drive = drive;
         this.pose = pose;
         this.verticalSlideRR = verticalSlideRR;

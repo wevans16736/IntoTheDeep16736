@@ -57,7 +57,7 @@ public class Telop extends OpMode {
         verticalHanger = new VerticalHangerRR(hardwareMap);
         attachment = new Attachment(verticalSlide, verticalWrist, verticalGrabber,
                 horizontalSlide, horizontalRoll, horizontalGrabber, horizontalWrist, verticalHanger,
-                runningActions, dash);
+                runningActions, dash, System.currentTimeMillis());
 
         //setup the drive train
         DcMotorEx frontLeft = hardwareMap.get(DcMotorEx.class, ConfigConstants.FRONT_LEFT);
@@ -76,6 +76,8 @@ public class Telop extends OpMode {
     boolean percise = false;
     @Override
     public void loop() {
+        //update time
+        attachment.updateTime(System.currentTimeMillis());
         //verticalGrabber
         attachment.verticalGrabber(gamepad1.right_bumper);
         //horizontal slide
@@ -89,7 +91,7 @@ public class Telop extends OpMode {
         //hook
         attachment.hook(gamepad1.dpad_up);
         //percise mode
-        percise = attachment.percise(gamepad1.circle);
+        percise = attachment.percise(gamepad1.square);
        //manual slide override
         attachment.verticalOverride(gamepad1.cross, gamepad1.dpad_up, gamepad1.dpad_down);
 

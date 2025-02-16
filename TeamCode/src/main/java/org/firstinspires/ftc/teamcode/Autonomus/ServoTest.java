@@ -36,6 +36,7 @@ public class ServoTest extends LinearOpMode {
         Servo VerticalHangServo = hardwareMap.get(Servo.class, ConfigConstants.VERTICAL_HANGER);
 
         Servo HorizontalGrabberServo = hardwareMap.get(Servo.class, ConfigConstants.HORIZONTAL_INTAKE);
+        HorizontalGrabberServo.setDirection(Servo.Direction.REVERSE);
         Servo HorizontalWristServo = hardwareMap.get(Servo.class, ConfigConstants.HORIZONTAL_WRIST);
         Servo HorizontalRollServo = hardwareMap.get(Servo.class, ConfigConstants.HORIZONTAL_ROLL);
 

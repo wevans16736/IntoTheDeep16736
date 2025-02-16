@@ -4,7 +4,7 @@ import com.acmerobotics.dashboard.config.Config;
 
 @Config
 public class ConfigurationSecondRobot {
-    public static double adriveMultiple = 1;
+    public static double adriveMultiple = 20;
     //drive default movement
     public static double driveVelocity = (50* adriveMultiple); //default is 50
     public static double driveMinAccel =  -30; //default is -30
@@ -14,7 +14,7 @@ public class ConfigurationSecondRobot {
 
 
     //vertical slide position
-    public static int highBar = 1350;
+    public static int highBar = 675;
     public static int bottom = 0;
     public static int lowBar = 2000;
     public static int topBasket = 2360;
@@ -24,13 +24,13 @@ public class ConfigurationSecondRobot {
 
     //this is vertical wrist servo position
     //this is a position to place it on the basket
-    public static double verticalWristBasket = 0.45;
+    public static double verticalWristBasket = .4;
     //this is a position to grab the butter from the wall or set it on the lower basket or either rung
     public static double verticalWristWall = 0.275;
     //this is the position to grab the butter from the intake
     public static double verticalWristIntake = 0.93;
     //this is the position to hang the butter to the bar
-    public static double verticalWristBar = .28;
+    public static double verticalWristBar = .43;
     public static double verticalWristUp = .7;
 
     //Time to move vertical wrist, MS
@@ -66,7 +66,7 @@ public class ConfigurationSecondRobot {
     public static double horizontalWristIntaketoTransfer = 800;
 
     //horizontal grabber servo position
-    public static double horizontalGrabberClose = .41;
+    public static double horizontalGrabberClose = .475;
     public static double horizontalGrabberSoftClose = horizontalGrabberClose - 0.025;
     public static double horizontalGrabberOpen = horizontalGrabberClose - 0.225;
     public static double horizontalGrabberWide = horizontalGrabberClose - 0.3;
@@ -78,7 +78,7 @@ public class ConfigurationSecondRobot {
     //horizontal roll servo position
     public static double flat = 0.175;
     public static double slant = .3;
-    public static double sideway = .51;
+    public static double sideway = .325;
 
     //horizontal roll time to flip, MS
     public static double flatToSidewaysTime = 600;

@@ -71,14 +71,13 @@ public class MecanumDrive {
 //        public double lateralInPerTick =  0.7665571658951872;OLD
         public double lateralInPerTick = 0.7665571658951872;
 //        public double trackWidthTicks = 12.909184083483952; OLD
-        public double trackWidthTicks = 12.909184083483952;
+        public double trackWidthTicks = 13.845137550174671;
 
         // feedforward parameters (in tick units)
-//        public double kS = 1.312598752395592; OLD
-        public double kS = 2.41630800809041;
-//        public double kV = 0.12627343205960265; OLD
-        public double kV = 0.12578307198549346;
-//        public double kA = 0.00001; OLD
+        public double kS = 1.3529559114292242;
+        //2.41630800809041
+        public double kV = 0.1293631529355424;
+        //0.12578307198549346
         public double kA = 0.001;
 
         // path profile parameters (in inches)
@@ -307,7 +306,7 @@ public class MecanumDrive {
 
             Pose2d error = txWorldTarget.value().minusExp(pose);
 
-            if (t >= timeTrajectory.duration && error.position.norm() < 1 && error.heading.toDouble() < 1 && robotVelRobot.linearVel.norm() < .5 || t>= timeTrajectory.duration + .1) {
+            if (t >= timeTrajectory.duration && error.position.norm() < 1 && error.heading.toDouble() < 1 && robotVelRobot.linearVel.norm() < .5 || t>= timeTrajectory.duration + .05) {
                 leftFront.setPower(0);
                 leftBack.setPower(0);
                 rightBack.setPower(0);

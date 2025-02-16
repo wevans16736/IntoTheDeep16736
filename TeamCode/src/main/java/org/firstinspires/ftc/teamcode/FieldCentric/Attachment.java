@@ -19,6 +19,7 @@ import org.firstinspires.ftc.teamcode.Configuration.secondRobot.VerticalWristRR;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class Attachment {
     VerticalSlideRR verticalSlide; VerticalWristRR verticalWrist;
@@ -33,7 +34,7 @@ public class Attachment {
                       VerticalGrabberRR verticalGrabber, HorizontalSlideRR horizontalSlide,
                       HorizontalRollRR horizontalRoll, HorizontalGrabberRR horizontalGrabber,
                       HorizontalWristRR horizontalWrist, VerticalHangerRR verticalHanger,
-                      List<Action> runningActions, FtcDashboard dash){
+                      List<Action> runningActions, FtcDashboard dash, Long time){
         this.verticalSlide = verticalSlide;
         this.verticalWrist = verticalWrist;
         this.verticalGrabber = verticalGrabber;
@@ -50,7 +51,7 @@ public class Attachment {
     boolean wasRB = false; double prevTimeRB = 0.0; double LoopTimeRB;
     public void verticalGrabber(boolean right_bumper) {
         //vertical grabber
-        LoopTimeRB= currTime - prevTimeRB;
+        LoopTimeRB = currTime - prevTimeRB;
         //update need from gamepads
         if(right_bumper){
             if (LoopTimeRB >= desiredLoopms) {
@@ -87,14 +88,15 @@ public class Attachment {
                 } else {
                     if (wasTriangle) {
                         runningActions.add(new SequentialAction(
-                                new InstantAction(() -> horizontalWrist.setPose(ConfigurationSecondRobot.horizontalWristHover)),
+                                new InstantAction(() -> horizontalWrist.setPose(ConfigurationSecondRobot.horizontalWristTransfer)),
                                 new InstantAction(() -> horizontalRoll.setPose(ConfigurationSecondRobot.flat)),
                                 new InstantAction(() -> horizontalSlide.setPose(ConfigurationSecondRobot.horizontalSlideRetract)),
                                 new InstantAction(() -> verticalGrabber.setPose(ConfigurationSecondRobot.verticalOpen)),
                                 new InstantAction(() -> verticalWrist.setPose(ConfigurationSecondRobot.verticalWristIntake)),
-                                new SleepAction(ConfigurationSecondRobot.horizontalSlideTime / 1000),
-                                new InstantAction(() -> horizontalWrist.setPose(ConfigurationSecondRobot.horizontalWristTransfer)),
-                                new SleepAction(.5),
+//                                new SleepAction((ConfigurationSecondRobot.horizontalSlideTime *.25) / 1000),
+//                                new InstantAction(() -> horizontalWrist.setPose(ConfigurationSecondRobot.horizontalWristTransfer)),
+//                                new SleepAction((ConfigurationSecondRobot.horizontalSlideTime *.75) / 1000),
+                                new SleepAction(ConfigurationSecondRobot.horizontalSlideTime/1000),
                                 new InstantAction(() -> verticalGrabber.setPose(ConfigurationSecondRobot.verticalClose)),
                                 new SleepAction(ConfigurationSecondRobot.verticalCloseTime / 1000),
                                 new InstantAction(() -> horizontalGrabber.setPose(ConfigurationSecondRobot.horizontalGrabberOpen))
@@ -209,30 +211,32 @@ public class Attachment {
         loopTimeDPU = currTime - prevTimeDPU;
         //update input from gamepad
         if (dpad_up) {
-            if (!wasCross) {
-                if (loopTimeDPU >= desiredLoopms) {
-                    if (wasDPU) {
-                        runningActions.add(new SequentialAction(
-                                new InstantAction(() -> verticalHanger.setPose(ConfigurationSecondRobot.verticalHangIn))
-                        ));
-                    } else {
-                        if (!wasDPU) {
+            if(wasLeft == 3) {
+                if (!wasCross) {
+                    if (loopTimeDPU >= desiredLoopms) {
+                        if (wasDPU) {
                             runningActions.add(new SequentialAction(
-                                    new InstantAction(() -> verticalHanger.setPose(ConfigurationSecondRobot.verticalHangOut))
+                                    new InstantAction(() -> verticalHanger.setPose(ConfigurationSecondRobot.verticalHangIn))
                             ));
+                        } else {
+                            if (!wasDPU) {
+                                runningActions.add(new SequentialAction(
+                                        new InstantAction(() -> verticalHanger.setPose(ConfigurationSecondRobot.verticalHangOut))
+                                ));
+                            }
                         }
+                        prevTimeDPU = currTime;
+                        wasDPU = !wasDPU;
                     }
-                    prevTimeDPU = currTime;
-                    wasDPU = !wasDPU;
                 }
             }
         }
     }
-    double loopTimeSquare; double prevTimeSquare = 0.0; boolean wasSquare;
+    double loopTimeSquare; double prevTimeSquare = 0.0; boolean wasSquare = false;
     public boolean percise(boolean square){
         loopTimeSquare = currTime - prevTimeSquare;
         //update input from gamepad
-        if (square) {
+        if(square) {
             if (loopTimeSquare >= desiredLoopms) {
                 prevTimeSquare = currTime;
                 wasSquare = !wasSquare;
@@ -253,11 +257,11 @@ public class Attachment {
                     slidePose = verticalSlide.returnPose();
                    if(loopTimedpad >= desiredLoopms){
                        if(dpad_up){
-                           slidePose += 50;
+                           slidePose += 200;
                            verticalSlide.setPose(slidePose);
                        }
                        if(dpad_down){
-                           slidePose -= 50;
+                           slidePose -= 200;
                            verticalSlide.setPose(slidePose);
                        }
                        prevTimedpad = currTime;
@@ -267,6 +271,10 @@ public class Attachment {
                 wasCross = !wasCross;
             }
         }
+    }
+
+    public void updateTime(long time){
+        currTime = time;
     }
     public void updateAction(){
         List<Action> newActions = new ArrayList<>();

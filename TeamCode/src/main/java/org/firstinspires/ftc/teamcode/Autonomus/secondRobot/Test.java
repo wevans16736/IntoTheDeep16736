@@ -1,37 +1,32 @@
 package org.firstinspires.ftc.teamcode.Autonomus.secondRobot;
 
-import com.acmerobotics.roadrunner.Action;
-import com.acmerobotics.roadrunner.ParallelAction;
 import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.SequentialAction;
+import com.acmerobotics.roadrunner.SleepAction;
 import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.hardware.ColorSensor;
-import com.qualcomm.robotcore.hardware.DistanceSensor;
 
-import org.firstinspires.ftc.teamcode.Autonomus.secondRobot.Trajectory;
 import org.firstinspires.ftc.teamcode.Configuration.secondRobot.HorizontalGrabberRR;
 import org.firstinspires.ftc.teamcode.Configuration.secondRobot.HorizontalRollRR;
 import org.firstinspires.ftc.teamcode.Configuration.secondRobot.HorizontalSlideRR;
 import org.firstinspires.ftc.teamcode.Configuration.secondRobot.HorizontalWristRR;
 import org.firstinspires.ftc.teamcode.Configuration.secondRobot.RobotSensor;
 import org.firstinspires.ftc.teamcode.Configuration.secondRobot.VerticalGrabberRR;
+import org.firstinspires.ftc.teamcode.Configuration.secondRobot.VerticalHangerRR;
 import org.firstinspires.ftc.teamcode.Configuration.secondRobot.VerticalSlideRR;
 import org.firstinspires.ftc.teamcode.Configuration.secondRobot.VerticalWristRR;
-import org.firstinspires.ftc.teamcode.Configuration.secondRobot.VerticalHangerRR;
 import org.firstinspires.ftc.teamcode.GlobalVariables;
 import org.firstinspires.ftc.teamcode.PinpointDrive;
-import org.firstinspires.ftc.teamcode.secondrobot.constants.ConfigConstants;
 
-@Autonomous(name = "rotation")
-public class Auto5Butter extends LinearOpMode {
+@Autonomous(name = "test")
+public class Test extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
         //set up Pinpoint and Pose2d class
         Pose2d pose;
         PinpointDrive drive;
-//        DistanceSensor distance = hardwareMap.get(DistanceSensor.class, ConfigConstants.COLOR_SENSOR);
+        //        DistanceSensor distance = hardwareMap.get(DistanceSensor.class, ConfigConstants.COLOR_SENSOR);
         boolean side = false;
 
         //all of these class is under Configuration.secondRobot
@@ -39,13 +34,15 @@ public class Auto5Butter extends LinearOpMode {
         VerticalWristRR verticalWrist = new VerticalWristRR(hardwareMap);
         VerticalGrabberRR verticalGrabber = new VerticalGrabberRR(hardwareMap);
 
-        if(!side){
-            pose = new Pose2d(9,-64,Math.toRadians(90));
-            drive = new PinpointDrive(hardwareMap, pose);
-        }else{
-            pose = new Pose2d(-15,-64,Math.toRadians(180));
-            drive = new PinpointDrive(hardwareMap, pose);
-        }
+//        if (!side) {
+//            pose = new Pose2d(9, -64, Math.toRadians(90));
+//            drive = new PinpointDrive(hardwareMap, pose);
+//        } else {
+//            pose = new Pose2d(-15, -64, Math.toRadians(180));
+//            drive = new PinpointDrive(hardwareMap, pose);
+//        }
+        pose = new Pose2d(0,0,Math.toRadians(0));
+        drive = new PinpointDrive(hardwareMap, pose);
 
         HorizontalSlideRR horizontalSlide = new HorizontalSlideRR(hardwareMap);
         HorizontalRollRR horizontalRoll = new HorizontalRollRR(hardwareMap);
@@ -55,10 +52,8 @@ public class Auto5Butter extends LinearOpMode {
 
         RobotSensor robotSensor = new RobotSensor(telemetry, drive);
 
-        Trajectory trajectory = new Trajectory(drive, pose, verticalSlide, verticalWrist, verticalGrabber,
+        TrajectoryTest trajectory = new TrajectoryTest(drive, pose, verticalSlide, verticalWrist, verticalGrabber,
                 verticalHanger, horizontalSlide, horizontalRoll, horizontalGrabber, horizontalWrist, robotSensor);
-
-        //build everything
 
 
         //wait for the start button to be press
@@ -68,10 +63,10 @@ public class Auto5Butter extends LinearOpMode {
 
         GlobalVariables.autoStarted = true;
 
-        Actions.runBlocking(new SequentialAction(
-
-
-        ));
-        GlobalVariables.currentPose = drive.getLastPinpointPose();
+        for(int index = 0; index < 8; index++) {
+            Actions.runBlocking(new SequentialAction(
+                    trajectory.getTest()
+            ));
+        }
     }
 }
