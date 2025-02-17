@@ -66,10 +66,10 @@ public class ConfigurationSecondRobot {
     public static double horizontalWristIntaketoTransfer = 800;
 
     //horizontal grabber servo position
-    public static double horizontalGrabberClose = .475;
-    public static double horizontalGrabberSoftClose = horizontalGrabberClose - 0.025;
-    public static double horizontalGrabberOpen = horizontalGrabberClose - 0.225;
-    public static double horizontalGrabberWide = horizontalGrabberClose - 0.3;
+    public static double horizontalGrabberClose = .15;
+
+    public static double horizontalGrabberOpen = .3;
+    public static double horizontalGrabberWide = .35;
 
     //todo horizontal grabber close time, MS
     public static double horizontalGrabberCloseTime = 150; //Maybe this right?
@@ -78,7 +78,7 @@ public class ConfigurationSecondRobot {
     //horizontal roll servo position
     public static double flat = 0.175;
     public static double slant = .3;
-    public static double sideway = .325;
+    public static double sideway = 0.52;
 
     //horizontal roll time to flip, MS
     public static double flatToSidewaysTime = 600;

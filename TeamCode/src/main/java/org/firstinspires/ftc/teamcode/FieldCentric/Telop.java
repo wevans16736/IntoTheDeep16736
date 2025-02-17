@@ -90,6 +90,8 @@ public class Telop extends OpMode {
         attachment.transferWrist(gamepad1.circle);
         //hook
         attachment.hook(gamepad1.dpad_up);
+        //roll
+        attachment.roll(gamepad1.dpad_left);
         //percise mode
         percise = attachment.percise(gamepad1.square);
        //manual slide override

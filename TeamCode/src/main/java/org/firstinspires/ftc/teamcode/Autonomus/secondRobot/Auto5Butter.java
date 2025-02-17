@@ -69,8 +69,15 @@ public class Auto5Butter extends LinearOpMode {
         GlobalVariables.autoStarted = true;
 
         Actions.runBlocking(new SequentialAction(
-
-
+                trajectory.getHang(),
+                trajectory.getButter(),
+                new ParallelAction(
+                        trajectory.getAttachment(),
+                        trajectory.getButter()
+                ),
+                trajectory.getAttachment(),
+                trajectory.getButter(),
+                trajectory.getHang()
         ));
         GlobalVariables.currentPose = drive.getLastPinpointPose();
     }
