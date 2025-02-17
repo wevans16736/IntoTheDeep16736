@@ -44,10 +44,10 @@ class ContourLocatorProcessorImpl extends ContourLocatorProcessor implements Vis
     public void init(int width, int height, CameraCalibration calibration) {}
 
     public Point pixelToPosition(Point center) {
-        double pixelX = center.x;
-        double pixelY = center.y;
+        double pixelX = center.y;
+        double pixelY = -center.x;
         double degreesPerPixel = 63.0 / (double) pixelWidth;
-        double YOffsetDegrees = 45.0; //TODO
+        double YOffsetDegrees = 25.0; //TODO
         double middleY = pixelHeight / 2.0;
         double degreesX = (pixelX - ((double) pixelWidth / 2.0)) * degreesPerPixel;
         double degreesY = (pixelY - middleY) * degreesPerPixel - YOffsetDegrees;
@@ -98,12 +98,12 @@ class ContourLocatorProcessorImpl extends ContourLocatorProcessor implements Vis
         Mat mask = new Mat();
         Core.bitwise_or(colorMask, yellowMask, mask);
 
-        Imgproc.blur(mask, mask, new Size(mask.width() / 80, mask.width() / 80));
+//        Imgproc.blur(mask, mask, new Size(mask.width() / 80, mask.width() / 80));
 
         Mat secondRoundMasking = new Mat();
         Core.inRange(mask, new Scalar(254, 254, 254), new Scalar(255, 255, 255), secondRoundMasking);
 
-        Mat element = Imgproc.getStructuringElement(Imgproc.CV_SHAPE_RECT, new Size(mask.width() / 45, mask.width() / 45));
+        Mat element = Imgproc.getStructuringElement(Imgproc.CV_SHAPE_RECT, new Size(mask.width() / 35, mask.width() / 35));
         Imgproc.dilate(secondRoundMasking, secondRoundMasking, element);
 
 
@@ -134,7 +134,7 @@ class ContourLocatorProcessorImpl extends ContourLocatorProcessor implements Vis
                 RotatedRect newOval = Imgproc.fitEllipseAMS(contours.get(i));
                 double distance = Math.sqrt(Math.pow(newOval.center.x - (canny.cols() / 2.0), 2.0) + Math.pow(newOval.center.y - (canny.rows()), 2.0));
                 double area = newOval.size.area();
-                if (minArea < area && area < maxArea && distance < minDistance && newOval.center.y > maxHeight) {
+                if (minArea < area && area < maxArea && distance < minDistance) {
                     minOval = newOval;
                     minDistance = distance;
                 }
@@ -171,7 +171,7 @@ class ContourLocatorProcessorImpl extends ContourLocatorProcessor implements Vis
     public Object processFrame(Mat frame, long captureTimeNanos)
     {
 
-        Imgcodecs.imwrite("/sdcard/FIRST/java/src/img.png", frame);
+        Imgcodecs.imwrite("/sdcard/FIRST/java/src/img.jpg", frame);
         Mat processed = prepareForContours(frame);
         contourAndOval(processed);
 

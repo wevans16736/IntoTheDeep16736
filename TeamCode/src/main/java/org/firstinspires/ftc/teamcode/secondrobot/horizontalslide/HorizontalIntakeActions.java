@@ -39,7 +39,7 @@ public class HorizontalIntakeActions {
     double vertGrabberClosingStartTime = 0;
     public void update() {
         if (!closed) {
-            setPosition(ConfigurationSecondRobot.horizontalGrabberOpen);
+            setPosition(ConfigurationSecondRobot.horizontalGrabberWide);
             telemetry.addData("open", true);
         } else {
             setPosition(ConfigurationSecondRobot.horizontalGrabberClose);
