@@ -78,4 +78,17 @@ public class HorizontalSlideActions {
     public int getSlidePosition() {
         return armMotor.getCurrentPosition();
     }
+    boolean wasToggle = false;
+    boolean goTo75 = false;
+    public void toggleSlidePosition(boolean input) {
+        if (input &! wasToggle) {
+            goTo75 = !goTo75;
+            if (goTo75){
+                setSlideDistance(490, 3000);
+            } else {
+                setSlideDistance(0, 3000);
+            }
+        }
+        wasToggle = input;
+    }
 }

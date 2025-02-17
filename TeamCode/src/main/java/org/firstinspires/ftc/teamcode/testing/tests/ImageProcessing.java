@@ -312,7 +312,7 @@ public class ImageProcessing {
     public void testContourLocatorProcessor() {
         System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
 
-        String pathImg = "src/main/java/org/firstinspires/ftc/teamcode/testing/tests/data/blueButter4.png";
+        String pathImg = "src/main/java/org/firstinspires/ftc/teamcode/testing/tests/data/img.jpeg";
 
         File fileImg = new File(pathImg);
         String absolutePathImg = fileImg.getAbsolutePath();
@@ -326,16 +326,24 @@ public class ImageProcessing {
         int type = img.type();
         ContourLocatorProcessor contourLocatorProcessor = new ContourLocatorProcessor.Builder()
                 .build();
-        contourLocatorProcessor.setIsRed(false);
         contourLocatorProcessor.contourAndOval(contourLocatorProcessor.prepareForContours(img));
         List<MatOfPoint> contours = contourLocatorProcessor.getContours();
         double contourArea[] = new double[contours.size()];
+        double contourX[] = new double[contours.size()];
+        double contourY[] = new double[contours.size()];
+
         for (int i = 0; i < contourArea.length; i++) {
             if (contours.get(i).rows() > 5) {
-                RotatedRect oval = Imgproc.fitEllipseAMS(contours.get(i));
+                RotatedRect oval = Imgproc.fitEllipseDirect(contours.get(i));
                 contourArea[i] = oval.size.area();
+                contourX[i] = oval.center.x;
+                contourY[i] = oval.center.y;
+//                distance[i] = Math.sqrt(Math.pow(oval.center.x - (640 / 2.0), 2.0) + Math.pow(oval.center.y - (pixelHeight), 2.0));
+
             }
         }
+        Point center = contourLocatorProcessor.getCenter();
+        Point center1 = contourLocatorProcessor.pixelToPosition(contourLocatorProcessor.getCenter());
     }
     @Test
     public void testPixelToInches() {
@@ -344,9 +352,9 @@ public class ImageProcessing {
         double pixelWidth = 640;
         double pixelHeight = 480;
         double pixelX = center.y;
-        double pixelY = -center.x;
+        double pixelY = -center.x * 1.05;
         double degreesPerPixel = 63.0 / (double) pixelWidth;
-        double YOffsetDegrees = 25.0; //TODO
+        double YOffsetDegrees = 53.4; //TODO
         double middleY = pixelWidth / 2.0;
         double degreesX = (pixelX - ((double) pixelHeight / 2.0)) * degreesPerPixel;
         double degreesY = (pixelY) * degreesPerPixel - YOffsetDegrees;
@@ -354,7 +362,7 @@ public class ImageProcessing {
         double distanceFromCameraBase = cameraHeight * Math.tan(Math.toRadians(90 - degreesY));
         double x = distanceFromCameraBase * Math.cos(Math.toRadians(90.0 - degreesX));
         double y = distanceFromCameraBase * Math.sin(Math.toRadians(90.0 - degreesX));
-        Point position = new Point(x, y + 4.9323659);
+        Point position = new Point(x, y - 1.85666);
 //        Point position = new Point(x, y);
 //        detectBlockActions.setCenterTest(center);
 //        center = detectBlockActions.pixelToPosition();
