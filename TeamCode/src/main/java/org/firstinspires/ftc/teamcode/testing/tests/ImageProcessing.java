@@ -312,7 +312,7 @@ public class ImageProcessing {
     public void testContourLocatorProcessor() {
         System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
 
-        String pathImg = "src/main/java/org/firstinspires/ftc/teamcode/testing/tests/data/img.jpeg";
+        String pathImg = "src/main/java/org/firstinspires/ftc/teamcode/testing/tests/data/redButter7.png";
 
         File fileImg = new File(pathImg);
         String absolutePathImg = fileImg.getAbsolutePath();

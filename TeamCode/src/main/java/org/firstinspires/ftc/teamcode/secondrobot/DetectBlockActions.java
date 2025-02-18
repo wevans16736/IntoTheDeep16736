@@ -24,6 +24,7 @@ import org.openftc.easyopencv.OpenCvWebcam;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
 //To use with testing, download opencv for your platform and search for opencv_java4100 , run the program and put it where the error tells you
@@ -77,6 +78,24 @@ public class DetectBlockActions {
 //        //Use UtilityFrameCapture to grab frame, USB-C to robot, grab VisionPortal-CameraFrameCapture- latest one
 //        //Crop down to size
 
+        portal.stopStreaming();
+    }
+    public void takePicture() {
+        portal.saveNextFrameRaw(String.format(Locale.US, "CameraFrameCapture-%06d", 0));
+    }
+
+    boolean activate = false;
+    double activateStartTime = 0;
+    public void activate(boolean input) {
+        if (input &! activate){
+            activate = true;
+            activateStartTime = System.currentTimeMillis();
+            portal.resumeStreaming();
+        }
+        if (activate && System.currentTimeMillis() > activateStartTime + 420) {
+            activate = false;
+            portal.stopStreaming();
+        }
     }
 
     public void setExposure() {

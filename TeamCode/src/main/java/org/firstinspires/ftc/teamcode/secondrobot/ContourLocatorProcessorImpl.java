@@ -61,7 +61,7 @@ class ContourLocatorProcessorImpl extends ContourLocatorProcessor implements Vis
 
     public Mat getColorThreshold(Mat hsv) {
         Mat blue = new Mat();
-        Core.inRange(hsv, new Scalar(0, 70, 160), new Scalar(110, 205, 245), blue);
+        Core.inRange(hsv, new Scalar(0, 30, 160), new Scalar(110, 205, 245), blue);
 //        if (isRed) {
 //            Mat mask1 = new Mat();
 //            Mat mask2 = new Mat();
@@ -170,15 +170,14 @@ class ContourLocatorProcessorImpl extends ContourLocatorProcessor implements Vis
     public double getAngle() {
         return angle;
     }
+
     @Override
     public Object processFrame(Mat frame, long captureTimeNanos)
     {
-
-        Imgcodecs.imwrite("/sdcard/FIRST/java/src/img.jpeg", frame);
+        Imgcodecs.imwrite("/sdcard/FIRST/java/src/img.jpg", frame);
         Mat processed = prepareForContours(frame);
         Imgcodecs.imwrite("/sdcard/FIRST/java/src/processed.jpg", processed);
         contourAndOval(processed);
-
 
         /**
          * NOTE: to see how to get data from your pipeline to your OpMode as well as how

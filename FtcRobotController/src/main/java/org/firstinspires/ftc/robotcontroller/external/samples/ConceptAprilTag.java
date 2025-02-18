@@ -156,6 +156,7 @@ public class ConceptAprilTag extends LinearOpMode {
         // Set the camera (webcam vs. built-in RC phone camera).
         if (USE_WEBCAM) {
             builder.setCamera(hardwareMap.get(WebcamName.class, "Webcam 1"));
+            builder.setCameraResolution(new Size(640, 480));
         } else {
             builder.setCamera(BuiltinCameraDirection.BACK);
         }
