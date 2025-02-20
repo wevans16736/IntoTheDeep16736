@@ -97,6 +97,9 @@ public class DetectBlockActions {
             portal.stopStreaming();
         }
     }
+    public void deactivate() {
+        portal.stopStreaming();
+    }
 
     public void setExposure() {
         ExposureControl exposureControl = portal.getCameraControl(ExposureControl.class);

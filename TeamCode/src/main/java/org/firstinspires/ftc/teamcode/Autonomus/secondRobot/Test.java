@@ -1,8 +1,10 @@
 package org.firstinspires.ftc.teamcode.Autonomus.secondRobot;
 
+import com.acmerobotics.roadrunner.ParallelAction;
 import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.SequentialAction;
 import com.acmerobotics.roadrunner.SleepAction;
+import com.acmerobotics.roadrunner.TrajectoryActionBuilder;
 import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -18,6 +20,7 @@ import org.firstinspires.ftc.teamcode.Configuration.secondRobot.VerticalSlideRR;
 import org.firstinspires.ftc.teamcode.Configuration.secondRobot.VerticalWristRR;
 import org.firstinspires.ftc.teamcode.GlobalVariables;
 import org.firstinspires.ftc.teamcode.PinpointDrive;
+import org.firstinspires.ftc.teamcode.secondrobot.DetectBlockActions;
 
 @Autonomous(name = "test")
 public class Test extends LinearOpMode {
@@ -41,7 +44,7 @@ public class Test extends LinearOpMode {
 //            pose = new Pose2d(-15, -64, Math.toRadians(180));
 //            drive = new PinpointDrive(hardwareMap, pose);
 //        }
-        pose = new Pose2d(0,0,Math.toRadians(0));
+        pose = new Pose2d( 0,0,Math.toRadians(90));
         drive = new PinpointDrive(hardwareMap, pose);
 
         HorizontalSlideRR horizontalSlide = new HorizontalSlideRR(hardwareMap);
@@ -50,10 +53,12 @@ public class Test extends LinearOpMode {
         HorizontalWristRR horizontalWrist = new HorizontalWristRR(hardwareMap);
         VerticalHangerRR verticalHanger = new VerticalHangerRR(hardwareMap);
 
-        RobotSensor robotSensor = new RobotSensor(telemetry, drive);
+        DetectBlockActions vision = new DetectBlockActions(hardwareMap);
+
+        RobotSensor robotSensor = new RobotSensor(telemetry, drive, vision);
 
         TrajectoryTest trajectory = new TrajectoryTest(drive, pose, verticalSlide, verticalWrist, verticalGrabber,
-                verticalHanger, horizontalSlide, horizontalRoll, horizontalGrabber, horizontalWrist, robotSensor);
+                verticalHanger, horizontalSlide, horizontalRoll, horizontalGrabber, horizontalWrist, robotSensor, telemetry);
 
 
         //wait for the start button to be press
@@ -63,10 +68,17 @@ public class Test extends LinearOpMode {
 
         GlobalVariables.autoStarted = true;
 
-        for(int index = 0; index < 8; index++) {
             Actions.runBlocking(new SequentialAction(
-                    trajectory.getTest()
+                    robotSensor.visionOn(),
+                    new SleepAction(.3),
+                    new ParallelAction(
+                            trajectory.moveSide(),
+                            robotSensor.visionScan()
+                    ),
+                    new ParallelAction(
+                            trajectory.grabButter(),
+                            robotSensor.visionOff()
+                    )
             ));
-        }
     }
 }

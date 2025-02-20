@@ -47,7 +47,7 @@ public class Test extends LinearOpMode {
         pose = new Pose2d(0, 0, Math.toRadians(90));
         drive = new PinpointDrive(hardwareMap, pose);
 
-        RobotSensor robotSensor = new RobotSensor(telemetry, drive, distance);
+        RobotSensor robotSensor = new RobotSensor(telemetry, drive);
 
 
         TestTrajectory TestTrajectory = new TestTrajectory(drive, pose, verticalSlide, verticalWrist, verticalGrabber,

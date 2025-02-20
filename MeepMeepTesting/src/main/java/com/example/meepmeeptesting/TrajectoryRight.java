@@ -18,10 +18,10 @@ public class TrajectoryRight {
         Pose2d drive = new Pose2d(9, -64, Math.toRadians(90));
 
         double hangX = 0; double hangY = -35; int hang = 0; int attachment = 0;
-        double firstButterX = 46; double firstButterY = -30; double butterCounter = 0;
-        double secondButterX = 45; double secondButterY = firstButterY;
-        double thirdButterX = 48; double thirdButterY = firstButterY;
-        double humanX = 40; double humanY = -59; int human = 0;
+        double firstButterX = 49; double firstButterY = -37.25; double butterCounter = 0;
+        double secondButterX = 58; double secondButterY =  -47.75;
+        double thirdButterX = 61; double thirdButterY = -28.5;
+        double humanX = 35; double humanY = -60; int human = 0;
 
         myBot.runAction(myBot.getDrive().actionBuilder(drive)
 //                //hang the first butter
@@ -68,13 +68,23 @@ public class TrajectoryRight {
 //                .setTangent(Math.toRadians(-90))
 //                .splineToLinearHeading(new Pose2d(61,-58, Math.toRadians(0)), Math.toRadians(0))
 
-
-
+                .setTangent(Math.toRadians(90))
                 .splineToLinearHeading(new Pose2d(hangX, hangY, Math.toRadians(90)), Math.toRadians(90))
                 .setReversed(true)
-                .splineToLinearHeading(new Pose2d(firstButterX, firstButterY, Math.toRadians(-90.00000001)), Math.toRadians(90))
+                .splineToLinearHeading(new Pose2d(firstButterX, firstButterY, Math.toRadians(-90.0001)), Math.toRadians(90))
+                .setTangent(Math.toRadians(-90))
+                .splineToLinearHeading(new Pose2d(secondButterX, secondButterY, Math.toRadians(-90)), Math.toRadians(0))
+                .setTangent(Math.toRadians(90))
+                .splineToLinearHeading(new Pose2d(thirdButterX, thirdButterY, Math.toRadians(180)), Math.toRadians(0))
+                .setTangent(Math.toRadians(180))
+                .splineToLinearHeading(new Pose2d(59, -58, Math.toRadians(-.0001)), Math.toRadians(0))
 
-
+                .setTangent(Math.toRadians(90))
+                .splineToLinearHeading(new Pose2d(hangX, hangY, Math.toRadians(90)), Math.toRadians(90))
+                        .setTangent(Math.toRadians(-90))
+                .splineToLinearHeading(new Pose2d(humanX, humanY, Math.toRadians(-90)), Math.toRadians(-90))
+                .setTangent(Math.toRadians(90))
+                .splineToLinearHeading(new Pose2d(hangX, hangY, Math.toRadians(90)), Math.toRadians(90))
 
                 .build());
         meepMeep.setBackground(MeepMeep.Background.FIELD_INTO_THE_DEEP_OFFICIAL)

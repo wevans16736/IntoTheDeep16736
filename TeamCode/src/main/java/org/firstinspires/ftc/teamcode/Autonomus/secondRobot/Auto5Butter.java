@@ -22,6 +22,7 @@ import org.firstinspires.ftc.teamcode.Configuration.secondRobot.VerticalWristRR;
 import org.firstinspires.ftc.teamcode.Configuration.secondRobot.VerticalHangerRR;
 import org.firstinspires.ftc.teamcode.GlobalVariables;
 import org.firstinspires.ftc.teamcode.PinpointDrive;
+import org.firstinspires.ftc.teamcode.secondrobot.DetectBlockActions;
 import org.firstinspires.ftc.teamcode.secondrobot.constants.ConfigConstants;
 
 @Autonomous(name = "rotation")
@@ -53,7 +54,9 @@ public class Auto5Butter extends LinearOpMode {
         HorizontalWristRR horizontalWrist = new HorizontalWristRR(hardwareMap);
         VerticalHangerRR verticalHanger = new VerticalHangerRR(hardwareMap);
 
-        RobotSensor robotSensor = new RobotSensor(telemetry, drive);
+        DetectBlockActions vision = new DetectBlockActions(hardwareMap);
+
+        RobotSensor robotSensor = new RobotSensor(telemetry, drive, vision);
 
         Trajectory trajectory = new Trajectory(drive, pose, verticalSlide, verticalWrist, verticalGrabber,
                 verticalHanger, horizontalSlide, horizontalRoll, horizontalGrabber, horizontalWrist, robotSensor);
@@ -77,7 +80,14 @@ public class Auto5Butter extends LinearOpMode {
                 ),
                 trajectory.getAttachment(),
                 trajectory.getButter(),
-                trajectory.getHang()
+                trajectory.getHang(),
+                trajectory.getHuman(),
+                trajectory.getHang(),
+                trajectory.getHuman(),
+                trajectory.getHang(),
+                trajectory.getHuman(),
+                trajectory.getHang(),
+                trajectory.getHuman()
         ));
         GlobalVariables.currentPose = drive.getLastPinpointPose();
     }

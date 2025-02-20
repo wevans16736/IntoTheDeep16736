@@ -23,8 +23,6 @@ import org.firstinspires.ftc.teamcode.Configuration.secondRobot.VerticalWristRR;
 import org.firstinspires.ftc.teamcode.PinpointDrive;
 import org.firstinspires.ftc.teamcode.secondrobot.constants.ConfigConstants;
 
-@Disabled
-@Deprecated
 @Autonomous(name = "AutoLeft")
 public class AutoLeft extends LinearOpMode {
     @Override
@@ -32,7 +30,7 @@ public class AutoLeft extends LinearOpMode {
         //set up Pinpoint and Pose2d class
         Pose2d pose;
         PinpointDrive drive;
-        DistanceSensor distance = hardwareMap.get(DistanceSensor.class, ConfigConstants.COLOR_SENSOR);
+//        DistanceSensor distance = hardwareMap.get(DistanceSensor.class, ConfigConstants.COLOR_SENSOR);
 
         //all of these class is under Configuration.secondRobot
         VerticalSlideRR verticalSlide = new VerticalSlideRR(hardwareMap);
@@ -87,7 +85,7 @@ public class AutoLeft extends LinearOpMode {
             drive = new PinpointDrive(hardwareMap, pose);
         }
 
-        RobotSensor robotSensor = new RobotSensor(telemetry, drive, distance);
+        RobotSensor robotSensor = new RobotSensor(telemetry, drive);
 
         Trajectory trajectory = new Trajectory(drive, pose, verticalSlide, verticalWrist, verticalGrabber,
                 verticalHanger, horizontalSlide, horizontalRoll, horizontalGrabber, horizontalWrist, robotSensor);

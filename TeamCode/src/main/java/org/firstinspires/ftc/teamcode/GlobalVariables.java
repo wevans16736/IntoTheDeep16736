@@ -12,5 +12,7 @@ public class GlobalVariables {
 
     public static Pose2d currentPose = new Pose2d(0,0,0);
     public static boolean autoStarted = false;
+    public static double X = 0;
+    public static double Y = 0;
 
 }

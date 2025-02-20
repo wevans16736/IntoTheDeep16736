@@ -20,6 +20,7 @@ import org.firstinspires.ftc.teamcode.Configuration.secondRobot.VerticalHangerRR
 import org.firstinspires.ftc.teamcode.Configuration.secondRobot.VerticalSlideRR;
 import org.firstinspires.ftc.teamcode.Configuration.secondRobot.VerticalWristRR;
 import org.firstinspires.ftc.teamcode.PinpointDrive;
+import org.firstinspires.ftc.teamcode.secondrobot.DetectBlockActions;
 import org.firstinspires.ftc.teamcode.secondrobot.constants.ConfigConstants;
 
 @Autonomous(name = "Auto")
@@ -84,7 +85,9 @@ public class Auto extends LinearOpMode {
             drive = new PinpointDrive(hardwareMap, pose);
         }
 
-        RobotSensor robotSensor = new RobotSensor(telemetry, drive);
+        DetectBlockActions vision = new DetectBlockActions(hardwareMap);
+
+        RobotSensor robotSensor = new RobotSensor(telemetry, drive, vision);
 
         Trajectory trajectory = new Trajectory(drive, pose, verticalSlide, verticalWrist, verticalGrabber,
                 verticalHanger, horizontalSlide, horizontalRoll, horizontalGrabber, horizontalWrist, robotSensor);

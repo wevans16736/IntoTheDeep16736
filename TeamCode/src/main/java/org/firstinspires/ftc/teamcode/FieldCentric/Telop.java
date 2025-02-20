@@ -4,10 +4,12 @@ import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.acmerobotics.roadrunner.Action;
 import com.acmerobotics.roadrunner.Pose2d;
+import com.acmerobotics.roadrunner.TrajectoryActionBuilder;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.IMU;
+import com.qualcomm.robotcore.util.RobotLog;
 
 import org.firstinspires.ftc.teamcode.Configuration.secondRobot.HorizontalGrabberRR;
 import org.firstinspires.ftc.teamcode.Configuration.secondRobot.HorizontalRollRR;
@@ -19,6 +21,7 @@ import org.firstinspires.ftc.teamcode.Configuration.secondRobot.VerticalWristRR;
 import org.firstinspires.ftc.teamcode.Configuration.secondRobot.VerticalGrabberRR;
 import org.firstinspires.ftc.teamcode.GlobalVariables;
 import org.firstinspires.ftc.teamcode.PinpointDrive;
+import org.firstinspires.ftc.teamcode.secondrobot.DriveActions;
 import org.firstinspires.ftc.teamcode.secondrobot.constants.ConfigConstants;
 
 import java.util.ArrayList;
@@ -39,6 +42,7 @@ public class Telop extends OpMode {
     DriveTrain driveTrain;
     Pose2d currentPose;
     Attachment attachment;
+    DriveActions driveActions;
     @Override
     public void init() {
         //set up Pinpoint and Pose2d class
@@ -55,9 +59,8 @@ public class Telop extends OpMode {
         horizontalGrabber = new HorizontalGrabberRR(hardwareMap);
         horizontalWrist = new HorizontalWristRR(hardwareMap);
         verticalHanger = new VerticalHangerRR(hardwareMap);
-        attachment = new Attachment(verticalSlide, verticalWrist, verticalGrabber,
-                horizontalSlide, horizontalRoll, horizontalGrabber, horizontalWrist, verticalHanger,
-                runningActions, dash, System.currentTimeMillis());
+
+        driveActions = new DriveActions(telemetry, hardwareMap);
 
         //setup the drive train
         DcMotorEx frontLeft = hardwareMap.get(DcMotorEx.class, ConfigConstants.FRONT_LEFT);
@@ -71,7 +74,10 @@ public class Telop extends OpMode {
         } else{
             this.currentPose = GlobalVariables.currentPose;
         }
-        GlobalVariables.autoStarted = false;
+
+        attachment = new Attachment(verticalSlide, verticalWrist, verticalGrabber,
+                horizontalSlide, horizontalRoll, horizontalGrabber, horizontalWrist, verticalHanger,
+                runningActions, dash);
     }
     boolean percise = false;
     @Override
@@ -94,17 +100,30 @@ public class Telop extends OpMode {
         attachment.roll(gamepad1.dpad_left);
         //percise mode
         percise = attachment.percise(gamepad1.square);
-       //manual slide override
+        //manual slide override
         attachment.verticalOverride(gamepad1.cross, gamepad1.dpad_up, gamepad1.dpad_down);
 
-        //field centric robot control
-        if(gamepad1.left_stick_x != 0 || gamepad1.left_stick_y != 0 || gamepad1.right_stick_x != 0 || gamepad1.right_bumper){
-            driveTrain.drive(gamepad1.left_stick_y, gamepad1.left_stick_x, gamepad1.right_stick_x, gamepad1.options, percise, currentPose);
-        } else{
-            driveTrain.drive(0,0,0, false, percise, currentPose);
+        if(gamepad1.dpad_up){
+//            TrajectoryActionBuilder basket = dash.ge
         }
+
+        driveActions.drive(
+                //joystick controlling strafe
+                (gamepad1.left_stick_x * Math.abs(gamepad1.left_stick_x)),
+                //joystick controlling forward/backward
+                (-gamepad1.left_stick_y * Math.abs(gamepad1.left_stick_y)),
+                //joystick controlling rotation
+                -gamepad1.right_stick_x * Math.abs(gamepad1.right_stick_x));
+
+//        //field centric robot control
+//        if(gamepad1.left_stick_x != 0 || gamepad1.left_stick_y != 0 || gamepad1.right_stick_x != 0 || gamepad1.right_bumper){
+//            driveTrain.drive(gamepad1.left_stick_y, gamepad1.left_stick_x, gamepad1.right_stick_x, gamepad1.options, percise, currentPose);
+//        } else{
+//            driveTrain.drive(0,0,0, false, percise, currentPose);
+//        }
 
         //update runing actions
         attachment.updateAction();
+        RobotLog.d("robot orientation: " + (driveTrain.botHeading));
     }
 }

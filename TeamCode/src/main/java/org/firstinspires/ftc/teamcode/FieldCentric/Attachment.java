@@ -4,8 +4,11 @@ import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.acmerobotics.roadrunner.Action;
 import com.acmerobotics.roadrunner.InstantAction;
+import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.SequentialAction;
 import com.acmerobotics.roadrunner.SleepAction;
+import com.acmerobotics.roadrunner.Trajectory;
+import com.acmerobotics.roadrunner.TrajectoryActionBuilder;
 
 import org.firstinspires.ftc.teamcode.Configuration.secondRobot.ConfigurationSecondRobot;
 import org.firstinspires.ftc.teamcode.Configuration.secondRobot.HorizontalGrabberRR;
@@ -16,6 +19,7 @@ import org.firstinspires.ftc.teamcode.Configuration.secondRobot.VerticalGrabberR
 import org.firstinspires.ftc.teamcode.Configuration.secondRobot.VerticalHangerRR;
 import org.firstinspires.ftc.teamcode.Configuration.secondRobot.VerticalSlideRR;
 import org.firstinspires.ftc.teamcode.Configuration.secondRobot.VerticalWristRR;
+import org.firstinspires.ftc.teamcode.PinpointDrive;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,6 +30,7 @@ public class Attachment {
     VerticalGrabberRR verticalGrabber; HorizontalSlideRR horizontalSlide;
     HorizontalRollRR horizontalRoll; HorizontalGrabberRR horizontalGrabber;
     HorizontalWristRR horizontalWrist; VerticalHangerRR verticalHanger;
+    PinpointDrive drive;
     double currTime; double desiredLoopms = 250;
     private List<Action> runningActions; private FtcDashboard dash;
     TelemetryPacket packet = new TelemetryPacket();
@@ -34,7 +39,7 @@ public class Attachment {
                       VerticalGrabberRR verticalGrabber, HorizontalSlideRR horizontalSlide,
                       HorizontalRollRR horizontalRoll, HorizontalGrabberRR horizontalGrabber,
                       HorizontalWristRR horizontalWrist, VerticalHangerRR verticalHanger,
-                      List<Action> runningActions, FtcDashboard dash, Long time){
+                      List<Action> runningActions, FtcDashboard dash){
         this.verticalSlide = verticalSlide;
         this.verticalWrist = verticalWrist;
         this.verticalGrabber = verticalGrabber;
@@ -44,9 +49,12 @@ public class Attachment {
         this.horizontalWrist = horizontalWrist;
         this.verticalHanger = verticalHanger;
 
+
         this.runningActions = runningActions;
         this.dash = dash;
         currTime = System.currentTimeMillis();
+
+
     }
     boolean wasRB = false; double prevTimeRB = 0.0; double LoopTimeRB;
     public void verticalGrabber(boolean right_bumper) {
@@ -81,7 +89,6 @@ public class Attachment {
                             new InstantAction(() -> horizontalSlide.setPose(ConfigurationSecondRobot.horizontalSlideExtend)),
                             new SleepAction(.5),
                             new InstantAction(() -> horizontalWrist.setPose(ConfigurationSecondRobot.horizontalWristIntake)),
-                            new InstantAction(() -> horizontalRoll.setPose(ConfigurationSecondRobot.slant)),
                             new InstantAction(() -> verticalGrabber.setPose(ConfigurationSecondRobot.verticalOpen)),
                             new InstantAction(() -> horizontalGrabber.setPose(ConfigurationSecondRobot.horizontalGrabberOpen))
                     ));
@@ -122,7 +129,7 @@ public class Attachment {
                 } else {
                     if (wasRT) {
                         runningActions.add(new SequentialAction(
-                                new InstantAction(() -> horizontalGrabber.setPose(ConfigurationSecondRobot.horizontalGrabberOpen))
+                                new InstantAction(() -> horizontalGrabber.setPose(ConfigurationSecondRobot.horizontalGrabberWide))
                         ));
                     }
                 }
@@ -284,7 +291,7 @@ public class Attachment {
                 }
                 if(!wasDpad_left){
                     runningActions.add(new SequentialAction(
-                            new InstantAction(() -> horizontalRoll.setPose(ConfigurationSecondRobot.slant))
+                            new InstantAction(() -> horizontalRoll.setPose(ConfigurationSecondRobot.sideway))
                     ));
                 }
                 prevTimeDpad_left = currTime;
@@ -308,4 +315,5 @@ public class Attachment {
 
         dash.sendTelemetryPacket(packet);
     }
+
 }

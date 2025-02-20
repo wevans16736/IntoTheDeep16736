@@ -4,8 +4,7 @@ import com.acmerobotics.dashboard.config.Config;
 
 @Config
 public class ConfigurationSecondRobot {
-    public static double adriveMultiple = 20;
-    //drive default movement
+    public static double adriveMultiple = 50; //drive default movement
     public static double driveVelocity = (50* adriveMultiple); //default is 50
     public static double driveMinAccel =  -30; //default is -30
     public static double driveMaxAccel = (50* adriveMultiple); //default is 50
@@ -14,7 +13,7 @@ public class ConfigurationSecondRobot {
 
 
     //vertical slide position
-    public static int highBar = 675;
+    public static int highBar = 650;
     public static int bottom = 0;
     public static int lowBar = 2000;
     public static int topBasket = 2360;
@@ -38,9 +37,9 @@ public class ConfigurationSecondRobot {
     public static double verticalWristIntaketoBar = 500;
 
     //vertical grabber servo position
-    public static double verticalOpen = .55;
-    public static double verticalClose = 0.3;
-    public static double verticalOpenWide = .7;
+    public static double verticalOpen = .4;
+    public static double verticalClose = .2625;
+    public static double verticalOpenWide = .5;
 
     //Time to move vertical grabber, MS
     public static double verticalOpenTime = 200;
@@ -48,7 +47,7 @@ public class ConfigurationSecondRobot {
     public static double verticalCloseWideTime = 325;
 
     //this is the position to hang the robot
-    public static double verticalHangIn = 0.85;
+    public static double verticalHangIn = 0.9;
     public static double verticalHangOut = 0.0;
 
 
@@ -69,7 +68,7 @@ public class ConfigurationSecondRobot {
     public static double horizontalGrabberClose = .15;
 
     public static double horizontalGrabberOpen = .3;
-    public static double horizontalGrabberWide = .35;
+    public static double horizontalGrabberWide = .37;
 
     //todo horizontal grabber close time, MS
     public static double horizontalGrabberCloseTime = 150; //Maybe this right?

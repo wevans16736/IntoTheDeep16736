@@ -23,8 +23,6 @@ import org.firstinspires.ftc.teamcode.PinpointDrive;
 
 import java.util.Arrays;
 
-@Disabled
-@Deprecated
 public class TrajectoryLeft {
     VerticalSlideRR verticalSlideRR;
     VerticalWristRR verticalWristRR;

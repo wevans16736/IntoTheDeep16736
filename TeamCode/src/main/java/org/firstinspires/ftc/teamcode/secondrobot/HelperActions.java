@@ -89,7 +89,7 @@ public abstract class HelperActions extends LinearOpMode {
          prevToggle = toggle;
     }
 
-    public boolean reverseSpeed = false;
+    public boolean reverseSpeed = true;
     public void setReverseSpeed(boolean toggle) {
         reverseSpeed = toggle;
     }

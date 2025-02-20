@@ -46,8 +46,8 @@ public class SecondaryTeleOp extends HelperActions {
         telemetry.addData("normal speed?", "press up");
         telemetry.update();
         while (!(gamepad1.dpad_up || gamepad1.dpad_down) && opModeInInit());
-        if (gamepad1.dpad_down) {
-            setReverseSpeed(true);
+        if (gamepad1.dpad_up) {
+            setReverseSpeed(false);
         }
         telemetry.addData("registered", "you may begin");
         telemetry.update();
@@ -85,7 +85,7 @@ public class SecondaryTeleOp extends HelperActions {
 
             /** Gamepad 2 **/
             //use the player 2 left joystick to run the horizontal slide
-            horizontalSlide.teleOpArmMotor(-gamepad2.left_stick_y * Math.abs(gamepad2.left_stick_y), 1.35);
+            horizontalSlide.teleOpArmMotor(-gamepad2.left_stick_y * Math.abs(gamepad2.left_stick_y), 1.1);
             //If the right dpad button is pressed, hslide will toggle between 75% and 0%
             horizontalSlide.toggleSlidePosition(gamepad2.dpad_right);
             //rotate the servo with intake in it
