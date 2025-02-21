@@ -69,16 +69,18 @@ public class Test extends LinearOpMode {
         GlobalVariables.autoStarted = true;
 
             Actions.runBlocking(new SequentialAction(
-                    robotSensor.visionOn(),
-                    new SleepAction(.3),
-                    new ParallelAction(
-                            trajectory.moveSide(),
-                            robotSensor.visionScan()
-                    ),
-                    new ParallelAction(
-                            trajectory.grabButter(),
-                            robotSensor.visionOff()
-                    )
+//                    robotSensor.visionOn(),
+//                    robotSensor.visionOff(),
+                    trajectory.scanButter()
+//                    trajectory.grabButter()
+//                    new SleepAction(.3),
+//                    new ParallelAction(
+////                            robotSensor.visionScan()
+//                    ),
+////                    robotSensor.visionOff(),
+//                            trajectory.grabButter(),
+//                    new SleepAction(2000)
+
             ));
     }
 }

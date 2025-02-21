@@ -2,6 +2,8 @@ package org.firstinspires.ftc.teamcode.secondrobot;
 
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
+import org.firstinspires.ftc.robotcore.external.hardware.camera.Camera;
+import org.firstinspires.ftc.robotcore.external.hardware.camera.CameraName;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.controls.ExposureControl;
 import org.firstinspires.ftc.vision.VisionPortal;
@@ -37,17 +39,11 @@ public class DetectBlockActions {
     int pixelHeight = 480;
     VisionPortal portal;
     private ContourLocatorProcessor colorLocator;
+    HardwareMap hardwareMap;
 
     public DetectBlockActions(HardwareMap hardwareMap) {
-        colorLocator = new ContourLocatorProcessor.Builder()
-                .build();
+        this.hardwareMap = hardwareMap;
 
-        portal = new VisionPortal.Builder()
-                .addProcessor(colorLocator)
-                .setCameraResolution(new android.util.Size(pixelWidth, pixelHeight))
-                .setCamera(hardwareMap.get(WebcamName.class, "Webcam 1"))
-                .setStreamFormat(VisionPortal.StreamFormat.MJPEG)
-                .build();
 
 
 
@@ -78,7 +74,6 @@ public class DetectBlockActions {
 //        //Use UtilityFrameCapture to grab frame, USB-C to robot, grab VisionPortal-CameraFrameCapture- latest one
 //        //Crop down to size
 
-        portal.stopStreaming();
     }
     public void takePicture() {
         portal.saveNextFrameRaw(String.format(Locale.US, "CameraFrameCapture-%06d", 0));
@@ -86,19 +81,19 @@ public class DetectBlockActions {
 
     boolean activate = false;
     double activateStartTime = 0;
-    public void activate(boolean input) {
-        if (input &! activate){
-            activate = true;
-            activateStartTime = System.currentTimeMillis();
-            portal.resumeStreaming();
-        }
-        if (activate && System.currentTimeMillis() > activateStartTime + 420) {
-            activate = false;
-            portal.stopStreaming();
-        }
+    public void activate() {
+        colorLocator = new ContourLocatorProcessor.Builder()
+                .build();
+
+        portal = new VisionPortal.Builder()
+                .addProcessor(colorLocator)
+                .setCameraResolution(new android.util.Size(pixelWidth, pixelHeight))
+                .setCamera(hardwareMap.get(WebcamName.class, "Webcam 1"))
+                .setStreamFormat(VisionPortal.StreamFormat.MJPEG)
+                .build();
     }
     public void deactivate() {
-        portal.stopStreaming();
+        portal.close();
     }
 
     public void setExposure() {

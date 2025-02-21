@@ -74,12 +74,29 @@ public class TrajectoryTest {
         double x = GlobalVariables.X;
         double y = GlobalVariables.Y;
         TrajectoryActionBuilder Butter = currentTrajectory
-                .strafeToConstantHeading(new Vector2d(x,y));
+                .strafeToConstantHeading(new Vector2d(x,y))
+                .stopAndAdd(robotSensor.visionOff());
 //        .strafeToConstantHeading(new Vector2d(0, -5));
         telemetry.addData("X", GlobalVariables.X);
         telemetry.addData("Y", GlobalVariables.Y);
         telemetry.update();
         currentTrajectory = Butter.endTrajectory().fresh();
         return  Butter.build();
+    }
+    public Action move(){
+        TrajectoryActionBuilder Move = currentTrajectory
+                .strafeTo(new Vector2d(0, 20));
+        currentTrajectory = Move.endTrajectory().fresh();
+        return Move.build();
+    }
+    public Action scanButter(){
+        TrajectoryActionBuilder scan = currentTrajectory
+                .stopAndAdd(robotSensor.visionOn())
+//                .waitSeconds(3)
+                .stopAndAdd(robotSensor.visionOff())
+                .waitSeconds(3);
+//                .stopAndAdd(robotSensor.visionScan());
+        currentTrajectory = scan.endTrajectory().fresh();
+        return scan.build();
     }
 }

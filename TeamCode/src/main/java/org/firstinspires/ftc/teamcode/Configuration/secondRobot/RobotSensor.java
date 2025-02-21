@@ -97,7 +97,11 @@ public class RobotSensor {
 
         @Override
         public boolean run(@NonNull TelemetryPacket telemetryPacket){
-            vision.activate(true);
+            telemetry.addLine("opening");
+            telemetry.update();
+            vision.activate();
+            telemetry.addLine("opened");
+            telemetry.update();
             return false;
         }
     }
@@ -118,7 +122,11 @@ public class RobotSensor {
     public class VisionOff implements Action{
         @Override
         public boolean run(@NonNull TelemetryPacket telemetryPacket) {
+            telemetry.addLine("closing");
+            telemetry.update();
             vision.deactivate();
+            telemetry.addLine("closed");
+            telemetry.update();
             return false;
         }
     }

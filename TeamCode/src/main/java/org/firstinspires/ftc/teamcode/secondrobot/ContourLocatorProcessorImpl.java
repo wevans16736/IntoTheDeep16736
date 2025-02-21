@@ -76,14 +76,14 @@ class ContourLocatorProcessorImpl extends ContourLocatorProcessor implements Vis
 //            Imgcodecs.imwrite("src/main/java/org/firstinspires/ftc/teamcode/testing/tests/data/red.jpg", finalMask);
 //            return finalMask;
 //        } else {
-            Imgcodecs.imwrite("src/main/java/org/firstinspires/ftc/teamcode/testing/tests/data/blue.jpg", blue);
+//            Imgcodecs.imwrite("src/main/java/org/firstinspires/ftc/teamcode/testing/tests/data/blue.jpg", blue);
             return blue;
 //        }
     }
     public Mat getYellowThreshold(Mat hsv) {
         Mat mask = new Mat();
         Core.inRange(hsv, new Scalar(10, 200, 160), new Scalar(45, 245, 255), mask);
-        Imgcodecs.imwrite("src/main/java/org/firstinspires/ftc/teamcode/testing/tests/data/yellow.jpg", mask);
+//        Imgcodecs.imwrite("src/main/java/org/firstinspires/ftc/teamcode/testing/tests/data/yellow.jpg", mask);
         return mask;
     }
     public Mat prepareForContours(Mat input) {
@@ -110,7 +110,7 @@ class ContourLocatorProcessorImpl extends ContourLocatorProcessor implements Vis
         Mat canny = new Mat();
         Imgproc.Canny(mask, canny, 100, 200);
 
-        Imgcodecs.imwrite("src/main/java/org/firstinspires/ftc/teamcode/testing/tests/data/final mask edges.jpg", canny);
+//        Imgcodecs.imwrite("src/main/java/org/firstinspires/ftc/teamcode/testing/tests/data/final mask edges.jpg", canny);
         return canny;
     }
 
@@ -146,7 +146,7 @@ class ContourLocatorProcessorImpl extends ContourLocatorProcessor implements Vis
                 }
             }
         }
-        Imgcodecs.imwrite("src/main/java/org/firstinspires/ftc/teamcode/testing/tests/data/final mask contours.jpg", contoursMat);
+//        Imgcodecs.imwrite("src/main/java/org/firstinspires/ftc/teamcode/testing/tests/data/final mask contours.jpg", contoursMat);
         this.minOval = minOval;
 
         if (minOval != new RotatedRect()) {
@@ -174,9 +174,9 @@ class ContourLocatorProcessorImpl extends ContourLocatorProcessor implements Vis
     @Override
     public Object processFrame(Mat frame, long captureTimeNanos)
     {
-        Imgcodecs.imwrite("/sdcard/FIRST/java/src/img.jpg", frame);
+//        Imgcodecs.imwrite("/sdcard/FIRST/java/src/img.jpg", frame);
         Mat processed = prepareForContours(frame);
-        Imgcodecs.imwrite("/sdcard/FIRST/java/src/processed.jpg", processed);
+//        Imgcodecs.imwrite("/sdcard/FIRST/java/src/processed.jpg", processed);
         contourAndOval(processed);
 
         /**
