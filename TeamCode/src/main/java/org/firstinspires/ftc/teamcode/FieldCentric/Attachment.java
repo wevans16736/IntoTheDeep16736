@@ -90,7 +90,7 @@ public class Attachment {
                             new SleepAction(.5),
                             new InstantAction(() -> horizontalWrist.setPose(ConfigurationSecondRobot.horizontalWristIntake)),
                             new InstantAction(() -> verticalGrabber.setPose(ConfigurationSecondRobot.verticalOpen)),
-                            new InstantAction(() -> horizontalGrabber.setPose(ConfigurationSecondRobot.horizontalGrabberOpen))
+                            new InstantAction(() -> horizontalGrabber.setPose(ConfigurationSecondRobot.horizontalGrabberWide))
                     ));
                 } else {
                     if (wasTriangle) {
@@ -168,7 +168,8 @@ public class Attachment {
                         runningActions.add(new SequentialAction(
                                 new InstantAction(() -> verticalWrist.setPose(ConfigurationSecondRobot.verticalWristWall)),
                                 new InstantAction(() -> verticalSlide.setPose(ConfigurationSecondRobot.bottom)),
-                                new InstantAction(() -> verticalGrabber.setPose(ConfigurationSecondRobot.verticalClose))
+                                new InstantAction(() -> verticalGrabber.setPose(ConfigurationSecondRobot.verticalClose)),
+                                new InstantAction(() -> horizontalGrabber.setPose(ConfigurationSecondRobot.horizontalGrabberOpen))
                         ));
                     }
                     if (wasLeft == 2) {

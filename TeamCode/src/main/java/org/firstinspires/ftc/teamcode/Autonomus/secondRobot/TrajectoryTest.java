@@ -99,4 +99,11 @@ public class TrajectoryTest {
         currentTrajectory = scan.endTrajectory().fresh();
         return scan.build();
     }
+    public Action turn(){
+        TrajectoryActionBuilder turn = currentTrajectory
+                .strafeToLinearHeading(new Vector2d(0, -7), Math.toRadians(-90))
+                .strafeToLinearHeading(new Vector2d(25, -17), Math.toRadians(-90));
+        currentTrajectory = turn.endTrajectory().fresh();
+        return turn.build();
+    }
 }

@@ -12,10 +12,10 @@ public class TrajectoryRight {
 
         RoadRunnerBotEntity myBot = new DefaultBotBuilder(meepMeep)
                 // Set bot constraints: maxVel, maxAccel, maxAngVel, maxAngAccel, track width
-                .setConstraints(200, 200, Math.toRadians(180), Math.toRadians(180), 14.257357477632226)
+                .setConstraints(200, 200, Math.toRadians(1800000), Math.toRadians(18000000), 14.257357477632226)
                 .build();
 
-        Pose2d drive = new Pose2d(9, -64, Math.toRadians(90));
+        Pose2d drive = new Pose2d(0, 0, Math.toRadians(0));
 
         double hangX = 0; double hangY = -35; int hang = 0; int attachment = 0;
         double firstButterX = 49; double firstButterY = -37.25; double butterCounter = 0;
@@ -68,23 +68,30 @@ public class TrajectoryRight {
 //                .setTangent(Math.toRadians(-90))
 //                .splineToLinearHeading(new Pose2d(61,-58, Math.toRadians(0)), Math.toRadians(0))
 
-                .setTangent(Math.toRadians(90))
-                .splineToLinearHeading(new Pose2d(hangX, hangY, Math.toRadians(90)), Math.toRadians(90))
-                .setReversed(true)
-                .splineToLinearHeading(new Pose2d(firstButterX, firstButterY, Math.toRadians(-90.0001)), Math.toRadians(90))
-                .setTangent(Math.toRadians(-90))
-                .splineToLinearHeading(new Pose2d(secondButterX, secondButterY, Math.toRadians(-90)), Math.toRadians(0))
-                .setTangent(Math.toRadians(90))
-                .splineToLinearHeading(new Pose2d(thirdButterX, thirdButterY, Math.toRadians(180)), Math.toRadians(0))
-                .setTangent(Math.toRadians(180))
-                .splineToLinearHeading(new Pose2d(59, -58, Math.toRadians(-.0001)), Math.toRadians(0))
+//                .setTangent(Math.toRadians(90))
+//                .splineToLinearHeading(new Pose2d(hangX, hangY, Math.toRadians(90)), Math.toRadians(90))
+//                .setReversed(true)
+//                .splineToLinearHeading(new Pose2d(firstButterX, firstButterY, Math.toRadians(-90.0001)), Math.toRadians(90))
+//                .setTangent(Math.toRadians(-90))
+//                .splineToLinearHeading(new Pose2d(secondButterX, secondButterY, Math.toRadians(-90)), Math.toRadians(0))
+//                .setTangent(Math.toRadians(90))
+//                .splineToLinearHeading(new Pose2d(thirdButterX, thirdButterY, Math.toRadians(180)), Math.toRadians(0))
+//                .setTangent(Math.toRadians(180))
+//                .splineToLinearHeading(new Pose2d(59, -58, Math.toRadians(-.0001)), Math.toRadians(0))
+//
+//                .setTangent(Math.toRadians(90))
+//                .splineToLinearHeading(new Pose2d(hangX, hangY, Math.toRadians(90)), Math.toRadians(90))
+//                        .setTangent(Math.toRadians(-90))
+//                .splineToLinearHeading(new Pose2d(humanX, humanY, Math.toRadians(-90)), Math.toRadians(-90))
+//                .setTangent(Math.toRadians(90))
+//                .splineToLinearHeading(new Pose2d(hangX, hangY, Math.toRadians(90)), Math.toRadians(90))
 
-                .setTangent(Math.toRadians(90))
-                .splineToLinearHeading(new Pose2d(hangX, hangY, Math.toRadians(90)), Math.toRadians(90))
-                        .setTangent(Math.toRadians(-90))
-                .splineToLinearHeading(new Pose2d(humanX, humanY, Math.toRadians(-90)), Math.toRadians(-90))
-                .setTangent(Math.toRadians(90))
-                .splineToLinearHeading(new Pose2d(hangX, hangY, Math.toRadians(90)), Math.toRadians(90))
+                        .setTangent(-Math.PI/2)
+//                        .splineToLinearHeading(new Pose2d(-6, 0, Math.toRadians(-180)), Math.toRadians(-180))
+                        .turn(Math.toRadians(180))
+//                        .waitSeconds(5)
+                        .setTangent(-Math.PI/1.5)
+                .lineToY(-48)
 
                 .build());
         meepMeep.setBackground(MeepMeep.Background.FIELD_INTO_THE_DEEP_OFFICIAL)

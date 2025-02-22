@@ -38,8 +38,8 @@ public class ConfigurationSecondRobot {
 
     //vertical grabber servo position
     public static double verticalOpen = .4;
-    public static double verticalClose = .25;
-    public static double verticalOpenWide = .5;
+    public static double verticalClose = .225;
+    public static double verticalOpenWide = .45;
 
     //Time to move vertical grabber, MS
     public static double verticalOpenTime = 200;
@@ -62,7 +62,7 @@ public class ConfigurationSecondRobot {
     //horizontal wrist moving times, MS
     public static double horizontalWristtoMiddleTime = 300;
     public static double horizontalWristDowntoUpTime = 1340;
-    public static double horizontalWristIntaketoTransfer = 800;
+    public static double horizontalWristIntaketoTransfer = 375;
 
     //horizontal grabber servo position
     public static double horizontalGrabberClose = .15;
