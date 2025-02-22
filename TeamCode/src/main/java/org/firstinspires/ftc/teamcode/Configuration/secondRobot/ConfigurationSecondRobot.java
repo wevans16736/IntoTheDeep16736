@@ -38,12 +38,12 @@ public class ConfigurationSecondRobot {
 
     //vertical grabber servo position
     public static double verticalOpen = .4;
-    public static double verticalClose = .2625;
+    public static double verticalClose = .25;
     public static double verticalOpenWide = .5;
 
     //Time to move vertical grabber, MS
     public static double verticalOpenTime = 200;
-    public static double verticalCloseTime = 200;
+    public static double verticalCloseTime = 250;
     public static double verticalCloseWideTime = 325;
 
     //this is the position to hang the robot

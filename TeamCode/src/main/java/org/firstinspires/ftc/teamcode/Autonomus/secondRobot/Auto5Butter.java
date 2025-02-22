@@ -4,6 +4,7 @@ import com.acmerobotics.roadrunner.Action;
 import com.acmerobotics.roadrunner.ParallelAction;
 import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.SequentialAction;
+import com.acmerobotics.roadrunner.SleepAction;
 import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -62,8 +63,19 @@ public class Auto5Butter extends LinearOpMode {
                 verticalHanger, horizontalSlide, horizontalRoll, horizontalGrabber, horizontalWrist, robotSensor);
 
         //build everything
-
-
+        Action hang1 = trajectory.getHang();
+        Action butter1 = trajectory.getButter();
+        Action attachment1 = trajectory.getAttachment();
+        Action butter2 = trajectory.getButter();
+        Action attachment2 = trajectory.getAttachment();
+        Action butter3 = trajectory.getButter();
+        Action hang2 = trajectory.getHang();
+        Action Human1 = trajectory.getHuman();
+        Action hang3 = trajectory.getHang();
+        Action Human2 = trajectory.getHuman();
+        Action  hang4 = trajectory.getHang();
+        Action  Human3 = trajectory.getHuman();
+        Action hang5 = trajectory.getHang();
         //wait for the start button to be press
         waitForStart();
         //if the stop button press then stop the robot
@@ -72,22 +84,21 @@ public class Auto5Butter extends LinearOpMode {
         GlobalVariables.autoStarted = true;
 
         Actions.runBlocking(new SequentialAction(
-                trajectory.getHang(),
-                trajectory.getButter(),
+                hang1,
+                butter1,
                 new ParallelAction(
-                        trajectory.getAttachment(),
-                        trajectory.getButter()
+                        attachment1,
+                        butter2
                 ),
-                trajectory.getAttachment(),
-                trajectory.getButter(),
-                trajectory.getHang(),
-                trajectory.getHuman(),
-                trajectory.getHang(),
-                trajectory.getHuman(),
-                trajectory.getHang(),
-                trajectory.getHuman(),
-                trajectory.getHang(),
-                trajectory.getHuman()
+                attachment2,
+                butter3,
+                hang2,
+                Human1,
+                hang3,
+                Human2,
+                hang4,
+                Human3,
+                hang5
         ));
         GlobalVariables.currentPose = drive.getLastPinpointPose();
     }

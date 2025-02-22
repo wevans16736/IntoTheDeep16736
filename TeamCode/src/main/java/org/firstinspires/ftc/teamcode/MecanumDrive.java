@@ -71,12 +71,12 @@ public class MecanumDrive {
 //        public double lateralInPerTick =  0.7665571658951872;OLD
         public double lateralInPerTick = 0.7665571658951872;
 //        public double trackWidthTicks = 12.909184083483952; OLD
-        public double trackWidthTicks = 13.845137550174671;
+        public double trackWidthTicks =12.909184083483952;
 
         // feedforward parameters (in tick units)
-        public double kS = 1.3529559114292242;
+        public double kS = 2.41630800809041;
         //2.41630800809041
-        public double kV = 0.1293631529355424;
+        public double kV = 0.12578307198549346;
         //0.12578307198549346
         public double kA = 0.001;
 
@@ -90,11 +90,11 @@ public class MecanumDrive {
         public double maxAngAccel = ConfigurationSecondRobot.driveMaxAngle;
 
         // path controller gains
-        public double axialGain = 2; //Old 4
+        public double axialGain = 1.5; //Old 4
         public double lateralGain = 8;// Old 2
         public double headingGain = 2; // shared with turn, old 4
 
-        public double axialVelGain = 0.0;
+        public double axialVelGain = -.1;
         public double lateralVelGain = 0.0;
         public double headingVelGain = 0.0; // shared with turn
     }

@@ -105,7 +105,7 @@ public class Trajectory {
                     .afterTime(1, verticalGrabberRR.verticalGrabberAction(ConfigurationSecondRobot.verticalOpenWide))
                     .setReversed(true)
 //                    .splineToLinearHeading(new Pose2d(humanX, humanY+2.25, Math.toRadians(-90.00001)), Math.toRadians(-90))
-                    .splineToLinearHeading(new Pose2d(humanX, humanY, Math.toRadians(-90.00001)), Math.toRadians(-90))
+                    .splineToLinearHeading(new Pose2d(humanX, humanY, Math.toRadians(-90.0001)), Math.toRadians(0))
                     .stopAndAdd(robotSensor.robotSensorAction("hang " + counter, humanX, humanY, -90));
             currentTrajectory = Hang.endTrajectory().fresh();
             counter++;
