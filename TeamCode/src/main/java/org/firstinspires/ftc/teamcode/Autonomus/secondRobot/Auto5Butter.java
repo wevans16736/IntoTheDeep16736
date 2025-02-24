@@ -24,16 +24,14 @@ import org.firstinspires.ftc.teamcode.Configuration.secondRobot.VerticalHangerRR
 import org.firstinspires.ftc.teamcode.GlobalVariables;
 import org.firstinspires.ftc.teamcode.PinpointDrive;
 import org.firstinspires.ftc.teamcode.secondrobot.DetectBlockActions;
-import org.firstinspires.ftc.teamcode.secondrobot.constants.ConfigConstants;
 
-@Autonomous(name = "rotation")
+@Autonomous(name = "Auto")
 public class Auto5Butter extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
         //set up Pinpoint and Pose2d class
         Pose2d pose;
         PinpointDrive drive;
-//        DistanceSensor distance = hardwareMap.get(DistanceSensor.class, ConfigConstants.COLOR_SENSOR);
         boolean side = false;
 
         //all of these class is under Configuration.secondRobot
@@ -57,7 +55,7 @@ public class Auto5Butter extends LinearOpMode {
 
         DetectBlockActions vision = new DetectBlockActions(hardwareMap);
 
-        RobotSensor robotSensor = new RobotSensor(telemetry, drive, vision);
+        RobotSensor robotSensor = new RobotSensor(telemetry, drive, vision, hardwareMap);
 
         Trajectory trajectory = new Trajectory(drive, pose, verticalSlide, verticalWrist, verticalGrabber,
                 verticalHanger, horizontalSlide, horizontalRoll, horizontalGrabber, horizontalWrist, robotSensor);

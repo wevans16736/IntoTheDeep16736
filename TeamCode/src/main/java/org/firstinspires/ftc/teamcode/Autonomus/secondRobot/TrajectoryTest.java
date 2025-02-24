@@ -83,21 +83,24 @@ public class TrajectoryTest {
         currentTrajectory = Butter.endTrajectory().fresh();
         return  Butter.build();
     }
-    public Action move(){
-        TrajectoryActionBuilder Move = currentTrajectory
-                .strafeTo(new Vector2d(0, 20));
-        currentTrajectory = Move.endTrajectory().fresh();
-        return Move.build();
-    }
     public Action scanButter(){
         TrajectoryActionBuilder scan = currentTrajectory
                 .stopAndAdd(robotSensor.visionOn())
-//                .waitSeconds(3)
+                .waitSeconds(1)
+                .stopAndAdd(robotSensor.visionScan())
+                .waitSeconds(1)
                 .stopAndAdd(robotSensor.visionOff())
-                .waitSeconds(3);
-//                .stopAndAdd(robotSensor.visionScan());
+                .stopAndAdd(robotSensor.output())
+                .waitSeconds(5000000);
+//                .strafeToConstantHeading(new Vector2d(robotSensor.grabX(), robotSensor.grabY()));
+
         currentTrajectory = scan.endTrajectory().fresh();
         return scan.build();
+    }
+    public Action move(){
+        TrajectoryActionBuilder Move = currentTrajectory;
+        currentTrajectory = Move.endTrajectory().fresh();
+        return Move.build();
     }
     public Action turn(){
         TrajectoryActionBuilder turn = currentTrajectory

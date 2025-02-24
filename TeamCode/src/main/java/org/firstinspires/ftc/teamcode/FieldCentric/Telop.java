@@ -43,12 +43,9 @@ public class Telop extends OpMode {
     Pose2d currentPose;
     Attachment attachment;
     DriveActions driveActions;
+    PinpointDrive drive;
     @Override
     public void init() {
-        //set up Pinpoint and Pose2d class
-        Pose2d pose;
-        PinpointDrive drive;
-
         //all of these class is under Configuration.secondRobot
         verticalSlide = new VerticalSlideRR(hardwareMap);
         verticalWrist = new VerticalWristRR(hardwareMap , true);
@@ -60,20 +57,23 @@ public class Telop extends OpMode {
         horizontalWrist = new HorizontalWristRR(hardwareMap);
         verticalHanger = new VerticalHangerRR(hardwareMap);
 
-        driveActions = new DriveActions(telemetry, hardwareMap);
-
         //setup the drive train
         DcMotorEx frontLeft = hardwareMap.get(DcMotorEx.class, ConfigConstants.FRONT_LEFT);
         DcMotorEx frontRight = hardwareMap.get(DcMotorEx.class, ConfigConstants.FRONT_RIGHT);
         DcMotorEx rearLeft = hardwareMap.get(DcMotorEx.class, ConfigConstants.BACK_LEFT);
         DcMotorEx rearRight = hardwareMap.get(DcMotorEx.class, ConfigConstants.BACK_RIGHT);
         IMU imu = hardwareMap.get(IMU.class, ConfigConstants.IMU);
-        driveTrain = new DriveTrain(frontLeft, frontRight, rearLeft, rearRight, imu);
         if(!GlobalVariables.autoStarted){
             this.currentPose = new Pose2d(0,0,0);
+            this.drive = new PinpointDrive(hardwareMap, currentPose);
         } else{
             this.currentPose = GlobalVariables.currentPose;
+            this.drive = new PinpointDrive(hardwareMap, currentPose);
         }
+
+        driveTrain = new DriveTrain(frontLeft, frontRight, rearLeft, rearRight, imu, drive);
+
+        driveActions = new DriveActions(telemetry, hardwareMap);
 
         attachment = new Attachment(verticalSlide, verticalWrist, verticalGrabber,
                 horizontalSlide, horizontalRoll, horizontalGrabber, horizontalWrist, verticalHanger,
@@ -101,26 +101,23 @@ public class Telop extends OpMode {
         //percise mode
         percise = attachment.percise(gamepad1.square);
         //manual slide override
-        attachment.verticalOverride(gamepad1.cross, gamepad1.dpad_up, gamepad1.dpad_down);
+//        attachment.verticalOverride(gamepad1.cross, gamepad1.dpad_up, gamepad1.dpad_down);
 
-        if(gamepad1.dpad_up){
-//            TrajectoryActionBuilder basket = dash.ge
+//
+//        driveActions.drive(
+//                //joystick controlling strafe
+//                (gamepad1.left_stick_x * Math.abs(gamepad1.left_stick_x)),
+//                //joystick controlling forward/backward
+//                (-gamepad1.left_stick_y * Math.abs(gamepad1.left_stick_y)),
+//                //joystick controlling rotation
+//                -gamepad1.right_stick_x * Math.abs(gamepad1.right_stick_x));
+
+        //field centric robot control
+        if(gamepad1.left_stick_x != 0 || gamepad1.left_stick_y != 0 || gamepad1.right_stick_x != 0 || gamepad1.right_bumper){
+            driveTrain.drive(gamepad1.left_stick_y, gamepad1.left_stick_x, gamepad1.right_stick_x, gamepad1.options, percise);
+        } else{
+            driveTrain.drive(0,0,0, false, percise);
         }
-
-        driveActions.drive(
-                //joystick controlling strafe
-                (gamepad1.left_stick_x * Math.abs(gamepad1.left_stick_x)),
-                //joystick controlling forward/backward
-                (-gamepad1.left_stick_y * Math.abs(gamepad1.left_stick_y)),
-                //joystick controlling rotation
-                -gamepad1.right_stick_x * Math.abs(gamepad1.right_stick_x));
-
-//        //field centric robot control
-//        if(gamepad1.left_stick_x != 0 || gamepad1.left_stick_y != 0 || gamepad1.right_stick_x != 0 || gamepad1.right_bumper){
-//            driveTrain.drive(gamepad1.left_stick_y, gamepad1.left_stick_x, gamepad1.right_stick_x, gamepad1.options, percise, currentPose);
-//        } else{
-//            driveTrain.drive(0,0,0, false, percise, currentPose);
-//        }
 
         //update runing actions
         attachment.updateAction();

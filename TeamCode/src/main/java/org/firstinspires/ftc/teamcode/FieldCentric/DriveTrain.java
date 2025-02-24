@@ -10,13 +10,14 @@ import com.qualcomm.robotcore.hardware.IMU;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.teamcode.GlobalVariables;
+import org.firstinspires.ftc.teamcode.PinpointDrive;
 
 @Config
 public class DriveTrain {
-    DcMotorEx frontLeft; DcMotorEx rearLeft; DcMotorEx frontRight; DcMotorEx rearRight; IMU imu;
+    DcMotorEx frontLeft; DcMotorEx rearLeft; DcMotorEx frontRight; DcMotorEx rearRight; IMU imu; PinpointDrive drive;
     double flActive = 1; double rlActive = 1; double frActive = 1; double rrActive = 1; double botHeading;
 
-    public DriveTrain(DcMotorEx frontLeft, DcMotorEx rearLeft, DcMotorEx frontRight, DcMotorEx rearRight, IMU imu){
+    public DriveTrain(DcMotorEx frontLeft, DcMotorEx rearLeft, DcMotorEx frontRight, DcMotorEx rearRight, IMU imu, PinpointDrive drive){
         this.frontLeft = frontLeft;
         this.frontRight = frontRight;
         this.rearRight = rearRight;
@@ -31,8 +32,9 @@ public class DriveTrain {
                 RevHubOrientationOnRobot.UsbFacingDirection.LEFT
         ));
         this.imu.initialize(parameters);
+        this.drive = drive;
     }
-    public void drive(double leftStickY, double leftStickX, double rightStickX, boolean reset, boolean percise, Pose2d curentPose){
+    public void drive(double leftStickY, double leftStickX, double rightStickX, boolean reset, boolean percise){
         //take input from gamepad
         double y = -leftStickY;
         double x = leftStickX;
@@ -57,7 +59,8 @@ public class DriveTrain {
 //        if(GlobalVariables.autoStarted) {
 //            botHeading = imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS) + curentPose.heading.toDouble();
 //        }else {
-            botHeading = imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS);
+//            botHeading = imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS);
+        botHeading = drive.getLastPinpointPose().heading.toDouble();
 //        }
         //Rotate the movement direction counter to the bot's rotation
         double rotX = x * Math.cos(-botHeading) - y * Math.sin(-botHeading);
