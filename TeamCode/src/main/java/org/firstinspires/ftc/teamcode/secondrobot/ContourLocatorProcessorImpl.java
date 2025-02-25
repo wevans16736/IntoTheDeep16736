@@ -1,27 +1,13 @@
 package org.firstinspires.ftc.teamcode.secondrobot;
 
 import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Paint;
-import android.graphics.Path;
-import android.util.Log;
-
-import androidx.annotation.ColorInt;
-
-import com.qualcomm.robotcore.util.SortOrder;
 
 import org.firstinspires.ftc.robotcore.internal.camera.calibration.CameraCalibration;
 import org.firstinspires.ftc.vision.VisionProcessor;
-import org.firstinspires.ftc.vision.opencv.ColorRange;
-import org.firstinspires.ftc.vision.opencv.ColorSpace;
-import org.firstinspires.ftc.vision.opencv.ImageRegion;
 import org.opencv.core.Core;
 import org.opencv.core.Mat;
-import org.opencv.core.MatOfInt;
 import org.opencv.core.MatOfPoint;
-import org.opencv.core.MatOfPoint2f;
 import org.opencv.core.Point;
-import org.opencv.core.Rect;
 import org.opencv.core.RotatedRect;
 import org.opencv.core.Scalar;
 import org.opencv.core.Size;
@@ -139,14 +125,16 @@ class ContourLocatorProcessorImpl extends ContourLocatorProcessor implements Vis
                 RotatedRect newOval = Imgproc.fitEllipseDirect(contours.get(i));
                 double distance = Math.sqrt(Math.pow(newOval.center.x, 2.0) + Math.pow(newOval.center.y - (pixelHeight / 2), 2.0));
                 double area = newOval.size.area();
-                Imgproc.ellipse(contoursMat, newOval, new Scalar(200, 200, 200));
+                if (area > minArea) {
+                    Imgproc.ellipse(contoursMat, newOval, new Scalar(200, 200, 200));
+                }
                 if (minArea < area && area < maxArea && distance < minDistance) {
                     minOval = newOval;
                     minDistance = distance;
                 }
             }
         }
-//        Imgcodecs.imwrite("src/main/java/org/firstinspires/ftc/teamcode/testing/tests/data/final mask contours.jpg", contoursMat);
+        Imgcodecs.imwrite("src/main/java/org/firstinspires/ftc/teamcode/testing/tests/data/final mask contours.jpg", contoursMat);
         this.minOval = minOval;
 
         if (minOval != new RotatedRect()) {
@@ -159,6 +147,35 @@ class ContourLocatorProcessorImpl extends ContourLocatorProcessor implements Vis
             setCenterAndAngle(center, 0);
         }
         return;
+    }
+    public Mat newMethod(Mat input) {
+        Mat gray = new Mat();
+        input.copyTo(gray);
+        Imgproc.cvtColor(input, gray, Imgproc.COLOR_RGB2GRAY);
+        contours = new ArrayList<>();
+        Imgproc.Canny(gray, gray, 50, 100);
+        Imgcodecs.imwrite("src/main/java/org/firstinspires/ftc/teamcode/testing/tests/data/basic contours.jpg", gray);
+        Mat element = Imgproc.getStructuringElement(Imgproc.CV_SHAPE_ELLIPSE, new Size(3, 3));
+        Imgproc.dilate(gray, gray, element);
+        Core.inRange(gray, new Scalar(0, 0, 0), new Scalar(100, 100, 100), gray);
+
+        Mat hsv = new Mat();
+        Imgproc.cvtColor(input, hsv, Imgproc.COLOR_RGB2HSV);
+
+        Mat colorMask = getColorThreshold(hsv);
+        Mat yellowMask = getYellowThreshold(hsv);
+        Mat mask = new Mat();
+        Core.bitwise_or(colorMask, yellowMask, mask);
+
+
+        Imgcodecs.imwrite("src/main/java/org/firstinspires/ftc/teamcode/testing/tests/data/final mask edges.jpg", mask);
+
+        Core.bitwise_and(gray, mask, gray);
+
+        Imgcodecs.imwrite("src/main/java/org/firstinspires/ftc/teamcode/testing/tests/data/mask edges.jpg", gray);
+
+        return gray;
+
     }
     public void setCenterAndAngle(Point center, double angle) {
         this.center = center;

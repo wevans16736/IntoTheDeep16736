@@ -33,22 +33,12 @@
 
 package org.firstinspires.ftc.teamcode.secondrobot;
 
-import android.graphics.Color;
-
-import androidx.annotation.ColorInt;
-
-import com.qualcomm.robotcore.util.SortOrder;
-
 import org.firstinspires.ftc.vision.VisionProcessor;
-import org.firstinspires.ftc.vision.opencv.ColorRange;
-import org.firstinspires.ftc.vision.opencv.ImageRegion;
 import org.opencv.core.Mat;
 import org.opencv.core.MatOfPoint;
 import org.opencv.core.Point;
 import org.opencv.core.RotatedRect;
 
-import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 
 public abstract class ContourLocatorProcessor implements VisionProcessor
@@ -67,5 +57,6 @@ public abstract class ContourLocatorProcessor implements VisionProcessor
     public abstract List<MatOfPoint> getContours();
     public abstract Point pixelToPosition(Point center);
     public abstract RotatedRect getMinOval();
+    public abstract Mat newMethod(Mat input);
 
 }

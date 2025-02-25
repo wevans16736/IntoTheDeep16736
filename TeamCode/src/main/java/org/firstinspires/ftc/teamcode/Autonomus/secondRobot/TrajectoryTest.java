@@ -92,7 +92,7 @@ public class TrajectoryTest {
     public Action scanButter(){
         TrajectoryActionBuilder scan = currentTrajectory
                 .stopAndAdd(robotSensor.visionOn())
-//                .waitSeconds(3)
+                .waitSeconds(3)
                 .stopAndAdd(robotSensor.visionOff())
                 .waitSeconds(3);
 //                .stopAndAdd(robotSensor.visionScan());

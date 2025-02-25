@@ -312,21 +312,21 @@ public class ImageProcessing {
     public void testContourLocatorProcessor() {
         System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
 
-        String pathImg = "src/main/java/org/firstinspires/ftc/teamcode/testing/tests/data/redButter7.png";
+        String pathImg = "src/main/java/org/firstinspires/ftc/teamcode/testing/tests/data/blockfest1.jpg";
 
         File fileImg = new File(pathImg);
         String absolutePathImg = fileImg.getAbsolutePath();
         Mat img = Imgcodecs.imread(absolutePathImg, Imgcodecs.IMREAD_COLOR);
 
-//        Imgproc.cvtColor(img, img, Imgproc.COLOR_RGB2BGR);
+        Imgproc.cvtColor(img, img, Imgproc.COLOR_BGR2RGB);
 //        Imgcodecs.imwrite("src/main/java/org/firstinspires/ftc/teamcode/testing/tests/data/bgr.jpg", img);
-        Imgproc.cvtColor(img, img, Imgproc.COLOR_BGR2HSV);
-        Imgcodecs.imwrite("src/main/java/org/firstinspires/ftc/teamcode/testing/tests/data/hsv.jpg", img);
+//        Imgproc.cvtColor(img, img, Imgproc.COLOR_BGR2HSV);
+//        Imgcodecs.imwrite("src/main/java/org/firstinspires/ftc/teamcode/testing/tests/data/hsv.jpg", img);
 
         int type = img.type();
         ContourLocatorProcessor contourLocatorProcessor = new ContourLocatorProcessor.Builder()
                 .build();
-        contourLocatorProcessor.contourAndOval(contourLocatorProcessor.prepareForContours(img));
+        contourLocatorProcessor.contourAndOval(contourLocatorProcessor.newMethod(img));
         List<MatOfPoint> contours = contourLocatorProcessor.getContours();
         double contourArea[] = new double[contours.size()];
         double contourX[] = new double[contours.size()];
@@ -344,6 +344,26 @@ public class ImageProcessing {
         }
         Point center = contourLocatorProcessor.getCenter();
         Point center1 = contourLocatorProcessor.pixelToPosition(contourLocatorProcessor.getCenter());
+    }
+    @Test
+    public void testNewMethod() {
+        System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
+
+        String pathImg = "src/main/java/org/firstinspires/ftc/teamcode/testing/tests/data/blockfest1.jpg";
+
+        File fileImg = new File(pathImg);
+        String absolutePathImg = fileImg.getAbsolutePath();
+        Mat img = Imgcodecs.imread(absolutePathImg, Imgcodecs.IMREAD_COLOR);
+
+//        Imgproc.cvtColor(img, img, Imgproc.COLOR_RGB2BGR);
+        Imgproc.cvtColor(img, img, Imgproc.COLOR_BGR2RGB);
+        Imgcodecs.imwrite("src/main/java/org/firstinspires/ftc/teamcode/testing/tests/data/rgb.jpg", img);
+//        Imgproc.cvtColor(img, img, Imgproc.COLOR_BGR2HSV);
+//        Imgproc.cvtColor(img, img, Imgproc.COLOR_BGR2GRAY);
+        ContourLocatorProcessor contourLocatorProcessor = new ContourLocatorProcessor.Builder()
+                .build();
+        contourLocatorProcessor.newMethod(img);
+
     }
     @Test
     public void testPixelToInches() {
@@ -366,6 +386,7 @@ public class ImageProcessing {
 //        Point position = new Point(x, y);
 //        detectBlockActions.setCenterTest(center);
 //        center = detectBlockActions.pixelToPosition();
+
 
     }
 }

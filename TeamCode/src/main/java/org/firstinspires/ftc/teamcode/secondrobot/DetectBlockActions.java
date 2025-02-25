@@ -89,7 +89,7 @@ public class DetectBlockActions {
                 .addProcessor(colorLocator)
                 .setCameraResolution(new android.util.Size(pixelWidth, pixelHeight))
                 .setCamera(hardwareMap.get(WebcamName.class, "Webcam 1"))
-                .setStreamFormat(VisionPortal.StreamFormat.MJPEG)
+//                .setStreamFormat(VisionPortal.StreamFormat.MJPEG)
                 .build();
     }
     public void deactivate() {

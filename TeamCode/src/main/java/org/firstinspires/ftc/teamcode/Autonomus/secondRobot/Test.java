@@ -71,8 +71,8 @@ public class Test extends LinearOpMode {
             Actions.runBlocking(new SequentialAction(
 //                    robotSensor.visionOn(),
 //                    robotSensor.visionOff(),
-//                    trajectory.scanButter()
-                    trajectory.turn()
+                    trajectory.scanButter()
+//                    trajectory.turn()
 //                    trajectory.grabButter()
 //                    new SleepAction(.3),
 //                    new ParallelAction(
