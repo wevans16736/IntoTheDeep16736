@@ -8,8 +8,6 @@ import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.hardware.ColorSensor;
-import com.qualcomm.robotcore.hardware.DistanceSensor;
 
 import org.firstinspires.ftc.teamcode.Configuration.secondRobot.HorizontalGrabberRR;
 import org.firstinspires.ftc.teamcode.Configuration.secondRobot.HorizontalRollRR;
@@ -21,8 +19,8 @@ import org.firstinspires.ftc.teamcode.Configuration.secondRobot.VerticalHangerRR
 import org.firstinspires.ftc.teamcode.Configuration.secondRobot.VerticalSlideRR;
 import org.firstinspires.ftc.teamcode.Configuration.secondRobot.VerticalWristRR;
 import org.firstinspires.ftc.teamcode.PinpointDrive;
-import org.firstinspires.ftc.teamcode.secondrobot.constants.ConfigConstants;
 
+@Disabled
 @Autonomous(name = "AutoLeft")
 public class AutoLeft extends LinearOpMode {
     @Override
@@ -62,21 +60,21 @@ public class AutoLeft extends LinearOpMode {
 //            }
 //        }
 //        sleep(2000);
-        if (side) {
-            while (!(gamepad1.dpad_left || gamepad1.dpad_right || gamepad1.dpad_up)) {
-                telemetry.clearAll();
-                telemetry.addLine("left side chosen");
-                telemetry.addData("attempt? dpad-left", attempt);
-                telemetry.addData("sideway? dpad-right", sideway);
-                telemetry.addLine("Good? dpad-up");
-                telemetry.update();
-                if (gamepad1.dpad_left) {
-                    attempt = false;
-                } else if (gamepad1.dpad_right) {
-                    sideway = true;
-                }
-            }
-        }
+//        if (side) {
+//            while (!(gamepad1.dpad_left || gamepad1.dpad_right || gamepad1.dpad_up)) {
+//                telemetry.clearAll();
+//                telemetry.addLine("left side chosen");
+//                telemetry.addData("attempt? dpad-left", attempt);
+//                telemetry.addData("sideway? dpad-right", sideway);
+//                telemetry.addLine("Good? dpad-up");
+//                telemetry.update();
+//                if (gamepad1.dpad_left) {
+//                    attempt = false;
+//                } else if (gamepad1.dpad_right) {
+//                    sideway = true;
+//                }
+//            }
+//        }
         if (!side) {
             pose = new Pose2d(9, -64, Math.toRadians(90));
             drive = new PinpointDrive(hardwareMap, pose);
@@ -87,7 +85,7 @@ public class AutoLeft extends LinearOpMode {
 
         RobotSensor robotSensor = new RobotSensor(telemetry, drive);
 
-        Trajectory trajectory = new Trajectory(drive, pose, verticalSlide, verticalWrist, verticalGrabber,
+        org.firstinspires.ftc.teamcode.Autonomus.secondRobot.Decapricated.Trajectory trajectory = new Trajectory(drive, pose, verticalSlide, verticalWrist, verticalGrabber,
                 verticalHanger, horizontalSlide, horizontalRoll, horizontalGrabber, horizontalWrist, robotSensor);
 
         TrajectoryLeft trajectoryLeft = new TrajectoryLeft(drive, pose, verticalSlide, verticalWrist, verticalGrabber,

@@ -55,7 +55,7 @@ public class Test extends LinearOpMode {
 
         DetectBlockActions vision = new DetectBlockActions(hardwareMap);
 
-        RobotSensor robotSensor = new RobotSensor(telemetry, drive, vision);
+        RobotSensor robotSensor = new RobotSensor(telemetry, drive, vision, hardwareMap);
 
         TrajectoryTest trajectory = new TrajectoryTest(drive, pose, verticalSlide, verticalWrist, verticalGrabber,
                 verticalHanger, horizontalSlide, horizontalRoll, horizontalGrabber, horizontalWrist, robotSensor, telemetry);
@@ -71,7 +71,8 @@ public class Test extends LinearOpMode {
             Actions.runBlocking(new SequentialAction(
 //                    robotSensor.visionOn(),
 //                    robotSensor.visionOff(),
-                    trajectory.scanButter()
+                    trajectory.scanButter(),
+trajectory.move()
 //                    trajectory.turn()
 //                    trajectory.grabButter()
 //                    new SleepAction(.3),

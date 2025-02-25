@@ -191,7 +191,7 @@ class ContourLocatorProcessorImpl extends ContourLocatorProcessor implements Vis
     @Override
     public Object processFrame(Mat frame, long captureTimeNanos)
     {
-//        Imgcodecs.imwrite("/sdcard/FIRST/java/src/img.jpg", frame);
+        Imgcodecs.imwrite("/sdcard/FIRST/java/src/img.jpg", frame);
         Mat processed = prepareForContours(frame);
 //        Imgcodecs.imwrite("/sdcard/FIRST/java/src/processed.jpg", processed);
         contourAndOval(processed);

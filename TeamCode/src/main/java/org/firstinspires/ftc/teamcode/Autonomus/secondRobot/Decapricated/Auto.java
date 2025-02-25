@@ -8,7 +8,6 @@ import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.hardware.DistanceSensor;
 
 import org.firstinspires.ftc.teamcode.Configuration.secondRobot.HorizontalGrabberRR;
 import org.firstinspires.ftc.teamcode.Configuration.secondRobot.HorizontalRollRR;
@@ -21,8 +20,8 @@ import org.firstinspires.ftc.teamcode.Configuration.secondRobot.VerticalSlideRR;
 import org.firstinspires.ftc.teamcode.Configuration.secondRobot.VerticalWristRR;
 import org.firstinspires.ftc.teamcode.PinpointDrive;
 import org.firstinspires.ftc.teamcode.secondrobot.DetectBlockActions;
-import org.firstinspires.ftc.teamcode.secondrobot.constants.ConfigConstants;
 
+@Disabled
 @Autonomous(name = "Auto")
 public class Auto extends LinearOpMode {
     @Override
@@ -87,7 +86,7 @@ public class Auto extends LinearOpMode {
 
         DetectBlockActions vision = new DetectBlockActions(hardwareMap);
 
-        RobotSensor robotSensor = new RobotSensor(telemetry, drive, vision);
+        RobotSensor robotSensor = new RobotSensor(telemetry, drive, vision, hardwareMap);
 
         Trajectory trajectory = new Trajectory(drive, pose, verticalSlide, verticalWrist, verticalGrabber,
                 verticalHanger, horizontalSlide, horizontalRoll, horizontalGrabber, horizontalWrist, robotSensor);

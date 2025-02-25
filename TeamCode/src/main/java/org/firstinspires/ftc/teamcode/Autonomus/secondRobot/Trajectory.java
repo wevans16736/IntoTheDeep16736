@@ -46,10 +46,6 @@ public class Trajectory{
 
         currentTrajectory = drive.actionBuilder(pose);
     }
-    VelConstraint butterSpeed = new MinVelConstraint(Arrays.asList(
-            new TranslationalVelConstraint(50),
-            new AngularVelConstraint(Math.PI)
-    ));
     double hangX = 0; double hangY = -34.5; int hang = 0; int attachment = 0;
     double firstButterX = 49; double firstButterY = -36.5; double butterCounter = 0;
     double secondButterX = 58; double secondButterY =  -47.5;
