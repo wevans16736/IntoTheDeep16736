@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.testing.tests;
 import static org.opencv.core.CvType.CV_8UC1;
 
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.teamcode.secondrobot.ContourLocatorProcessor;
 import org.firstinspires.ftc.teamcode.secondrobot.DetectBlockActions;
@@ -362,8 +363,43 @@ public class ImageProcessing {
 //        Imgproc.cvtColor(img, img, Imgproc.COLOR_BGR2GRAY);
         ContourLocatorProcessor contourLocatorProcessor = new ContourLocatorProcessor.Builder()
                 .build();
-        contourLocatorProcessor.newMethod(img);
+        List<RotatedRect> ovals;
+        ovals = contourLocatorProcessor.newContours(contourLocatorProcessor.newMethod(img));
+        Imgproc.ellipse(img, contourLocatorProcessor.bestContour(ovals), new Scalar(0,0,0));
+        double minDistance = 1000000;
+        double maxDistance = 2.2;
+        RotatedRect bestContour = new RotatedRect();
+        for (int i = 0; i < ovals.size(); i++) {
+            boolean isTooClose = false;
+            for (int j = 0; j < ovals.size() - 1; j++) {
+                int k = j;
+                if (j >= i){
+                    k++;
+                }
+                Point srcPnt = contourLocatorProcessor.pixelToPosition(ovals.get(i).center);
+                Point dstPnt = contourLocatorProcessor.pixelToPosition(ovals.get(k).center);
+                double distFromBlock = Math.sqrt(Math.pow(srcPnt.x - dstPnt.x, 2) + Math.pow(srcPnt.y - dstPnt.y, 2));
+                if (distFromBlock < maxDistance) {
+                    isTooClose = true;
+                }
+            }
+            Point ovalCenter = contourLocatorProcessor.pixelToPosition(ovals.get(i).center);
+            double distFromBase = Math.sqrt(Math.pow(Range.clip(ovalCenter.x, 0, 640), 2) + Math.pow(ovalCenter.y - (480.0 / 2.0), 2));
+            if (!isTooClose && distFromBase < minDistance){
+                bestContour = ovals.get(i);
+                minDistance = distFromBase;
+            }
+        }
+        Imgcodecs.imwrite("src/main/java/org/firstinspires/ftc/teamcode/testing/tests/data/final.jpg", img);
 
+        double contourArea[] = new double[ovals.size()];
+        double contourX[] = new double[ovals.size()];
+        double contourY[] = new double[ovals.size()];
+        for (int i = 0; i < ovals.size(); i++) {
+                contourArea[i] = ovals.get(i).size.area();
+                contourX[i] = ovals.get(i).center.x;
+                contourY[i] = ovals.get(i).center.y;
+        }
     }
     @Test
     public void testPixelToInches() {

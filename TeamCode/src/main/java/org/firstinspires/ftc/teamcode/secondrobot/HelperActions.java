@@ -11,7 +11,6 @@ import org.firstinspires.ftc.teamcode.secondrobot.horizontalslide.HorizontalWris
 import org.firstinspires.ftc.teamcode.secondrobot.verticalslide.VerticalGrabberActions;
 import org.firstinspires.ftc.teamcode.secondrobot.verticalslide.VerticalSlideActions;
 import org.firstinspires.ftc.teamcode.secondrobot.verticalslide.VerticalWristActions;
-import org.opencv.core.Point;
 
 public abstract class HelperActions extends LinearOpMode {
     public final double SPEED = 0.5;
@@ -296,5 +295,32 @@ public abstract class HelperActions extends LinearOpMode {
             placeSample(verticalGrabber, verticalWrist, verticalSlide, horizontalWrist, horizontalSlide, intake, horizontalRoll);
         }
         wasActivatePlaceSample = activate;
+    }
+    public void activateDetection(DetectBlockActions detectBlockActions, HorizontalSlideActions horizontalSlide) {
+        if (grabState == 0) {
+            grabState = 1;
+            detectBlockActions.activate();
+        }
+    }
+    public void grabSample(DetectBlockActions detectBlockActions, HorizontalSlideActions horizontalSlide){
+        horizontalSlide.setSlideDistanceMath(detectBlockActions.pixelToPosition(detectBlockActions.getCenter()).y + horizontalSlide.getSlideDistanceMath(), 3000);
+
+    }
+    double grabState = 0;
+    public void resetGrabState() {
+        grabState = 0;
+    }
+    boolean wasActivateGrabSample = false;
+    public void manageGrabSample(boolean activate, DetectBlockActions detectBlockActions, HorizontalSlideActions horizontalSlide) {
+        if (activate && !wasActivateGrabSample) {
+            resetGrabState();
+        } else if (!activate && wasActivateGrabSample) {
+            detectBlockActions.deactivate();
+            grabSample(detectBlockActions, horizontalSlide);
+        }
+        if(activate) {
+            activateDetection(detectBlockActions, horizontalSlide);
+        }
+        wasActivateGrabSample = activate;
     }
 }

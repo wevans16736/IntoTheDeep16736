@@ -113,6 +113,7 @@ public class SecondaryTeleOp extends HelperActions {
             //A button gamepad 2. Not yet working
             managePlaceSample(gamepad2.a, verticalGrabber, verticalWrist, verticalSlide, horizontalWrist, horizontalSlide, horizontalIntake, horizontalIRoll);
 
+            manageGrabSample(gamepad2.share, detectBlockActions, horizontalSlide);
 //            Point blockCenter = detectBlockActions.pixelToPosition(detectBlockActions.getCenter());
 //            telemetry.addData("block x %f, block y %f", blockCenter);
 //            if (gamepad2.share) {

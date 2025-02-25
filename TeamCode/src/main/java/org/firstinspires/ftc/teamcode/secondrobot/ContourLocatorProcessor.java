@@ -59,4 +59,7 @@ public abstract class ContourLocatorProcessor implements VisionProcessor
     public abstract RotatedRect getMinOval();
     public abstract Mat newMethod(Mat input);
 
+    public abstract List newContours(Mat input);
+    public abstract RotatedRect bestContour(List<RotatedRect> ovals);
+
 }

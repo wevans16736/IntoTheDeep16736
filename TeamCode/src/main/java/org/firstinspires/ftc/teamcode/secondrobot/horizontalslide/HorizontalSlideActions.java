@@ -61,13 +61,15 @@ public class HorizontalSlideActions {
         telemetry.addData("current position HS", armMotor.getCurrentPosition());
     }
     double SlidePosition = 0;
-    public void setSlideDistanceMath(int distance, double velocity) {
-        double targetRadians = Math.acos(distance / (2 * armLegLength));
-        double targetRotations = targetRadians / (2 * Math.PI);
-        double targetEncoderTics = targetRotations / 2786.2;
-        armMotor.setTargetPosition((int) targetEncoderTics);
+    public void setSlideDistanceMath(double distance, double velocity) {
+        double targetEncoderTics = 7.0 * (70.0 - Math.toDegrees(Math.acos(distance/13.0)));
+        armMotor.setTargetPosition((int) Range.clip(targetEncoderTics, 0, 650));
         armMotor.setVelocity(velocity);
-        SlidePosition = distance;
+        SlidePosition = targetEncoderTics;
+    }
+    public double getSlideDistanceMath() {
+        double encoderTicks = getSlidePosition();
+        return Math.cos(Math.toRadians((encoderTicks / 7.0) - 70.0) * -1.0) * 13.0;
     }
     public void setSlideDistance(int distance, double velocity) {
         armMotor.setTargetPosition(distance);

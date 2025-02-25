@@ -47,7 +47,7 @@ class ContourLocatorProcessorImpl extends ContourLocatorProcessor implements Vis
 
     public Mat getColorThreshold(Mat hsv) {
         Mat blue = new Mat();
-        Core.inRange(hsv, new Scalar(0, 30, 160), new Scalar(110, 205, 245), blue);
+        Core.inRange(hsv, new Scalar(VisionParameters.b1h, VisionParameters.b1s, VisionParameters.b1v), new Scalar(VisionParameters.b2h, VisionParameters.b2s, VisionParameters.b2v), blue);
 //        if (isRed) {
 //            Mat mask1 = new Mat();
 //            Mat mask2 = new Mat();
@@ -68,7 +68,7 @@ class ContourLocatorProcessorImpl extends ContourLocatorProcessor implements Vis
     }
     public Mat getYellowThreshold(Mat hsv) {
         Mat mask = new Mat();
-        Core.inRange(hsv, new Scalar(10, 200, 160), new Scalar(45, 245, 255), mask);
+        Core.inRange(hsv, new Scalar(VisionParameters.y1h, VisionParameters.y1s, VisionParameters.y1v), new Scalar(VisionParameters.y2h, VisionParameters.y2s, VisionParameters.y2v), mask);
 //        Imgcodecs.imwrite("src/main/java/org/firstinspires/ftc/teamcode/testing/tests/data/yellow.jpg", mask);
         return mask;
     }
@@ -134,7 +134,7 @@ class ContourLocatorProcessorImpl extends ContourLocatorProcessor implements Vis
                 }
             }
         }
-        Imgcodecs.imwrite("src/main/java/org/firstinspires/ftc/teamcode/testing/tests/data/final mask contours.jpg", contoursMat);
+//        Imgcodecs.imwrite("src/main/java/org/firstinspires/ftc/teamcode/testing/tests/data/final mask contours.jpg", contoursMat);
         this.minOval = minOval;
 
         if (minOval != new RotatedRect()) {
@@ -152,30 +152,85 @@ class ContourLocatorProcessorImpl extends ContourLocatorProcessor implements Vis
         Mat gray = new Mat();
         input.copyTo(gray);
         Imgproc.cvtColor(input, gray, Imgproc.COLOR_RGB2GRAY);
-        contours = new ArrayList<>();
+        Core.addWeighted(gray, 2.3, gray, 0, -120, gray);
         Imgproc.Canny(gray, gray, 50, 100);
-        Imgcodecs.imwrite("src/main/java/org/firstinspires/ftc/teamcode/testing/tests/data/basic contours.jpg", gray);
-        Mat element = Imgproc.getStructuringElement(Imgproc.CV_SHAPE_ELLIPSE, new Size(3, 3));
+        Mat element = Imgproc.getStructuringElement(Imgproc.CV_SHAPE_ELLIPSE, new Size(4, 4));
         Imgproc.dilate(gray, gray, element);
         Core.inRange(gray, new Scalar(0, 0, 0), new Scalar(100, 100, 100), gray);
+        Imgcodecs.imwrite("src/main/java/org/firstinspires/ftc/teamcode/testing/tests/data/basic contours.jpg", gray);
 
-        Mat hsv = new Mat();
-        Imgproc.cvtColor(input, hsv, Imgproc.COLOR_RGB2HSV);
+//        Mat hsv = new Mat();
+//        Imgproc.cvtColor(input, hsv, Imgproc.COLOR_RGB2HSV);
 
-        Mat colorMask = getColorThreshold(hsv);
-        Mat yellowMask = getYellowThreshold(hsv);
-        Mat mask = new Mat();
-        Core.bitwise_or(colorMask, yellowMask, mask);
+//        Mat colorMask = getColorThreshold(hsv);
+//        Mat yellowMask = getYellowThreshold(hsv);
+//        Mat mask = new Mat();
+//        Core.bitwise_or(colorMask, yellowMask, mask);
 
 
-        Imgcodecs.imwrite("src/main/java/org/firstinspires/ftc/teamcode/testing/tests/data/final mask edges.jpg", mask);
+//        Imgcodecs.imwrite("src/main/java/org/firstinspires/ftc/teamcode/testing/tests/data/final mask edges.jpg", mask);
 
-        Core.bitwise_and(gray, mask, gray);
+//        Core.bitwise_and(gray, mask, gray);
 
-        Imgcodecs.imwrite("src/main/java/org/firstinspires/ftc/teamcode/testing/tests/data/mask edges.jpg", gray);
+//        Imgcodecs.imwrite("src/main/java/org/firstinspires/ftc/teamcode/testing/tests/data/mask edges.jpg", gray);
 
         return gray;
 
+    }
+    public List newContours(Mat canny) {
+        Mat contoursMat = canny;
+        contours = new ArrayList<>();
+        Mat hierarchy = new Mat();
+        Imgproc.findContours(canny, contours, hierarchy, Imgproc.RETR_TREE, Imgproc.CHAIN_APPROX_SIMPLE);
+
+        double maxArea = 400000;
+        double minArea =  10000;
+        double maxHeight = 400;
+        double maxRatio = 0.7;
+        List<RotatedRect> newContours = new ArrayList<>();
+        for (int i = 0; i < contours.size(); i++) {
+            if (contours.get(i).rows() > 5) {
+                RotatedRect newOval = Imgproc.fitEllipseDirect(contours.get(i));
+                double area = newOval.size.area();
+                double contourArea = Imgproc.contourArea(contours.get(i));
+                double areaRatio = contourArea / area;
+                if (minArea < area && area < maxArea && newOval.center.x < maxHeight && areaRatio < maxRatio) {
+                    newContours.add(newOval);
+                    Imgproc.ellipse(contoursMat, newOval, new Scalar(0, 0, 0));
+                    Imgproc.putText(contoursMat, newOval.size.toString(), newOval.center, 1, 3, new Scalar(0,0,0));
+                }
+            }
+        }
+        Imgcodecs.imwrite("src/main/java/org/firstinspires/ftc/teamcode/testing/tests/data/final mask contours.jpg", contoursMat);
+
+        return newContours;
+    }
+    public RotatedRect bestContour(List<RotatedRect> ovals) {
+        double minDistance = 1000000;
+        double maxDistance = 2.2;
+        RotatedRect bestContour = new RotatedRect();
+        for (int i = 0; i < ovals.size(); i++) {
+            boolean isTooClose = false;
+            for (int j = 0; j < ovals.size() - 1; j++) {
+                int k = j;
+                if (j >= i){
+                    k++;
+                }
+                Point srcPnt = pixelToPosition(ovals.get(i).center);
+                Point dstPnt = pixelToPosition(ovals.get(k).center);
+                double distFromBlock = Math.sqrt(Math.pow(srcPnt.x - dstPnt.x, 2) + Math.pow(srcPnt.y - dstPnt.y, 2));
+                if (distFromBlock < maxDistance) {
+                    isTooClose = true;
+                }
+            }
+            Point ovalCenter = pixelToPosition(ovals.get(i).center);
+            double distFromBase = Math.sqrt(Math.pow(ovalCenter.x, 2) + Math.pow(ovalCenter.y - pixelHeight / 2.0, 2));
+            if (!isTooClose && distFromBase < minDistance){
+                bestContour = ovals.get(i);
+                minDistance = distFromBase;
+            }
+        }
+        return bestContour;
     }
     public void setCenterAndAngle(Point center, double angle) {
         this.center = center;
@@ -192,9 +247,10 @@ class ContourLocatorProcessorImpl extends ContourLocatorProcessor implements Vis
     public Object processFrame(Mat frame, long captureTimeNanos)
     {
         Imgcodecs.imwrite("/sdcard/FIRST/java/src/img.jpg", frame);
-        Mat processed = prepareForContours(frame);
-//        Imgcodecs.imwrite("/sdcard/FIRST/java/src/processed.jpg", processed);
-        contourAndOval(processed);
+        Mat processed = newMethod(frame);
+        Imgcodecs.imwrite("/sdcard/FIRST/java/src/processed.jpg", processed);
+        RotatedRect rect = bestContour(newContours(processed));
+        setCenterAndAngle(rect.center, rect.angle);
 
         /**
          * NOTE: to see how to get data from your pipeline to your OpMode as well as how
