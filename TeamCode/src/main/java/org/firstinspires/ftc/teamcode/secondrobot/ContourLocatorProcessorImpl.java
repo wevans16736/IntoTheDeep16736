@@ -16,6 +16,7 @@ import org.opencv.imgproc.Imgproc;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 class ContourLocatorProcessorImpl extends ContourLocatorProcessor implements VisionProcessor
 {
@@ -153,7 +154,7 @@ class ContourLocatorProcessorImpl extends ContourLocatorProcessor implements Vis
         input.copyTo(gray);
         Imgproc.cvtColor(input, gray, Imgproc.COLOR_RGB2GRAY);
         Core.addWeighted(gray, 2.3, gray, 0, -120, gray);
-        Imgproc.Canny(gray, gray, 50, 100);
+        Imgproc.Canny(gray, gray, 50, 70);
         Mat element = Imgproc.getStructuringElement(Imgproc.CV_SHAPE_ELLIPSE, new Size(4, 4));
         Imgproc.dilate(gray, gray, element);
         Core.inRange(gray, new Scalar(0, 0, 0), new Scalar(100, 100, 100), gray);
@@ -250,7 +251,9 @@ class ContourLocatorProcessorImpl extends ContourLocatorProcessor implements Vis
         Mat processed = newMethod(frame);
         Imgcodecs.imwrite("/sdcard/FIRST/java/src/processed.jpg", processed);
         RotatedRect rect = bestContour(newContours(processed));
-        setCenterAndAngle(rect.center, rect.angle);
+        if (!Objects.equals(rect, new RotatedRect())) {
+            setCenterAndAngle(rect.center, rect.angle);
+        }
 
         /**
          * NOTE: to see how to get data from your pipeline to your OpMode as well as how
