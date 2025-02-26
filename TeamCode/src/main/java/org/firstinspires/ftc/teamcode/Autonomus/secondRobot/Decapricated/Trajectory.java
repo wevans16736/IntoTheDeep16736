@@ -54,7 +54,7 @@ public class Trajectory {
     public Trajectory(PinpointDrive drive, Pose2d pose, VerticalSlideRR verticalSlideRR,
                       VerticalWristRR verticalWristRR, VerticalGrabberRR verticalGrabberRR,
                       VerticalHangerRR verticalHangerRR, HorizontalSlideRR horizontalSlideRR, HorizontalRollRR horizontalRollRR,
-                      HorizontalGrabberRR horizontalGrabberRR, HorizontalWristRR horizontalWristRR, RobotSensor robotSensor) {
+                      HorizontalGrabberRR horizontalGrabberRR, HorizontalWristRR horizontalWristRR) {
         this.drive = drive;
         this.pose = pose;
         this.verticalSlideRR = verticalSlideRR;
@@ -65,7 +65,6 @@ public class Trajectory {
         this.horizontalRollRR = horizontalRollRR;
         this.horizontalGrabberRR = horizontalGrabberRR;
         this.horizontalWristRR = horizontalWristRR;
-        this.robotSensor = robotSensor;
 
         currentTrajectory = drive.actionBuilder(pose);
     }

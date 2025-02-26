@@ -1,15 +1,12 @@
-package org.firstinspires.ftc.teamcode.Autonomus.secondRobot.LimeLightTesting;
+package org.firstinspires.ftc.teamcode.Autonomus.secondRobot.Vision;
 
+import com.acmerobotics.roadrunner.ParallelAction;
 import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.SequentialAction;
-import com.acmerobotics.roadrunner.TrajectoryActionBuilder;
-import com.acmerobotics.roadrunner.Vector2d;
 import com.acmerobotics.roadrunner.ftc.Actions;
-import com.qualcomm.hardware.limelightvision.Limelight3A;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
-import org.firstinspires.ftc.teamcode.Autonomus.secondRobot.TrajectoryTest;
 import org.firstinspires.ftc.teamcode.Configuration.secondRobot.HorizontalGrabberRR;
 import org.firstinspires.ftc.teamcode.Configuration.secondRobot.HorizontalRollRR;
 import org.firstinspires.ftc.teamcode.Configuration.secondRobot.HorizontalSlideRR;
@@ -41,35 +38,30 @@ public class Move extends LinearOpMode {
         HorizontalGrabberRR horizontalGrabber = new HorizontalGrabberRR(hardwareMap);
         HorizontalWristRR horizontalWrist = new HorizontalWristRR(hardwareMap);
         VerticalHangerRR verticalHanger = new VerticalHangerRR(hardwareMap);
+
+
         pose = new Pose2d(0, 0, Math.toRadians(90));
         drive = new PinpointDrive(hardwareMap, pose);
 
-        //Set up limelight
-        Limelight3A limelight = hardwareMap.get(Limelight3A.class, "limelight");
-//        telemetry.setMsTransmissionInterval(11);
-//        limelight.pipelineSwitch(1);
-//        //start polling data
-//        limelight.start();
-//        telemetry.addData(">", "Robot Ready.  Press Play.");
-//        telemetry.update();
-
-       Trajectory trajectory = new Trajectory(drive, pose, verticalSlide, verticalWrist, verticalGrabber,
-                verticalHanger, horizontalSlide, horizontalRoll, horizontalGrabber, horizontalWrist, limelight, telemetry);
-
-       double x = 0;
-       double y = 0;
+        DetectBlockActions detect = new DetectBlockActions(hardwareMap);
+        RobotSensor robotSensor = new RobotSensor(telemetry, drive, detect);
+        Trajectory trajectory = new Trajectory(drive, pose, verticalSlide, verticalWrist, verticalGrabber,
+                verticalHanger, horizontalSlide, horizontalRoll, horizontalGrabber, horizontalWrist, telemetry);
 
         //wait for the start button to be press
         waitForStart();
         //if the stop button press then stop the robot
-        if (isStopRequested()){
-            return;
-        }
-
+        if (isStopRequested())return;
 
         Actions.runBlocking(new SequentialAction(
-
-                horizontalSlide.horizontalSlideActions()
+                new ParallelAction(
+                        trajectory.getInitial(),
+                        robotSensor.visionOn()
+                )
+        ));
+        robotSensor.visionScan();
+        Actions.runBlocking(new SequentialAction(
+                trajectory.getButter()
         ));
     }
 }

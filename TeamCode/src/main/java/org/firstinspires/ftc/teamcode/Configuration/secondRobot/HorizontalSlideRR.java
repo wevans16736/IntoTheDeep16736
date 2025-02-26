@@ -8,7 +8,9 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.util.Range;
 
+import org.firstinspires.ftc.teamcode.GlobalVariables;
 import org.firstinspires.ftc.teamcode.secondrobot.constants.ConfigConstants;
 
 public class HorizontalSlideRR {
@@ -47,9 +49,15 @@ public class HorizontalSlideRR {
             return false;
         }
     }
+
     public Action horizontalSlideActions(int position) {return new HorizontalSlideActions(position);}
 
     public void setPose(int pose){
         horizontalSlideMotor.setTargetPosition(pose);
+    }
+    public int getDistance(){
+        double distance = GlobalVariables.Y + Math.cos(Math.toRadians((horizontalSlideMotor.getCurrentPosition() / 7.0) - 70.0) * -1.0) * 13.0;
+        double ticks = 7.0 * (70.0 - Math.toDegrees(Math.acos(distance/13.0)));
+        return (int) Range.clip(ticks, 0, 650);
     }
 }

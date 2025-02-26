@@ -55,10 +55,8 @@ public class Auto5Butter extends LinearOpMode {
 
         DetectBlockActions vision = new DetectBlockActions(hardwareMap);
 
-        RobotSensor robotSensor = new RobotSensor(telemetry, drive, vision, hardwareMap);
-
         Trajectory trajectory = new Trajectory(drive, pose, verticalSlide, verticalWrist, verticalGrabber,
-                verticalHanger, horizontalSlide, horizontalRoll, horizontalGrabber, horizontalWrist, robotSensor);
+                verticalHanger, horizontalSlide, horizontalRoll, horizontalGrabber, horizontalWrist);
 
         //build everything
         Action hang1 = trajectory.getHang();

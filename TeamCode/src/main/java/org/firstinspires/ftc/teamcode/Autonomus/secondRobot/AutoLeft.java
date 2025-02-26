@@ -50,10 +50,8 @@ public class AutoLeft extends LinearOpMode {
 
             DetectBlockActions vision = new DetectBlockActions(hardwareMap);
 
-            RobotSensor robotSensor = new RobotSensor(telemetry, drive, vision, hardwareMap);
-
             TrajectoryLeft trajectory = new TrajectoryLeft(drive, pose, verticalSlide, verticalWrist, verticalGrabber,
-                    verticalHanger, horizontalSlide, horizontalRoll, horizontalGrabber, horizontalWrist, robotSensor);
+                    verticalHanger, horizontalSlide, horizontalRoll, horizontalGrabber, horizontalWrist);
 
             //build everything
             Action Basket1 = trajectory.getBasket();

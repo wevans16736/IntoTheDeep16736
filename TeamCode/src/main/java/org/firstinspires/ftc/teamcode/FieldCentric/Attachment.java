@@ -3,12 +3,16 @@ package org.firstinspires.ftc.teamcode.FieldCentric;
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.acmerobotics.roadrunner.Action;
+import com.acmerobotics.roadrunner.CancelableProfile;
 import com.acmerobotics.roadrunner.InstantAction;
 import com.acmerobotics.roadrunner.Pose2d;
+import com.acmerobotics.roadrunner.PoseVelocity2d;
 import com.acmerobotics.roadrunner.SequentialAction;
 import com.acmerobotics.roadrunner.SleepAction;
 import com.acmerobotics.roadrunner.Trajectory;
 import com.acmerobotics.roadrunner.TrajectoryActionBuilder;
+import com.acmerobotics.roadrunner.Vector2d;
+import com.acmerobotics.roadrunner.ftc.Actions;
 
 import org.firstinspires.ftc.teamcode.Configuration.secondRobot.ConfigurationSecondRobot;
 import org.firstinspires.ftc.teamcode.Configuration.secondRobot.HorizontalGrabberRR;
@@ -19,6 +23,7 @@ import org.firstinspires.ftc.teamcode.Configuration.secondRobot.VerticalGrabberR
 import org.firstinspires.ftc.teamcode.Configuration.secondRobot.VerticalHangerRR;
 import org.firstinspires.ftc.teamcode.Configuration.secondRobot.VerticalSlideRR;
 import org.firstinspires.ftc.teamcode.Configuration.secondRobot.VerticalWristRR;
+import org.firstinspires.ftc.teamcode.GlobalVariables;
 import org.firstinspires.ftc.teamcode.PinpointDrive;
 
 import java.util.ArrayList;
@@ -33,13 +38,13 @@ public class Attachment {
     PinpointDrive drive;
     double currTime; double desiredLoopms = 250;
     private List<Action> runningActions; private FtcDashboard dash;
-    TelemetryPacket packet = new TelemetryPacket();
+    TelemetryPacket packet = new TelemetryPacket(); double basketX = -56; double basketY = -55;
 
     public Attachment(VerticalSlideRR verticalSlide, VerticalWristRR verticalWrist,
                       VerticalGrabberRR verticalGrabber, HorizontalSlideRR horizontalSlide,
                       HorizontalRollRR horizontalRoll, HorizontalGrabberRR horizontalGrabber,
                       HorizontalWristRR horizontalWrist, VerticalHangerRR verticalHanger,
-                      List<Action> runningActions, FtcDashboard dash){
+                      List<Action> runningActions, FtcDashboard dash, PinpointDrive drive){
         this.verticalSlide = verticalSlide;
         this.verticalWrist = verticalWrist;
         this.verticalGrabber = verticalGrabber;
@@ -48,7 +53,7 @@ public class Attachment {
         this.horizontalGrabber = horizontalGrabber;
         this.horizontalWrist = horizontalWrist;
         this.verticalHanger = verticalHanger;
-
+        this.drive = drive;
 
         this.runningActions = runningActions;
         this.dash = dash;
@@ -252,34 +257,33 @@ public class Attachment {
         }
         return wasSquare;
     }
-    double loopTimeCross; double prevTimeCross = 0.0; boolean wasCross = false; int slidePose;
     double loopTimedpad; double prevTimedpad = 0.0;
-    public void verticalOverride(boolean cross, boolean dpad_up, boolean dpad_down){
-        //manual override for vertical slide
-        loopTimeCross = currTime - prevTimeCross;
-        loopTimedpad = currTime - prevTimedpad;
-        //update input from gamepad
-        if (cross) {
-            if(loopTimeCross >= desiredLoopms){
-                if(wasCross){
-                    slidePose = verticalSlide.returnPose();
-                   if(loopTimedpad >= desiredLoopms){
-                       if(dpad_up){
-                           slidePose += 200;
-                           verticalSlide.setPose(slidePose);
-                       }
-                       if(dpad_down){
-                           slidePose -= 200;
-                           verticalSlide.setPose(slidePose);
-                       }
-                       prevTimedpad = currTime;
-                   }
-                }
-                prevTimeCross = currTime;
-                wasCross = !wasCross;
-            }
-        }
-    }
+//    public void verticalOverride(boolean cross, boolean dpad_up, boolean dpad_down){
+//        //manual override for vertical slide
+//        loopTimeCross = currTime - prevTimeCross;
+//        loopTimedpad = currTime - prevTimedpad;
+//        //update input from gamepad
+//        if (cross) {
+//            if(loopTimeCross >= desiredLoopms){
+//                if(wasCross){
+//                    slidePose = verticalSlide.returnPose();
+//                   if(loopTimedpad >= desiredLoopms){
+//                       if(dpad_up){
+//                           slidePose += 200;
+//                           verticalSlide.setPose(slidePose);
+//                       }
+//                       if(dpad_down){
+//                           slidePose -= 200;
+//                           verticalSlide.setPose(slidePose);
+//                       }
+//                       prevTimedpad = currTime;
+//                   }
+//                }
+//                prevTimeCross = currTime;
+//                wasCross = !wasCross;
+//            }
+//        }
+//    }
     double loopTimeDpad_left = 0; double prevTimeDpad_left = 0; boolean wasDpad_left = false;
     public void roll(boolean DPad_left){
         loopTimeDpad_left = currTime - prevTimeDpad_left;
@@ -300,6 +304,31 @@ public class Attachment {
             }
         }
     }
+    double loopTimeCross; double prevTimeCross = 0.0; boolean wasCross = false;
+    public void driveBasket(boolean cross){
+        loopTimeCross = currTime - prevTimeCross;
+        if(cross) {
+            if(loopTimeCross >= desiredLoopms) {
+                if(wasCross) {
+                    TrajectoryActionBuilder Basket = drive.actionBuilder(new Pose2d(drive.getLastPinpointPose().position.x, drive.getLastPinpointPose().position.y, drive.getLastPinpointPose().heading.toDouble()))
+                            .strafeToLinearHeading(new Vector2d(basketX, basketY), Math.toRadians(217));
+                    if (GlobalVariables.autoStarted) {
+                        Actions.runBlocking(new SequentialAction(
+                                Basket.build()
+                                ));
+                    } else {
+                       Actions.runBlocking(new SequentialAction(
+
+                       ));
+                    }
+                } else {
+                    drive.setDrivePowers(new PoseVelocity2d(new Vector2d(0,0), 0));
+                }
+                prevTimeCross = currTime;
+                wasCross = !wasCross;
+            }
+        }
+    }
 
     public void updateTime(long time){
         currTime = time;
@@ -313,7 +342,6 @@ public class Attachment {
             }
         }
         runningActions = newActions;
-
         dash.sendTelemetryPacket(packet);
     }
 

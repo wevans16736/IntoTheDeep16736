@@ -86,10 +86,8 @@ public class Auto extends LinearOpMode {
 
         DetectBlockActions vision = new DetectBlockActions(hardwareMap);
 
-        RobotSensor robotSensor = new RobotSensor(telemetry, drive, vision, hardwareMap);
-
         Trajectory trajectory = new Trajectory(drive, pose, verticalSlide, verticalWrist, verticalGrabber,
-                verticalHanger, horizontalSlide, horizontalRoll, horizontalGrabber, horizontalWrist, robotSensor);
+                verticalHanger, horizontalSlide, horizontalRoll, horizontalGrabber, horizontalWrist);
 
         TrajectoryLeft trajectoryLeft = new TrajectoryLeft(drive, pose, verticalSlide, verticalWrist, verticalGrabber,
                 verticalHanger, horizontalSlide, horizontalRoll, horizontalGrabber, horizontalWrist);

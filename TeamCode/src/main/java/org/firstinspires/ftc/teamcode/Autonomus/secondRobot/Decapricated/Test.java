@@ -47,11 +47,8 @@ public class Test extends LinearOpMode {
         pose = new Pose2d(0, 0, Math.toRadians(90));
         drive = new PinpointDrive(hardwareMap, pose);
 
-        RobotSensor robotSensor = new RobotSensor(telemetry, drive);
-
-
         TestTrajectory TestTrajectory = new TestTrajectory(drive, pose, verticalSlide, verticalWrist, verticalGrabber,
-                verticalHanger, horizontalSlide, horizontalRoll, horizontalGrabber, horizontalWrist, robotSensor);
+                verticalHanger, horizontalSlide, horizontalRoll, horizontalGrabber, horizontalWrist);
 
         //wait for the start button to be press
         waitForStart();

@@ -37,6 +37,14 @@ public class VerticalSlideRR {
         verticalSlideMotorRight.setTargetPosition(0);
         verticalSlideMotorRight.setVelocity(5000);
 
+        while(!magnetSwitch.isPressed()){
+            verticalSlideMotorLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            verticalSlideMotorRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            verticalSlideMotorLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            verticalSlideMotorRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            verticalSlideMotorLeft.setPower(-0.5);
+            verticalSlideMotorRight.setPower(-0.5);
+        }
 
     }
 

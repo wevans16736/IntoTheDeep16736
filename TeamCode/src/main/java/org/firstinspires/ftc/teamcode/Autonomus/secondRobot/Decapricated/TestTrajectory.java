@@ -47,7 +47,7 @@ public class TestTrajectory {
                           VerticalWristRR verticalWristRR, VerticalGrabberRR verticalGrabberRR,
                           VerticalHangerRR verticalHangerRR, HorizontalSlideRR horizontalSlideRR,
                           HorizontalRollRR horizontalRollRR, HorizontalGrabberRR horizontalGrabberRR,
-                          HorizontalWristRR horizontalWristRR, RobotSensor robotSensor) {
+                          HorizontalWristRR horizontalWristRR) {
         this.drive = drive;
         this.pose = pose;
         this.verticalSlideRR = verticalSlideRR;
@@ -58,7 +58,6 @@ public class TestTrajectory {
         this.horizontalRollRR = horizontalRollRR;
         this.horizontalGrabberRR = horizontalGrabberRR;
         this.horizontalWristRR = horizontalWristRR;
-        this.robotSensor = robotSensor;
 
         currentTrajectory = drive.actionBuilder(pose);
     }

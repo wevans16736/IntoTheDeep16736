@@ -30,7 +30,7 @@ public class TrajectoryLeft {
     public TrajectoryLeft(PinpointDrive drive, Pose2d pose, VerticalSlideRR verticalSlideRR,
                       VerticalWristRR verticalWristRR, VerticalGrabberRR verticalGrabberRR,
                       VerticalHangerRR verticalHangerRR, HorizontalSlideRR horizontalSlideRR, HorizontalRollRR horizontalRollRR,
-                      HorizontalGrabberRR horizontalGrabberRR, HorizontalWristRR horizontalWristRR, RobotSensor robotSensor){
+                      HorizontalGrabberRR horizontalGrabberRR, HorizontalWristRR horizontalWristRR){
         this.drive = drive;
         this.pose = pose;
         this.verticalSlideRR = verticalSlideRR;
@@ -41,7 +41,6 @@ public class TrajectoryLeft {
         this.horizontalRollRR = horizontalRollRR;
         this.horizontalGrabberRR = horizontalGrabberRR;
         this.horizontalWristRR = horizontalWristRR;
-        this.robotSensor = robotSensor;
 
         currentTrajectory = drive.actionBuilder(pose);
     }

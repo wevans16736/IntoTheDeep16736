@@ -55,10 +55,8 @@ public class Test extends LinearOpMode {
 
         DetectBlockActions vision = new DetectBlockActions(hardwareMap);
 
-        RobotSensor robotSensor = new RobotSensor(telemetry, drive, vision, hardwareMap);
-
         TrajectoryTest trajectory = new TrajectoryTest(drive, pose, verticalSlide, verticalWrist, verticalGrabber,
-                verticalHanger, horizontalSlide, horizontalRoll, horizontalGrabber, horizontalWrist, robotSensor, telemetry);
+                verticalHanger, horizontalSlide, horizontalRoll, horizontalGrabber, horizontalWrist, telemetry);
 
 
         //wait for the start button to be press

@@ -52,10 +52,8 @@ public class TestTransfer extends LinearOpMode {
             drive = new PinpointDrive(hardwareMap, pose);
         }
 
-        RobotSensor robotSensor = new RobotSensor(telemetry, drive);
-
         Trajectory trajectory = new Trajectory(drive, pose, verticalSlide, verticalWrist, verticalGrabber,
-                verticalHanger, horizontalSlide, horizontalRoll, horizontalGrabber, horizontalWrist, robotSensor);
+                verticalHanger, horizontalSlide, horizontalRoll, horizontalGrabber, horizontalWrist);
 
         //wait for the start button to be press
         waitForStart();

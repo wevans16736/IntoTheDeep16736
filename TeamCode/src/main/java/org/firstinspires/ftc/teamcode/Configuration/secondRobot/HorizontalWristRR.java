@@ -7,6 +7,7 @@ import com.acmerobotics.roadrunner.Action;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
+import org.firstinspires.ftc.teamcode.GlobalVariables;
 import org.firstinspires.ftc.teamcode.secondrobot.constants.ConfigConstants;
 
 public class HorizontalWristRR {
@@ -32,5 +33,9 @@ public class HorizontalWristRR {
 
     public void setPose(double pose){
         HorizontalWristServo.setPosition(pose);
+    }
+    public double getRotation(){
+        double tickPerDegree = (ConfigurationSecondRobot.sideway)/(ConfigurationSecondRobot.flat);
+        return ConfigurationSecondRobot.flat + (tickPerDegree* GlobalVariables.Roll);
     }
 }

@@ -70,14 +70,13 @@ public class Telop extends OpMode {
             this.currentPose = GlobalVariables.currentPose;
             this.drive = new PinpointDrive(hardwareMap, currentPose);
         }
-
         driveTrain = new DriveTrain(frontLeft, frontRight, rearLeft, rearRight, imu, drive);
 
         driveActions = new DriveActions(telemetry, hardwareMap);
 
         attachment = new Attachment(verticalSlide, verticalWrist, verticalGrabber,
                 horizontalSlide, horizontalRoll, horizontalGrabber, horizontalWrist, verticalHanger,
-                runningActions, dash);
+                runningActions, dash, drive);
     }
     boolean percise = false;
     @Override
@@ -102,6 +101,10 @@ public class Telop extends OpMode {
         percise = attachment.percise(gamepad1.square);
         //manual slide override
 //        attachment.verticalOverride(gamepad1.cross, gamepad1.dpad_up, gamepad1.dpad_down);
+        //basket
+        GlobalVariables.autoStarted = true;
+        attachment.driveBasket(gamepad1.cross);
+
 
 //
 //        driveActions.drive(

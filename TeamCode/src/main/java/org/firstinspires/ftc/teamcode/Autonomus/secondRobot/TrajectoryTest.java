@@ -43,7 +43,7 @@ public class TrajectoryTest {
     public TrajectoryTest(PinpointDrive drive, Pose2d pose, VerticalSlideRR verticalSlideRR,
                           VerticalWristRR verticalWristRR, VerticalGrabberRR verticalGrabberRR,
                           VerticalHangerRR verticalHangerRR, HorizontalSlideRR horizontalSlideRR, HorizontalRollRR horizontalRollRR,
-                          HorizontalGrabberRR horizontalGrabberRR, HorizontalWristRR horizontalWristRR, RobotSensor robotSensor, Telemetry telemetry) {
+                          HorizontalGrabberRR horizontalGrabberRR, HorizontalWristRR horizontalWristRR, Telemetry telemetry) {
         this.drive = drive;
         this.pose = pose;
         this.verticalSlideRR = verticalSlideRR;
@@ -74,8 +74,8 @@ public class TrajectoryTest {
         double x = GlobalVariables.X;
         double y = GlobalVariables.Y;
         TrajectoryActionBuilder Butter = currentTrajectory
-                .strafeToConstantHeading(new Vector2d(x,y))
-                .stopAndAdd(robotSensor.visionOff());
+                .strafeToConstantHeading(new Vector2d(x,y));
+//                .stopAndAdd(robotSensor.visionOff());
 //        .strafeToConstantHeading(new Vector2d(0, -5));
         telemetry.addData("X", GlobalVariables.X);
         telemetry.addData("Y", GlobalVariables.Y);
@@ -89,8 +89,8 @@ public class TrajectoryTest {
                 .waitSeconds(1)
                 .stopAndAdd(robotSensor.visionScan())
                 .waitSeconds(1)
-                .stopAndAdd(robotSensor.visionOff())
-                .stopAndAdd(robotSensor.output())
+//                .stopAndAdd(robotSensor.visionOff())
+//                .stopAndAdd(robotSensor.output())
                 .waitSeconds(5000000);
 //                .strafeToConstantHeading(new Vector2d(robotSensor.grabX(), robotSensor.grabY()));
 
