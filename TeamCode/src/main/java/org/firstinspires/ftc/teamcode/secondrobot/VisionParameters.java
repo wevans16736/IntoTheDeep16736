@@ -20,4 +20,10 @@ public class VisionParameters {
     public static double b2h = 255;
     public static double b2s = 255;
     public static double b2v = 255;
+
+    public static double alpha = 1.2;
+    public static double gamma = 0;
+
+    public static double threshold1 = 50;
+    public static double threshold2 = 70;
 }

@@ -1,6 +1,8 @@
 package org.firstinspires.ftc.teamcode.secondrobot;
 
 import android.graphics.Canvas;
+import android.graphics.Paint;
+import android.graphics.RectF;
 
 import org.firstinspires.ftc.robotcore.internal.camera.calibration.CameraCalibration;
 import org.firstinspires.ftc.vision.VisionProcessor;
@@ -153,8 +155,8 @@ class ContourLocatorProcessorImpl extends ContourLocatorProcessor implements Vis
         Mat gray = new Mat();
         input.copyTo(gray);
         Imgproc.cvtColor(input, gray, Imgproc.COLOR_RGB2GRAY);
-        Core.addWeighted(gray, 2.3, gray, 0, -120, gray);
-        Imgproc.Canny(gray, gray, 50, 70);
+        Core.addWeighted(gray, VisionParameters.alpha, gray, 0, VisionParameters.gamma, gray);
+        Imgproc.Canny(gray, gray, VisionParameters.threshold1, VisionParameters.threshold2);
         Mat element = Imgproc.getStructuringElement(Imgproc.CV_SHAPE_ELLIPSE, new Size(4, 4));
         Imgproc.dilate(gray, gray, element);
         Core.inRange(gray, new Scalar(0, 0, 0), new Scalar(100, 100, 100), gray);
@@ -178,8 +180,7 @@ class ContourLocatorProcessorImpl extends ContourLocatorProcessor implements Vis
         return gray;
 
     }
-    public List newContours(Mat canny) {
-        Mat contoursMat = canny;
+    public List<RotatedRect> newContours(Mat canny) {
         contours = new ArrayList<>();
         Mat hierarchy = new Mat();
         Imgproc.findContours(canny, contours, hierarchy, Imgproc.RETR_TREE, Imgproc.CHAIN_APPROX_SIMPLE);
@@ -188,28 +189,31 @@ class ContourLocatorProcessorImpl extends ContourLocatorProcessor implements Vis
         double minArea =  10000;
         double maxHeight = 400;
         double maxRatio = 0.7;
+        double maxDistRatio = 400000;
         List<RotatedRect> newContours = new ArrayList<>();
         for (int i = 0; i < contours.size(); i++) {
             if (contours.get(i).rows() > 5) {
                 RotatedRect newOval = Imgproc.fitEllipseDirect(contours.get(i));
                 double area = newOval.size.area();
+                Point position = pixelToPosition(newOval.center);
+                double distRatio = area * Math.sqrt(Math.pow(position.x, 2) + Math.pow(position.y, 2));
                 double contourArea = Imgproc.contourArea(contours.get(i));
                 double areaRatio = contourArea / area;
-                if (minArea < area && area < maxArea && newOval.center.x < maxHeight && areaRatio < maxRatio) {
+                if (minArea < area && area < maxArea && newOval.center.x < maxHeight && areaRatio < maxRatio && distRatio < maxDistRatio) {
                     newContours.add(newOval);
-                    Imgproc.ellipse(contoursMat, newOval, new Scalar(0, 0, 0));
-                    Imgproc.putText(contoursMat, newOval.size.toString(), newOval.center, 1, 3, new Scalar(0,0,0));
+                    Imgproc.ellipse(canny, newOval, new Scalar(0, 0, 0));
+                    Imgproc.putText(canny, newOval.size.toString(), newOval.center, 1, 3, new Scalar(0,0,0));
                 }
             }
         }
-        Imgcodecs.imwrite("src/main/java/org/firstinspires/ftc/teamcode/testing/tests/data/final mask contours.jpg", contoursMat);
+        Imgcodecs.imwrite("src/main/java/org/firstinspires/ftc/teamcode/testing/tests/data/final mask contours.jpg", canny);
 
         return newContours;
     }
     public RotatedRect bestContour(List<RotatedRect> ovals) {
         double minDistance = 1000000;
         double maxDistance = 2.2;
-        RotatedRect bestContour = new RotatedRect();
+        RotatedRect bestContour = new RotatedRect(new Point(0,0), new Size(0,0), 0);
         for (int i = 0; i < ovals.size(); i++) {
             boolean isTooClose = false;
             for (int j = 0; j < ovals.size() - 1; j++) {
@@ -250,7 +254,8 @@ class ContourLocatorProcessorImpl extends ContourLocatorProcessor implements Vis
         Imgcodecs.imwrite("/sdcard/FIRST/java/src/img.jpg", frame);
         Mat processed = newMethod(frame);
         Imgcodecs.imwrite("/sdcard/FIRST/java/src/processed.jpg", processed);
-        RotatedRect rect = bestContour(newContours(processed));
+        List<RotatedRect> contoursList = newContours(processed);
+        RotatedRect rect = bestContour(contoursList);
         if (!Objects.equals(rect, new RotatedRect())) {
             setCenterAndAngle(rect.center, rect.angle);
         }
@@ -265,5 +270,9 @@ class ContourLocatorProcessorImpl extends ContourLocatorProcessor implements Vis
     }
 
     @Override
-    public void onDrawFrame(Canvas canvas, int onscreenWidth, int onscreenHeight, float scaleBmpPxToCanvasPx, float scaleCanvasDensity, Object userContext) {}
+    public void onDrawFrame(Canvas canvas, int onscreenWidth, int onscreenHeight, float scaleBmpPxToCanvasPx, float scaleCanvasDensity, Object userContext) {
+//        RotatedRect oval = (RotatedRect) userContext;
+//        RotatedRect newOval = new RotatedRect(new Point(oval.center.x * scaleBmpPxToCanvasPx, oval.center.y * scaleBmpPxToCanvasPx), new Size(oval.size.width * scaleBmpPxToCanvasPx, oval.size.height * scaleBmpPxToCanvasPx), oval.angle);
+//        canvas.drawCircle((float) newOval.center.x, (float) newOval.center.y, 50, new Paint());
+    }
 }
