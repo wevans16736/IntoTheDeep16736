@@ -25,6 +25,7 @@ public class HorizontalSlideActions {
         armMotor.setDirection(DcMotorSimple.Direction.REVERSE);
         armMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         armMotor.setTargetPosition(0);
+        armMotor.setVelocity(3000);
         armMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
     }
     double prevTime = System.currentTimeMillis();
