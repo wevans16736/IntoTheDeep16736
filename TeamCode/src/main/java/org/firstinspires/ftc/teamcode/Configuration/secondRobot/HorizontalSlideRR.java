@@ -56,7 +56,7 @@ public class HorizontalSlideRR {
         horizontalSlideMotor.setTargetPosition(pose);
     }
     public int getDistance(){
-        double distance = GlobalVariables.Y + Math.cos(Math.toRadians((horizontalSlideMotor.getCurrentPosition() / 7.0) - 70.0) * -1.0) * 13.0;
+        double distance = GlobalVariables.X + Math.cos(Math.toRadians((horizontalSlideMotor.getCurrentPosition() / 7.0) - 70.0) * -1.0) * 13.0;
         double ticks = 7.0 * (70.0 - Math.toDegrees(Math.acos(distance/13.0)));
         return (int) Range.clip(ticks, 0, 650);
     }

@@ -95,8 +95,8 @@ public class RobotSensor {
         public boolean run(@NonNull TelemetryPacket telemetryPacket) {
             Point pixelLoc = vision.getCenter();
             Point point = vision.pixelToPosition(pixelLoc);
-            GlobalVariables.X = point.x*(-1) + drive.getLastPinpointPose().position.x;
-            GlobalVariables.Y = vision.pixelToPosition(vision.getCenter()).y;
+            GlobalVariables.Y = point.x*(-1) + drive.getLastPinpointPose().position.y;
+            GlobalVariables.X = vision.pixelToPosition(vision.getCenter()).y;
             GlobalVariables.Roll = vision.getAngle();
 
 

@@ -18,7 +18,7 @@ public class VerticalSlideRR {
     DcMotorEx verticalSlideMotorRight;
     TouchSensor magnetSwitch;
     public VerticalSlideRR(HardwareMap hardwareMap){
-
+        magnetSwitch = hardwareMap.get(TouchSensor.class, ConfigConstants.VERTICAL_SWITCH);
         verticalSlideMotorLeft = hardwareMap.get(DcMotorEx.class, ConfigConstants.VERTICAL_SLIDE1);
         verticalSlideMotorLeft.setDirection(DcMotorSimple.Direction.REVERSE);
         verticalSlideMotorLeft.setPower(1);

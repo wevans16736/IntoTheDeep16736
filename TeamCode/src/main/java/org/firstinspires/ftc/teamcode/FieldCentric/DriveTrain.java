@@ -15,17 +15,13 @@ import org.firstinspires.ftc.teamcode.PinpointDrive;
 @Config
 public class DriveTrain {
     DcMotorEx frontLeft; DcMotorEx rearLeft; DcMotorEx frontRight; DcMotorEx rearRight; IMU imu; PinpointDrive drive;
-    double flActive = 1; double rlActive = 1; double frActive = 1; double rrActive = 1; double botHeading;
+    double active; double botHeading;
 
     public DriveTrain(DcMotorEx frontLeft, DcMotorEx rearLeft, DcMotorEx frontRight, DcMotorEx rearRight, IMU imu, PinpointDrive drive){
         this.frontLeft = frontLeft;
         this.frontRight = frontRight;
         this.rearRight = rearRight;
         this.rearLeft = rearLeft;
-        frontLeft.setDirection(DcMotorSimple.Direction.REVERSE);
-        frontRight.setDirection(DcMotorSimple.Direction.REVERSE);
-        rearRight.setDirection(DcMotorSimple.Direction.FORWARD);
-        rearLeft.setDirection(DcMotorSimple.Direction.FORWARD);
         this.imu = imu;
         IMU.Parameters parameters = new IMU.Parameters(new RevHubOrientationOnRobot(
                 RevHubOrientationOnRobot.LogoFacingDirection.UP,
@@ -34,22 +30,16 @@ public class DriveTrain {
         this.imu.initialize(parameters);
         this.drive = drive;
     }
-    public void drive(double leftStickY, double leftStickX, double rightStickX, boolean reset, boolean percise){
+    public void drive(double leftStickY, double leftStickX, double rightStickX, boolean reset, boolean percise, double heading){
         //take input from gamepad
         double y = -leftStickY;
         double x = leftStickX;
         double rx = rightStickX;
 
         if(percise){
-            flActive = .5;
-            rlActive = .5;
-            frActive = .5;
-            rrActive = .5;
+           active = .5;
         } else {
-            flActive = 1;
-            rlActive = 1;
-            frActive = 1;
-            rrActive = 1;
+           active = 1;
         }
 
 //        if(reset){
@@ -60,8 +50,8 @@ public class DriveTrain {
 //            botHeading = imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS) + curentPose.heading.toDouble();
 //        }else {
 //            botHeading = imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS);
-        botHeading = drive.getLastPinpointPose().heading.toDouble();
 //        }
+        botHeading = heading - Math.toRadians(90);
         //Rotate the movement direction counter to the bot's rotation
         double rotX = x * Math.cos(-botHeading) - y * Math.sin(-botHeading);
         double rotY = x * Math.sin(-botHeading) + y * Math.cos(-botHeading);
@@ -74,9 +64,9 @@ public class DriveTrain {
         double frontRightPower = (rotY - rotX + rx) / denominator;
         double rearRightPower = (rotY + rotX - rx) / denominator;
 
-        frontLeft.setPower((frontLeftPower * flActive));
-        frontRight.setPower((frontRightPower * frActive));
-        rearRight.setPower((rearRightPower * rrActive));
-        rearLeft.setPower((rearLeftPower * rlActive));
+        frontLeft.setPower((frontLeftPower * active));
+        frontRight.setPower((frontRightPower * active));
+        rearRight.setPower((rearRightPower * active));
+        rearLeft.setPower((rearLeftPower * active));
     }
 }

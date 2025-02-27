@@ -78,8 +78,6 @@ public class Auto5Butter extends LinearOpMode {
         //if the stop button press then stop the robot
         if (isStopRequested()) return;
 
-        GlobalVariables.autoStarted = true;
-
         Actions.runBlocking(new SequentialAction(
                 hang1,
                 butter1,
@@ -97,6 +95,7 @@ public class Auto5Butter extends LinearOpMode {
                 Human3,
                 hang5
         ));
+        GlobalVariables.autoStarted = true;
         GlobalVariables.currentPose = drive.getLastPinpointPose();
     }
 }

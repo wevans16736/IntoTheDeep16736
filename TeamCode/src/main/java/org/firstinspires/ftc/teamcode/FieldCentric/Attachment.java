@@ -2,15 +2,19 @@ package org.firstinspires.ftc.teamcode.FieldCentric;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
+import com.acmerobotics.roadrunner.AccelConstraint;
 import com.acmerobotics.roadrunner.Action;
 import com.acmerobotics.roadrunner.CancelableProfile;
 import com.acmerobotics.roadrunner.InstantAction;
 import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.PoseVelocity2d;
+import com.acmerobotics.roadrunner.ProfileParams;
 import com.acmerobotics.roadrunner.SequentialAction;
 import com.acmerobotics.roadrunner.SleepAction;
 import com.acmerobotics.roadrunner.Trajectory;
 import com.acmerobotics.roadrunner.TrajectoryActionBuilder;
+import com.acmerobotics.roadrunner.TrajectoryBuilder;
+import com.acmerobotics.roadrunner.TrajectoryBuilderParams;
 import com.acmerobotics.roadrunner.Vector2d;
 import com.acmerobotics.roadrunner.ftc.Actions;
 
@@ -24,6 +28,7 @@ import org.firstinspires.ftc.teamcode.Configuration.secondRobot.VerticalHangerRR
 import org.firstinspires.ftc.teamcode.Configuration.secondRobot.VerticalSlideRR;
 import org.firstinspires.ftc.teamcode.Configuration.secondRobot.VerticalWristRR;
 import org.firstinspires.ftc.teamcode.GlobalVariables;
+import org.firstinspires.ftc.teamcode.MecanumDrive;
 import org.firstinspires.ftc.teamcode.PinpointDrive;
 
 import java.util.ArrayList;
@@ -38,7 +43,7 @@ public class Attachment {
     PinpointDrive drive;
     double currTime; double desiredLoopms = 250;
     private List<Action> runningActions; private FtcDashboard dash;
-    TelemetryPacket packet = new TelemetryPacket(); double basketX = -56; double basketY = -55;
+    TelemetryPacket packet = new TelemetryPacket();
 
     public Attachment(VerticalSlideRR verticalSlide, VerticalWristRR verticalWrist,
                       VerticalGrabberRR verticalGrabber, HorizontalSlideRR horizontalSlide,
@@ -305,28 +310,26 @@ public class Attachment {
         }
     }
     double loopTimeCross; double prevTimeCross = 0.0; boolean wasCross = false;
-    public void driveBasket(boolean cross){
-        loopTimeCross = currTime - prevTimeCross;
-        if(cross) {
-            if(loopTimeCross >= desiredLoopms) {
-                if(wasCross) {
-                    TrajectoryActionBuilder Basket = drive.actionBuilder(new Pose2d(drive.getLastPinpointPose().position.x, drive.getLastPinpointPose().position.y, drive.getLastPinpointPose().heading.toDouble()))
-                            .strafeToLinearHeading(new Vector2d(basketX, basketY), Math.toRadians(217));
-                    if (GlobalVariables.autoStarted) {
-                        Actions.runBlocking(new SequentialAction(
-                                Basket.build()
-                                ));
-                    } else {
-                       Actions.runBlocking(new SequentialAction(
 
-                       ));
-                    }
-                } else {
-                    drive.setDrivePowers(new PoseVelocity2d(new Vector2d(0,0), 0));
-                }
-                prevTimeCross = currTime;
-                wasCross = !wasCross;
+    double basketX = -56; double basketY = -55;
+    public void driveBasket(boolean cross){
+        if(cross) {
+            GlobalVariables.driveDisable = true;
+            drive.updatePoseEstimate();
+            if (GlobalVariables.autoStarted) {
+                TrajectoryActionBuilder Bucket =  drive.actionBuilder(drive.getLastPinpointPose())
+                        .strafeToLinearHeading(new Vector2d(basketX, basketY), Math.toRadians(217));
+                Actions.runBlocking(new SequentialAction(
+                       Bucket.build()
+                ));
+                GlobalVariables.driveDisable = false;
+            } else {
+                Actions.runBlocking(new SequentialAction());
             }
+        } if(!cross) {
+            GlobalVariables.cancel = true;
+            drive.setDrivePowers(new PoseVelocity2d(new Vector2d(0,0), 0));
+            GlobalVariables.driveDisable = false;
         }
     }
 

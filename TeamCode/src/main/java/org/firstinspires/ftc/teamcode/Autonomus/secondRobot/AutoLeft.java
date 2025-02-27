@@ -18,6 +18,7 @@ import org.firstinspires.ftc.teamcode.Configuration.secondRobot.VerticalGrabberR
 import org.firstinspires.ftc.teamcode.Configuration.secondRobot.VerticalHangerRR;
 import org.firstinspires.ftc.teamcode.Configuration.secondRobot.VerticalSlideRR;
 import org.firstinspires.ftc.teamcode.Configuration.secondRobot.VerticalWristRR;
+import org.firstinspires.ftc.teamcode.GlobalVariables;
 import org.firstinspires.ftc.teamcode.PinpointDrive;
 import org.firstinspires.ftc.teamcode.secondrobot.DetectBlockActions;
 @Autonomous(name = "AutoLeft")
@@ -75,6 +76,7 @@ public class AutoLeft extends LinearOpMode {
 
             Actions.runBlocking(new SequentialAction(
                     Basket1,
+                    new SleepAction(1.8),
                     Park1,
                     new ParallelAction(
                             Basket5,
@@ -95,8 +97,9 @@ public class AutoLeft extends LinearOpMode {
                             Basket4,
                             Attachment3
                     ),
-                    Park2,
-                    new SleepAction(50000)
+                    Park2
                     ));
+            GlobalVariables.autoStarted = true;
+            GlobalVariables.currentPose = drive.getLastPinpointPose();
         }
 }

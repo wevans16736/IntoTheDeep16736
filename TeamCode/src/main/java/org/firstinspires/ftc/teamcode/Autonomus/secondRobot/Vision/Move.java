@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.Autonomus.secondRobot.Vision;
 import com.acmerobotics.roadrunner.ParallelAction;
 import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.SequentialAction;
+import com.acmerobotics.roadrunner.SleepAction;
 import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -57,7 +58,8 @@ public class Move extends LinearOpMode {
                 new ParallelAction(
                         trajectory.getInitial(),
                         robotSensor.visionOn()
-                )
+                ),
+                new SleepAction(2)
         ));
         robotSensor.visionScan();
         Actions.runBlocking(new SequentialAction(

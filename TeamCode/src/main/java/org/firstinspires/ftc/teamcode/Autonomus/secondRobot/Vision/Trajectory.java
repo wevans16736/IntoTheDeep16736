@@ -42,7 +42,7 @@ public class Trajectory {
     }
    public Action getInitial(){
         TrajectoryActionBuilder initial = currentTrajectory
-                .strafeToConstantHeading(new Vector2d(0, 10));
+                .strafeToConstantHeading(new Vector2d(0, -5));
         currentTrajectory = initial.endTrajectory().fresh();
         return initial.build();
    }
@@ -53,7 +53,7 @@ public class Trajectory {
                 .stopAndAdd(horizontalWristRR.horizontalWristAction(ConfigurationSecondRobot.horizontalWristIntake))
                 .stopAndAdd(horizontalGrabberRR.horizontalGrabberAction(ConfigurationSecondRobot.horizontalGrabberWide))
                 .stopAndAdd(verticalGrabberRR.verticalGrabberAction(ConfigurationSecondRobot.verticalOpen))
-                .strafeToConstantHeading(new Vector2d(GlobalVariables.X, drive.getLastPinpointPose().position.y))
+                .strafeToConstantHeading(new Vector2d(drive.getLastPinpointPose().position.x, GlobalVariables.Y))
                 .stopAndAdd(horizontalGrabberRR.horizontalGrabberAction(ConfigurationSecondRobot.horizontalGrabberClose))
                 .waitSeconds(ConfigurationSecondRobot.horizontalGrabberWideTime/1000)
                 .stopAndAdd(horizontalRollRR.horizontalRollAction(ConfigurationSecondRobot.flat))

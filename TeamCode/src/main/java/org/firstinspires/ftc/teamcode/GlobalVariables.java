@@ -15,5 +15,7 @@ public class GlobalVariables {
     public static double X = 0;
     public static double Y = 0;
     public static double Roll = 0;
+    public static boolean driveDisable = false;
+    public static boolean cancel = false;
 
 }

@@ -2,7 +2,6 @@ package org.firstinspires.ftc.teamcode;
 
 import androidx.annotation.NonNull;
 
-import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.canvas.Canvas;
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
@@ -40,7 +39,6 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.robotcore.hardware.VoltageSensor;
 
-import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.YawPitchRollAngles;
 import org.firstinspires.ftc.teamcode.Configuration.secondRobot.ConfigurationSecondRobot;
@@ -114,7 +112,7 @@ public class MecanumDrive {
     public final AccelConstraint defaultAccelConstraint =
             new ProfileAccelConstraint(PARAMS.minProfileAccel, PARAMS.maxProfileAccel);
 
-    public final DcMotorEx leftFront, leftBack, rightBack, rightFront;
+    public DcMotorEx leftFront = null, leftBack = null, rightBack = null, rightFront = null;
 
     public final VoltageSensor voltageSensor;
 
@@ -289,6 +287,7 @@ public class MecanumDrive {
             }
         }
 
+
         @Override
         public boolean run(@NonNull TelemetryPacket p) {
             double t;
@@ -305,6 +304,10 @@ public class MecanumDrive {
             PoseVelocity2d robotVelRobot = updatePoseEstimate();
 
             Pose2d error = txWorldTarget.value().minusExp(pose);
+            if(GlobalVariables.cancel){
+                t = timeTrajectory.duration;
+                GlobalVariables.cancel = false;
+            }
 
             if (t >= timeTrajectory.duration && error.position.norm() < 1 && error.heading.toDouble() < 1 && robotVelRobot.linearVel.norm() < .5 || t>= timeTrajectory.duration + .05) {
                 leftFront.setPower(0);
@@ -314,6 +317,7 @@ public class MecanumDrive {
 
                 return false;
             }
+
 
 //            Pose2dDual<Time> txWorldTarget = timeTrajectory.get(t);
 //            targetPoseWriter.write(new PoseMessage(txWorldTarget.value()));
