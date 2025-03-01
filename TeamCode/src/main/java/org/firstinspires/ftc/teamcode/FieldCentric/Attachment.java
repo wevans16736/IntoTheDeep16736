@@ -317,12 +317,27 @@ public class Attachment {
             GlobalVariables.driveDisable = true;
             drive.updatePoseEstimate();
             if (GlobalVariables.autoStarted) {
-                TrajectoryActionBuilder Bucket =  drive.actionBuilder(drive.getLastPinpointPose())
-                        .strafeToLinearHeading(new Vector2d(basketX, basketY), Math.toRadians(217));
-                Actions.runBlocking(new SequentialAction(
-                       Bucket.build()
-                ));
-                GlobalVariables.driveDisable = false;
+                if(drive.getLastPinpointPose().position.x < -20 && drive.getLastPinpointPose().position.x > - 50 &&
+                    drive.getLastPinpointPose().position.y < 20 && drive.getLastPinpointPose().position.y > -20){
+                    TrajectoryActionBuilder Bucket = drive.actionBuilder(drive.getLastPinpointPose())
+                            .strafeToLinearHeading(new Vector2d(basketX, drive.getLastPinpointPose().position.y), Math.toRadians(-90))
+                            .stopAndAdd(verticalSlide.verticalSlideAction(ConfigurationSecondRobot.topBasket))
+                            .stopAndAdd(verticalWrist.VerticalWristAction(ConfigurationSecondRobot.verticalWristBasket))
+                            .strafeToLinearHeading(new Vector2d(basketX, basketY), Math.toRadians(217));
+                    Actions.runBlocking(new SequentialAction(
+                            Bucket.build()
+                    ));
+                    GlobalVariables.driveDisable = false;
+                } else {
+                    TrajectoryActionBuilder Bucket = drive.actionBuilder(drive.getLastPinpointPose())
+                            .stopAndAdd(verticalSlide.verticalSlideAction(ConfigurationSecondRobot.topBasket))
+                            .stopAndAdd(verticalWrist.VerticalWristAction(ConfigurationSecondRobot.verticalWristBasket))
+                            .strafeToLinearHeading(new Vector2d(basketX, basketY), Math.toRadians(217));
+                    Actions.runBlocking(new SequentialAction(
+                            Bucket.build()
+                    ));
+                    GlobalVariables.driveDisable = false;
+                }
             } else {
                 Actions.runBlocking(new SequentialAction());
             }

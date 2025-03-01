@@ -18,7 +18,7 @@ public class VerticalSlideRR {
     DcMotorEx verticalSlideMotorRight;
     TouchSensor magnetSwitch;
     public VerticalSlideRR(HardwareMap hardwareMap){
-        magnetSwitch = hardwareMap.get(TouchSensor.class, ConfigConstants.VERTICAL_SWITCH);
+//        magnetSwitch = hardwareMap.get(TouchSensor.class, ConfigConstants.VERTICAL_SWITCH);
         verticalSlideMotorLeft = hardwareMap.get(DcMotorEx.class, ConfigConstants.VERTICAL_SLIDE1);
         verticalSlideMotorLeft.setDirection(DcMotorSimple.Direction.REVERSE);
         verticalSlideMotorLeft.setPower(1);
@@ -37,14 +37,14 @@ public class VerticalSlideRR {
         verticalSlideMotorRight.setTargetPosition(0);
         verticalSlideMotorRight.setVelocity(5000);
 
-        while(!magnetSwitch.isPressed()){
-            verticalSlideMotorLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            verticalSlideMotorRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            verticalSlideMotorLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-            verticalSlideMotorRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-            verticalSlideMotorLeft.setPower(-0.5);
-            verticalSlideMotorRight.setPower(-0.5);
-        }
+//        while(!magnetSwitch.isPressed()){
+//            verticalSlideMotorLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+//            verticalSlideMotorRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+//            verticalSlideMotorLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+//            verticalSlideMotorRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+//            verticalSlideMotorLeft.setPower(-0.5);
+//            verticalSlideMotorRight.setPower(-0.5);
+//        }
 
     }
 

@@ -5,6 +5,7 @@ import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.SequentialAction;
 import com.acmerobotics.roadrunner.SleepAction;
 import com.acmerobotics.roadrunner.ftc.Actions;
+import com.qualcomm.hardware.limelightvision.Limelight3A;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
@@ -40,12 +41,11 @@ public class Move extends LinearOpMode {
         HorizontalWristRR horizontalWrist = new HorizontalWristRR(hardwareMap);
         VerticalHangerRR verticalHanger = new VerticalHangerRR(hardwareMap);
 
-
         pose = new Pose2d(0, 0, Math.toRadians(90));
         drive = new PinpointDrive(hardwareMap, pose);
 
-        DetectBlockActions detect = new DetectBlockActions(hardwareMap);
-        RobotSensor robotSensor = new RobotSensor(telemetry, drive, detect);
+        LimeSweet limeSweet = new LimeSweet(hardwareMap, telemetry);
+
         Trajectory trajectory = new Trajectory(drive, pose, verticalSlide, verticalWrist, verticalGrabber,
                 verticalHanger, horizontalSlide, horizontalRoll, horizontalGrabber, horizontalWrist, telemetry);
 
@@ -56,12 +56,11 @@ public class Move extends LinearOpMode {
 
         Actions.runBlocking(new SequentialAction(
                 new ParallelAction(
-                        trajectory.getInitial(),
-                        robotSensor.visionOn()
+                        trajectory.getInitial()
                 ),
-                new SleepAction(2)
+                new SleepAction(4)
         ));
-        robotSensor.visionScan();
+        limeSweet.scan();
         Actions.runBlocking(new SequentialAction(
                 trajectory.getButter()
         ));

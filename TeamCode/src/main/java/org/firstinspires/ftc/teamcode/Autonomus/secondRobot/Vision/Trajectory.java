@@ -4,6 +4,8 @@ import com.acmerobotics.roadrunner.Action;
 import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.TrajectoryActionBuilder;
 import com.acmerobotics.roadrunner.Vector2d;
+import com.qualcomm.hardware.limelightvision.Limelight3A;
+import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.Configuration.secondRobot.ConfigurationSecondRobot;
@@ -18,12 +20,13 @@ import org.firstinspires.ftc.teamcode.Configuration.secondRobot.VerticalWristRR;
 import org.firstinspires.ftc.teamcode.GlobalVariables;
 import org.firstinspires.ftc.teamcode.PinpointDrive;
 import org.firstinspires.ftc.teamcode.secondrobot.DetectBlockActions;
+import org.opencv.core.Point;
 
 public class Trajectory {
     VerticalSlideRR verticalSlideRR; VerticalWristRR verticalWristRR; VerticalGrabberRR verticalGrabberRR; VerticalHangerRR verticalHangerRR;
     HorizontalSlideRR horizontalSlideRR; HorizontalRollRR horizontalRollRR; HorizontalGrabberRR horizontalGrabberRR;
     HorizontalWristRR horizontalWristRR; PinpointDrive drive; Pose2d pose; TrajectoryActionBuilder currentTrajectory;
-    Telemetry telemetry; DetectBlockActions detect; double x = 0; double y = 0;
+    Telemetry telemetry; double x, y = 0;
     public Trajectory(PinpointDrive drive, Pose2d pose, VerticalSlideRR verticalSlideRR,
                       VerticalWristRR verticalWristRR, VerticalGrabberRR verticalGrabberRR,
                       VerticalHangerRR verticalHangerRR, HorizontalSlideRR horizontalSlideRR, HorizontalRollRR horizontalRollRR,
@@ -38,22 +41,31 @@ public class Trajectory {
         this.horizontalRollRR = horizontalRollRR;
         this.horizontalGrabberRR = horizontalGrabberRR;
         this.horizontalWristRR = horizontalWristRR;
+        this.telemetry = telemetry;
         currentTrajectory = drive.actionBuilder(pose);
+
     }
    public Action getInitial(){
         TrajectoryActionBuilder initial = currentTrajectory
-                .strafeToConstantHeading(new Vector2d(0, -5));
+                .stopAndAdd(horizontalSlideRR.horizontalSlideActions(200))
+                .stopAndAdd(verticalWristRR.VerticalWristAction(ConfigurationSecondRobot.verticalWristWall))
+                .strafeToConstantHeading(new Vector2d(0, 0));
         currentTrajectory = initial.endTrajectory().fresh();
         return initial.build();
    }
    public Action getButter(){
+       int tick = horizontalSlideRR.setSlideDistanceMath(y + horizontalSlideRR.getSlideDistanceMath(), 3000);
+       x = GlobalVariables.Y + drive.getLastPinpointPose().position.x;
+       y = drive.getLastPinpointPose().position.y;
+        telemetry.addData("tick", tick);
+        telemetry.update();
         TrajectoryActionBuilder Butter = currentTrajectory
-                .stopAndAdd(horizontalSlideRR.horizontalSlideActions(horizontalSlideRR.getDistance()))
+                .stopAndAdd(horizontalSlideRR.horizontalSlideActions(tick))
                 .stopAndAdd(horizontalRollRR.horizontalRollAction(horizontalWristRR.getRotation()))
-                .stopAndAdd(horizontalWristRR.horizontalWristAction(ConfigurationSecondRobot.horizontalWristIntake))
                 .stopAndAdd(horizontalGrabberRR.horizontalGrabberAction(ConfigurationSecondRobot.horizontalGrabberWide))
                 .stopAndAdd(verticalGrabberRR.verticalGrabberAction(ConfigurationSecondRobot.verticalOpen))
-                .strafeToConstantHeading(new Vector2d(drive.getLastPinpointPose().position.x, GlobalVariables.Y))
+                .stopAndAdd(horizontalWristRR.horizontalWristAction(ConfigurationSecondRobot.horizontalWristIntake))
+                .strafeToConstantHeading(new Vector2d(x, y))
                 .stopAndAdd(horizontalGrabberRR.horizontalGrabberAction(ConfigurationSecondRobot.horizontalGrabberClose))
                 .waitSeconds(ConfigurationSecondRobot.horizontalGrabberWideTime/1000)
                 .stopAndAdd(horizontalRollRR.horizontalRollAction(ConfigurationSecondRobot.flat))

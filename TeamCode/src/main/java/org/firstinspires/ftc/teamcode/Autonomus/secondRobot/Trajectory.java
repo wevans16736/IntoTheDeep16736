@@ -45,8 +45,8 @@ public class Trajectory{
 
         currentTrajectory = drive.actionBuilder(pose);
     }
-    double hangX = 0; double hangY = -34.5; int hang = 0; int attachment = 0;
-    double firstButterX = 49; double firstButterY = -36.5; double butterCounter = 0;
+    double hangX = -1; double hangY = -34.5; int hang = 0; int attachment = 0;
+    double firstButterX = 49; double firstButterY = -36.25; double butterCounter = 0;
     double secondButterX = 58; double secondButterY =  -47.5;
     double thirdButterX = 61; double thirdButterY = -28.5;
     double humanX = 43; double humanY = -52.5; int human = 0;
@@ -73,7 +73,7 @@ public class Trajectory{
                     .stopAndAdd(verticalWristRR.VerticalWristAction(ConfigurationSecondRobot.verticalWristBar))
                     .setTangent(Math.toRadians(180))
                     .splineToLinearHeading(new Pose2d(45, -45, Math.toRadians(179.999)), Math.toRadians(200))
-                    .splineToLinearHeading(new Pose2d(hangX, hangY, Math.toRadians(90)), Math.toRadians(115))
+                    .splineToLinearHeading(new Pose2d(hangX, hangY + .5, Math.toRadians(90)), Math.toRadians(115))
                     .stopAndAdd(verticalGrabberRR.verticalGrabberAction(ConfigurationSecondRobot.verticalOpen))
 //                    .stopAndAdd(verticalWristRR.VerticalWristAction(ConfigurationSecondRobot.verticalWristUp))
                     .waitSeconds(ConfigurationSecondRobot.verticalCloseTime/1000);
@@ -122,7 +122,7 @@ public class Trajectory{
             return secondButter.build();
         } else {
             TrajectoryActionBuilder thirdButter = currentTrajectory
-                    .stopAndAdd(horizontalSlideRR.horizontalSlideActions(275))
+                    .stopAndAdd(horizontalSlideRR.horizontalSlideActions(350))
                     .stopAndAdd(horizontalRollRR.horizontalRollAction(ConfigurationSecondRobot.sideway))
                     .setTangent(Math.toRadians(90))
                     .splineToLinearHeading(new Pose2d(thirdButterX, thirdButterY, Math.toRadians(180)), Math.toRadians(0))

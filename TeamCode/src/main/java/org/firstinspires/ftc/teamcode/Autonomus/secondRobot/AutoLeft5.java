@@ -13,7 +13,6 @@ import org.firstinspires.ftc.teamcode.Configuration.secondRobot.HorizontalGrabbe
 import org.firstinspires.ftc.teamcode.Configuration.secondRobot.HorizontalRollRR;
 import org.firstinspires.ftc.teamcode.Configuration.secondRobot.HorizontalSlideRR;
 import org.firstinspires.ftc.teamcode.Configuration.secondRobot.HorizontalWristRR;
-import org.firstinspires.ftc.teamcode.Configuration.secondRobot.RobotSensor;
 import org.firstinspires.ftc.teamcode.Configuration.secondRobot.VerticalGrabberRR;
 import org.firstinspires.ftc.teamcode.Configuration.secondRobot.VerticalHangerRR;
 import org.firstinspires.ftc.teamcode.Configuration.secondRobot.VerticalSlideRR;
@@ -21,8 +20,9 @@ import org.firstinspires.ftc.teamcode.Configuration.secondRobot.VerticalWristRR;
 import org.firstinspires.ftc.teamcode.GlobalVariables;
 import org.firstinspires.ftc.teamcode.PinpointDrive;
 import org.firstinspires.ftc.teamcode.secondrobot.DetectBlockActions;
-@Autonomous(name = "AutoLeft")
-public class AutoLeft extends LinearOpMode {
+
+@Autonomous(name = "AutoLeft5")
+public class AutoLeft5 extends LinearOpMode {
         @Override
         public void runOpMode() throws InterruptedException {
             //set up Pinpoint and Pose2d class
@@ -55,83 +55,50 @@ public class AutoLeft extends LinearOpMode {
                     verticalHanger, horizontalSlide, horizontalRoll, horizontalGrabber, horizontalWrist);
 
             //build everything
-           Action basket1 = trajectory.getBasket();
-           Action butter1 = trajectory.getButter();
-           Action basket2 = trajectory.getBasket();
-           Action attachment1 = trajectory.getAttachment();
-           Action butter2 = trajectory.getButter();
-           Action basket3 = trajectory.getBasket();
-           Action attachment2 = trajectory.getAttachment();
-           Action butter3 = trajectory.getButter();
-           Action basket4 = trajectory.getBasket();
-           Action attachment3 = trajectory.getAttachment();
-           Action guess1 = trajectory.getGuess();
-           Action basket5 = trajectory.getBasket();
-           Action attachment4 = trajectory.getAttachment();
-           Action guess2 = trajectory.getGuess();
-
-           boolean attempt = true; int distance;
-
-           while(!gamepad1.cross){
-               telemetry.addData("attempt", attempt);
-               telemetry.update();
-               if(gamepad1.square){
-                   attempt = !attempt;
-               }
-           }
-           telemetry.addLine("ready");
-           telemetry.update();
+            Action Basket1 = trajectory.getBasket();
+            Action Butter1 = trajectory.getButter();
+            Action Basket2 = trajectory.getBasket();
+            Action Attachment1 = trajectory.getAttachment();
+            Action Butter2 = trajectory.getButter();
+            Action Basket3 = trajectory.getBasket();
+            Action Attachment2 = trajectory.getAttachment();
+            Action Butter3 = trajectory.getButter();
+            Action Basket4 = trajectory.getBasket();
+            Action Park1 = trajectory.getPark();
+            Action Basket5 = trajectory.getBasket();
+            Action Attachment3 = trajectory.getAttachment();
+            Action Attachment4 = trajectory.getAttachment();
+            Action Park2 = trajectory.getPark();
             //wait for the start button to be press
             waitForStart();
             //if the stop button press then stop the robot
             if (isStopRequested()) return;
-            if(attempt) {
-                Actions.runBlocking(new SequentialAction(
-                        basket1,
-                        butter1,
-                        new ParallelAction(
-                                basket2,
-                                attachment1
-                        ),
-                        butter2,
-                        new ParallelAction(
-                                basket3,
-                                attachment2
-                        ),
-                        butter3,
-                        new ParallelAction(
-                                basket4,
-                                attachment3
-                        ),
-                        guess1,
-                        new ParallelAction(
-                                basket5,
-                                attachment4
-                        ),
-                        guess2
-                ));
-                GlobalVariables.autoStarted = true;
-                GlobalVariables.currentPose = drive.getLastPinpointPose();
-            } else {
-                Actions.runBlocking(new SequentialAction(
-                        basket1,
-                        butter1,
-                        new ParallelAction(
-                                basket2,
-                                attachment1
-                        ),
-                        butter2,
-                        new ParallelAction(
-                                basket3,
-                                attachment2
-                        ),
-                        butter3,
-                        new ParallelAction(
-                                basket4,
-                                attachment3
-                        ),
-                        guess2
-                ));
-            }
+
+            Actions.runBlocking(new SequentialAction(
+                    Basket1,
+                    Park1,
+                    new ParallelAction(
+                            Basket5,
+                            Attachment4
+                    ),
+                    Butter1,
+                    new ParallelAction(
+                            Basket2,
+                            Attachment1
+                    ),
+                    Butter2,
+                    new ParallelAction(
+                            Basket3,
+                            Attachment2
+                    ),
+                    Butter3,
+                    new ParallelAction(
+                            Basket4,
+                            Attachment3
+                    ),
+                    Park2
+                    ));
+            GlobalVariables.autoStarted = true;
+            GlobalVariables.currentPose = drive.getLastPinpointPose();
         }
 }

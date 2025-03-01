@@ -304,10 +304,11 @@ public class MecanumDrive {
             PoseVelocity2d robotVelRobot = updatePoseEstimate();
 
             Pose2d error = txWorldTarget.value().minusExp(pose);
-            if(GlobalVariables.cancel){
-                t = timeTrajectory.duration;
-                GlobalVariables.cancel = false;
-            }
+
+//            if(GlobalVariables.cancel){
+//                t = timeTrajectory.duration;
+//                GlobalVariables.cancel = false;
+//            }
 
             if (t >= timeTrajectory.duration && error.position.norm() < 1 && error.heading.toDouble() < 1 && robotVelRobot.linearVel.norm() < .5 || t>= timeTrajectory.duration + .05) {
                 leftFront.setPower(0);

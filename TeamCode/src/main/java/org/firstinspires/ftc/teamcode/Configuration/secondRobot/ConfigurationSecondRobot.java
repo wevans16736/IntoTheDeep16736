@@ -16,7 +16,7 @@ public class ConfigurationSecondRobot {
     public static int highBar = 650;
     public static int bottom = 0;
     public static int lowBar = 2000;
-    public static int topBasket = 2360;
+    public static int topBasket = 2370;
     //added 280 on 1/3/2024
 
     public static double verticalSlideBottomToHighBar = 1500;
@@ -62,7 +62,7 @@ public class ConfigurationSecondRobot {
     //horizontal wrist moving times, MS
     public static double horizontalWristtoMiddleTime = 300;
     public static double horizontalWristDowntoUpTime = 1340;
-    public static double horizontalWristIntaketoTransfer = 375;
+    public static double horizontalWristIntaketoTransfer = 450;
 
     //horizontal grabber servo position
     public static double horizontalGrabberClose = .15;
