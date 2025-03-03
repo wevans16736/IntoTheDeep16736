@@ -50,7 +50,7 @@ public class HorizontalIntakeActions {
             vertGrabberClosing = true;
             vertGrabberClosingStartTime = System.currentTimeMillis();
         }
-        if (vertGrabberClosing && System.currentTimeMillis() > vertGrabberClosingStartTime + 420 && isVertGrabberClosed) {
+        if (vertGrabberClosing && System.currentTimeMillis() > vertGrabberClosingStartTime + 100 && isVertGrabberClosed) {
             vertGrabberClosing = false;
             closed = false;
         }

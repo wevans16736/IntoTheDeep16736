@@ -30,7 +30,7 @@ public class VerticalGrabberActions {
 //        if (!verticalGrabberServo.isPwmEnabled()) {
 //            verticalGrabberServo.setPwmDisable();
 //        }
-        verticalGrabberServo.setPosition(ConfigurationSecondRobot.verticalClose);
+        verticalGrabberServo.setPosition(ConfigurationSecondRobot.verticalCloseHard);
         isClose = true;
     }
     boolean isClose = true;

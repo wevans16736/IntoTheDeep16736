@@ -48,11 +48,11 @@ public class TrajectoryLeft {
     }
     double basketX = -56; double basketY = -55; int basket = 0;
     int butter = 0; int attachment = 0; int park = 0;int guess = 0;
-    double firstButterX = -48.5; double firstButterY = -36.5;
+    double firstButterX = -48.25; double firstButterY = -36.5;
     double secondButterX = -58.75; double secondButterY = -50;
-    double thirdButterX = -61.25; double thirdButterY = -25;
+    double thirdButterX = -61.25; double thirdButterY = -25.5;
     double parkX = -20; double parkY = 0;
-    double humanX = 20, humanY = -63;
+    double humanX = 20.5, humanY = -63;
     public Action getBasket() {
         if (basket == 0) {
             TrajectoryActionBuilder Basket = currentTrajectory
@@ -67,7 +67,7 @@ public class TrajectoryLeft {
         if (basket == 1 || basket == 3) {
             TrajectoryActionBuilder Basket = currentTrajectory
                     .waitSeconds(ConfigurationSecondRobot.horizontalGrabberWideTime / 1000)
-                    .waitSeconds(1.25)
+                    .waitSeconds(1.5)
                     .setReversed(true)
                     .splineToLinearHeading(new Pose2d(basketX, basketY, Math.toRadians(227)), Math.toRadians(227));
             basket++;
@@ -89,7 +89,7 @@ public class TrajectoryLeft {
                         .waitSeconds(ConfigurationSecondRobot.horizontalGrabberWideTime / 1000)
                         .setTangent(Math.toRadians(180))
                         .splineToLinearHeading(new Pose2d(basketX + 20, basketY, Math.toRadians(180)), Math.toRadians(180))
-                        .splineToLinearHeading(new Pose2d(basketX, basketY, Math.toRadians(227)), Math.toRadians(227));
+                        .splineToLinearHeading(new Pose2d(basketX, basketY, Math.toRadians(230)), Math.toRadians(230));
                 basket++;
                 currentTrajectory = Basket.endTrajectory().fresh();
                 return Basket.build();
@@ -98,7 +98,7 @@ public class TrajectoryLeft {
                         .waitSeconds(ConfigurationSecondRobot.horizontalGrabberWideTime / 1000)
                         .setTangent(Math.toRadians(180))
                         .splineToLinearHeading(new Pose2d(basketX, -10, Math.toRadians(-90)), Math.toRadians(180))
-                        .splineToLinearHeading(new Pose2d(basketX, basketY, Math.toRadians(227)), Math.toRadians(227));
+                        .splineToLinearHeading(new Pose2d(basketX, basketY, Math.toRadians(230)), Math.toRadians(230));
                 basket++;
                 currentTrajectory = Basket.endTrajectory().fresh();
                 return Basket.build();
@@ -164,7 +164,7 @@ public class TrajectoryLeft {
                     .stopAndAdd(verticalGrabberRR.verticalGrabberAction(ConfigurationSecondRobot.verticalOpen))
                     .stopAndAdd(horizontalRollRR.horizontalRollAction(ConfigurationSecondRobot.flat))
                     .stopAndAdd(horizontalSlideRR.horizontalSlideActions(ConfigurationSecondRobot.horizontalSlideRetract))
-                    .waitSeconds(ConfigurationSecondRobot.horizontalWristIntaketoTransfer / 1000)
+                    .waitSeconds(ConfigurationSecondRobot.horizontalWristIntaketoTransfer / 1000 + .1)
                     .stopAndAdd(verticalGrabberRR.verticalGrabberAction(ConfigurationSecondRobot.verticalClose))
                     .waitSeconds(ConfigurationSecondRobot.verticalCloseTime / 1000)
                     .stopAndAdd(horizontalGrabberRR.horizontalGrabberAction(ConfigurationSecondRobot.horizontalGrabberOpen))

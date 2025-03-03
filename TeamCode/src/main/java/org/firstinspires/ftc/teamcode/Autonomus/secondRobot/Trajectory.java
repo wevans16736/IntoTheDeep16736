@@ -45,11 +45,11 @@ public class Trajectory{
 
         currentTrajectory = drive.actionBuilder(pose);
     }
-    double hangX = -1; double hangY = -34.5; int hang = 0; int attachment = 0;
-    double firstButterX = 49; double firstButterY = -36.25; double butterCounter = 0;
-    double secondButterX = 58; double secondButterY =  -47.5;
+    double hangX = -1; double hangY = -34.35; int hang = 0; int attachment = 0;
+    double firstButterX = 48.75; double firstButterY = -36.25; double butterCounter = 0;
+    double secondButterX = 58; double secondButterY =  -47.2;
     double thirdButterX = 61; double thirdButterY = -28.5;
-    double humanX = 43; double humanY = -52.5; int human = 0;
+    double humanX = 43; double humanY = -52; int human = 0;
 
     public Action getHang(){
         if(hang == 0){
@@ -81,10 +81,11 @@ public class Trajectory{
             hang++;
             currentTrajectory = secondHang.endTrajectory().fresh();
             return secondHang.build();
+
         } else {
             TrajectoryActionBuilder thirdHang = currentTrajectory
                     .stopAndAdd(verticalGrabberRR.verticalGrabberAction(ConfigurationSecondRobot.verticalClose))
-                    .waitSeconds(ConfigurationSecondRobot.verticalClose/1000 + .3)
+                    .waitSeconds(ConfigurationSecondRobot.verticalCloseTime/1000)
                     .stopAndAdd(verticalWristRR.VerticalWristAction(ConfigurationSecondRobot.verticalWristUp))
                     .stopAndAdd(verticalSlideRR.verticalSlideAction(ConfigurationSecondRobot.highBar))
                     .afterTime(1, verticalWristRR.VerticalWristAction(ConfigurationSecondRobot.verticalWristBar))
@@ -146,7 +147,7 @@ public class Trajectory{
                     .stopAndAdd(horizontalWristRR.horizontalWristAction(ConfigurationSecondRobot.horizontalWristTransfer))
                     .stopAndAdd(verticalGrabberRR.verticalGrabberAction(ConfigurationSecondRobot.verticalOpen))
                     .stopAndAdd(horizontalSlideRR.horizontalSlideActions(ConfigurationSecondRobot.horizontalSlideRetract))
-                    .waitSeconds(ConfigurationSecondRobot.horizontalWristIntaketoTransfer/1000)
+                    .waitSeconds(ConfigurationSecondRobot.horizontalWristIntaketoTransfer/1000+.1)
                     .stopAndAdd(verticalGrabberRR.verticalGrabberAction(ConfigurationSecondRobot.verticalClose))
                     .waitSeconds(ConfigurationSecondRobot.verticalOpenTime/1000)
                     .stopAndAdd(horizontalGrabberRR.horizontalGrabberAction(ConfigurationSecondRobot.horizontalGrabberOpen))
@@ -183,14 +184,15 @@ public class Trajectory{
         }
     }
     public Action getHuman(){
-        TrajectoryActionBuilder Human = currentTrajectory
-                .stopAndAdd(verticalSlideRR.verticalSlideAction(ConfigurationSecondRobot.bottom))
-                .stopAndAdd(verticalGrabberRR.verticalGrabberAction(ConfigurationSecondRobot.verticalOpen))
-                .stopAndAdd(verticalWristRR.VerticalWristAction(ConfigurationSecondRobot.verticalWristUp))
-                .afterTime(1, verticalWristRR.VerticalWristAction(ConfigurationSecondRobot.verticalWristWall))
-                .setReversed(true)
-                .splineToLinearHeading(new Pose2d(humanX, humanY, Math.toRadians(-89.9999999999)), Math.toRadians(-90));
-        currentTrajectory = Human.endTrajectory().fresh();
-        return Human.build();
+            TrajectoryActionBuilder Human = currentTrajectory
+                    .stopAndAdd(verticalSlideRR.verticalSlideAction(ConfigurationSecondRobot.bottom))
+                    .stopAndAdd(verticalGrabberRR.verticalGrabberAction(ConfigurationSecondRobot.verticalOpen))
+                    .stopAndAdd(verticalWristRR.VerticalWristAction(ConfigurationSecondRobot.verticalWristUp))
+                    .afterTime(1, verticalWristRR.VerticalWristAction(ConfigurationSecondRobot.verticalWristWall))
+                    .setReversed(true)
+                    .splineToLinearHeading(new Pose2d(humanX, humanY, Math.toRadians(-89.9999999999)), Math.toRadians(-90));
+            human++;
+            currentTrajectory = Human.endTrajectory().fresh();
+            return Human.build();
     }
 }
