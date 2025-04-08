@@ -244,6 +244,7 @@ public abstract class HelperActions extends LinearOpMode {
         }
         if (transferState == 1 && System.currentTimeMillis() > verticalGrabberCloseStartTime + ConfigurationSecondRobot.verticalCloseTime) {
             horizontalIntake.open();
+            horizontalIntake.update();
             horizontalIntakeOpenStartTime = System.currentTimeMillis();
             transferState = 2;
         }
@@ -288,15 +289,16 @@ public abstract class HelperActions extends LinearOpMode {
         wasActivatePlaceSample = activate;
     }
     public void grabSample(LimeSweet limeSweet, HorizontalSlideActions horizontalSlide, DriveActions driveActions, HorizontalIRollActions horizontalIRollActions, HorizontalWristActions horizontalWristActions, HorizontalIntakeActions horizontalIntakeActions)  {
-        grabX = limeSweet.scanButter().get(0);
+        grabX = -limeSweet.scanButter().get(0);
         grabY = limeSweet.scanButter().get(1);
         angle = -limeSweet.scanButter().get(2) + 180;
         if (angle > 170){angle -= 180;}
         horizontalIRollActions.setPosition((angle / 90) * 0.3);
-        grabX += 3*Math.cos(Math.toRadians(90+angle)) - 2;
-        grabY += -3*Math.sin(Math.toRadians(90+angle));
+        grabX -= 3*Math.cos(Math.toRadians(90+angle));
+        grabY += -3*Math.sin(Math.toRadians(90+angle)) + 2;
         horizontalSlide.setSlideDistanceMath(grabY, 3000);
 
+        horizontalIntakeActions.open();
         horizontalIntakeActions.setPosition(ConfigurationSecondRobot.horizontalGrabberWide);
         driveActions.strafeDistance(grabX + 1);
         horizontalIRollActions.setPosition((angle / 90) * 0.3);

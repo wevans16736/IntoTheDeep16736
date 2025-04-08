@@ -29,7 +29,7 @@ import org.firstinspires.ftc.teamcode.secondrobot.verticalslide.VerticalWristAct
 import java.util.ArrayList;
 import java.util.List;
 
-@TeleOp(name = "Tele Op second robot", group = "Linear Opmode")
+@TeleOp(name = "Limelight TeleOp", group = "Linear Opmode")
 public class LimelightTeleOp extends HelperActions {
     private DriveActions driveActions = null;
     private HorizontalWristActions horizontalWrist = null;
@@ -120,7 +120,7 @@ public class LimelightTeleOp extends HelperActions {
 
             //allow you to use a d-pad to adjust the speed of the drive train
             changeSpeed(driveActions, gamepad1.dpad_up, gamepad1.dpad_down, false, false, gamepad1.right_trigger);
-            toggleSpeed(gamepad1.a);
+//            toggleSpeed(gamepad1.a);
             //toggles the hanger in and out, gamepad 1 x
             verticalHanger.teleOpHanger(gamepad1.x);
             //B button, overrides the coded stops on the vertical slide, resets slide perceived position on release

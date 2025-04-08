@@ -69,9 +69,9 @@ public class VerticalWristActions {
             } else {
                 forward();
             }
+            update();
         }
         wasInput = input;
-        update();
     }
     double position = 0.89;
     //Manually control the wrist. move with one button, reverse movement with other button

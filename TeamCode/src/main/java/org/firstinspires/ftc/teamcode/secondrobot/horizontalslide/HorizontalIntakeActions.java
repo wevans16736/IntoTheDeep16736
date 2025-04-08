@@ -57,9 +57,7 @@ public class HorizontalIntakeActions {
         wasVertGrabberClosed = isVertGrabberClosed;
     }
     public void setPosition(double position) {
-        if (intakeServo.isPwmEnabled()) {
-            intakeServo.setPosition(position);
-        }
+        intakeServo.setPosition(position);
     }
     boolean wasInput = false;
     public boolean closed = false;
@@ -70,9 +68,9 @@ public class HorizontalIntakeActions {
             } else {
                 close();
             }
+            update();
         }
         wasInput = input;
-        update();
     }
     double position = 0.9;
     public void manual(boolean activate, boolean reverse) {

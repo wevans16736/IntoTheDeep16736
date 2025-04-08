@@ -17,6 +17,7 @@ import com.acmerobotics.roadrunner.TrajectoryBuilder;
 import com.acmerobotics.roadrunner.TrajectoryBuilderParams;
 import com.acmerobotics.roadrunner.Vector2d;
 import com.acmerobotics.roadrunner.ftc.Actions;
+import com.qualcomm.robotcore.util.RobotLog;
 
 import org.firstinspires.ftc.teamcode.Configuration.secondRobot.ConfigurationSecondRobot;
 import org.firstinspires.ftc.teamcode.Configuration.secondRobot.HorizontalGrabberRR;
@@ -314,11 +315,14 @@ public class Attachment {
     double basketX = -56; double basketY = -55;
     public void driveBasket(boolean cross){
         if(cross) {
+            RobotLog.dd("driveBasket", "cross pressed");
             GlobalVariables.driveDisable = true;
             drive.updatePoseEstimate();
-            if (GlobalVariables.autoStarted) {
+            if (true) {
+                RobotLog.dd("driveBasket", "autoStarted");
                 if(drive.getLastPinpointPose().position.x < -20 && drive.getLastPinpointPose().position.x > - 50 &&
                     drive.getLastPinpointPose().position.y < 20 && drive.getLastPinpointPose().position.y > -20){
+                    RobotLog.dd("driveBasket", "tabing");
                     TrajectoryActionBuilder Bucket = drive.actionBuilder(drive.getLastPinpointPose())
                             .strafeToLinearHeading(new Vector2d(basketX, drive.getLastPinpointPose().position.y), Math.toRadians(-90))
                             .stopAndAdd(verticalSlide.verticalSlideAction(ConfigurationSecondRobot.topBasket))
@@ -343,7 +347,7 @@ public class Attachment {
             }
         } if(!cross) {
             GlobalVariables.cancel = true;
-            drive.setDrivePowers(new PoseVelocity2d(new Vector2d(0,0), 0));
+//            drive.setDrivePowers(new PoseVelocity2d(new Vector2d(0,0), 0));
             GlobalVariables.driveDisable = false;
         }
     }
