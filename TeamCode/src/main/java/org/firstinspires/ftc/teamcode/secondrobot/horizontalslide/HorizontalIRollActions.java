@@ -45,6 +45,9 @@ public class HorizontalIRollActions {
         }
         prevPos = position;
     }
+    public double getPos(){
+        return prevPos;
+    }
     boolean isTransfer = true;
     public void setTransfer(boolean isTransfering) {
         isTransfer = isTransfering;
@@ -54,12 +57,13 @@ public class HorizontalIRollActions {
     public void teleOp(boolean operate){
         if (operate && !wasOperate) {
             isFlat = !isFlat;
+            if (isFlat || isTransfer) {
+                setPosition(0.0);
+            } else {
+                setPosition(0.3);
+            }
         }
-        if (isFlat || isTransfer) {
-            setPosition(0.0);
-        } else {
-            setPosition(0.3);
-        }
+
         wasOperate = operate;
     }
 }

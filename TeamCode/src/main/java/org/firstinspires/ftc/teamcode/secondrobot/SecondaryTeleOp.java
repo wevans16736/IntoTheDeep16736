@@ -23,7 +23,7 @@ public class SecondaryTeleOp extends HelperActions {
     private VerticalGrabberActions verticalGrabber = null;
     private VerticalHangerActions verticalHanger = null;
     private HorizontalSlideActions horizontalSlide = null;
-    private DetectBlockActions detectBlockActions = null;
+    private LimeSweet limeSweet = null;
 
     double liftSpdMult = 0.8 ;
 
@@ -38,7 +38,7 @@ public class SecondaryTeleOp extends HelperActions {
         verticalWrist = new VerticalWristActions(telemetry, hardwareMap);
         verticalGrabber = new VerticalGrabberActions(telemetry, hardwareMap);
         verticalHanger = new VerticalHangerActions(hardwareMap);
-        detectBlockActions = new DetectBlockActions(hardwareMap);
+        limeSweet = new LimeSweet(hardwareMap, telemetry, 0);
         //Set Speed for teleOp. Mecannum wheel speed.
         //driveActions.setSpeed(1.0);
 
@@ -113,7 +113,8 @@ public class SecondaryTeleOp extends HelperActions {
             //A button gamepad 2. Not yet working
             managePlaceSample(gamepad2.a, verticalGrabber, verticalWrist, verticalSlide, horizontalWrist, horizontalSlide, horizontalIntake, horizontalIRoll);
 
-            manageGrabSample(gamepad2.share, detectBlockActions, horizontalSlide);
+            manageGrabSample(gamepad2.share, limeSweet, horizontalSlide, driveActions, horizontalIRoll, horizontalWrist, horizontalIntake);
+            limeSweet.scanButter();
 //            Point blockCenter = detectBlockActions.pixelToPosition(detectBlockActions.getCenter());
 //            telemetry.addData("block x %f, block y %f", blockCenter);
 //            if (gamepad2.share) {

@@ -124,11 +124,13 @@ public class DriveActions {
      */
     public void drive(double speedX, double speedY, double rotation){
 
-        double throttledX = speedX * THROTTLE;
-        double throttledY = speedY * THROTTLE;
-        double throttledRotation = rotation * THROTTLE;
+        if (leftFront.getMode() == DcMotor.RunMode.RUN_WITHOUT_ENCODER) {
+            double throttledX = speedX * THROTTLE;
+            double throttledY = speedY * THROTTLE;
+            double throttledRotation = rotation * THROTTLE;
 
-        driveUsingJoyStick(throttledX, throttledY, throttledRotation);
+            driveUsingJoyStick(throttledX, throttledY, throttledRotation);
+        }
     }
 
     /**
@@ -233,5 +235,41 @@ public class DriveActions {
         YawPitchRollAngles orientation = imu.getRobotYawPitchRollAngles();
         headingOffset = orientation.getYaw(AngleUnit.DEGREES);
         robotHeading = 0;
+    }
+    public void strafeDistance(double distance) {
+        leftFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        rightFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        leftRear.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        rightRear.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+        double ticksPerCM = 12;
+
+        int totalTicks = (int) (ticksPerCM * distance);
+        // When going left, the target position needs to be inverted from when we go right
+        leftFront.setTargetPosition(-totalTicks);
+        rightFront.setTargetPosition(totalTicks);
+        leftRear.setTargetPosition(totalTicks);
+        rightRear.setTargetPosition(-totalTicks);
+
+        // Switch to RUN_TO_POSITION mode
+        leftFront.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        rightFront.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        leftRear.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        rightRear.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+        double speed = 2000;
+        leftFront.setVelocity(-speed);
+        rightFront.setVelocity(-speed);
+        leftRear.setVelocity(-speed);
+        rightRear.setVelocity(-speed);
+    }
+    boolean isDone() {
+        return leftFront.isBusy();
+    }
+    void runWithoutEncoders() {
+        leftFront.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        leftRear.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        rightFront.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        rightRear.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
     }
 }

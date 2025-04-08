@@ -19,7 +19,7 @@ import org.firstinspires.ftc.teamcode.Configuration.secondRobot.VerticalSlideRR;
 import org.firstinspires.ftc.teamcode.Configuration.secondRobot.VerticalWristRR;
 import org.firstinspires.ftc.teamcode.GlobalVariables;
 import org.firstinspires.ftc.teamcode.PinpointDrive;
-import org.firstinspires.ftc.teamcode.secondrobot.DetectBlockActions;
+
 @Autonomous(name = "Circut Breaker")
 public class CircutBreaker extends LinearOpMode {
         @Override
@@ -48,7 +48,7 @@ public class CircutBreaker extends LinearOpMode {
             HorizontalWristRR horizontalWrist = new HorizontalWristRR(hardwareMap);
             VerticalHangerRR verticalHanger = new VerticalHangerRR(hardwareMap);
 
-            DetectBlockActions vision = new DetectBlockActions(hardwareMap);
+//            DetectBlockActions vision = new DetectBlockActions(hardwareMap);
 
             TrajectoryLeft trajectory = new TrajectoryLeft(drive, pose, verticalSlide, verticalWrist, verticalGrabber,
                     verticalHanger, horizontalSlide, horizontalRoll, horizontalGrabber, horizontalWrist);

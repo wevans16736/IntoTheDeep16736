@@ -13,13 +13,11 @@ import org.firstinspires.ftc.teamcode.Configuration.secondRobot.HorizontalGrabbe
 import org.firstinspires.ftc.teamcode.Configuration.secondRobot.HorizontalRollRR;
 import org.firstinspires.ftc.teamcode.Configuration.secondRobot.HorizontalSlideRR;
 import org.firstinspires.ftc.teamcode.Configuration.secondRobot.HorizontalWristRR;
-import org.firstinspires.ftc.teamcode.Configuration.secondRobot.RobotSensor;
 import org.firstinspires.ftc.teamcode.Configuration.secondRobot.VerticalGrabberRR;
 import org.firstinspires.ftc.teamcode.Configuration.secondRobot.VerticalHangerRR;
 import org.firstinspires.ftc.teamcode.Configuration.secondRobot.VerticalSlideRR;
 import org.firstinspires.ftc.teamcode.Configuration.secondRobot.VerticalWristRR;
 import org.firstinspires.ftc.teamcode.PinpointDrive;
-import org.firstinspires.ftc.teamcode.secondrobot.DetectBlockActions;
 
 @Disabled
 @Autonomous(name = "Auto")
@@ -84,7 +82,7 @@ public class Auto extends LinearOpMode {
             drive = new PinpointDrive(hardwareMap, pose);
         }
 
-        DetectBlockActions vision = new DetectBlockActions(hardwareMap);
+//        DetectBlockActions vision = new DetectBlockActions(hardwareMap);
 
         Trajectory trajectory = new Trajectory(drive, pose, verticalSlide, verticalWrist, verticalGrabber,
                 verticalHanger, horizontalSlide, horizontalRoll, horizontalGrabber, horizontalWrist);

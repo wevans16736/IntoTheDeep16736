@@ -63,10 +63,14 @@ public class HorizontalSlideActions {
     }
     double SlidePosition = 0;
     public void setSlideDistanceMath(double distance, double velocity) {
-        double targetEncoderTics = 7.0 * (70.0 - Math.toDegrees(Math.acos(distance/13.0)));
-        armMotor.setTargetPosition((int) Range.clip(targetEncoderTics, 0, 650));
+        //Based off law of sines
+        double linkageLength = 27;
+        double targetRads = Math.acos(distance / (2 * linkageLength));
+        //based off of endpoints of rad 1.31812/ticks 0 and rad 0/ticks 640
+        double targetTicks = -(640/0.842234) * (targetRads - 1.31812);
+        armMotor.setTargetPosition((int) Range.clip(targetTicks, 0, 650));
         armMotor.setVelocity(velocity);
-        SlidePosition = targetEncoderTics;
+        SlidePosition = targetTicks;
     }
     public double getSlideDistanceMath() {
         double encoderTicks = getSlidePosition();

@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.secondrobot;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.teamcode.Configuration.secondRobot.ConfigurationSecondRobot;
@@ -98,17 +99,6 @@ public abstract class HelperActions extends LinearOpMode {
         } else {
             return 1;
         }
-    }
-
-    public void moveToBlock(DetectBlockActions detectBlockActions, DriveActions driveActions, HorizontalSlideActions horizontalSlideActions, HorizontalIRollActions horizontalIRollActions) {
-//        Point position = detectBlockActions.pixelToPosition();
-//        driveActions.drive(0, position.x, 0);
-//        horizontalSlideActions.teleOpArmMotor(position.y / 5, 2);
-//        double angle = detectBlockActions.angle;
-//        while (angle > 180){
-//            angle -= 180;
-//        }
-//        horizontalIRollActions.setPosition(angle / 180);
     }
 
     public double adjustedHSlideSpeed(double inputSpeed) {
@@ -230,7 +220,7 @@ public abstract class HelperActions extends LinearOpMode {
         }
 
         //close the horizontal roll and set a timer to wait until it's done
-        if (!horizontalRoll.isFlat()) {
+        if (horizontalRoll.getPos() != 0) {
             //going false then true switches the flat state, which we know is not flat, switching it to flat
             horizontalRoll.teleOp(false);
             horizontalRoll.teleOp(true);
@@ -296,30 +286,39 @@ public abstract class HelperActions extends LinearOpMode {
         }
         wasActivatePlaceSample = activate;
     }
-    public void activateDetection(DetectBlockActions detectBlockActions, HorizontalSlideActions horizontalSlide) {
-        if (grabState == 0) {
-            grabState = 1;
-            detectBlockActions.activate();
-        }
-    }
-    public void grabSample(DetectBlockActions detectBlockActions, HorizontalSlideActions horizontalSlide){
-        horizontalSlide.setSlideDistanceMath(detectBlockActions.pixelToPosition(detectBlockActions.getCenter()).y + horizontalSlide.getSlideDistanceMath(), 3000);
+    public void grabSample(LimeSweet limeSweet, HorizontalSlideActions horizontalSlide, DriveActions driveActions, HorizontalIRollActions horizontalIRollActions, HorizontalWristActions horizontalWristActions, HorizontalIntakeActions horizontalIntakeActions)  {
+        grabX = limeSweet.scanButter().get(0);
+        grabY = limeSweet.scanButter().get(1);
+        angle = -limeSweet.scanButter().get(2) + 180;
+        if (angle > 170){angle -= 180;}
+        horizontalIRollActions.setPosition((angle / 90) * 0.3);
+        grabX += 3*Math.cos(Math.toRadians(90+angle)) - 2;
+        grabY += -3*Math.sin(Math.toRadians(90+angle));
+        horizontalSlide.setSlideDistanceMath(grabY, 3000);
 
+        horizontalIntakeActions.setPosition(ConfigurationSecondRobot.horizontalGrabberWide);
+        driveActions.strafeDistance(grabX + 1);
+        horizontalIRollActions.setPosition((angle / 90) * 0.3);
+        horizontalWristActions.setOverride(false);
+        horizontalWristActions.setForward(true);
+        horizontalWristActions.update();
     }
     double grabState = 0;
     public void resetGrabState() {
         grabState = 0;
     }
     boolean wasActivateGrabSample = false;
-    public void manageGrabSample(boolean activate, DetectBlockActions detectBlockActions, HorizontalSlideActions horizontalSlide) {
+    double grabX = 0;
+    double grabY = 0;
+    double angle = 0;
+    public void manageGrabSample(boolean activate, LimeSweet limeSweet, HorizontalSlideActions horizontalSlide, DriveActions driveActions, HorizontalIRollActions horizontalIRollActions, HorizontalWristActions horizontalWristActions, HorizontalIntakeActions horizontalIntakeActions) {
         if (activate && !wasActivateGrabSample) {
             resetGrabState();
         } else if (!activate && wasActivateGrabSample) {
-            detectBlockActions.deactivate();
-            grabSample(detectBlockActions, horizontalSlide);
+            grabSample(limeSweet, horizontalSlide, driveActions, horizontalIRollActions,horizontalWristActions, horizontalIntakeActions);
         }
-        if(activate) {
-            activateDetection(detectBlockActions, horizontalSlide);
+        if (driveActions.isDone() && driveActions.leftFront.getMode() == DcMotor.RunMode.RUN_TO_POSITION && Math.abs(horizontalSlide.getSlidePosition() - horizontalSlide.armMotor.getTargetPosition()) < 10 ) {
+            driveActions.runWithoutEncoders();
         }
         wasActivateGrabSample = activate;
     }
