@@ -5,6 +5,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.teamcode.Configuration.secondRobot.ConfigurationSecondRobot;
+import org.firstinspires.ftc.teamcode.GlobalVariables;
 import org.firstinspires.ftc.teamcode.secondrobot.horizontalslide.HorizontalIntakeActions;
 import org.firstinspires.ftc.teamcode.secondrobot.horizontalslide.HorizontalIRollActions;
 import org.firstinspires.ftc.teamcode.secondrobot.horizontalslide.HorizontalSlideActions;
@@ -319,6 +320,7 @@ public abstract class HelperActions extends LinearOpMode {
         }
         if (driveActions.isDone() && driveActions.leftFront.getMode() == DcMotor.RunMode.RUN_TO_POSITION && Math.abs(horizontalSlide.getSlidePosition() - horizontalSlide.armMotor.getTargetPosition()) < 10 ) {
             driveActions.runWithoutEncoders();
+            GlobalVariables.driveDisable = false;
         }
         wasActivateGrabSample = activate;
     }

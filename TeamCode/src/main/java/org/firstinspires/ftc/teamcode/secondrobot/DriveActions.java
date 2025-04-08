@@ -238,6 +238,7 @@ public class DriveActions {
         robotHeading = 0;
     }
     public void strafeDistance(double distance) {
+        GlobalVariables.driveDisable = true;
         leftFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         rightFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         leftRear.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
