@@ -13,6 +13,7 @@ import com.qualcomm.robotcore.util.RobotLog;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.YawPitchRollAngles;
+import org.firstinspires.ftc.teamcode.GlobalVariables;
 import org.firstinspires.ftc.teamcode.secondrobot.constants.ConfigConstants;
 
 import java.util.Collections;
@@ -124,7 +125,7 @@ public class DriveActions {
      */
     public void drive(double speedX, double speedY, double rotation){
 
-        if (leftFront.getMode() == DcMotor.RunMode.RUN_WITHOUT_ENCODER) {
+        if (leftFront.getMode() == DcMotor.RunMode.RUN_WITHOUT_ENCODER &!GlobalVariables.driveDisable) {
             double throttledX = speedX * THROTTLE;
             double throttledY = speedY * THROTTLE;
             double throttledRotation = rotation * THROTTLE;

@@ -61,7 +61,7 @@ public class ConfigurationSecondRobot {
     public static double horizontalWristIntake = 0.17;
 
     //horizontal wrist moving times, MS
-    public static double horizontalWristtoMiddleTime = 300;
+    public static double horizontalWristtoMiddleTime = 600;
     public static double horizontalWristDowntoUpTime = 1340;
     public static double horizontalWristIntaketoTransfer = 450;
 
