@@ -6,6 +6,7 @@ import com.acmerobotics.roadrunner.SequentialAction;
 import com.acmerobotics.roadrunner.SleepAction;
 import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.Configuration.secondRobot.HorizontalGrabberRR;
@@ -19,6 +20,7 @@ import org.firstinspires.ftc.teamcode.Configuration.secondRobot.VerticalWristRR;
 import org.firstinspires.ftc.teamcode.RR.PinpointDrive;
 
 @Autonomous(name="move")
+@Disabled
 public class Move extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {

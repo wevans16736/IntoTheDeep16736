@@ -3,7 +3,9 @@ package org.firstinspires.ftc.teamcode.Autonomus.secondRobot.Championship;
 import com.acmerobotics.roadrunner.ParallelAction;
 import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.SequentialAction;
+import com.acmerobotics.roadrunner.SleepAction;
 import com.acmerobotics.roadrunner.ftc.Actions;
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.Configuration.secondRobot.HorizontalGrabberRR;
@@ -17,11 +19,12 @@ import org.firstinspires.ftc.teamcode.Configuration.secondRobot.VerticalWristRR;
 import org.firstinspires.ftc.teamcode.RR.PinpointDrive;
 import org.firstinspires.ftc.teamcode.secondrobot.LimeSweet;
 
+@Autonomous(name = "AutoLeftChampionship", group = "auto")
 public class AutoLeftChampionship extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
         //set up Pinpoint and Pose2d class
-        Pose2d pose = new Pose2d(-29.5,-62.25,Math.toRadians(180));
+        Pose2d pose = new Pose2d(-39.5,-62.25,Math.toRadians(180));
         PinpointDrive drive = new PinpointDrive(hardwareMap, pose);
         LimeSweet lime = new LimeSweet(hardwareMap, telemetry, 0);
 
@@ -62,15 +65,16 @@ public class AutoLeftChampionship extends LinearOpMode {
                         trajectory.getBasket(),
                         trajectory.getTransfer()
                 ),
-                trajectory.getSub()
+                trajectory.getSub(),
+                new SleepAction(2000)
         ));
-        trajectory.getButterPose();
-        Actions.runBlocking(new SequentialAction(
-                trajectory.getSubButter(),
-                new ParallelAction(
-                        trajectory.getBasket(),
-                        trajectory.getTransfer()
-                )
-        ));
+//        trajectory.getButterPose();
+//        Actions.runBlocking(new SequentialAction(
+//                trajectory.getSubButter(),
+//                new ParallelAction(
+//                        trajectory.getBasket(),
+//                        trajectory.getTransfer()
+//                )
+//        ));
     }
 }

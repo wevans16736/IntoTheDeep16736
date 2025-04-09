@@ -7,7 +7,6 @@ import com.acmerobotics.roadrunner.Action;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
-import org.firstinspires.ftc.teamcode.Autonomus.firstRobot.YellowAuto;
 import org.firstinspires.ftc.teamcode.secondrobot.constants.ConfigConstants;
 
 public class VerticalWristRR {

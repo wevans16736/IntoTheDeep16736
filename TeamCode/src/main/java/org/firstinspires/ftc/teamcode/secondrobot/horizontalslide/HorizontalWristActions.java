@@ -6,7 +6,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.Configuration.secondRobot.Pose;
-import org.firstinspires.ftc.teamcode.robotverticalslides.constants.ConfigConstants;
+import org.firstinspires.ftc.teamcode.secondrobot.constants.ConfigConstants;
 
 public class HorizontalWristActions {
     public ServoImplEx horizontalWristServo;

@@ -7,7 +7,7 @@ import com.acmerobotics.roadrunner.Action;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
-import org.firstinspires.ftc.teamcode.robotverticalslides.constants.ConfigConstants;
+import org.firstinspires.ftc.teamcode.secondrobot.constants.ConfigConstants;
 
 public class HorizontalGrabberRR {
     Servo HorizontalGrabberServo;
