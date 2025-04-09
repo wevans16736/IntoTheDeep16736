@@ -16,7 +16,7 @@ import org.firstinspires.ftc.teamcode.Configuration.secondRobot.VerticalGrabberR
 import org.firstinspires.ftc.teamcode.Configuration.secondRobot.VerticalHangerRR;
 import org.firstinspires.ftc.teamcode.Configuration.secondRobot.VerticalSlideRR;
 import org.firstinspires.ftc.teamcode.Configuration.secondRobot.VerticalWristRR;
-import org.firstinspires.ftc.teamcode.PinpointDrive;
+import org.firstinspires.ftc.teamcode.RR.PinpointDrive;
 
 @Autonomous(name="move")
 public class Move extends LinearOpMode {
@@ -59,7 +59,7 @@ public class Move extends LinearOpMode {
         ));
         limeSweet.scan();
         Actions.runBlocking(new SequentialAction(
-                trajectory.getButter()
+//                trajectory.getButter()
         ));
     }
 }

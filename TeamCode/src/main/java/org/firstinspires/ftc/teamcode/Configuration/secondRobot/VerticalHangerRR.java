@@ -13,7 +13,7 @@ public class VerticalHangerRR {
     Servo verticalHanger;
     public VerticalHangerRR(HardwareMap hardwareMap){
         verticalHanger = hardwareMap.get(Servo.class, ConfigConstants.VERTICAL_HANGER);
-        verticalHanger.setPosition(ConfigurationSecondRobot.verticalHangIn);
+        verticalHanger.setPosition(Pose.verticalHangIn);
     }
 
     public class VerticalHangAction implements Action {

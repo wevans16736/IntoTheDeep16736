@@ -4,8 +4,9 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.Range;
 
-import org.firstinspires.ftc.teamcode.Configuration.secondRobot.ConfigurationSecondRobot;
-import org.firstinspires.ftc.teamcode.GlobalVariables;
+import org.firstinspires.ftc.teamcode.Configuration.secondRobot.Pose;
+import org.firstinspires.ftc.teamcode.Configuration.secondRobot.Timing;
+import org.firstinspires.ftc.teamcode.RR.GlobalVariables;
 import org.firstinspires.ftc.teamcode.secondrobot.horizontalslide.HorizontalIntakeActions;
 import org.firstinspires.ftc.teamcode.secondrobot.horizontalslide.HorizontalIRollActions;
 import org.firstinspires.ftc.teamcode.secondrobot.horizontalslide.HorizontalSlideActions;
@@ -124,8 +125,8 @@ public abstract class HelperActions extends LinearOpMode {
         intake.setIsVertGrabberClosed(grabber.isClose());
 
         //tells the vertical wrist when the slide is up
-        verticalWrist.setSlideUp(verticalSlide.getSlidePosition() > ConfigurationSecondRobot.highBar + 700);
-        verticalWrist.setSlideMiddle(verticalSlide.getSlidePosition() > ConfigurationSecondRobot.highBar - 600);
+        verticalWrist.setSlideUp(verticalSlide.getSlidePosition() > Pose.verticalSlideHighBar + 700);
+        verticalWrist.setSlideMiddle(verticalSlide.getSlidePosition() > Pose.verticalSlideHighBar - 600);
 
         //tells the horizontal slide to stop and let the horizontal wrist flip up or flip down when going in or out
         overrideSlide = horizontalArm.getSlidePosition() < overrideSlideThreshold && !horizontalWrist.override;
@@ -152,7 +153,7 @@ public abstract class HelperActions extends LinearOpMode {
         //Set the vertical slide to go to the bottom
         verticalSlide.goToPreset(false, true, false, false);
         //if the distance between the vertical slide and the bottom is significant, the vertical assembly is not closed
-        if (Math.abs(verticalSlide.getSlidePosition() - ConfigurationSecondRobot.bottom) > 5) {
+        if (Math.abs(verticalSlide.getSlidePosition() - Pose.verticalSlideBottom) > 5) {
             isClosed = false;
         }
         //if the vertical grabber is closed, open it and start a timer to run until it's open
@@ -161,7 +162,7 @@ public abstract class HelperActions extends LinearOpMode {
             verticalGrabberOpenStartTime = System.currentTimeMillis();
         }
         //if the vertical grabber timer is not over, the vertical assembly is not closed
-        if (System.currentTimeMillis() < verticalGrabberOpenStartTime + ConfigurationSecondRobot.verticalOpenTime) {
+        if (System.currentTimeMillis() < verticalGrabberOpenStartTime + Timing.verticalOpenTime) {
             isClosed = false;
         }
         //if the vertical wrist is flipped out, flip it back and start a timer to run until it's back
@@ -170,7 +171,7 @@ public abstract class HelperActions extends LinearOpMode {
             verticalWristBackwardStartTime = System.currentTimeMillis();
         }
         //if the vertical wrist timer is not over, the vertical assembly is not closed
-        if (System.currentTimeMillis() < verticalWristBackwardStartTime + ConfigurationSecondRobot.verticalWristWalltoIntake) {
+        if (System.currentTimeMillis() < verticalWristBackwardStartTime + Timing.verticalWristWalltoIntake) {
             isClosed = false;
         }
         return isClosed;
@@ -191,7 +192,7 @@ public abstract class HelperActions extends LinearOpMode {
                 horizontalWristMiddleStartTime = System.currentTimeMillis();
             }
             //move the slide in, if the wrist is moving move the slide slower
-            if (System.currentTimeMillis() < horizontalWristMiddleStartTime + ConfigurationSecondRobot.horizontalWristtoMiddleTime) {
+            if (System.currentTimeMillis() < horizontalWristMiddleStartTime + Timing.horizontalWristtoMiddleTime) {
                 horizontalSlide.teleOpArmMotor(-0.5, 1);
             } else {
                 horizontalSlide.setSlideDistance(0, 6000);
@@ -203,14 +204,14 @@ public abstract class HelperActions extends LinearOpMode {
                 horizontalWristUpStartTime = System.currentTimeMillis();
                 //if the wrist is down, set the timer to the time it'll take to move all the way up
                 if (horizontalWrist.forward) {
-                    timeTilWristIsUp = ConfigurationSecondRobot.horizontalWristDowntoUpTime;
+                    timeTilWristIsUp = Timing.horizontalWristDowntoUpTime;
                 } else {
                     //If the wrist is middle, the time it needs is the time from middle to up. if it's moving from down to middle, the time it has been moving needs to be subtracted from the timer
-                    if (System.currentTimeMillis() > horizontalWristMiddleStartTime + ConfigurationSecondRobot.horizontalWristtoMiddleTime) {
-                        timeTilWristIsUp = ConfigurationSecondRobot.horizontalWristtoMiddleTime;
+                    if (System.currentTimeMillis() > horizontalWristMiddleStartTime + Timing.horizontalWristtoMiddleTime) {
+                        timeTilWristIsUp = Timing.horizontalWristtoMiddleTime;
                     } else {
-                        double timeWristHasBeenTravelling = Range.clip(System.currentTimeMillis() - horizontalWristMiddleStartTime, 0, ConfigurationSecondRobot.horizontalWristtoMiddleTime);
-                        timeTilWristIsUp = ConfigurationSecondRobot.horizontalWristDowntoUpTime - timeWristHasBeenTravelling;
+                        double timeWristHasBeenTravelling = Range.clip(System.currentTimeMillis() - horizontalWristMiddleStartTime, 0, Timing.horizontalWristtoMiddleTime);
+                        timeTilWristIsUp = Timing.horizontalWristDowntoUpTime - timeWristHasBeenTravelling;
                     }
                 }
             }
@@ -227,7 +228,7 @@ public abstract class HelperActions extends LinearOpMode {
             horizontalRoll.teleOp(true);
             horizontalRollTurnStartTime = System.currentTimeMillis();
         }
-        if (System.currentTimeMillis() < horizontalRollTurnStartTime + ConfigurationSecondRobot.flatToSidewaysTime) {
+        if (System.currentTimeMillis() < horizontalRollTurnStartTime + Timing.flatToSidewaysTime) {
             isClosed = false;
         }
 
@@ -242,13 +243,13 @@ public abstract class HelperActions extends LinearOpMode {
             verticalGrabberCloseStartTime = System.currentTimeMillis();
             transferState = 1;
         }
-        if (transferState == 1 && System.currentTimeMillis() > verticalGrabberCloseStartTime + ConfigurationSecondRobot.verticalCloseTime) {
+        if (transferState == 1 && System.currentTimeMillis() > verticalGrabberCloseStartTime + Timing.verticalCloseTime) {
             horizontalIntake.open();
             horizontalIntake.update();
             horizontalIntakeOpenStartTime = System.currentTimeMillis();
             transferState = 2;
         }
-        if (transferState == 2 && System.currentTimeMillis() > horizontalIntakeOpenStartTime + ConfigurationSecondRobot.horizontalGrabberOpen) {
+        if (transferState == 2 && System.currentTimeMillis() > horizontalIntakeOpenStartTime + Pose.horizontalGrabberOpen) {
             transferState = 3;
         }
         return (transferState == 3);
@@ -299,7 +300,7 @@ public abstract class HelperActions extends LinearOpMode {
         horizontalSlide.setSlideDistanceMath(grabY, 3000);
 
         horizontalIntakeActions.open();
-        horizontalIntakeActions.setPosition(ConfigurationSecondRobot.horizontalGrabberWide);
+        horizontalIntakeActions.setPosition(Pose.horizontalGrabberWide);
         driveActions.strafeDistance(grabX + 1);
         horizontalIRollActions.setPosition((angle / 90) * 0.3);
         horizontalWristActions.setOverride(false);

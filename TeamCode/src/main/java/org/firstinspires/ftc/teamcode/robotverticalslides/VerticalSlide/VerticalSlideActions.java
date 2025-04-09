@@ -4,13 +4,12 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
-import com.qualcomm.robotcore.hardware.TouchSensor;
 import com.qualcomm.robotcore.util.Range;
 import com.qualcomm.robotcore.util.RobotLog;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
-import org.firstinspires.ftc.teamcode.Configuration.firstRobot.ConfigurationFirstRobot;
+import org.firstinspires.ftc.teamcode.Configuration.secondRobot.Pose;
 import org.firstinspires.ftc.teamcode.robotverticalslides.constants.ConfigConstants;
 
 public class VerticalSlideActions {
@@ -78,11 +77,11 @@ public class VerticalSlideActions {
     boolean downTo1 = false;
     boolean at1 = false;
     double at1StartTime = 0;
-    int preset1 = ConfigurationFirstRobot.highBar;
-    int preset2 = ConfigurationFirstRobot.bottom;
+    int preset1 = Pose.verticalSlideHighBar;
+    int preset2 = Pose.verticalSlideBottom;
     //todo is this right?
-    int preset3 = ConfigurationFirstRobot.lowBar;
-    int preset4 = ConfigurationFirstRobot.topBasket;
+    int preset3 = Pose.verticalSlideLowBar;
+    int preset4 = Pose.verticalSlideHighBasket;
     boolean wasSet = false;
 
     public void goToPreset(boolean bottomRung, boolean bottom, boolean topRung, boolean topBasket) {

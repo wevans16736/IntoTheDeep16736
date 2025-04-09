@@ -15,8 +15,8 @@ import org.firstinspires.ftc.teamcode.Configuration.secondRobot.VerticalSlideRR;
 import org.firstinspires.ftc.teamcode.Configuration.secondRobot.VerticalWristRR;
 import org.firstinspires.ftc.teamcode.FieldCentric.Attachment;
 import org.firstinspires.ftc.teamcode.FieldCentric.DriveTrain;
-import org.firstinspires.ftc.teamcode.GlobalVariables;
-import org.firstinspires.ftc.teamcode.PinpointDrive;
+import org.firstinspires.ftc.teamcode.RR.GlobalVariables;
+import org.firstinspires.ftc.teamcode.RR.PinpointDrive;
 import org.firstinspires.ftc.teamcode.secondrobot.horizontalslide.HorizontalIRollActions;
 import org.firstinspires.ftc.teamcode.secondrobot.horizontalslide.HorizontalIntakeActions;
 import org.firstinspires.ftc.teamcode.secondrobot.horizontalslide.HorizontalSlideActions;
@@ -47,7 +47,6 @@ public class LimelightTeleOp extends HelperActions {
     private List<Action> runningActions = new ArrayList<>();
     VerticalSlideRR verticalSlideRR; VerticalWristRR verticalWristRR; VerticalGrabberRR verticalGrabberRR; VerticalHangerRR verticalHangerRR;
     HorizontalSlideRR horizontalSlideRR; HorizontalRollRR horizontalRollRR; HorizontalGrabberRR horizontalGrabberRR; HorizontalWristRR horizontalWristRR;
-
 
     double liftSpdMult = 0.8 ;
 

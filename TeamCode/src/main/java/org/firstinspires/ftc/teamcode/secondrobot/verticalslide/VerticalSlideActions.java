@@ -10,7 +10,7 @@ import com.qualcomm.robotcore.util.RobotLog;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
-import org.firstinspires.ftc.teamcode.Configuration.secondRobot.ConfigurationSecondRobot;
+import org.firstinspires.ftc.teamcode.Configuration.secondRobot.Pose;
 import org.firstinspires.ftc.teamcode.secondrobot.constants.ConfigConstants;
 
 public class VerticalSlideActions {
@@ -90,7 +90,7 @@ public class VerticalSlideActions {
             //Multiplying by change in time makes sure the slide speed is more consistent
             double total = SlidePosition + power * (time - prevTime) * liftSpeedMultiplier;
             if (!overrideStops) {
-                total = Range.clip(total, 0, ConfigurationSecondRobot.topBasket);
+                total = Range.clip(total, 0, Pose.verticalSlideHighBasket);
             }
             setSlidePosition((int) total, 3000 * liftSpeedMultiplier);
             RobotLog.dd("LiftyUppy", "Target Position %f, time %f", SlidePosition, time);
@@ -105,11 +105,11 @@ public class VerticalSlideActions {
 
     boolean at1 = false;
     double at1StartTime = 0;
-    int preset1 = ConfigurationSecondRobot.highBar;
-    int preset2 = ConfigurationSecondRobot.bottom;
+    int preset1 = Pose.verticalSlideHighBar;
+    int preset2 = Pose.verticalSlideBottom;
     //todo is this right?
-    int preset3 = ConfigurationSecondRobot.lowBar;
-    int preset4 = ConfigurationSecondRobot.topBasket;
+    int preset3 = Pose.verticalSlideLowBar;
+    int preset4 = Pose.verticalSlideHighBasket;
     boolean wasSet = false;
     boolean wasDown = true;
     boolean isDown = true;

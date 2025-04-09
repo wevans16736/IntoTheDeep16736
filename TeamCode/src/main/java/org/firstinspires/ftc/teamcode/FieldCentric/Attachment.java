@@ -2,39 +2,30 @@ package org.firstinspires.ftc.teamcode.FieldCentric;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
-import com.acmerobotics.roadrunner.AccelConstraint;
 import com.acmerobotics.roadrunner.Action;
-import com.acmerobotics.roadrunner.CancelableProfile;
 import com.acmerobotics.roadrunner.InstantAction;
-import com.acmerobotics.roadrunner.Pose2d;
-import com.acmerobotics.roadrunner.PoseVelocity2d;
-import com.acmerobotics.roadrunner.ProfileParams;
 import com.acmerobotics.roadrunner.SequentialAction;
 import com.acmerobotics.roadrunner.SleepAction;
-import com.acmerobotics.roadrunner.Trajectory;
 import com.acmerobotics.roadrunner.TrajectoryActionBuilder;
-import com.acmerobotics.roadrunner.TrajectoryBuilder;
-import com.acmerobotics.roadrunner.TrajectoryBuilderParams;
 import com.acmerobotics.roadrunner.Vector2d;
 import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.util.RobotLog;
 
-import org.firstinspires.ftc.teamcode.Configuration.secondRobot.ConfigurationSecondRobot;
+import org.firstinspires.ftc.teamcode.Configuration.secondRobot.Pose;
 import org.firstinspires.ftc.teamcode.Configuration.secondRobot.HorizontalGrabberRR;
 import org.firstinspires.ftc.teamcode.Configuration.secondRobot.HorizontalRollRR;
 import org.firstinspires.ftc.teamcode.Configuration.secondRobot.HorizontalSlideRR;
 import org.firstinspires.ftc.teamcode.Configuration.secondRobot.HorizontalWristRR;
+import org.firstinspires.ftc.teamcode.Configuration.secondRobot.Timing;
 import org.firstinspires.ftc.teamcode.Configuration.secondRobot.VerticalGrabberRR;
 import org.firstinspires.ftc.teamcode.Configuration.secondRobot.VerticalHangerRR;
 import org.firstinspires.ftc.teamcode.Configuration.secondRobot.VerticalSlideRR;
 import org.firstinspires.ftc.teamcode.Configuration.secondRobot.VerticalWristRR;
-import org.firstinspires.ftc.teamcode.GlobalVariables;
-import org.firstinspires.ftc.teamcode.MecanumDrive;
-import org.firstinspires.ftc.teamcode.PinpointDrive;
+import org.firstinspires.ftc.teamcode.RR.GlobalVariables;
+import org.firstinspires.ftc.teamcode.RR.PinpointDrive;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 public class Attachment {
     VerticalSlideRR verticalSlide; VerticalWristRR verticalWrist;
@@ -76,12 +67,12 @@ public class Attachment {
             if (LoopTimeRB >= desiredLoopms) {
                 if (!wasRB) {
                     runningActions.add(new SequentialAction(
-                            new InstantAction(() -> verticalGrabber.setPose(ConfigurationSecondRobot.verticalOpen))
+                            new InstantAction(() -> verticalGrabber.setPose(Pose.verticalOpen))
                     ));
                 } else {
                     if (wasRB) {
                         runningActions.add(new SequentialAction(
-                                new InstantAction(() -> verticalGrabber.setPose(ConfigurationSecondRobot.verticalClose))
+                                new InstantAction(() -> verticalGrabber.setPose(Pose.verticalClose))
                         ));
                     }
                 }
@@ -97,27 +88,27 @@ public class Attachment {
             if (loopTimeTriangle >= desiredLoopms) {
                 if (!wasTriangle) {
                     runningActions.add(new SequentialAction(
-                            new InstantAction(() -> horizontalSlide.setPose(ConfigurationSecondRobot.horizontalSlideExtend)),
+                            new InstantAction(() -> horizontalSlide.setPose(Pose.horizontalSlideExtend)),
                             new SleepAction(.5),
-                            new InstantAction(() -> horizontalWrist.setPose(ConfigurationSecondRobot.horizontalWristIntake)),
-                            new InstantAction(() -> verticalGrabber.setPose(ConfigurationSecondRobot.verticalOpen)),
-                            new InstantAction(() -> horizontalGrabber.setPose(ConfigurationSecondRobot.horizontalGrabberWide))
+                            new InstantAction(() -> horizontalWrist.setPose(Pose.horizontalWristIntake)),
+                            new InstantAction(() -> verticalGrabber.setPose(Pose.verticalOpen)),
+                            new InstantAction(() -> horizontalGrabber.setPose(Pose.horizontalGrabberWide))
                     ));
                 } else {
                     if (wasTriangle) {
                         runningActions.add(new SequentialAction(
-                                new InstantAction(() -> horizontalWrist.setPose(ConfigurationSecondRobot.horizontalWristTransfer)),
-                                new InstantAction(() -> horizontalRoll.setPose(ConfigurationSecondRobot.flat)),
-                                new InstantAction(() -> horizontalSlide.setPose(ConfigurationSecondRobot.horizontalSlideRetract)),
-                                new InstantAction(() -> verticalGrabber.setPose(ConfigurationSecondRobot.verticalOpen)),
-                                new InstantAction(() -> verticalWrist.setPose(ConfigurationSecondRobot.verticalWristIntake)),
+                                new InstantAction(() -> horizontalWrist.setPose(Pose.horizontalWristTransfer)),
+                                new InstantAction(() -> horizontalRoll.setPose(Pose.horizontalRollFlat)),
+                                new InstantAction(() -> horizontalSlide.setPose(Pose.horizontalSlideRetract)),
+                                new InstantAction(() -> verticalGrabber.setPose(Pose.verticalOpen)),
+                                new InstantAction(() -> verticalWrist.setPose(Pose.verticalWristTransfer)),
 //                                new SleepAction((ConfigurationSecondRobot.horizontalSlideTime *.25) / 1000),
 //                                new InstantAction(() -> horizontalWrist.setPose(ConfigurationSecondRobot.horizontalWristTransfer)),
 //                                new SleepAction((ConfigurationSecondRobot.horizontalSlideTime *.75) / 1000),
-                                new SleepAction(ConfigurationSecondRobot.horizontalSlideTime/1000),
-                                new InstantAction(() -> verticalGrabber.setPose(ConfigurationSecondRobot.verticalClose)),
-                                new SleepAction(ConfigurationSecondRobot.verticalCloseTime / 1000),
-                                new InstantAction(() -> horizontalGrabber.setPose(ConfigurationSecondRobot.horizontalGrabberOpen))
+                                new SleepAction(Timing.horizontalSlideTime/1000),
+                                new InstantAction(() -> verticalGrabber.setPose(Pose.verticalClose)),
+                                new SleepAction(Timing.verticalCloseTime / 1000),
+                                new InstantAction(() -> horizontalGrabber.setPose(Pose.horizontalGrabberOpen))
                         ));
                     }
                 }
@@ -135,12 +126,12 @@ public class Attachment {
             if (loopTimeRT >= desiredLoopms) {
                 if (!wasRT) {
                     runningActions.add(new SequentialAction(
-                            new InstantAction(() -> horizontalGrabber.setPose(ConfigurationSecondRobot.horizontalGrabberClose))
+                            new InstantAction(() -> horizontalGrabber.setPose(Pose.horizontalGrabberClose))
                     ));
                 } else {
                     if (wasRT) {
                         runningActions.add(new SequentialAction(
-                                new InstantAction(() -> horizontalGrabber.setPose(ConfigurationSecondRobot.horizontalGrabberWide))
+                                new InstantAction(() -> horizontalGrabber.setPose(Pose.horizontalGrabberWide))
                         ));
                     }
                 }
@@ -170,29 +161,29 @@ public class Attachment {
                     }
                     if (wasLeft == 0) {
                         runningActions.add(new SequentialAction(
-                                new InstantAction(() -> verticalSlide.setPose(ConfigurationSecondRobot.bottom)),
-                                new InstantAction(() -> verticalWrist.setPose(ConfigurationSecondRobot.verticalWristIntake)),
-                                new InstantAction(() -> verticalGrabber.setPose(ConfigurationSecondRobot.verticalOpen))
+                                new InstantAction(() -> verticalSlide.setPose(Pose.verticalSlideBottom)),
+                                new InstantAction(() -> verticalWrist.setPose(Pose.verticalWristTransfer)),
+                                new InstantAction(() -> verticalGrabber.setPose(Pose.verticalOpen))
                         ));
                     }
                     if (wasLeft == 1) {
                         runningActions.add(new SequentialAction(
-                                new InstantAction(() -> verticalWrist.setPose(ConfigurationSecondRobot.verticalWristWall)),
-                                new InstantAction(() -> verticalSlide.setPose(ConfigurationSecondRobot.bottom)),
-                                new InstantAction(() -> verticalGrabber.setPose(ConfigurationSecondRobot.verticalClose)),
-                                new InstantAction(() -> horizontalGrabber.setPose(ConfigurationSecondRobot.horizontalGrabberOpen))
+                                new InstantAction(() -> verticalWrist.setPose(Pose.verticalWristWall)),
+                                new InstantAction(() -> verticalSlide.setPose(Pose.verticalSlideBottom)),
+                                new InstantAction(() -> verticalGrabber.setPose(Pose.verticalClose)),
+                                new InstantAction(() -> horizontalGrabber.setPose(Pose.horizontalGrabberOpen))
                         ));
                     }
                     if (wasLeft == 2) {
                         runningActions.add(new SequentialAction(
-                                new InstantAction(() -> verticalSlide.setPose(ConfigurationSecondRobot.highBar)),
-                                new InstantAction(() -> verticalWrist.setPose(ConfigurationSecondRobot.verticalWristBar))
+                                new InstantAction(() -> verticalSlide.setPose(Pose.verticalSlideHighBar)),
+                                new InstantAction(() -> verticalWrist.setPose(Pose.verticalWristBar))
                         ));
                     }
                     if (wasLeft == 3) {
                         runningActions.add(new SequentialAction(
-                                new InstantAction(() -> verticalWrist.setPose(ConfigurationSecondRobot.verticalWristBasket)),
-                                new InstantAction(() -> verticalSlide.setPose(ConfigurationSecondRobot.topBasket))
+                                new InstantAction(() -> verticalWrist.setPose(Pose.verticalWristBasket)),
+                                new InstantAction(() -> verticalSlide.setPose(Pose.verticalSlideHighBasket))
                         ));
                     }
                     prevTimeLeft = currTime;
@@ -209,13 +200,13 @@ public class Attachment {
             if (loopTimeCircle <= desiredLoopms) {
                 if (wasCircle) {
                     runningActions.add(new SequentialAction(
-                            new InstantAction(() -> verticalWrist.setPose(ConfigurationSecondRobot.verticalWristIntake))
+                            new InstantAction(() -> verticalWrist.setPose(Pose.verticalWristTransfer))
                     ));
                 } else {
                     if (!wasCircle) {
                         runningActions.add(new SequentialAction(
-                                new InstantAction(() -> verticalWrist.setPose(ConfigurationSecondRobot.verticalWristWall)),
-                                new InstantAction(() -> verticalGrabber.setPose(ConfigurationSecondRobot.verticalOpen))
+                                new InstantAction(() -> verticalWrist.setPose(Pose.verticalWristWall)),
+                                new InstantAction(() -> verticalGrabber.setPose(Pose.verticalOpen))
                         ));
                     }
                 }
@@ -235,12 +226,12 @@ public class Attachment {
                     if (loopTimeDPU >= desiredLoopms) {
                         if (wasDPU) {
                             runningActions.add(new SequentialAction(
-                                    new InstantAction(() -> verticalHanger.setPose(ConfigurationSecondRobot.verticalHangIn))
+                                    new InstantAction(() -> verticalHanger.setPose(Pose.verticalHangIn))
                             ));
                         } else {
                             if (!wasDPU) {
                                 runningActions.add(new SequentialAction(
-                                        new InstantAction(() -> verticalHanger.setPose(ConfigurationSecondRobot.verticalHangOut))
+                                        new InstantAction(() -> verticalHanger.setPose(Pose.verticalHangOut))
                                 ));
                             }
                         }
@@ -297,12 +288,12 @@ public class Attachment {
             if(loopTimeDpad_left >= desiredLoopms){
                 if(wasDpad_left){
                     runningActions.add(new SequentialAction(
-                            new InstantAction(() -> horizontalRoll.setPose(ConfigurationSecondRobot.flat))
+                            new InstantAction(() -> horizontalRoll.setPose(Pose.horizontalRollFlat))
                             ));
                 }
                 if(!wasDpad_left){
                     runningActions.add(new SequentialAction(
-                            new InstantAction(() -> horizontalRoll.setPose(ConfigurationSecondRobot.sideway))
+                            new InstantAction(() -> horizontalRoll.setPose(Pose.horizontalRollSideway))
                     ));
                 }
                 prevTimeDpad_left = currTime;
@@ -325,8 +316,8 @@ public class Attachment {
                     RobotLog.dd("driveBasket", "tabing");
                     TrajectoryActionBuilder Bucket = drive.actionBuilder(drive.getLastPinpointPose())
                             .strafeToLinearHeading(new Vector2d(basketX, drive.getLastPinpointPose().position.y), Math.toRadians(-90))
-                            .stopAndAdd(verticalSlide.verticalSlideAction(ConfigurationSecondRobot.topBasket))
-                            .stopAndAdd(verticalWrist.VerticalWristAction(ConfigurationSecondRobot.verticalWristBasket))
+                            .stopAndAdd(verticalSlide.verticalSlideAction(Pose.verticalSlideHighBasket))
+                            .stopAndAdd(verticalWrist.verticalWristAction(Pose.verticalWristBasket))
                             .strafeToLinearHeading(new Vector2d(basketX, basketY), Math.toRadians(217));
                     Actions.runBlocking(new SequentialAction(
                             Bucket.build()
@@ -334,8 +325,8 @@ public class Attachment {
                     GlobalVariables.driveDisable = false;
                 } else {
                     TrajectoryActionBuilder Bucket = drive.actionBuilder(drive.getLastPinpointPose())
-                            .stopAndAdd(verticalSlide.verticalSlideAction(ConfigurationSecondRobot.topBasket))
-                            .stopAndAdd(verticalWrist.VerticalWristAction(ConfigurationSecondRobot.verticalWristBasket))
+                            .stopAndAdd(verticalSlide.verticalSlideAction(Pose.verticalSlideHighBasket))
+                            .stopAndAdd(verticalWrist.verticalWristAction(Pose.verticalWristBasket))
                             .strafeToLinearHeading(new Vector2d(basketX, basketY), Math.toRadians(217));
                     Actions.runBlocking(new SequentialAction(
                             Bucket.build()

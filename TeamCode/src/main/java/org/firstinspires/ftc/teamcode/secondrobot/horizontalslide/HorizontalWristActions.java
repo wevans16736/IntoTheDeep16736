@@ -5,7 +5,7 @@ import com.qualcomm.robotcore.hardware.ServoImplEx;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.teamcode.Configuration.secondRobot.ConfigurationSecondRobot;
+import org.firstinspires.ftc.teamcode.Configuration.secondRobot.Pose;
 import org.firstinspires.ftc.teamcode.robotverticalslides.constants.ConfigConstants;
 
 public class HorizontalWristActions {
@@ -13,9 +13,9 @@ public class HorizontalWristActions {
     private Telemetry telemetry;
     private HardwareMap hardwareMap;
     private ElapsedTime runtime = new ElapsedTime();
-    private double backwardPosIn = ConfigurationSecondRobot.horizontalWristTransfer;
-    private double backwardPosOut = ConfigurationSecondRobot.horizontalWristHover;
-    private double forwardPosOut = ConfigurationSecondRobot.horizontalWristIntake;
+    private double backwardPosIn = Pose.horizontalWristTransfer;
+    private double backwardPosOut = Pose.horizontalWristHover;
+    private double forwardPosOut = Pose.horizontalWristIntake;
     public HorizontalWristActions(Telemetry opModeTelemetry, HardwareMap opModeHardware) {
         this.telemetry = opModeTelemetry;
         this.hardwareMap = opModeHardware;

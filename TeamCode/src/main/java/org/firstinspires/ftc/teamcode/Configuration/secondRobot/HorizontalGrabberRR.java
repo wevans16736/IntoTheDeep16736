@@ -4,7 +4,6 @@ import androidx.annotation.NonNull;
 
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.acmerobotics.roadrunner.Action;
-import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
@@ -14,7 +13,7 @@ public class HorizontalGrabberRR {
     Servo HorizontalGrabberServo;
     public HorizontalGrabberRR(HardwareMap hardwareMap){
         HorizontalGrabberServo = hardwareMap.get(Servo.class, ConfigConstants.HORIZONTAL_INTAKE);
-        HorizontalGrabberServo.setPosition(ConfigurationSecondRobot.horizontalGrabberOpen);
+        HorizontalGrabberServo.setPosition(Pose.horizontalGrabberOpen);
     }
 
     public class HorizontalGrabberAction implements Action {

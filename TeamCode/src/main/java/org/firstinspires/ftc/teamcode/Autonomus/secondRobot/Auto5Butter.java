@@ -16,8 +16,8 @@ import org.firstinspires.ftc.teamcode.Configuration.secondRobot.VerticalGrabberR
 import org.firstinspires.ftc.teamcode.Configuration.secondRobot.VerticalSlideRR;
 import org.firstinspires.ftc.teamcode.Configuration.secondRobot.VerticalWristRR;
 import org.firstinspires.ftc.teamcode.Configuration.secondRobot.VerticalHangerRR;
-import org.firstinspires.ftc.teamcode.GlobalVariables;
-import org.firstinspires.ftc.teamcode.PinpointDrive;
+import org.firstinspires.ftc.teamcode.RR.GlobalVariables;
+import org.firstinspires.ftc.teamcode.RR.PinpointDrive;
 
 @Autonomous(name = "Auto")
 public class Auto5Butter extends LinearOpMode {
@@ -49,7 +49,7 @@ public class Auto5Butter extends LinearOpMode {
 
 //        DetectBlockActions vision = new DetectBlockActions(hardwareMap);
 
-        Trajectory trajectory = new Trajectory(drive, pose, verticalSlide, verticalWrist, verticalGrabber,
+        TrajectoryRight trajectory = new TrajectoryRight(drive, pose, verticalSlide, verticalWrist, verticalGrabber,
                 verticalHanger, horizontalSlide, horizontalRoll, horizontalGrabber, horizontalWrist);
 
         //build everything

@@ -5,7 +5,7 @@ import com.qualcomm.robotcore.hardware.ServoImplEx;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.teamcode.Configuration.secondRobot.ConfigurationSecondRobot;
+import org.firstinspires.ftc.teamcode.Configuration.secondRobot.Pose;
 import org.firstinspires.ftc.teamcode.secondrobot.constants.ConfigConstants;
 
 //todo is this spell wrong?
@@ -14,7 +14,7 @@ public class HorizontalIRollActions {
     private Telemetry telemetry;
     private HardwareMap hardwareMap;
     private ElapsedTime runtime = new ElapsedTime();
-    private double flat = ConfigurationSecondRobot.flat;
+    private double flat = Pose.horizontalRollFlat;
 
     public HorizontalIRollActions(Telemetry opModeTelemetry, HardwareMap opModeHardware) {
         this.telemetry = opModeTelemetry;

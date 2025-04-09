@@ -1,22 +1,7 @@
 package org.firstinspires.ftc.teamcode.secondrobot;
 
-import com.acmerobotics.dashboard.FtcDashboard;
-import com.acmerobotics.roadrunner.Action;
-import com.acmerobotics.roadrunner.Pose2d;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
-import org.firstinspires.ftc.teamcode.Configuration.secondRobot.HorizontalGrabberRR;
-import org.firstinspires.ftc.teamcode.Configuration.secondRobot.HorizontalRollRR;
-import org.firstinspires.ftc.teamcode.Configuration.secondRobot.HorizontalSlideRR;
-import org.firstinspires.ftc.teamcode.Configuration.secondRobot.HorizontalWristRR;
-import org.firstinspires.ftc.teamcode.Configuration.secondRobot.VerticalGrabberRR;
-import org.firstinspires.ftc.teamcode.Configuration.secondRobot.VerticalHangerRR;
-import org.firstinspires.ftc.teamcode.Configuration.secondRobot.VerticalSlideRR;
-import org.firstinspires.ftc.teamcode.Configuration.secondRobot.VerticalWristRR;
-import org.firstinspires.ftc.teamcode.FieldCentric.Attachment;
-import org.firstinspires.ftc.teamcode.FieldCentric.DriveTrain;
-import org.firstinspires.ftc.teamcode.GlobalVariables;
-import org.firstinspires.ftc.teamcode.PinpointDrive;
 import org.firstinspires.ftc.teamcode.secondrobot.horizontalslide.HorizontalIRollActions;
 import org.firstinspires.ftc.teamcode.secondrobot.horizontalslide.HorizontalIntakeActions;
 import org.firstinspires.ftc.teamcode.secondrobot.horizontalslide.HorizontalWristActions;
@@ -25,10 +10,6 @@ import org.firstinspires.ftc.teamcode.secondrobot.verticalslide.VerticalHangerAc
 import org.firstinspires.ftc.teamcode.secondrobot.verticalslide.VerticalSlideActions;
 import org.firstinspires.ftc.teamcode.secondrobot.verticalslide.VerticalWristActions;
 import org.firstinspires.ftc.teamcode.secondrobot.horizontalslide.HorizontalSlideActions;
-import org.opencv.core.Point;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @TeleOp(name = "Tele Op second robot", group = "Linear Opmode")
 public class SecondaryTeleOp extends HelperActions {

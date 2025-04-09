@@ -13,7 +13,7 @@ public class VerticalGrabberRR {
     Servo verticalGrabberServo;
     public VerticalGrabberRR(HardwareMap hardwareMap){
         verticalGrabberServo = hardwareMap.get(Servo.class, ConfigConstants.VERTICAL_GRABBER);
-        verticalGrabberServo.setPosition(ConfigurationSecondRobot.verticalClose);
+        verticalGrabberServo.setPosition(Pose.verticalClose);
     }
 
     public class VerticalGrabberAction implements Action{

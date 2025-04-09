@@ -1,12 +1,11 @@
 package org.firstinspires.ftc.teamcode.secondrobot.horizontalslide;
 
 import com.qualcomm.robotcore.hardware.HardwareMap;
-import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.ServoImplEx;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.teamcode.Configuration.secondRobot.ConfigurationSecondRobot;
+import org.firstinspires.ftc.teamcode.Configuration.secondRobot.Pose;
 import org.firstinspires.ftc.teamcode.secondrobot.constants.ConfigConstants;
 
 public class HorizontalIntakeActions {
@@ -39,10 +38,10 @@ public class HorizontalIntakeActions {
     double vertGrabberClosingStartTime = 0;
     public void update() {
         if (!closed) {
-            setPosition(ConfigurationSecondRobot.horizontalGrabberWide);
+            setPosition(Pose.horizontalGrabberWide);
             telemetry.addData("open", true);
         } else {
-            setPosition(ConfigurationSecondRobot.horizontalGrabberClose);
+            setPosition(Pose.horizontalGrabberClose);
             telemetry.addData("closed", true);
         }
         //if the vertical grabber is closing, start a timer for .4 seconds. at the end of the .4 seconds, open the intake
