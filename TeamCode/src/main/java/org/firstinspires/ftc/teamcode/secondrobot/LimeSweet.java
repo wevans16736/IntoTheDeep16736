@@ -17,6 +17,8 @@ public class LimeSweet {
     double tx, ty, height, verticalFOV, horizontalFOV;
     double verticalDistance, horizontalDistance, xDistance, yDistance;
     int pipeline; ArrayList<Double> point = new ArrayList<>();
+    double[] inputs = {1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0};
+
     public LimeSweet(HardwareMap hardwareMap, Telemetry telemetry, int pipeline){
         this.telemetry = telemetry;
         this.lime = hardwareMap.get(Limelight3A.class, ConfigConstants.LIME);
@@ -62,7 +64,6 @@ public class LimeSweet {
             return point;
         } else {
             // Sending numbers to Python
-            double[] inputs = {1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0};
             lime.updatePythonInputs(inputs);
             LLResult result = lime.getLatestResult();
                 // Getting numbers from Python
@@ -85,5 +86,8 @@ public class LimeSweet {
                 telemetry.update();
             return point;
         }
+    }
+    public void setInputs(double[] inputs){
+        this.inputs = inputs;
     }
 }

@@ -326,4 +326,16 @@ public abstract class HelperActions extends LinearOpMode {
         }
         wasActivateGrabSample = activate;
     }
+    double[] inputs = new double[]{1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0};
+    public void switchSample(boolean yellow, boolean blue, boolean red, LimeSweet limeSweet){
+        if (yellow){
+            inputs = new double[]{1.0, 2.0, 0.0, 4.0, 5.0, 6.0, 7.0, 8.0};
+
+        } else if (red){
+            inputs = new double[]{1.0, 2.0, 1.0, 4.0, 5.0, 6.0, 7.0, 8.0};
+        } else if (blue){
+            inputs = new double[]{1.0, 2.0, 2.0, 4.0, 5.0, 6.0, 7.0, 8.0};
+        }
+        limeSweet.setInputs(inputs);
+    }
 }

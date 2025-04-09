@@ -119,7 +119,7 @@ public class LimelightTeleOp extends HelperActions {
             telemetry.addData("Joystick", gamepad2.left_stick_y);
 
             //allow you to use a d-pad to adjust the speed of the drive train
-            changeSpeed(driveActions, gamepad1.dpad_up, gamepad1.dpad_down, false, false, gamepad1.right_trigger);
+            changeSpeed(driveActions, false, false, false, false, gamepad1.right_trigger);
 //            toggleSpeed(gamepad1.a);
             //toggles the hanger in and out, gamepad 1 x
             verticalHanger.teleOpHanger(gamepad1.x);
@@ -158,10 +158,11 @@ public class LimelightTeleOp extends HelperActions {
             //A button gamepad 2. Not yet working
             managePlaceSample(gamepad2.a, verticalGrabber, verticalWrist, verticalSlide, horizontalWrist, horizontalSlide, horizontalIntake, horizontalIRoll);
 
-            manageGrabSample(gamepad2.share, limeSweet, horizontalSlide, driveActions, horizontalIRoll, horizontalWrist, horizontalIntake);
+            switchSample(gamepad1.square, gamepad1.triangle, gamepad1.cross, limeSweet);
+            manageGrabSample(gamepad1.share, limeSweet, horizontalSlide, driveActions, horizontalIRoll, horizontalWrist, horizontalIntake);
             limeSweet.scanButter();
 
-            attachment.driveBasket(gamepad1.cross);
+            attachment.driveBasket(gamepad1.dpad_right);
             attachment.updateAction();
 //            Point blockCenter = detectBlockActions.pixelToPosition(detectBlockActions.getCenter());
 //            telemetry.addData("block x %f, block y %f", blockCenter);
