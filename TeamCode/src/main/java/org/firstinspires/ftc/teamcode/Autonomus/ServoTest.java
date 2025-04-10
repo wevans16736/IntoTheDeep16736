@@ -8,7 +8,7 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 
 @Config
 //@Disabled
-@TeleOp(name="1.ServoTest", group = "SecondRobot")
+@TeleOp(name="ServoTest", group = "SecondRobot")
 public class ServoTest extends LinearOpMode {
 
 //    public static double VerticalGrabber = ConfigurationSecondRobot.verticalClose;

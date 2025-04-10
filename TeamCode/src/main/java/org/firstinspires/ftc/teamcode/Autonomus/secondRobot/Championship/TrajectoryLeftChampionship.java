@@ -11,6 +11,7 @@ import com.acmerobotics.roadrunner.TranslationalVelConstraint;
 import com.acmerobotics.roadrunner.Vector2d;
 import com.acmerobotics.roadrunner.VelConstraint;
 
+import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.Configuration.secondRobot.HorizontalGrabberRR;
 import org.firstinspires.ftc.teamcode.Configuration.secondRobot.HorizontalRollRR;
 import org.firstinspires.ftc.teamcode.Configuration.secondRobot.HorizontalSlideRR;
@@ -31,7 +32,7 @@ public class TrajectoryLeftChampionship {
     VerticalSlideRR verticalSlideRR; VerticalWristRR verticalWristRR; VerticalGrabberRR verticalGrabberRR; VerticalHangerRR verticalHangerRR;
     HorizontalSlideRR horizontalSlideRR; HorizontalRollRR horizontalRollRR; HorizontalGrabberRR horizontalGrabberRR;
     HorizontalWristRR horizontalWristRR; PinpointDrive drive; Pose2d pose; TrajectoryActionBuilder currentTrajectory;
-    LimeSweet lime; ArrayList<Double> point; double grabX, grabY, angle; StrafeAction strafeAction;
+    LimeSweet lime; ArrayList<Double> point; double grabX, grabY, angle; StrafeAction strafeAction; Telemetry telemetry;
     public TrajectoryLeftChampionship(PinpointDrive drive, Pose2d pose, LimeSweet lime,StrafeAction strafeAction, HorizontalGrabberRR horizontalGrabberRR,
                                       HorizontalRollRR horizontalRollRR, HorizontalSlideRR horizontalSlideRR,
                                       HorizontalWristRR horizontalWristRR, VerticalGrabberRR verticalGrabberRR,
@@ -181,23 +182,28 @@ public class TrajectoryLeftChampionship {
                 .stopAndAdd(verticalWristRR.verticalWristAction(Pose.verticalWristTransfer))
                 .stopAndAdd(verticalSlideRR.verticalSlideAction(Pose.verticalSlideBottom))
                 .setTangent(Math.toRadians(15))
-                .splineToLinearHeading(new Pose2d(SX-20, SY, SH), ST)
+                .splineToLinearHeading(new Pose2d(SX-20, SY, SH), ST, subVel, subAccel)
                 .setTangent(Math.toRadians(0))
                 .splineToLinearHeading(new Pose2d(SX, SY, SH), ST, subVel, subAccel);
         currentTrajectory = sub.fresh();
         return sub.build();
     }
-    public Action getSubButter() {
-        TrajectoryActionBuilder subButter = currentTrajectory
-                .stopAndAdd(horizontalSlideRR.horizontalSlideDistance(grabY, 3000))
-                .stopAndAdd(horizontalWristRR.horizontalWristAction(Pose.horizontalWristIntake))
-                .stopAndAdd(horizontalRollRR.horizontalRollAction((angle / 90) * .3))
-                .strafeToConstantHeading(new Vector2d(grabX + drive.getLastPinpointPose().position.y, drive.getLastPinpointPose().position.x));
-        currentTrajectory = subButter.fresh();
-        return subButter.build();
+
+    public Action getMove(){
+        TrajectoryActionBuilder move = currentTrajectory
+                .strafeToLinearHeading(new Vector2d(0, 20), Math.toRadians(90), subVel, subAccel);
+        currentTrajectory = move.fresh();
+        return move.build();
     }
+    public void getButterPose() {
+       strafeAction.getButterPose();
+    }
+
     public Action getTest(){
         TrajectoryActionBuilder test = drive.actionBuilder(new Pose2d(0,0,Math.toRadians(90)))
+                .stopAndAdd(horizontalSlideRR.horizontalSlideActions(strafeAction.setSlideDistanceMath()))
+                .stopAndAdd(horizontalWristRR.horizontalWristAction(Pose.horizontalWristIntake))
+                .stopAndAdd(horizontalRollRR.horizontalRollAction(strafeAction.roll()))
                 .strafeToConstantHeading(new Vector2d(strafeAction.grabX + 1, 0));
         currentTrajectory = drive.actionBuilder(drive.getLastPinpointPose());
         return test.build();

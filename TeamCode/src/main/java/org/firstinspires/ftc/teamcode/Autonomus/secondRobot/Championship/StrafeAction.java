@@ -52,8 +52,11 @@ public class StrafeAction {
         horizontalGrabberRR.setPose(Pose.horizontalGrabberWide);
         horizontalRollRR.setPose((angle / 90) * 0.3);
         horizontalWristRR.setPose(Pose.horizontalWristIntake);
-        setSlideDistanceMath(grabY, 3000);
+//        setSlideDistanceMath(grabY, 3000);
         strafeDistance(grabX + 1);
+    }
+    public double roll(){
+        return ((angle / 90) * .3);
     }
 
     public void strafeDistance(double distance) {
@@ -107,13 +110,14 @@ public class StrafeAction {
         telemetry.addData("grabAngle", angle);
         telemetry.update();
     }
-    public void setSlideDistanceMath(double distance, double velocity) {
+    public int setSlideDistanceMath() {
         //Based off law of sines
         double linkageLength = 27;
-        double targetRads = Math.acos(distance / (2 * linkageLength));
+        double targetRads = Math.acos(grabX / (2 * linkageLength));
         //based off of endpoints of rad 1.31812/ticks 0 and rad 0/ticks 640
         double targetTicks = -(640/0.842234) * (targetRads - 1.31812);
-        horizontalSlideRR.setPose(((int) Range.clip(targetTicks, 0, 650)));
+        return ((int) Range.clip(targetTicks, 0, 650));
+//        horizontalSlideRR.setPose(((int) Range.clip(targetTicks, 0, 650)));
 //        horizontalSlideRR.setVelocity(velocity);
     }
 }
