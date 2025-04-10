@@ -27,6 +27,7 @@ public class AutoLeftChampionship extends LinearOpMode {
         Pose2d pose = new Pose2d(-39.5,-62.25,Math.toRadians(180));
         PinpointDrive drive = new PinpointDrive(hardwareMap, pose);
         LimeSweet lime = new LimeSweet(hardwareMap, telemetry, 0);
+        lime.setInputs(new double[] {1.0, 2.0, 0.0, 4.0, 5.0, 6.0, 7.0, 8.0});
 
         //all of these class is under Configuration.secondRobot
         VerticalSlideRR verticalSlide = new VerticalSlideRR(hardwareMap);
@@ -39,8 +40,10 @@ public class AutoLeftChampionship extends LinearOpMode {
         HorizontalWristRR horizontalWrist = new HorizontalWristRR(hardwareMap);
         VerticalHangerRR verticalHanger = new VerticalHangerRR(hardwareMap);
 
+        StrafeAction strafeAction = new StrafeAction(drive.leftFront, drive.leftBack, drive.rightBack, drive.rightFront,lime,telemetry, horizontalGrabber, horizontalRoll,
+                horizontalSlide, horizontalWrist, verticalGrabber, verticalHanger, verticalSlide, verticalWrist);
 
-        TrajectoryLeftChampionship trajectory = new TrajectoryLeftChampionship(drive, pose,lime, horizontalGrabber, horizontalRoll,
+        TrajectoryLeftChampionship trajectory = new TrajectoryLeftChampionship(drive, pose,lime, strafeAction,horizontalGrabber, horizontalRoll,
                 horizontalSlide, horizontalWrist, verticalGrabber, verticalHanger, verticalSlide, verticalWrist);
 
         //wait for the start button to be press
@@ -66,15 +69,15 @@ public class AutoLeftChampionship extends LinearOpMode {
                         trajectory.getTransfer()
                 ),
                 trajectory.getSub(),
-                new SleepAction(2000)
+                new SleepAction(2)
         ));
-//        trajectory.getButterPose();
-//        Actions.runBlocking(new SequentialAction(
-//                trajectory.getSubButter(),
-//                new ParallelAction(
-//                        trajectory.getBasket(),
-//                        trajectory.getTransfer()
-//                )
-//        ));
+        strafeAction.getButterPose();
+        strafeAction.grabButter();
+//        strafeAction.setMode();
+        Actions.runBlocking(new SequentialAction(
+                trajectory.getTest(),
+                new SleepAction(2000000)
+                ));
+
     }
 }

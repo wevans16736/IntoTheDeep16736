@@ -31,8 +31,8 @@ public class TrajectoryLeftChampionship {
     VerticalSlideRR verticalSlideRR; VerticalWristRR verticalWristRR; VerticalGrabberRR verticalGrabberRR; VerticalHangerRR verticalHangerRR;
     HorizontalSlideRR horizontalSlideRR; HorizontalRollRR horizontalRollRR; HorizontalGrabberRR horizontalGrabberRR;
     HorizontalWristRR horizontalWristRR; PinpointDrive drive; Pose2d pose; TrajectoryActionBuilder currentTrajectory;
-    LimeSweet lime; ArrayList<Double> point; double grabX, grabY, angle;
-    public TrajectoryLeftChampionship(PinpointDrive drive, Pose2d pose, LimeSweet lime, HorizontalGrabberRR horizontalGrabberRR,
+    LimeSweet lime; ArrayList<Double> point; double grabX, grabY, angle; StrafeAction strafeAction;
+    public TrajectoryLeftChampionship(PinpointDrive drive, Pose2d pose, LimeSweet lime,StrafeAction strafeAction, HorizontalGrabberRR horizontalGrabberRR,
                                       HorizontalRollRR horizontalRollRR, HorizontalSlideRR horizontalSlideRR,
                                       HorizontalWristRR horizontalWristRR, VerticalGrabberRR verticalGrabberRR,
                                       VerticalHangerRR verticalHangerRR, VerticalSlideRR verticalSlideRR,
@@ -40,6 +40,7 @@ public class TrajectoryLeftChampionship {
         this.drive = drive;
         this.pose = pose;
         this.lime = lime;
+        this.strafeAction = strafeAction;
         this.point = new ArrayList<>();
         this.verticalSlideRR = verticalSlideRR;
         this.verticalWristRR = verticalWristRR;
@@ -52,18 +53,15 @@ public class TrajectoryLeftChampionship {
 
         currentTrajectory = drive.actionBuilder(pose);
     }
-    VelConstraint butterVel = new MinVelConstraint(Arrays.asList(
-            new TranslationalVelConstraint(25),
-            new AngularVelConstraint(Math.PI)
-    ));
-    AccelConstraint butterAcel = new ProfileAccelConstraint(-15, 40);
+    VelConstraint subVel = new TranslationalVelConstraint(5);
+    AccelConstraint subAccel = new ProfileAccelConstraint(-15, 10);
 
     int butter = 0; int attachment = 0; int park = 0; int sub = 0;
     double BX = -55; double BY = -54; double BH = Math.toRadians(220); double BT = Math.toRadians(220); int basket = 0;
-    double FBX = -48.25; double FBY = -46.75; double FBH = Math.toRadians(-90); double FBT = Math.toRadians(90);
-    double SBX = -58.75; double SBY = -45.25; double SBH = Math.toRadians(-90); double SBT = Math.toRadians(90);
-    double TBX = -52; double TBY = -24.5; double TBH = Math.toRadians(-.000001); double TBT = Math.toRadians(180);
-    double SX = -35; double SY = -25; double SH = Math.toRadians(0); double ST = Math.toRadians(0);
+    double FBX = -48.25; double FBY = -47.5; double FBH = Math.toRadians(-90); double FBT = Math.toRadians(90);
+    double SBX = -58.75; double SBY = -45.5; double SBH = Math.toRadians(-90); double SBT = Math.toRadians(90);
+    double TBX = -52; double TBY = -23.25; double TBH = Math.toRadians(-.000001); double TBT = Math.toRadians(180);
+    double SX = -10; double SY = -5; double SH = Math.toRadians(180); double ST = Math.toRadians(0);
 //    double humanX = 20.5, humanY = -63;
 
     public Action getBasket(){
@@ -182,29 +180,26 @@ public class TrajectoryLeftChampionship {
                 .waitSeconds(Timing.verticalOpenTime / 1000)
                 .stopAndAdd(verticalWristRR.verticalWristAction(Pose.verticalWristTransfer))
                 .stopAndAdd(verticalSlideRR.verticalSlideAction(Pose.verticalSlideBottom))
-                .setTangent(Math.toRadians(90))
-                .splineToLinearHeading(new Pose2d(SX - 5, SY, SH), ST)
+                .setTangent(Math.toRadians(15))
+                .splineToLinearHeading(new Pose2d(SX-20, SY, SH), ST)
                 .setTangent(Math.toRadians(0))
-                .splineToLinearHeading(new Pose2d(SX, SY, SH), ST);
+                .splineToLinearHeading(new Pose2d(SX, SY, SH), ST, subVel, subAccel);
         currentTrajectory = sub.fresh();
         return sub.build();
     }
-    public void getButterPose(){
-        grabX = -lime.scanButter().get(0);
-        grabY = lime.scanButter().get(1);
-        angle = -lime.scanButter().get(2) + 180;
-        if (angle > 170){angle -= 180;}
-        grabX -= 3*Math.cos(Math.toRadians(90+angle));
-        grabX = grabX / 2.54;
-        grabY += -3*Math.sin(Math.toRadians(90+angle)) + 2;
-    }
-    public Action getSubButter(){
+    public Action getSubButter() {
         TrajectoryActionBuilder subButter = currentTrajectory
                 .stopAndAdd(horizontalSlideRR.horizontalSlideDistance(grabY, 3000))
                 .stopAndAdd(horizontalWristRR.horizontalWristAction(Pose.horizontalWristIntake))
-                .stopAndAdd(horizontalRollRR.horizontalRollAction((angle/ 90) * .3))
+                .stopAndAdd(horizontalRollRR.horizontalRollAction((angle / 90) * .3))
                 .strafeToConstantHeading(new Vector2d(grabX + drive.getLastPinpointPose().position.y, drive.getLastPinpointPose().position.x));
         currentTrajectory = subButter.fresh();
         return subButter.build();
+    }
+    public Action getTest(){
+        TrajectoryActionBuilder test = drive.actionBuilder(new Pose2d(0,0,Math.toRadians(90)))
+                .strafeToConstantHeading(new Vector2d(strafeAction.grabX + 1, 0));
+        currentTrajectory = drive.actionBuilder(drive.getLastPinpointPose());
+        return test.build();
     }
 }
