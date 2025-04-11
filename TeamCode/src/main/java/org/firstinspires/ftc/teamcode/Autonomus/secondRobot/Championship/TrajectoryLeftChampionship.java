@@ -98,8 +98,8 @@ public class TrajectoryLeftChampionship {
         } if (basket == 3) {
             TrajectoryActionBuilder forthBasket = currentTrajectory
                     .waitSeconds(Timing.horizontalGrabberCloseTime / 1000)
-                    .setTangent(Math.toRadians(0))
-                    .splineToLinearHeading(new Pose2d(-35, -40, Math.toRadians(-90)), Math.toRadians(-90));
+                    .setReversed(true)
+                    .splineToLinearHeading(new Pose2d(-35, -40, Math.toRadians(-90)), Math.toRadians(-45));
 //                    .setTangent(Math.toRadians(0)) //todo suckkkyyyy ahhhhhh :(((((((
 //                    .splineToLinearHeading(new Pose2d(-45, -35, Math.toRadians(-90)), Math.toRadians(-90))
 //                    .setTangent(Math.toRadians(-90))
