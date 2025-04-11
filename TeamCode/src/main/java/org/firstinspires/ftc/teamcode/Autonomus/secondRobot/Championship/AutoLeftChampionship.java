@@ -50,17 +50,16 @@ public class AutoLeftChampionship extends LinearOpMode {
                 horizontalSlide, horizontalWrist, verticalGrabber, verticalHanger, verticalSlide, verticalWrist);
 
         ArrayList<Action> actions = new ArrayList<>();
-        actions.add(trajectory.getBasket());
-        actions.add(trajectory.getButter());
-        actions.add(trajectory.getBasket());
-        actions.add(trajectory.getTransfer());
-        actions.add(trajectory.getButter());
-        actions.add(trajectory.getBasket());
-        actions.add(trajectory.getTransfer());
-        actions.add(trajectory.getButter());
-        actions.add(trajectory.getBasket());
-        actions.add(trajectory.getTransfer());
-        actions.add(trajectory.getSub());
+        actions.add(trajectory.getBasket()); //0
+        actions.add(trajectory.getButter()); //1
+        actions.add(trajectory.getBasket()); //2
+        actions.add(trajectory.getTransfer()); //3
+        actions.add(trajectory.getButter()); //4
+        actions.add(trajectory.getBasket()); //5
+        actions.add(trajectory.getTransfer()); //6
+        actions.add(trajectory.getButter()); //7
+        actions.add(trajectory.getTransfer()); // 8
+        actions.add(trajectory.getSub()); // 9
 
         telemetry.addLine("Ready");
         telemetry.update();
@@ -82,12 +81,14 @@ public class AutoLeftChampionship extends LinearOpMode {
                         actions.get(5),
                         actions.get(6)
                 ),
-                actions.get(7),
                 new ParallelAction(
-                        actions.get(8),
-                        actions.get(9)
+                        actions.get(7),
+                        new SequentialAction(
+                                new SleepAction(2.125),
+                                actions.get(8)
+                        )
                 ),
-//                actions.get(10),
+                actions.get(9),
                 new SleepAction(20000)
         ));
     }

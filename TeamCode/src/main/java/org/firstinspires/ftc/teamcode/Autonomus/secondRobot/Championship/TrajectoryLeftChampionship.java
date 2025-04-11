@@ -2,8 +2,6 @@ package org.firstinspires.ftc.teamcode.Autonomus.secondRobot.Championship;
 
 import com.acmerobotics.roadrunner.AccelConstraint;
 import com.acmerobotics.roadrunner.Action;
-import com.acmerobotics.roadrunner.AngularVelConstraint;
-import com.acmerobotics.roadrunner.MinVelConstraint;
 import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.ProfileAccelConstraint;
 import com.acmerobotics.roadrunner.TrajectoryActionBuilder;
@@ -26,7 +24,6 @@ import org.firstinspires.ftc.teamcode.RR.PinpointDrive;
 import org.firstinspires.ftc.teamcode.secondrobot.LimeSweet;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 
 public class TrajectoryLeftChampionship {
     VerticalSlideRR verticalSlideRR; VerticalWristRR verticalWristRR; VerticalGrabberRR verticalGrabberRR; VerticalHangerRR verticalHangerRR;
@@ -58,12 +55,12 @@ public class TrajectoryLeftChampionship {
     VelConstraint subVel = new TranslationalVelConstraint(5);
     AccelConstraint subAccel = new ProfileAccelConstraint(-15, 10);
 
-    int butter = 0; int attachment = 0; int park = 0; int sub = 0;
-    double BX = -55; double BY = -54; double BH = Math.toRadians(220); double BT = Math.toRadians(220); int basket = 0;
-    double FBX = -48.75; double FBY = -43; double FBH = Math.toRadians(-90); double FBT = Math.toRadians(90);
-    double SBX = -58.75; double SBY = -40.5; double SBH = Math.toRadians(-90); double SBT = Math.toRadians(90);
+    int butter = 0; int transferCount = 0;
+    double BX = -55; double BY = -54.25; double BH = Math.toRadians(220); double BT = Math.toRadians(220); int basket = 0;
+    double FBX = -48.75; double FBY = -43.5; double FBH = Math.toRadians(-90); double FBT = Math.toRadians(90);
+    double SBX = -58.75; double SBY = -41.5; double SBH = Math.toRadians(-90); double SBT = Math.toRadians(90);
     double TBX = -56; double TBY = -23.25; double TBH = Math.toRadians(-.000001); double TBT = Math.toRadians(180);
-    double SX = -35; double SY = -20; double SH = Math.toRadians(180); double ST = Math.toRadians(0);
+    double SX = -25; double SY = 0; double SH = Math.toRadians(180); double ST = Math.toRadians(45);
     double sec = 1.2;
 //    double humanX = 20.5, humanY = -63;
 
@@ -95,18 +92,18 @@ public class TrajectoryLeftChampionship {
             basket++;
             currentTrajectory = thirdBasket.fresh();
             return thirdBasket.build();
-        } if (basket == 3) {
-            TrajectoryActionBuilder forthBasket = currentTrajectory
-                    .waitSeconds(Timing.horizontalGrabberCloseTime / 1000)
-                    .setReversed(true)
-                    .splineToLinearHeading(new Pose2d(-35, -40, Math.toRadians(-90)), Math.toRadians(-45));
-//                    .setTangent(Math.toRadians(0)) //todo suckkkyyyy ahhhhhh :(((((((
-//                    .splineToLinearHeading(new Pose2d(-45, -35, Math.toRadians(-90)), Math.toRadians(-90))
-//                    .setTangent(Math.toRadians(-90))
-//                    .splineToLinearHeading(new Pose2d(BX, BY, BH), BT);
-            basket++;
-            currentTrajectory = forthBasket.fresh();
-            return forthBasket.build();
+//        } if (basket == 3) {
+//            TrajectoryActionBuilder forthBasket = currentTrajectory
+//                    .waitSeconds(Timing.horizontalGrabberCloseTime / 1000)
+//                    .setReversed(true)
+//                    .splineToLinearHeading(new Pose2d(-35, -40, Math.toRadians(-90)), Math.toRadians(-45));
+////                    .setTangent(Math.toRadians(0)) //todo suckkkyyyy ahhhhhh :(((((((
+////                    .splineToLinearHeading(new Pose2d(-45, -35, Math.toRadians(-90)), Math.toRadians(-90))
+////                    .setTangent(Math.toRadians(-90))
+////                    .splineToLinearHeading(new Pose2d(BX, BY, BH), BT);
+//            basket++;
+//            currentTrajectory = forthBasket.fresh();
+//            return forthBasket.build();
         } else {
             TrajectoryActionBuilder restBasket = currentTrajectory
                     .waitSeconds(Timing.horizontalGrabberCloseTime)
@@ -157,27 +154,53 @@ public class TrajectoryLeftChampionship {
                     .stopAndAdd(horizontalGrabberRR.horizontalGrabberAction(Pose.horizontalGrabberWide))
                     .stopAndAdd(horizontalRollRR.horizontalRollAction(Pose.horizontalRollSideway))
                     .setTangent(Math.toRadians(40))
-                    .splineToLinearHeading(new Pose2d(TBX, TBY, TBH), TBT);
+                    .splineToLinearHeading(new Pose2d(TBX, TBY, TBH), TBT)
+                    .waitSeconds(Timing.horizontalGrabberCloseTime / 1000)
+                    .waitSeconds(.5)
+                    .setReversed(true)
+//                    .splineToLinearHeading(new Pose2d(-35, -40, Math.toRadians(-90)), Math.toRadians(-45))
+                    .splineToLinearHeading(new Pose2d(BX, BY, BH), BT);
             currentTrajectory = thirdButter.fresh();
             return thirdButter.build();
         }
     }
     public Action getTransfer(){
-        TrajectoryActionBuilder transfer = currentTrajectory
-                .stopAndAdd(horizontalGrabberRR.horizontalGrabberAction(Pose.horizontalGrabberClose))
-                .waitSeconds(Timing.horizontalGrabberCloseTime / 1000)
-                .stopAndAdd(horizontalWristRR.horizontalWristAction(Pose.horizontalWristTransfer))
-                .stopAndAdd(horizontalSlideRR.horizontalSlideActions(Pose.horizontalSlideRetract))
-                .stopAndAdd(horizontalRollRR.horizontalRollAction(Pose.horizontalRollFlat))
-                .waitSeconds(Timing.horizontalWristIntaketoTransfer / 1000)
-                .stopAndAdd(verticalGrabberRR.verticalGrabberAction(Pose.verticalClose))
-                .waitSeconds(Timing.verticalCloseTime / 1000)
-                .stopAndAdd(horizontalGrabberRR.horizontalGrabberAction(Pose.horizontalGrabberOpen))
-                .waitSeconds(Timing.horizontalGrabberCloseTime / 1000)
-                .stopAndAdd(verticalSlideRR.verticalSlideAction(Pose.verticalSlideHighBasket))
-                .stopAndAdd(verticalWristRR.verticalWristAction(Pose.verticalWristBasket));
-        currentTrajectory = transfer.fresh();
-        return transfer.build();
+        if(transferCount == 2) {
+            TrajectoryActionBuilder transfer = currentTrajectory
+                    .stopAndAdd(horizontalGrabberRR.horizontalGrabberAction(Pose.horizontalGrabberClose))
+                    .waitSeconds(Timing.horizontalGrabberCloseTime / 1000)
+                    .stopAndAdd(horizontalWristRR.horizontalWristAction(Pose.horizontalWristTransfer))
+                    .stopAndAdd(horizontalSlideRR.horizontalSlideActions(Pose.horizontalSlideRetract))
+                    .stopAndAdd(horizontalRollRR.horizontalRollAction(Pose.horizontalRollFlat))
+                    .waitSeconds(Timing.horizontalWristIntaketoTransfer / 1000)
+                    .waitSeconds(.125)
+                    .stopAndAdd(verticalGrabberRR.verticalGrabberAction(Pose.verticalClose))
+                    .waitSeconds(Timing.verticalCloseTime / 1000)
+                    .stopAndAdd(horizontalGrabberRR.horizontalGrabberAction(Pose.horizontalGrabberOpen))
+                    .waitSeconds(Timing.horizontalGrabberCloseTime / 1000)
+                    .stopAndAdd(verticalSlideRR.verticalSlideAction(Pose.verticalSlideHighBasket))
+                    .stopAndAdd(verticalWristRR.verticalWristAction(Pose.verticalWristBasket));
+            transferCount++;
+            currentTrajectory = transfer.fresh();
+            return transfer.build();
+        } else {
+            TrajectoryActionBuilder transfer = currentTrajectory
+                    .stopAndAdd(horizontalGrabberRR.horizontalGrabberAction(Pose.horizontalGrabberClose))
+                    .waitSeconds(Timing.horizontalGrabberCloseTime / 1000)
+                    .stopAndAdd(horizontalWristRR.horizontalWristAction(Pose.horizontalWristTransfer))
+                    .stopAndAdd(horizontalSlideRR.horizontalSlideActions(Pose.horizontalSlideRetract))
+                    .stopAndAdd(horizontalRollRR.horizontalRollAction(Pose.horizontalRollFlat))
+                    .waitSeconds(Timing.horizontalWristIntaketoTransfer / 1000)
+                    .stopAndAdd(verticalGrabberRR.verticalGrabberAction(Pose.verticalClose))
+                    .waitSeconds(Timing.verticalCloseTime / 1000)
+                    .stopAndAdd(horizontalGrabberRR.horizontalGrabberAction(Pose.horizontalGrabberOpen))
+                    .waitSeconds(Timing.horizontalGrabberCloseTime / 1000)
+                    .stopAndAdd(verticalSlideRR.verticalSlideAction(Pose.verticalSlideHighBasket))
+                    .stopAndAdd(verticalWristRR.verticalWristAction(Pose.verticalWristBasket));
+            transferCount++;
+            currentTrajectory = transfer.fresh();
+            return transfer.build();
+        }
     }
     public Action getSub(){
         TrajectoryActionBuilder sub = currentTrajectory
@@ -185,9 +208,9 @@ public class TrajectoryLeftChampionship {
                 .waitSeconds(Timing.verticalOpenTime / 1000)
                 .stopAndAdd(verticalWristRR.verticalWristAction(Pose.verticalWristTransfer))
                 .stopAndAdd(verticalSlideRR.verticalSlideAction(Pose.verticalSlideBottom))
-                .setTangent(Math.toRadians(75))
-                .splineToLinearHeading(new Pose2d(SX + 20, SY, Math.toRadians(180)), Math.toRadians(90));
-//                .splineToLinearHeading(new Pose2d(SX, SY, SH), ST, subVel, subAccel);
+                .setTangent(Math.toRadians(0))
+//                .splineToLinearHeading(new Pose2d(SX -1, SY, Math.toRadians(180)), Math.toRadians(90))
+                .splineToLinearHeading(new Pose2d(SX, SY, SH), ST);
         currentTrajectory = sub.fresh();
         return sub.build();
     }
