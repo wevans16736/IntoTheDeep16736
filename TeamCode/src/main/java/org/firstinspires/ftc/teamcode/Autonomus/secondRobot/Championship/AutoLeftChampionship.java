@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.Autonomus.secondRobot.Championship;
 
+import com.acmerobotics.roadrunner.Action;
 import com.acmerobotics.roadrunner.ParallelAction;
 import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.SequentialAction;
@@ -19,15 +20,17 @@ import org.firstinspires.ftc.teamcode.Configuration.secondRobot.VerticalWristRR;
 import org.firstinspires.ftc.teamcode.RR.PinpointDrive;
 import org.firstinspires.ftc.teamcode.secondrobot.LimeSweet;
 
+import java.util.ArrayList;
+
 @Autonomous(name = "AutoLeftChampionship", group = "auto")
 public class AutoLeftChampionship extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
         //set up Pinpoint and Pose2d class
-        Pose2d pose = new Pose2d(-39.5,-62.25,Math.toRadians(180));
+        Pose2d pose = new Pose2d(-39.5, -62.25, Math.toRadians(180));
         PinpointDrive drive = new PinpointDrive(hardwareMap, pose);
         LimeSweet lime = new LimeSweet(hardwareMap, telemetry, 0);
-        lime.setInputs(new double[] {1.0, 2.0, 0.0, 4.0, 5.0, 6.0, 7.0, 8.0});
+        lime.setInputs(new double[]{1.0, 2.0, 0.0, 4.0, 5.0, 6.0, 7.0, 8.0});
 
         //all of these class is under Configuration.secondRobot
         VerticalSlideRR verticalSlide = new VerticalSlideRR(hardwareMap);
@@ -40,11 +43,27 @@ public class AutoLeftChampionship extends LinearOpMode {
         HorizontalWristRR horizontalWrist = new HorizontalWristRR(hardwareMap);
         VerticalHangerRR verticalHanger = new VerticalHangerRR(hardwareMap);
 
-        StrafeAction strafeAction = new StrafeAction(drive.leftFront, drive.leftBack, drive.rightBack, drive.rightFront,lime,telemetry, horizontalGrabber, horizontalRoll,
+        StrafeAction strafeAction = new StrafeAction(drive.leftFront, drive.leftBack, drive.rightBack, drive.rightFront, lime, telemetry, horizontalGrabber, horizontalRoll,
                 horizontalSlide, horizontalWrist, verticalGrabber, verticalHanger, verticalSlide, verticalWrist);
 
-        TrajectoryLeftChampionship trajectory = new TrajectoryLeftChampionship(drive, pose,lime, strafeAction,horizontalGrabber, horizontalRoll,
+        TrajectoryLeftChampionship trajectory = new TrajectoryLeftChampionship(drive, pose, lime, strafeAction, telemetry, horizontalGrabber, horizontalRoll,
                 horizontalSlide, horizontalWrist, verticalGrabber, verticalHanger, verticalSlide, verticalWrist);
+
+        ArrayList<Action> actions = new ArrayList<>();
+        actions.add(trajectory.getBasket());
+        actions.add(trajectory.getButter());
+        actions.add(trajectory.getBasket());
+        actions.add(trajectory.getTransfer());
+        actions.add(trajectory.getButter());
+        actions.add(trajectory.getBasket());
+        actions.add(trajectory.getTransfer());
+        actions.add(trajectory.getButter());
+        actions.add(trajectory.getBasket());
+        actions.add(trajectory.getTransfer());
+        actions.add(trajectory.getSub());
+
+        telemetry.addLine("Ready");
+        telemetry.update();
 
         //wait for the start button to be press
         waitForStart();
@@ -52,32 +71,24 @@ public class AutoLeftChampionship extends LinearOpMode {
         if (isStopRequested()) return;
 
         Actions.runBlocking(new SequentialAction(
-                trajectory.getBasket(),
-                trajectory.getButter(),
+                actions.get(0),
+                actions.get(1),
                 new ParallelAction(
-                        trajectory.getBasket(),
-                        trajectory.getTransfer()
+                        actions.get(2),
+                        actions.get(3)
                 ),
-                trajectory.getButter(),
+                actions.get(4),
                 new ParallelAction(
-                        trajectory.getBasket(),
-                        trajectory.getTransfer()
+                        actions.get(5),
+                        actions.get(6)
                 ),
-                trajectory.getButter(),
+                actions.get(7),
                 new ParallelAction(
-                        trajectory.getBasket(),
-                        trajectory.getTransfer()
+                        actions.get(8),
+                        actions.get(9)
                 ),
-                trajectory.getSub(),
-                new SleepAction(2)
+//                actions.get(10),
+                new SleepAction(20000)
         ));
-        strafeAction.getButterPose();
-        strafeAction.grabButter();
-//        strafeAction.setMode();
-        Actions.runBlocking(new SequentialAction(
-                trajectory.getTest(),
-                new SleepAction(2000000)
-                ));
-
     }
 }

@@ -35,37 +35,13 @@ public class HorizontalSlideRR {
 
         @Override
         public boolean run(@NonNull TelemetryPacket telemetryPacket) {
-            if(!intizilize) {
-                horizontalSlideMotor.setTargetPosition(position);
-                intizilize = true;
-            }
-            int pos = horizontalSlideMotor.getCurrentPosition();
-
-//            if(pos > position){
-//                Int = false;
-//                return false;
-//            }else {
-//                return true;
-//            }
-//            return !(pos>position);
-            return false;
-        }
-    }
-    private class HorizontalSlideDistance implements Action{
-        double distance, velocity;
-        public HorizontalSlideDistance(double distance, double velocity){
-            this.distance = distance;
-            this.velocity = velocity;
-        }
-        @Override
-        public boolean run(@NonNull TelemetryPacket telemetryPacket) {
-            setSlideDistanceMath(distance, velocity);
+            horizontalSlideMotor.setTargetPosition(position);
             return false;
         }
     }
 
     public Action horizontalSlideActions(int position) {return new HorizontalSlideActions(position);}
-    public Action horizontalSlideDistance(double distance, double velocity){return new HorizontalSlideDistance(distance, velocity);}
+//    public Action horizontalSlideDistance(double distance, double velocity){return new HorizontalSlideDistance(distance, velocity);}
 
     public void setPose(int pose){
         horizontalSlideMotor.setTargetPosition(pose);

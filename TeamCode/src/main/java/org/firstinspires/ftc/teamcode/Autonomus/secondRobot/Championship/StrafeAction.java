@@ -113,11 +113,10 @@ public class StrafeAction {
     public int setSlideDistanceMath() {
         //Based off law of sines
         double linkageLength = 27;
-        double targetRads = Math.acos(grabX / (2 * linkageLength));
+        double targetRads = Math.acos(grabY / (2 * linkageLength));
         //based off of endpoints of rad 1.31812/ticks 0 and rad 0/ticks 640
         double targetTicks = -(640/0.842234) * (targetRads - 1.31812);
-        return ((int) Range.clip(targetTicks, 0, 650));
-//        horizontalSlideRR.setPose(((int) Range.clip(targetTicks, 0, 650)));
-//        horizontalSlideRR.setVelocity(velocity);
+        return (int) Range.clip(targetTicks, 0, 650);
+
     }
 }

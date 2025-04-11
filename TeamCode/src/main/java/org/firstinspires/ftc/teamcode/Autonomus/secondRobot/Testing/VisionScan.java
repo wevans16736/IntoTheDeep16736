@@ -25,7 +25,7 @@ public class VisionScan extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
         //set up Pinpoint and Pose2d class
-        Pose2d pose = new Pose2d(-39.5,-62.25,Math.toRadians(180));
+        Pose2d pose = new Pose2d(0,0,Math.toRadians(90));
         PinpointDrive drive = new PinpointDrive(hardwareMap, pose);
         LimeSweet lime = new LimeSweet(hardwareMap, telemetry, 0);
         lime.setInputs(new double[] {1.0, 2.0, 0.0, 4.0, 5.0, 6.0, 7.0, 8.0});
@@ -44,7 +44,7 @@ public class VisionScan extends LinearOpMode {
         StrafeAction strafeAction = new StrafeAction(drive.leftFront, drive.leftBack, drive.rightBack, drive.rightFront,lime,telemetry, horizontalGrabber, horizontalRoll,
                 horizontalSlide, horizontalWrist, verticalGrabber, verticalHanger, verticalSlide, verticalWrist);
 
-        TrajectoryLeftChampionship trajectory = new TrajectoryLeftChampionship(drive, pose,lime, strafeAction,horizontalGrabber, horizontalRoll,
+        TrajectoryLeftChampionship trajectory = new TrajectoryLeftChampionship(drive, pose,lime, strafeAction,telemetry, horizontalGrabber, horizontalRoll,
                 horizontalSlide, horizontalWrist, verticalGrabber, verticalHanger, verticalSlide, verticalWrist);
 
         //wait for the start button to be press
@@ -53,7 +53,8 @@ public class VisionScan extends LinearOpMode {
         if (isStopRequested()) return;
 
         Actions.runBlocking(new SequentialAction(
-                trajectory.getMove()
+                trajectory.getMove(),
+                new SleepAction(1)
         ));
         trajectory.getButterPose();
         Actions.runBlocking(new SequentialAction(
