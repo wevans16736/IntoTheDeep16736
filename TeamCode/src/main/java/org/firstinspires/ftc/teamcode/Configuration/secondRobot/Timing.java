@@ -11,7 +11,7 @@ public class Timing {
     //horizontal wrist moving times, MS
     public static double horizontalWristtoMiddleTime = 600;
     public static double horizontalWristDowntoUpTime = 1340;
-    public static double horizontalWristIntaketoTransfer = 450;
+    public static double horizontalWristIntaketoTransfer = 600;
     //todo horizontal grabber close time, MS
     public static double horizontalGrabberCloseTime = 150; //Maybe this right?
     public static double horizontalGrabberWideTime = 150;

@@ -168,6 +168,7 @@ public abstract class HelperActions extends LinearOpMode {
         //if the vertical wrist is flipped out, flip it back and start a timer to run until it's back
         if (verticalWrist.forward) {
             verticalWrist.backward();
+            verticalWrist.update();
             verticalWristBackwardStartTime = System.currentTimeMillis();
         }
         //if the vertical wrist timer is not over, the vertical assembly is not closed
@@ -188,12 +189,13 @@ public abstract class HelperActions extends LinearOpMode {
             isClosed = false;
             if (horizontalWrist.forward) {
                 horizontalWrist.setForward(false);
+                horizontalWrist.setOverride(true);
                 //Start a timer to go until the horizontal wrist is in the right position
                 horizontalWristMiddleStartTime = System.currentTimeMillis();
             }
             //move the slide in, if the wrist is moving move the slide slower
             if (System.currentTimeMillis() < horizontalWristMiddleStartTime + Timing.horizontalWristtoMiddleTime) {
-                horizontalSlide.teleOpArmMotor(-0.5, 1);
+                horizontalSlide.teleOpArmMotor(0.0, 1);
             } else {
                 horizontalSlide.setSlideDistance(0, 6000);
             }
@@ -271,6 +273,7 @@ public abstract class HelperActions extends LinearOpMode {
             }
         } else if (placeState == 3) {
             verticalWrist.forward();
+            verticalWrist.update();
             verticalSlide.setSlidePosition(2300, 3000);
         }
         telemetry.addData("placeState", placeState);
@@ -296,7 +299,7 @@ public abstract class HelperActions extends LinearOpMode {
         if (angle > 170){angle -= 180;}
         horizontalIRollActions.setPosition((angle / 90) * 0.3);
         grabX -= 3*Math.cos(Math.toRadians(90+angle));
-        grabY += -3*Math.sin(Math.toRadians(90+angle)) + 2;
+        grabY += -3*Math.sin(Math.toRadians(90+angle));
         horizontalSlide.setSlideDistanceMath(grabY, 3000);
 
         horizontalIntakeActions.open();

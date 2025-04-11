@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.Autonomus.secondRobot.Testing;
 
+import com.acmerobotics.roadrunner.Action;
 import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.SequentialAction;
 import com.acmerobotics.roadrunner.SleepAction;
@@ -57,8 +58,9 @@ public class VisionScan extends LinearOpMode {
                 new SleepAction(1)
         ));
         trajectory.getButterPose();
+        Action test = trajectory.getTest().build();
         Actions.runBlocking(new SequentialAction(
-                trajectory.getTest(),
+                test,
                 new SleepAction(5000)
         ));
 

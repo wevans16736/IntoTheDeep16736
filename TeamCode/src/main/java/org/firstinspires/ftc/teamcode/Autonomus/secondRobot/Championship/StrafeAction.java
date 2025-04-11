@@ -104,7 +104,7 @@ public class StrafeAction {
             angle -= 180;
         }
         grabX -= 3 * Math.cos(Math.toRadians(90 + angle));
-        grabY += -3 * Math.sin(Math.toRadians(90 + angle)) + 2;
+        grabY += -3 * Math.sin(Math.toRadians(90 + angle));
         telemetry.addData("grabX", grabX);
         telemetry.addData("grabY", grabY);
         telemetry.addData("grabAngle", angle);

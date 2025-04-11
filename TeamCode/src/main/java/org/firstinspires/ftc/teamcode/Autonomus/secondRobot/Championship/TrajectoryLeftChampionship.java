@@ -225,10 +225,10 @@ public class TrajectoryLeftChampionship {
        strafeAction.getButterPose();
     }
 
-    public Action getTest(){
+    public TrajectoryActionBuilder getTest(){
         int ticks = strafeAction.setSlideDistanceMath();
         double distanceX = strafeAction.grabX / 2.54;
-        double roll = (strafeAction.angle / 90) * .3;
+        double roll = (strafeAction.angle / 90) * .3 + Pose.horizontalRollFlat;
         TrajectoryActionBuilder test = drive.actionBuilder(new Pose2d(0,0,Math.toRadians(90)))
                 .stopAndAdd(horizontalSlideRR.horizontalSlideActions(ticks))
                 .stopAndAdd(horizontalGrabberRR.horizontalGrabberAction(Pose.horizontalGrabberWide))
@@ -238,6 +238,6 @@ public class TrajectoryLeftChampionship {
                 .waitSeconds(Timing.horizontalWristIntaketoTransfer / 1000)
                 .stopAndAdd(horizontalGrabberRR.horizontalGrabberAction(Pose.horizontalGrabberClose));
         currentTrajectory = drive.actionBuilder(drive.getLastPinpointPose());
-        return test.build();
+        return test;
     }
 }
