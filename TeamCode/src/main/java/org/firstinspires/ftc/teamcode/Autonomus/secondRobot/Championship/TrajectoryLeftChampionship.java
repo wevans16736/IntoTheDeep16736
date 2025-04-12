@@ -59,12 +59,12 @@ public class TrajectoryLeftChampionship {
     VelConstraint subVel = new TranslationalVelConstraint(5);
     AccelConstraint subAccel = new ProfileAccelConstraint(-15, 10);
 
-    int butter = 0; int transferCount = 0; Pose2d subPose;
+    int butter = 0; int transferCount = 0; Pose2d subPose; int sub = 0;
     double BX = -55; double BY = -54.25; double BH = Math.toRadians(220); double BT = Math.toRadians(220); int basket = 0;
-    double FBX = -48.75; double FBY = -43.5; double FBH = Math.toRadians(-90); double FBT = Math.toRadians(90);
+    double FBX = -48.75; double FBY = -44; double FBH = Math.toRadians(-90); double FBT = Math.toRadians(90);
     double SBX = -58.75; double SBY = -41.25; double SBH = Math.toRadians(-90); double SBT = Math.toRadians(90);
     double TBX = -56.5; double TBY = -23.25; double TBH = Math.toRadians(-.000001); double TBT = Math.toRadians(180);
-    double SX = -18; double SY = 0; double SH = Math.toRadians(180); double ST = Math.toRadians(45);
+    double SX = -18.5; double SY = 0; double SH = Math.toRadians(180); double ST = Math.toRadians(45);
     double sec = 1.4;double timeout = 250; double MX = -47; double MY = -25;
 //    double humanX = 20.5, humanY = -63;
 
@@ -232,32 +232,67 @@ public class TrajectoryLeftChampionship {
     }
 
     public TrajectoryActionBuilder getSubButter(){
-        Pose2d butterPose = new Pose2d(0,0,Math.toRadians(180));
-        drive = null;
-        decoy = new PinpointDrive(hardwareMap, butterPose);
+        if(sub == 0) {
+            Pose2d butterPose = drive.getLastPinpointPose();
+
+            drive = null;
+            decoy = new PinpointDrive(hardwareMap, butterPose);
 //        subPose = drive.getLastPinpointPose();
 //        drive.setPinpointPose(butterPose);
-        int ticks = strafeAction.setSlideDistanceMath();
-        double distanceX = (strafeAction.grabX + 1) / 2.54;
-        double roll = (strafeAction.angle / 90) * .3 + Pose.horizontalRollFlat;
-        TrajectoryActionBuilder test = decoy.actionBuilder(butterPose)
-                .stopAndAdd(horizontalSlideRR.horizontalSlideActions(ticks))
-                .stopAndAdd(horizontalGrabberRR.horizontalGrabberAction(Pose.horizontalGrabberWide))
-                .stopAndAdd(horizontalWristRR.horizontalWristAction(Pose.horizontalWristIntake))
-                .stopAndAdd(horizontalRollRR.horizontalRollAction(roll))
-                .strafeToConstantHeading(new Vector2d(0, -distanceX))
-                .waitSeconds(.75)
-                .stopAndAdd(horizontalGrabberRR.horizontalGrabberAction(Pose.horizontalGrabberClose))
-                .waitSeconds(Timing.horizontalGrabberCloseTime / 1000)
-                .setTangent(Math.toRadians(180))
-//                .splineTo(new Vector2d(-((double) 36 /2), -31), Math.toRadians(-90))
-                .splineToLinearHeading(new Pose2d(-40, -60, Math.toRadians(220)), Math.toRadians(220))
-                .stopAndAdd(verticalGrabberRR.verticalGrabberAction(Pose.verticalOpen))
-                .waitSeconds(Timing.verticalOpenTime / 1000)
-                .stopAndAdd(verticalSlideRR.verticalSlideAction(Pose.verticalSlideBottom))
-                .stopAndAdd(verticalWristRR.verticalWristAction(Pose.verticalWristTransfer))
-                .setTangent(Math.toRadians(0))
-                .splineToLinearHeading(new Pose2d(4,0, Math.toRadians(180)), Math.toRadians(0));
-        return test;
+            int ticks = strafeAction.setSlideDistanceMath();
+            double distanceX = (strafeAction.grabX + 1) / 2.54;
+            double roll = (strafeAction.angle / 90) * .3 + Pose.horizontalRollFlat;
+            TrajectoryActionBuilder test = decoy.actionBuilder(butterPose)
+                    .afterTime(0, horizontalSlideRR.horizontalSlideActions(ticks))
+                    .stopAndAdd(horizontalGrabberRR.horizontalGrabberAction(Pose.horizontalGrabberWide))
+                    .stopAndAdd(horizontalWristRR.horizontalWristAction(Pose.horizontalWristIntake))
+                    .stopAndAdd(horizontalRollRR.horizontalRollAction(roll))
+                    .strafeToConstantHeading(new Vector2d(butterPose.position.x, -distanceX + butterPose.position.y))
+                    .waitSeconds(.8)
+                    .stopAndAdd(horizontalGrabberRR.horizontalGrabberAction(Pose.horizontalGrabberClose))
+                    .waitSeconds(Timing.horizontalGrabberCloseTime / 1000)
+                    .setTangent(Math.toRadians(180))
+                    .splineToLinearHeading(new Pose2d(butterPose.position.x - 11, -distanceX, Math.toRadians(220)), Math.toRadians(240))
+                    .splineToLinearHeading(new Pose2d(BX - 2, BY, BH), Math.toRadians(-80))
+                    .stopAndAdd(verticalGrabberRR.verticalGrabberAction(Pose.verticalOpen))
+                    .waitSeconds(Timing.verticalOpenTime / 1000)
+                    .stopAndAdd(verticalSlideRR.verticalSlideAction(Pose.verticalSlideBottom))
+                    .stopAndAdd(verticalWristRR.verticalWristAction(Pose.verticalWristTransfer))
+                    .setTangent(Math.toRadians(0))
+                    .splineToLinearHeading(new Pose2d(SX, 0, Math.toRadians(180)), Math.toRadians(0));
+            sub++;
+            return test;
+        } else {
+            Pose2d butterPose = decoy.getLastPinpointPose();
+
+            decoy = null;
+            subDrive = new PinpointDrive(hardwareMap, butterPose);
+//        subPose = drive.getLastPinpointPose();
+//        drive.setPinpointPose(butterPose);
+            int ticks = strafeAction.setSlideDistanceMath();
+
+            double distanceX = (strafeAction.grabX + 1) / 2.54;
+            double roll = (strafeAction.angle / 90) * .3 + Pose.horizontalRollFlat;
+            TrajectoryActionBuilder test = subDrive.actionBuilder(butterPose)
+                    .afterTime(0, horizontalSlideRR.horizontalSlideActions(ticks))
+                    .stopAndAdd(horizontalGrabberRR.horizontalGrabberAction(Pose.horizontalGrabberWide))
+                    .stopAndAdd(horizontalWristRR.horizontalWristAction(Pose.horizontalWristIntake))
+                    .stopAndAdd(horizontalRollRR.horizontalRollAction(roll))
+                    .strafeToConstantHeading(new Vector2d(butterPose.position.x, -distanceX + butterPose.position.y))
+                    .waitSeconds(1)
+                    .stopAndAdd(horizontalGrabberRR.horizontalGrabberAction(Pose.horizontalGrabberClose))
+                    .waitSeconds(Timing.horizontalGrabberCloseTime / 1000)
+                    .splineToLinearHeading(new Pose2d(butterPose.position.x - 11, -distanceX, Math.toRadians(220)), Math.toRadians(240))
+                    .setTangent(Math.toRadians(180))
+                    .splineToLinearHeading(new Pose2d(BX - 3, BY-7, BH), Math.toRadians(-80))
+                    .stopAndAdd(verticalGrabberRR.verticalGrabberAction(Pose.verticalOpen))
+                    .waitSeconds(Timing.verticalOpenTime / 1000)
+                    .stopAndAdd(verticalSlideRR.verticalSlideAction(Pose.verticalSlideBottom))
+                    .stopAndAdd(verticalWristRR.verticalWristAction(Pose.verticalWristTransfer))
+                    .setTangent(Math.toRadians(0))
+                    .splineToLinearHeading(new Pose2d(SX, 0, Math.toRadians(180)), Math.toRadians(0));
+            sub++;
+            return test;
+        }
     }
 }

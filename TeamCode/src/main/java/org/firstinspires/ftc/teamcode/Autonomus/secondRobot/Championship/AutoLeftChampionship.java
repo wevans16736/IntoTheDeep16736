@@ -107,6 +107,10 @@ public class AutoLeftChampionship extends LinearOpMode {
                                 trajectory.getTransfer()
                         ))
         ));
+        currentTime = System.currentTimeMillis();
+        do {
+            strafeAction.getButterPose();
+        } while ((strafeAction.grabX == -1 && strafeAction.grabY == -1) && (timeout >= System.currentTimeMillis() - currentTime));
         trajectory.getButterPose();
         Action stuff = trajectory.getSubButter().build();
         Actions.runBlocking(new SequentialAction(
