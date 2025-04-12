@@ -65,6 +65,10 @@ public class AutoLeftChampionship extends LinearOpMode {
         telemetry.addLine("Ready");
         telemetry.update();
 
+        while(opModeInInit()){
+           lime.spicy();
+        }
+
         //wait for the start button to be press
         waitForStart();
         //if the stop button press then stop the robot
@@ -88,39 +92,32 @@ public class AutoLeftChampionship extends LinearOpMode {
                                 new SleepAction(2.2),
                                 actions.get(8)
                         )
-                )
-//                new SleepAction(.25)
+                ),
+                new SleepAction(.125)
         ));
 
         trajectory.getButterPose();
-        double currentTime = System.currentTimeMillis();
-        double timeout = 3000;
-        do {
-            strafeAction.getButterPose();
-        } while ((strafeAction.grabX == -1 && strafeAction.grabY == -1) && (timeout >= System.currentTimeMillis() - currentTime));
         Action getSubButter = trajectory.getSubButter().build();
         Actions.runBlocking(new SequentialAction(
                 new ParallelAction(
                         getSubButter,
                         new SequentialAction(
-                                new SleepAction(2),
+                                new SleepAction(.85), /*how long before triggers the close grabber*/
                                 trajectory.getTransfer()
-                        ))
+                        )),
+                new SleepAction(.25)
         ));
-//        currentTime = System.currentTimeMillis();
-//        while ((strafeAction.grabX == -1 && strafeAction.grabY == -1) && (timeout >= System.currentTimeMillis() - currentTime)){
-//            strafeAction.getButterPose();
-//        }
-//        trajectory.getButterPose();
-//        Action stuff = trajectory.getSubButter().build();
-//        Actions.runBlocking(new SequentialAction(
-//                new ParallelAction(
-//                        stuff,
-//                        new SequentialAction(
-//                                new SleepAction(.5),
-//                                trajectory.getTransfer()
-//                        )),
-//                new SleepAction(2000)
-//        ));
+        trajectory.getButterPose();
+        Action stuff = trajectory.getSubButter().build();
+        Actions.runBlocking(new SequentialAction(
+                new ParallelAction(
+                        stuff,
+                        new SequentialAction(
+                                new SleepAction(.85),
+                                trajectory.getTransfer()
+                        )),
+                new SleepAction(2000)
+        ));
+
     }
 }

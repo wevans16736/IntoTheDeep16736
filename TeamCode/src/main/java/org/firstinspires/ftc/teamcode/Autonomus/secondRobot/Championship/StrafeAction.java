@@ -104,9 +104,10 @@ public class StrafeAction {
         telemetry.addData("Original-grabY", grabY);
         telemetry.addData("Original-grabAngle", angle);
         if (angle > 150) {
-            angle -= 180;
+            angle = 0;
         }
         grabX -= 3 * Math.cos(Math.toRadians(90 + angle));
+        grabY -= 2;
         grabY += -3 * Math.sin(Math.toRadians(90 + angle));
         telemetry.addData("grabX", grabX);
         telemetry.addData("grabY", grabY);
@@ -116,7 +117,7 @@ public class StrafeAction {
     public int setSlideDistanceMath() {
         //Based off law of sines
         double linkageLength = 27;
-        double targetRads = Math.acos(grabY / (2 * linkageLength));
+        double targetRads = Math.acos((grabY )/ (2 * linkageLength));
         //based off of endpoints of rad 1.31812/ticks 0 and rad 0/ticks 640
         double targetTicks = -(640/0.842234) * (targetRads - 1.31812);
         return (int) Range.clip(targetTicks, 0, 650);

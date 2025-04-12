@@ -71,7 +71,7 @@ public class LimeSweet {
             LLResult result = lime.getLatestResult();
             // Getting numbers from Python
             double[] pythonOutputs = result.getPythonOutput();
-            if (pythonOutputs != null && pythonOutputs.length > 0 && pythonOutputs[3] != 0) {
+            if (pythonOutputs != null && pythonOutputs.length > 0) {
                 point.clear();
                 point.add(pythonOutputs[2]);
                 point.add(pythonOutputs[3] + 25);
@@ -93,6 +93,16 @@ public class LimeSweet {
             return point;
         }
 
+    }
+    public void spicy(){
+        LLStatus status = lime.getStatus();
+        telemetry.addData("Name", "%s",
+                status.getName());
+        telemetry.addData("LL", "Temp: %.1fC, CPU: %.1f%%, FPS: %d",
+                status.getTemp(), status.getCpu(),(int)status.getFps());
+        telemetry.addData("Pipeline", "Index: %d, Type: %s",
+                status.getPipelineIndex(), status.getPipelineType());
+        telemetry.update();
     }
     public void setInputs(double[] inputs){
         this.inputs = inputs;
