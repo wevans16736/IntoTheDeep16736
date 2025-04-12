@@ -93,7 +93,7 @@ public class AutoLeftChampionship extends LinearOpMode {
                                 actions.get(8)
                         )
                 ),
-                new SleepAction(.125)
+                new SleepAction(.225)
         ));
 
         trajectory.getButterPose();

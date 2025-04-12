@@ -287,7 +287,7 @@ public class TrajectoryLeftChampionship {
                     .stopAndAdd(horizontalGrabberRR.horizontalGrabberAction(Pose.horizontalGrabberClose))
                     .waitSeconds(Timing.horizontalGrabberCloseTime / 1000)
                     .setTangent(Math.toRadians(180)) /* last butter basket */
-                    .splineToLinearHeading(new Pose2d(BX - 4.5, BY-8, BH), Math.toRadians(-80))
+                    .splineToLinearHeading(new Pose2d(BX - 7.5, BY-8, BH), Math.toRadians(-80))
                     .stopAndAdd(verticalGrabberRR.verticalGrabberAction(Pose.verticalOpen))
                     .waitSeconds(Timing.verticalOpenTime / 1000)
                     .afterTime(1, verticalSlideRR.verticalSlideAction(Pose.verticalSlideBottom))
