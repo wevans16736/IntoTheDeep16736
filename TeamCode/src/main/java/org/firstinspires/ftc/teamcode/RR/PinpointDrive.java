@@ -135,6 +135,10 @@ public class PinpointDrive extends MecanumDrive {
         return lastPinpointPose;
     }
 
+    public void setPinpointPose(Pose2d pose){
+        pinpoint.setPosition(pose);
+    }
+
     // for debug logging
     public static final class FTCPoseMessage {
         public long timestamp;

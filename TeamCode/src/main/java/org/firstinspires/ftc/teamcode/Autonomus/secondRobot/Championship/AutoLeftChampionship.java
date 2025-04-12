@@ -46,7 +46,7 @@ public class AutoLeftChampionship extends LinearOpMode {
         StrafeAction strafeAction = new StrafeAction(drive.leftFront, drive.leftBack, drive.rightBack, drive.rightFront, lime, telemetry, horizontalGrabber, horizontalRoll,
                 horizontalSlide, horizontalWrist, verticalGrabber, verticalHanger, verticalSlide, verticalWrist);
 
-        TrajectoryLeftChampionship trajectory = new TrajectoryLeftChampionship(drive, pose, lime, strafeAction, telemetry, horizontalGrabber, horizontalRoll,
+        TrajectoryLeftChampionship trajectory = new TrajectoryLeftChampionship(drive, pose, lime, strafeAction, telemetry, hardwareMap, horizontalGrabber, horizontalRoll,
                 horizontalSlide, horizontalWrist, verticalGrabber, verticalHanger, verticalSlide, verticalWrist);
 
         ArrayList<Action> actions = new ArrayList<>();
@@ -59,7 +59,8 @@ public class AutoLeftChampionship extends LinearOpMode {
         actions.add(trajectory.getTransfer()); //6
         actions.add(trajectory.getButter()); //7
         actions.add(trajectory.getTransfer()); // 8
-        actions.add(trajectory.getSub()); // 9
+
+        lime.scanButter();
 
         telemetry.addLine("Ready");
         telemetry.update();
@@ -84,12 +85,38 @@ public class AutoLeftChampionship extends LinearOpMode {
                 new ParallelAction(
                         actions.get(7),
                         new SequentialAction(
-                                new SleepAction(2.125),
+                                new SleepAction(2.2),
                                 actions.get(8)
                         )
-                ),
-                actions.get(9),
-                new SleepAction(20000)
+                )
+//                new SleepAction(.25)
+        ));
+
+        trajectory.getButterPose();
+        double currentTime = System.currentTimeMillis();
+        double timeout = 3000;
+        do {
+            strafeAction.getButterPose();
+        } while ((strafeAction.grabX == -1 && strafeAction.grabY == -1) && (timeout >= System.currentTimeMillis() - currentTime));
+        Action getSubButter = trajectory.getSubButter().build();
+        Actions.runBlocking(new SequentialAction(
+                new ParallelAction(
+                        getSubButter,
+                        new SequentialAction(
+                                new SleepAction(.5),
+                                trajectory.getTransfer()
+                        ))
+        ));
+        trajectory.getButterPose();
+        Action stuff = trajectory.getSubButter().build();
+        Actions.runBlocking(new SequentialAction(
+                new ParallelAction(
+                        stuff,
+                        new SequentialAction(
+                                new SleepAction(.5),
+                                trajectory.getTransfer()
+                        )),
+                new SleepAction(2000)
         ));
     }
 }

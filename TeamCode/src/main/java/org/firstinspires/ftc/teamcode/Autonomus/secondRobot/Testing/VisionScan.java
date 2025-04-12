@@ -45,7 +45,7 @@ public class VisionScan extends LinearOpMode {
         StrafeAction strafeAction = new StrafeAction(drive.leftFront, drive.leftBack, drive.rightBack, drive.rightFront,lime,telemetry, horizontalGrabber, horizontalRoll,
                 horizontalSlide, horizontalWrist, verticalGrabber, verticalHanger, verticalSlide, verticalWrist);
 
-        TrajectoryLeftChampionship trajectory = new TrajectoryLeftChampionship(drive, pose,lime, strafeAction,telemetry, horizontalGrabber, horizontalRoll,
+        TrajectoryLeftChampionship trajectory = new TrajectoryLeftChampionship(drive, pose,lime, strafeAction,telemetry,hardwareMap, horizontalGrabber, horizontalRoll,
                 horizontalSlide, horizontalWrist, verticalGrabber, verticalHanger, verticalSlide, verticalWrist);
 
         //wait for the start button to be press
@@ -55,10 +55,10 @@ public class VisionScan extends LinearOpMode {
 
         Actions.runBlocking(new SequentialAction(
                 trajectory.getMove(),
-                new SleepAction(1)
+                new SleepAction(5)
         ));
         trajectory.getButterPose();
-        Action test = trajectory.getTest().build();
+        Action test = trajectory.getSubButter().build();
         Actions.runBlocking(new SequentialAction(
                 test,
                 new SleepAction(5000)

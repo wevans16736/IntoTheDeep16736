@@ -8,6 +8,7 @@ import com.acmerobotics.roadrunner.TrajectoryActionBuilder;
 import com.acmerobotics.roadrunner.TranslationalVelConstraint;
 import com.acmerobotics.roadrunner.Vector2d;
 import com.acmerobotics.roadrunner.VelConstraint;
+import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.Configuration.secondRobot.HorizontalGrabberRR;
@@ -26,11 +27,13 @@ import org.firstinspires.ftc.teamcode.secondrobot.LimeSweet;
 import java.util.ArrayList;
 
 public class TrajectoryLeftChampionship {
+    PinpointDrive decoy; PinpointDrive subDrive;
     VerticalSlideRR verticalSlideRR; VerticalWristRR verticalWristRR; VerticalGrabberRR verticalGrabberRR; VerticalHangerRR verticalHangerRR;
     HorizontalSlideRR horizontalSlideRR; HorizontalRollRR horizontalRollRR; HorizontalGrabberRR horizontalGrabberRR;
     HorizontalWristRR horizontalWristRR; PinpointDrive drive; Pose2d pose; TrajectoryActionBuilder currentTrajectory;
-    LimeSweet lime; ArrayList<Double> point; double grabX, grabY, angle; StrafeAction strafeAction; Telemetry telemetry;
-    public TrajectoryLeftChampionship(PinpointDrive drive, Pose2d pose, LimeSweet lime,StrafeAction strafeAction,Telemetry telemetry, HorizontalGrabberRR horizontalGrabberRR,
+    LimeSweet lime; ArrayList<Double> point; StrafeAction strafeAction; Telemetry telemetry; HardwareMap hardwareMap;
+    public TrajectoryLeftChampionship(PinpointDrive drive, Pose2d pose, LimeSweet lime,StrafeAction strafeAction,Telemetry telemetry,
+                                      HardwareMap hardwareMap, HorizontalGrabberRR horizontalGrabberRR,
                                       HorizontalRollRR horizontalRollRR, HorizontalSlideRR horizontalSlideRR,
                                       HorizontalWristRR horizontalWristRR, VerticalGrabberRR verticalGrabberRR,
                                       VerticalHangerRR verticalHangerRR, VerticalSlideRR verticalSlideRR,
@@ -40,6 +43,7 @@ public class TrajectoryLeftChampionship {
         this.lime = lime;
         this.telemetry = telemetry;
         this.strafeAction = strafeAction;
+        this.hardwareMap = hardwareMap;
         this.point = new ArrayList<>();
         this.verticalSlideRR = verticalSlideRR;
         this.verticalWristRR = verticalWristRR;
@@ -55,13 +59,13 @@ public class TrajectoryLeftChampionship {
     VelConstraint subVel = new TranslationalVelConstraint(5);
     AccelConstraint subAccel = new ProfileAccelConstraint(-15, 10);
 
-    int butter = 0; int transferCount = 0;
+    int butter = 0; int transferCount = 0; Pose2d subPose;
     double BX = -55; double BY = -54.25; double BH = Math.toRadians(220); double BT = Math.toRadians(220); int basket = 0;
     double FBX = -48.75; double FBY = -43.5; double FBH = Math.toRadians(-90); double FBT = Math.toRadians(90);
-    double SBX = -58.75; double SBY = -41.5; double SBH = Math.toRadians(-90); double SBT = Math.toRadians(90);
-    double TBX = -56; double TBY = -23.25; double TBH = Math.toRadians(-.000001); double TBT = Math.toRadians(180);
-    double SX = -25; double SY = 0; double SH = Math.toRadians(180); double ST = Math.toRadians(45);
-    double sec = 1.2;
+    double SBX = -58.75; double SBY = -41.25; double SBH = Math.toRadians(-90); double SBT = Math.toRadians(90);
+    double TBX = -56.5; double TBY = -23.25; double TBH = Math.toRadians(-.000001); double TBT = Math.toRadians(180);
+    double SX = -18; double SY = 0; double SH = Math.toRadians(180); double ST = Math.toRadians(45);
+    double sec = 1.4;double timeout = 250; double MX = -47; double MY = -25;
 //    double humanX = 20.5, humanY = -63;
 
     public Action getBasket(){
@@ -79,7 +83,7 @@ public class TrajectoryLeftChampionship {
                     .waitSeconds(Timing.horizontalGrabberCloseTime / 1000)
                     .waitSeconds(sec)
                     .setTangent(Math.toRadians(-90))
-                    .splineToLinearHeading(new Pose2d(BX, BY, BH), BT);
+                    .strafeToLinearHeading(new Vector2d(BX, BY), BT);
             basket++;
             currentTrajectory = secondBasket.fresh();
             return secondBasket.build();
@@ -88,7 +92,7 @@ public class TrajectoryLeftChampionship {
                     .waitSeconds(Timing.horizontalGrabberCloseTime / 1000)
                     .waitSeconds(sec)
                     .setTangent(Math.toRadians(-90))
-                    .splineToLinearHeading(new Pose2d(BX, BY, BH), BT);
+                    .strafeToLinearHeading(new Vector2d(BX, BY), BT);
             basket++;
             currentTrajectory = thirdBasket.fresh();
             return thirdBasket.build();
@@ -105,13 +109,11 @@ public class TrajectoryLeftChampionship {
 //            currentTrajectory = forthBasket.fresh();
 //            return forthBasket.build();
         } else {
-            TrajectoryActionBuilder restBasket = currentTrajectory
-                    .waitSeconds(Timing.horizontalGrabberCloseTime)
-                    .setTangent(Math.toRadians(180))
-                    .splineToLinearHeading(new Pose2d(BX, BY, BH), BT);
-            basket++;
-            currentTrajectory = restBasket.fresh();
-            return restBasket.build();
+            drive.setPinpointPose(new Pose2d(SX, SY, SH));
+            TrajectoryActionBuilder move = drive.actionBuilder(new Pose2d(SX, SY, SH))
+                    .strafeToConstantHeading(new Vector2d(5, 0), subVel, subAccel);
+            currentTrajectory = move.fresh();
+            return move.build();
         }
     }
     public Action getButter(){
@@ -138,7 +140,7 @@ public class TrajectoryLeftChampionship {
                     .stopAndAdd(horizontalSlideRR.horizontalSlideActions((2*Pose.horizontalSlideExtend) / 3))
                     .stopAndAdd(horizontalWristRR.horizontalWristAction(Pose.horizontalWristIntake))
                     .stopAndAdd(horizontalGrabberRR.horizontalGrabberAction(Pose.horizontalGrabberWide))
-                    .setTangent(Math.toRadians(40))
+                    .setTangent(Math.toRadians(90))
                     .strafeToLinearHeading(new Vector2d(SBX, SBY), SBH);
             butter++;
             currentTrajectory = secondButter.fresh();
@@ -156,13 +158,29 @@ public class TrajectoryLeftChampionship {
                     .setTangent(Math.toRadians(40))
                     .splineToLinearHeading(new Pose2d(TBX, TBY, TBH), TBT)
                     .waitSeconds(Timing.horizontalGrabberCloseTime / 1000)
-                    .waitSeconds(.5)
-                    .setReversed(true)
+                    .waitSeconds(1.1)
+                    .setTangent(Math.toRadians(0))
 //                    .splineToLinearHeading(new Pose2d(-35, -40, Math.toRadians(-90)), Math.toRadians(-45))
-                    .splineToLinearHeading(new Pose2d(BX, BY, BH), BT);
+                    .splineToLinearHeading(new Pose2d(BX, BY, BH), BT)
+                    //sub
+                    .stopAndAdd(verticalGrabberRR.verticalGrabberAction(Pose.verticalOpen))
+                    .waitSeconds(Timing.verticalOpenTime / 1000)
+                    .stopAndAdd(verticalWristRR.verticalWristAction(Pose.verticalWristTransfer))
+                    .stopAndAdd(verticalSlideRR.verticalSlideAction(Pose.verticalSlideBottom))
+                    .setTangent(Math.toRadians(0))
+//                    .splineToLinearHeading(new Pose2d(MX, MY, Math.toRadians(-90)), Math.toRadians(90))
+                    .splineToLinearHeading(new Pose2d(SX, SY, SH), ST);
             currentTrajectory = thirdButter.fresh();
             return thirdButter.build();
         }
+    }
+    public Action getSubBasket(){
+//        drive.setPinpointPose(new Pose2d(SX, SY, SH));
+        TrajectoryActionBuilder move = decoy.actionBuilder(new Pose2d(SX, SY, SH))
+                .setTangent(Math.toRadians(180))
+                .strafeToConstantHeading(new Vector2d(BX, 0));
+        currentTrajectory = move.fresh();
+        return move.build();
     }
     public Action getTransfer(){
         if(transferCount == 2) {
@@ -184,7 +202,7 @@ public class TrajectoryLeftChampionship {
             currentTrajectory = transfer.fresh();
             return transfer.build();
         } else {
-            TrajectoryActionBuilder transfer = currentTrajectory
+            TrajectoryActionBuilder transfer = currentTrajectory.endTrajectory()
                     .stopAndAdd(horizontalGrabberRR.horizontalGrabberAction(Pose.horizontalGrabberClose))
                     .waitSeconds(Timing.horizontalGrabberCloseTime / 1000)
                     .stopAndAdd(horizontalWristRR.horizontalWristAction(Pose.horizontalWristTransfer))
@@ -202,22 +220,10 @@ public class TrajectoryLeftChampionship {
             return transfer.build();
         }
     }
-    public Action getSub(){
-        TrajectoryActionBuilder sub = currentTrajectory
-                .stopAndAdd(verticalGrabberRR.verticalGrabberAction(Pose.verticalOpen))
-                .waitSeconds(Timing.verticalOpenTime / 1000)
-                .stopAndAdd(verticalWristRR.verticalWristAction(Pose.verticalWristTransfer))
-                .stopAndAdd(verticalSlideRR.verticalSlideAction(Pose.verticalSlideBottom))
-                .setTangent(Math.toRadians(0))
-//                .splineToLinearHeading(new Pose2d(SX -1, SY, Math.toRadians(180)), Math.toRadians(90))
-                .splineToLinearHeading(new Pose2d(SX, SY, SH), ST);
-        currentTrajectory = sub.fresh();
-        return sub.build();
-    }
 
     public Action getMove(){
         TrajectoryActionBuilder move = currentTrajectory
-                .strafeToConstantHeading(new Vector2d(0, -5), subVel, subAccel);
+                .strafeToConstantHeading(new Vector2d(0, 5), subVel, subAccel);
         currentTrajectory = move.fresh();
         return move.build();
     }
@@ -225,19 +231,33 @@ public class TrajectoryLeftChampionship {
        strafeAction.getButterPose();
     }
 
-    public TrajectoryActionBuilder getTest(){
+    public TrajectoryActionBuilder getSubButter(){
+        Pose2d butterPose = new Pose2d(0,0,Math.toRadians(180));
+        drive = null;
+        decoy = new PinpointDrive(hardwareMap, butterPose);
+//        subPose = drive.getLastPinpointPose();
+//        drive.setPinpointPose(butterPose);
         int ticks = strafeAction.setSlideDistanceMath();
-        double distanceX = strafeAction.grabX / 2.54;
+        double distanceX = (strafeAction.grabX + 1) / 2.54;
         double roll = (strafeAction.angle / 90) * .3 + Pose.horizontalRollFlat;
-        TrajectoryActionBuilder test = drive.actionBuilder(new Pose2d(0,0,Math.toRadians(90)))
+        TrajectoryActionBuilder test = decoy.actionBuilder(butterPose)
                 .stopAndAdd(horizontalSlideRR.horizontalSlideActions(ticks))
                 .stopAndAdd(horizontalGrabberRR.horizontalGrabberAction(Pose.horizontalGrabberWide))
                 .stopAndAdd(horizontalWristRR.horizontalWristAction(Pose.horizontalWristIntake))
                 .stopAndAdd(horizontalRollRR.horizontalRollAction(roll))
-                .strafeToConstantHeading(new Vector2d(-distanceX, 0))
-                .waitSeconds(Timing.horizontalWristIntaketoTransfer / 1000)
-                .stopAndAdd(horizontalGrabberRR.horizontalGrabberAction(Pose.horizontalGrabberClose));
-        currentTrajectory = drive.actionBuilder(drive.getLastPinpointPose());
+                .strafeToConstantHeading(new Vector2d(0, -distanceX))
+                .waitSeconds(.75)
+                .stopAndAdd(horizontalGrabberRR.horizontalGrabberAction(Pose.horizontalGrabberClose))
+                .waitSeconds(Timing.horizontalGrabberCloseTime / 1000)
+                .setTangent(Math.toRadians(180))
+//                .splineTo(new Vector2d(-((double) 36 /2), -31), Math.toRadians(-90))
+                .splineToLinearHeading(new Pose2d(-40, -60, Math.toRadians(220)), Math.toRadians(220))
+                .stopAndAdd(verticalGrabberRR.verticalGrabberAction(Pose.verticalOpen))
+                .waitSeconds(Timing.verticalOpenTime / 1000)
+                .stopAndAdd(verticalSlideRR.verticalSlideAction(Pose.verticalSlideBottom))
+                .stopAndAdd(verticalWristRR.verticalWristAction(Pose.verticalWristTransfer))
+                .setTangent(Math.toRadians(0))
+                .splineToLinearHeading(new Pose2d(4,0, Math.toRadians(180)), Math.toRadians(0));
         return test;
     }
 }
