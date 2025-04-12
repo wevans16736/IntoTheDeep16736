@@ -23,6 +23,8 @@ import org.firstinspires.ftc.teamcode.Configuration.secondRobot.VerticalWristRR;
 import org.firstinspires.ftc.teamcode.RR.GlobalVariables;
 import org.firstinspires.ftc.teamcode.secondrobot.LimeSweet;
 
+import java.util.ArrayList;
+
 public class StrafeAction {
     DcMotorEx leftFront, leftRear, rightRear, rightFront;double grabX, grabY, angle = 0; Telemetry telemetry;
     VerticalSlideRR verticalSlideRR; VerticalWristRR verticalWristRR; VerticalGrabberRR verticalGrabberRR; VerticalHangerRR verticalHangerRR;
@@ -94,13 +96,14 @@ public class StrafeAction {
         rightRear.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
     }
     public void getButterPose() {
-        grabX = -lime.scanButter().get(0);
-        grabY = lime.scanButter().get(1);
-        angle = -lime.scanButter().get(2) + 180;
+        ArrayList<Double> grab = lime.scanButter();
+        grabX = -grab.get(0);
+        grabY = grab.get(1);
+        angle = -grab.get(2) + 180;
         telemetry.addData("Original-grabX", grabX);
         telemetry.addData("Original-grabY", grabY);
         telemetry.addData("Original-grabAngle", angle);
-        if (angle > 170) {
+        if (angle > 150) {
             angle -= 180;
         }
         grabX -= 3 * Math.cos(Math.toRadians(90 + angle));

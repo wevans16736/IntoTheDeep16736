@@ -103,24 +103,24 @@ public class AutoLeftChampionship extends LinearOpMode {
                 new ParallelAction(
                         getSubButter,
                         new SequentialAction(
-                                new SleepAction(.5),
+                                new SleepAction(2),
                                 trajectory.getTransfer()
                         ))
         ));
-        currentTime = System.currentTimeMillis();
-        do {
-            strafeAction.getButterPose();
-        } while ((strafeAction.grabX == -1 && strafeAction.grabY == -1) && (timeout >= System.currentTimeMillis() - currentTime));
-        trajectory.getButterPose();
-        Action stuff = trajectory.getSubButter().build();
-        Actions.runBlocking(new SequentialAction(
-                new ParallelAction(
-                        stuff,
-                        new SequentialAction(
-                                new SleepAction(.5),
-                                trajectory.getTransfer()
-                        )),
-                new SleepAction(2000)
-        ));
+//        currentTime = System.currentTimeMillis();
+//        while ((strafeAction.grabX == -1 && strafeAction.grabY == -1) && (timeout >= System.currentTimeMillis() - currentTime)){
+//            strafeAction.getButterPose();
+//        }
+//        trajectory.getButterPose();
+//        Action stuff = trajectory.getSubButter().build();
+//        Actions.runBlocking(new SequentialAction(
+//                new ParallelAction(
+//                        stuff,
+//                        new SequentialAction(
+//                                new SleepAction(.5),
+//                                trajectory.getTransfer()
+//                        )),
+//                new SleepAction(2000)
+//        ));
     }
 }

@@ -5,6 +5,7 @@ import com.qualcomm.hardware.limelightvision.LLResultTypes;
 import com.qualcomm.hardware.limelightvision.LLStatus;
 import com.qualcomm.hardware.limelightvision.Limelight3A;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.util.RobotLog;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.secondrobot.constants.ConfigConstants;
@@ -18,6 +19,7 @@ public class LimeSweet {
     double verticalDistance, horizontalDistance, xDistance, yDistance;
     int pipeline; ArrayList<Double> point = new ArrayList<>();
     double[] inputs = {1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0};
+    int i = 0;
 
     public LimeSweet(HardwareMap hardwareMap, Telemetry telemetry, int pipeline){
         this.telemetry = telemetry;
@@ -34,6 +36,7 @@ public class LimeSweet {
         verticalFOV = 42;
         horizontalFOV = 54.5;
         verticalDistance = 14;
+
     }
 
     public ArrayList<Double> scanButter(){
@@ -66,26 +69,30 @@ public class LimeSweet {
             // Sending numbers to Python
             lime.updatePythonInputs(inputs);
             LLResult result = lime.getLatestResult();
-                // Getting numbers from Python
-                double[] pythonOutputs = result.getPythonOutput();
-                if (pythonOutputs != null && pythonOutputs.length > 0 && pythonOutputs[3] != 0) {
-                    point.clear();
-                    point.add(pythonOutputs[2]);
-                    point.add(pythonOutputs[3] + 25);
-                    point.add(pythonOutputs[4]);
-                    telemetry.addData("Python output X:", point.get(0));
-                    telemetry.addData("Python output Y:", point.get(1));
-                    telemetry.addData("Python output angle:", point.get(2));
-                } else {
-                    telemetry.addLine("no target");
-                    point.clear();
-                    point.add(0, -1.0);
-                    point.add(1, -1.0);
-                    point.add(2, -1.0);
-                }
-                telemetry.update();
+            // Getting numbers from Python
+            double[] pythonOutputs = result.getPythonOutput();
+            if (pythonOutputs != null && pythonOutputs.length > 0 && pythonOutputs[3] != 0) {
+                point.clear();
+                point.add(pythonOutputs[2]);
+                point.add(pythonOutputs[3] + 25);
+                point.add(pythonOutputs[4]);
+                telemetry.addData("Python output X:", point.get(0));
+                telemetry.addData("Python output Y:", point.get(1));
+                telemetry.addData("Python output angle:", point.get(2));
+            } else {
+                telemetry.addLine("no target");
+                point.clear();
+                point.add(0, -1.0);
+                point.add(1, -1.0);
+                point.add(2, -1.0);
+            }
+            telemetry.update();
+            i = (int) System.nanoTime();
+            lime.captureSnapshot(String.valueOf(i));
+            RobotLog.dd("vision", "id %d", i);
             return point;
         }
+
     }
     public void setInputs(double[] inputs){
         this.inputs = inputs;

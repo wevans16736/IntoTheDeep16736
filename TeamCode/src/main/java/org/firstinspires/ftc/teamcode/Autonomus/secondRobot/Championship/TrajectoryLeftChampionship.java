@@ -62,7 +62,7 @@ public class TrajectoryLeftChampionship {
     int butter = 0; int transferCount = 0; Pose2d subPose; int sub = 0;
     double BX = -55; double BY = -54.25; double BH = Math.toRadians(220); double BT = Math.toRadians(220); int basket = 0;
     double FBX = -48.75; double FBY = -44; double FBH = Math.toRadians(-90); double FBT = Math.toRadians(90);
-    double SBX = -58.75; double SBY = -41.25; double SBH = Math.toRadians(-90); double SBT = Math.toRadians(90);
+    double SBX = -58.75; double SBY = -41.75; double SBH = Math.toRadians(-90); double SBT = Math.toRadians(90);
     double TBX = -56.5; double TBY = -23.25; double TBH = Math.toRadians(-.000001); double TBT = Math.toRadians(180);
     double SX = -18.5; double SY = 0; double SH = Math.toRadians(180); double ST = Math.toRadians(45);
     double sec = 1.4;double timeout = 250; double MX = -47; double MY = -25;
@@ -248,9 +248,7 @@ public class TrajectoryLeftChampionship {
                     .stopAndAdd(horizontalWristRR.horizontalWristAction(Pose.horizontalWristIntake))
                     .stopAndAdd(horizontalRollRR.horizontalRollAction(roll))
                     .strafeToConstantHeading(new Vector2d(butterPose.position.x, -distanceX + butterPose.position.y))
-                    .waitSeconds(.8)
-                    .stopAndAdd(horizontalGrabberRR.horizontalGrabberAction(Pose.horizontalGrabberClose))
-                    .waitSeconds(Timing.horizontalGrabberCloseTime / 1000)
+                    .waitSeconds(4)
                     .setTangent(Math.toRadians(180))
                     .splineToLinearHeading(new Pose2d(butterPose.position.x - 11, -distanceX, Math.toRadians(220)), Math.toRadians(240))
                     .splineToLinearHeading(new Pose2d(BX - 2, BY, BH), Math.toRadians(-80))
