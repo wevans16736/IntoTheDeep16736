@@ -68,7 +68,7 @@ public class TrajectoryRight {
                     .stopAndAdd(verticalWristRR.verticalWristAction(Pose.verticalWristBar))
                     .setTangent(Math.toRadians(180))
                     .splineToLinearHeading(new Pose2d(45, -45, Math.toRadians(179.999)), Math.toRadians(200))
-                    .splineToLinearHeading(new Pose2d(hangX, hangY + .5, Math.toRadians(90)), Math.toRadians(115))
+                    .splineToLinearHeading(new Pose2d(hangX, hangY + .75, Math.toRadians(90)), Math.toRadians(115))
                     .stopAndAdd(verticalGrabberRR.verticalGrabberAction(Pose.verticalOpen))
 //                    .stopAndAdd(verticalWristRR.VerticalWristAction(ConfigurationSecondRobot.verticalWristUp))
                     .waitSeconds(Timing.verticalCloseTime/1000);
@@ -85,9 +85,9 @@ public class TrajectoryRight {
                     .stopAndAdd(verticalSlideRR.verticalSlideAction(Pose.verticalSlideHighBar))
                     .afterTime(1, verticalWristRR.verticalWristAction(Pose.verticalWristBar))
                     .strafeToLinearHeading(new Vector2d( humanX - 15, humanY), Math.toRadians(90))
-                    .strafeToLinearHeading(new Vector2d(hangX, hangY), Math.toRadians(90))
+                    .strafeToLinearHeading(new Vector2d(hangX, hangY + 1), Math.toRadians(90))
                     .stopAndAdd(verticalGrabberRR.verticalGrabberAction(Pose.verticalOpen))
-                    .waitSeconds(Timing.verticalCloseTime/1000)
+                    .waitSeconds((Timing.verticalCloseTime/1000))
                     .stopAndAdd(verticalWristRR.verticalWristAction(Pose.verticalWristWall))
                     .stopAndAdd(verticalSlideRR.verticalSlideAction(Pose.verticalSlideBottom))
                     .stopAndAdd(verticalGrabberRR.verticalGrabberAction(Pose.verticalOpen));
