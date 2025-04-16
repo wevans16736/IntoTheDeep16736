@@ -51,6 +51,7 @@ public class HorizontalIRollActions {
     boolean isTransfer = true;
     public void setTransfer(boolean isTransfering) {
         isTransfer = isTransfering;
+        if(isTransfering){setPosition(0.0);}
     }
     boolean isFlat = true;
     boolean wasOperate = false;

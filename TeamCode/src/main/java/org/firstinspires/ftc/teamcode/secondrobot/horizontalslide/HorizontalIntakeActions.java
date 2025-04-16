@@ -26,6 +26,7 @@ public class HorizontalIntakeActions {
     boolean wasVertGrabberClosed = false;
     public void setIsVertGrabberClosed(boolean vertGrabberClosed) {
         isVertGrabberClosed = vertGrabberClosed;
+
     }
     double openStartTime = 0;
     public void close() {
@@ -44,6 +45,8 @@ public class HorizontalIntakeActions {
             setPosition(Pose.horizontalGrabberClose);
             telemetry.addData("closed", true);
         }
+    }
+    public void updateIsClosedGrabber(){
         //if the vertical grabber is closing, start a timer for .4 seconds. at the end of the .4 seconds, open the intake
         if (isVertGrabberClosed && !wasVertGrabberClosed){
             vertGrabberClosing = true;
@@ -52,6 +55,7 @@ public class HorizontalIntakeActions {
         if (vertGrabberClosing && System.currentTimeMillis() > vertGrabberClosingStartTime + 100 && isVertGrabberClosed) {
             vertGrabberClosing = false;
             closed = false;
+            update();
         }
         wasVertGrabberClosed = isVertGrabberClosed;
     }

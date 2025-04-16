@@ -123,6 +123,7 @@ public abstract class HelperActions extends LinearOpMode {
     public void updateExchangeAssembly(VerticalGrabberActions grabber, VerticalWristActions verticalWrist, HorizontalWristActions horizontalWrist, HorizontalSlideActions horizontalArm, VerticalSlideActions verticalSlide, HorizontalIRollActions horizontalIRoll, HorizontalIntakeActions intake) {
         //tells the horizontal intake to be open when the vertical grabber grabs
         intake.setIsVertGrabberClosed(grabber.isClose());
+        intake.updateIsClosedGrabber();
 
         //tells the vertical wrist when the slide is up
         verticalWrist.setSlideUp(verticalSlide.getSlidePosition() > Pose.verticalSlideHighBar + 700);
