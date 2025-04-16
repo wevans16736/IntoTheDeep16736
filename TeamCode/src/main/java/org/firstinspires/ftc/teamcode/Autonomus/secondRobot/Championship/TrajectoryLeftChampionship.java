@@ -64,12 +64,12 @@ public class TrajectoryLeftChampionship {
     //First butter position
     double FBX = -48.75; double FBY = -44.125; double FBH = Math.toRadians(-90); double FBT = Math.toRadians(90);
     //second butter position
-    double SBX = -58.75; double SBY = -42.5; double SBH = Math.toRadians(-90); double SBT = Math.toRadians(90);
+    double SBX = -58.75; double SBY = -43.125; double SBH = Math.toRadians(-90); double SBT = Math.toRadians(90);
     //third butter position
     double TBX = -56.5; double TBY = -23.25; double TBH = Math.toRadians(-.000001); double TBT = Math.toRadians(180);
     //location in
 
-    double SX = -16.75; double SY = 0; double SH = Math.toRadians(180); double ST = Math.toRadians(45);
+    double SX = -17; double SY = 0; double SH = Math.toRadians(180); double ST = Math.toRadians(45);
     double sec = 1.0;double timeout = 250; double MX = -47; double MY = -25;
 //    double humanX = 20.5, humanY = -63;
 
@@ -166,7 +166,7 @@ public class TrajectoryLeftChampionship {
                     .waitSeconds(1)
                     .setTangent(Math.toRadians(0))
 //                    .splineToLinearHeading(new Pose2d(-35, -40, Math.toRadians(-90)), Math.toRadians(-45))
-                    .splineToLinearHeading(new Pose2d(BX, BY, BH), BT)
+                    .splineToLinearHeading(new Pose2d(BX, BY, Math.toRadians(200)), BT)
                     //sub
                     .stopAndAdd(verticalGrabberRR.verticalGrabberAction(Pose.verticalOpen))
                     .waitSeconds(Timing.verticalOpenTime / 1000)
@@ -257,16 +257,16 @@ public class TrajectoryLeftChampionship {
                     .afterTime(.125, horizontalWristRR.horizontalWristAction(Pose.horizontalWristIntake))
                     .stopAndAdd(horizontalRollRR.horizontalRollAction(roll))
                     .strafeToConstantHeading(new Vector2d(butterPose.position.x, -distanceX + butterPose.position.y))
-                    .waitSeconds(1)
+                    .waitSeconds(1.5)
                     .setTangent(Math.toRadians(180))
 //                    .splineToLinearHeading(new Pose2d(butterPose.position.x - 11, -distanceX, Math.toRadians(220)), Math.toRadians(240))
-                    .splineToLinearHeading(new Pose2d(BX - 5.5, BY - 5, BH), Math.toRadians(-80))
+                    .splineToLinearHeading(new Pose2d(BX - 7, BY - 3, Math.toRadians(230)), Math.toRadians(-80))
                     .stopAndAdd(verticalGrabberRR.verticalGrabberAction(Pose.verticalOpen))
                     .waitSeconds(Timing.verticalOpenTime / 1000)
                     .afterTime(1, verticalSlideRR.verticalSlideAction(Pose.verticalSlideBottom))
                     .stopAndAdd(verticalWristRR.verticalWristAction(Pose.verticalWristTransfer))
                     .setTangent(Math.toRadians(0))
-                    .splineToLinearHeading(new Pose2d(-5, 5, Math.toRadians(180)), Math.toRadians(0));
+                    .splineToLinearHeading(new Pose2d(-10, 5, Math.toRadians(180)), Math.toRadians(0));
             sub++;
             return test;
         } else {
@@ -293,7 +293,7 @@ public class TrajectoryLeftChampionship {
                     .stopAndAdd(horizontalGrabberRR.horizontalGrabberAction(Pose.horizontalGrabberClose))
                     .waitSeconds(Timing.horizontalGrabberCloseTime / 1000)
                     .setTangent(Math.toRadians(180)) /* last butter basket */
-                    .splineToLinearHeading(new Pose2d(BX - 7.5, BY-8, BH), Math.toRadians(-80))
+                    .splineToLinearHeading(new Pose2d(BX - 10, BY-8, BH), Math.toRadians(-80))
                     .stopAndAdd(verticalGrabberRR.verticalGrabberAction(Pose.verticalOpen))
                     .waitSeconds(Timing.verticalOpenTime / 1000)
                     .afterTime(1, verticalSlideRR.verticalSlideAction(Pose.verticalSlideBottom))

@@ -106,11 +106,11 @@ public class LimelightTeleOp extends HelperActions {
             /** Gamepad 1 **/
             driveActions.drive(
                     //joystick controlling strafe
-                    (gamepad1.left_stick_x * Math.abs(gamepad1.left_stick_x) * getReverseSpeed()),
+                    (-gamepad1.left_stick_x * Math.abs(gamepad1.left_stick_x) * getReverseSpeed()),
                     //joystick controlling forward/backward
-                    (-gamepad1.left_stick_y * Math.abs(gamepad1.left_stick_y) * getReverseSpeed()),
+                    (gamepad1.left_stick_y * Math.abs(gamepad1.left_stick_y) * getReverseSpeed()),
                     //joystick controlling rotation
-                    gamepad1.right_stick_x * Math.abs(gamepad1.right_stick_x));
+                    -gamepad1.right_stick_x * Math.abs(gamepad1.right_stick_x));
             telemetry.addData("Left stick x", gamepad1.left_stick_x);
             telemetry.addData("left stick y", gamepad1.left_stick_y);
             telemetry.addData("right stick x", gamepad1.right_stick_x);

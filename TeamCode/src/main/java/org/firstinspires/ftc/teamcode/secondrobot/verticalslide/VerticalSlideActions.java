@@ -125,6 +125,7 @@ public class VerticalSlideActions {
                 //one shot- when button is pressed, it only sets the position once
                 if (bottomRung) {
                     setSlidePosition(preset1, 1800);
+
                 }
                 if (bottom) {
                     setSlidePosition(preset2, 2500);

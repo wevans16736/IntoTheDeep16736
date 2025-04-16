@@ -85,7 +85,7 @@ public class TrajectoryRightChampionship {
                     .stopAndAdd(verticalSlideRR.verticalSlideAction(Pose.verticalSlideHighBar))
                     .afterTime(1, verticalWristRR.verticalWristAction(Pose.verticalWristBar))
                     .strafeToLinearHeading(new Vector2d( humanX - 15, humanY), Math.toRadians(90))
-                    .strafeToLinearHeading(new Vector2d(hangX, hangY + 1), Math.toRadians(90))
+                    .strafeToLinearHeading(new Vector2d(hangX, hangY + 3), Math.toRadians(90))
                     .stopAndAdd(verticalGrabberRR.verticalGrabberAction(Pose.verticalOpen))
                     .waitSeconds((Timing.verticalCloseTime/1000))
                     .stopAndAdd(verticalWristRR.verticalWristAction(Pose.verticalWristWall))
@@ -150,9 +150,9 @@ public class TrajectoryRightChampionship {
                     .stopAndAdd(verticalWristRR.verticalWristAction(Pose.verticalWristWall))
                     .stopAndAdd(horizontalSlideRR.horizontalSlideActions(Pose.horizontalSlideExtend))
                     .stopAndAdd(horizontalWristRR.horizontalWristAction(Pose.horizontalWristIntake))
-                    .waitSeconds(Timing.verticalWristWalltoIntake/1000)
+                    .waitSeconds(Timing.verticalWristWalltoIntake/1000 -.1)
                     .stopAndAdd(verticalGrabberRR.verticalGrabberAction(Pose.verticalOpen))
-                    .waitSeconds(Timing.verticalCloseTime/1000);
+                    .waitSeconds(Timing.verticalCloseTime/1000 - .1);
             attachment++;
             currentTrajectory = firstAttachment.endTrajectory().fresh();
             return  firstAttachment.build();
@@ -171,7 +171,7 @@ public class TrajectoryRightChampionship {
                     .waitSeconds(Timing.horizontalGrabberCloseTime/1000)
                     .stopAndAdd(verticalWristRR.verticalWristAction(Pose.verticalWristWall))
                     .stopAndAdd(horizontalWristRR.horizontalWristAction(Pose.horizontalWristIntake))
-                    .waitSeconds(Timing.verticalWristWalltoIntake/1000)
+                    .waitSeconds(Timing.verticalWristWalltoIntake/1000 -.1)
                     .stopAndAdd(verticalGrabberRR.verticalGrabberAction(Pose.verticalOpen))
                     .waitSeconds(Timing.verticalCloseTime/1000);
             currentTrajectory = secondAttachment.endTrajectory().fresh();
