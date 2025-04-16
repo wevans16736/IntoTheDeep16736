@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.Autonomus.secondRobot;
+package org.firstinspires.ftc.teamcode.Autonomus.secondRobot.Championship;
 
 import com.acmerobotics.roadrunner.Action;
 import com.acmerobotics.roadrunner.ParallelAction;
@@ -6,7 +6,6 @@ import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.SequentialAction;
 import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.Configuration.secondRobot.HorizontalGrabberRR;
@@ -20,8 +19,8 @@ import org.firstinspires.ftc.teamcode.Configuration.secondRobot.VerticalHangerRR
 import org.firstinspires.ftc.teamcode.RR.GlobalVariables;
 import org.firstinspires.ftc.teamcode.RR.PinpointDrive;
 
-@Autonomous(name = "Auto")
-public class Auto5Butter extends LinearOpMode {
+@Autonomous(name = "AutoRightChampionship", group = "auto")
+public class AutoRightChampionship extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
         //set up Pinpoint and Pose2d class
@@ -50,7 +49,7 @@ public class Auto5Butter extends LinearOpMode {
 
 //        DetectBlockActions vision = new DetectBlockActions(hardwareMap);
 
-        TrajectoryRight trajectory = new TrajectoryRight(drive, pose, verticalSlide, verticalWrist, verticalGrabber,
+        TrajectoryRightChampionship trajectory = new TrajectoryRightChampionship(drive, pose, verticalSlide, verticalWrist, verticalGrabber,
                 verticalHanger, horizontalSlide, horizontalRoll, horizontalGrabber, horizontalWrist);
 
         //build everything

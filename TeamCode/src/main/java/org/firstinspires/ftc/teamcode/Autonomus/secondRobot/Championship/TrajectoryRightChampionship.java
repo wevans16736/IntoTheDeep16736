@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.Autonomus.secondRobot;
+package org.firstinspires.ftc.teamcode.Autonomus.secondRobot.Championship;
 
 import com.acmerobotics.roadrunner.Action;
 import com.acmerobotics.roadrunner.Pose2d;
@@ -18,15 +18,15 @@ import org.firstinspires.ftc.teamcode.Configuration.secondRobot.VerticalSlideRR;
 import org.firstinspires.ftc.teamcode.Configuration.secondRobot.VerticalWristRR;
 import org.firstinspires.ftc.teamcode.RR.PinpointDrive;
 
-public class TrajectoryRight {
+public class TrajectoryRightChampionship {
     VerticalSlideRR verticalSlideRR; VerticalWristRR verticalWristRR; VerticalGrabberRR verticalGrabberRR; VerticalHangerRR verticalHangerRR;
     HorizontalSlideRR horizontalSlideRR; HorizontalRollRR horizontalRollRR; HorizontalGrabberRR horizontalGrabberRR;
     HorizontalWristRR horizontalWristRR; PinpointDrive drive; Pose2d pose; TrajectoryActionBuilder currentTrajectory;
     RobotSensor robotSensor;
-    public TrajectoryRight(PinpointDrive drive, Pose2d pose, VerticalSlideRR verticalSlideRR,
-                           VerticalWristRR verticalWristRR, VerticalGrabberRR verticalGrabberRR,
-                           VerticalHangerRR verticalHangerRR, HorizontalSlideRR horizontalSlideRR, HorizontalRollRR horizontalRollRR,
-                           HorizontalGrabberRR horizontalGrabberRR, HorizontalWristRR horizontalWristRR){
+    public TrajectoryRightChampionship(PinpointDrive drive, Pose2d pose, VerticalSlideRR verticalSlideRR,
+                                       VerticalWristRR verticalWristRR, VerticalGrabberRR verticalGrabberRR,
+                                       VerticalHangerRR verticalHangerRR, HorizontalSlideRR horizontalSlideRR, HorizontalRollRR horizontalRollRR,
+                                       HorizontalGrabberRR horizontalGrabberRR, HorizontalWristRR horizontalWristRR){
         this.drive = drive;
         this.pose = pose;
         this.verticalSlideRR = verticalSlideRR;

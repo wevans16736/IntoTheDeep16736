@@ -246,6 +246,9 @@ public class TrajectoryLeftChampionship {
 //        drive.setPinpointPose(butterPose);
             //First butter submersible
             int ticks = strafeAction.setSlideDistanceMath();
+            if(ticks == 0){
+                ticks = (int)(Pose.horizontalSlideExtend * .75);
+            }
             double distanceX = (strafeAction.grabX + 1) / 2.54;
             double roll = (strafeAction.angle / 90) * .3 + Pose.horizontalRollFlat;
             TrajectoryActionBuilder test = decoy.actionBuilder(butterPose)
@@ -274,9 +277,12 @@ public class TrajectoryLeftChampionship {
 //        subPose = drive.getLastPinpointPose();
 //        drive.setPinpointPose(butterPose);
             int ticks = strafeAction.setSlideDistanceMath();
+            if(ticks == 0){
+                ticks = (int)(Pose.horizontalSlideExtend * .75);
+            }
             double distanceX = (strafeAction.grabX + 1) / 2.54;
             double roll = (strafeAction.angle / 90) * .3 + Pose.horizontalRollFlat;
-            //second submersiable butter
+            //second submersible butter
             TrajectoryActionBuilder test = subDrive.actionBuilder(butterPose)
                     .afterTime(0, horizontalSlideRR.horizontalSlideActions(ticks))
                     .stopAndAdd(horizontalGrabberRR.horizontalGrabberAction(Pose.horizontalGrabberWide + .05))
