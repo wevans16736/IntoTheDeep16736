@@ -111,11 +111,8 @@ public class AutoLeftChampionship extends LinearOpMode {
         Action stuff = trajectory.getSubButter().build();
         Actions.runBlocking(new SequentialAction(
                 new ParallelAction(
-                        stuff,
-                        new SequentialAction(
-                                new SleepAction(.85),
-                                trajectory.getTransfer()
-                        )),
+                        stuff
+                ),
                 new SleepAction(2000)
         ));
 

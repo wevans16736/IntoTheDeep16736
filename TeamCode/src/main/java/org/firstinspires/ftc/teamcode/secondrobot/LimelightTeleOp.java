@@ -5,14 +5,7 @@ import com.acmerobotics.roadrunner.Action;
 import com.acmerobotics.roadrunner.Pose2d;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
-import org.firstinspires.ftc.teamcode.Configuration.secondRobot.HorizontalGrabberRR;
-import org.firstinspires.ftc.teamcode.Configuration.secondRobot.HorizontalRollRR;
-import org.firstinspires.ftc.teamcode.Configuration.secondRobot.HorizontalSlideRR;
-import org.firstinspires.ftc.teamcode.Configuration.secondRobot.HorizontalWristRR;
-import org.firstinspires.ftc.teamcode.Configuration.secondRobot.VerticalGrabberRR;
-import org.firstinspires.ftc.teamcode.Configuration.secondRobot.VerticalHangerRR;
-import org.firstinspires.ftc.teamcode.Configuration.secondRobot.VerticalSlideRR;
-import org.firstinspires.ftc.teamcode.Configuration.secondRobot.VerticalWristRR;
+import org.firstinspires.ftc.teamcode.Configuration.secondRobot.*;
 import org.firstinspires.ftc.teamcode.FieldCentric.Attachment;
 import org.firstinspires.ftc.teamcode.FieldCentric.DriveTrain;
 import org.firstinspires.ftc.teamcode.RR.GlobalVariables;
@@ -40,7 +33,7 @@ public class LimelightTeleOp extends HelperActions {
     private VerticalGrabberActions verticalGrabber = null;
     private VerticalHangerActions verticalHanger = null;
     private HorizontalSlideActions horizontalSlide = null;
-    private LimeSweet limeSweet = null;
+//    private LimeSweet limeSweet = null;
     PinpointDrive drive;
     DriveTrain driveTrain; Pose2d currentPose; Attachment attachment;
     private FtcDashboard dash = FtcDashboard.getInstance();
@@ -61,7 +54,7 @@ public class LimelightTeleOp extends HelperActions {
         verticalWrist = new VerticalWristActions(telemetry, hardwareMap);
         verticalGrabber = new VerticalGrabberActions(telemetry, hardwareMap);
         verticalHanger = new VerticalHangerActions(hardwareMap);
-        limeSweet = new LimeSweet(hardwareMap, telemetry, 0);
+//        limeSweet = new LimeSweet(hardwareMap, telemetry, 0);
         //Set Speed for teleOp. Mecannum wheel speed.
         //driveActions.setSpeed(1.0);
 
@@ -121,7 +114,8 @@ public class LimelightTeleOp extends HelperActions {
             changeSpeed(driveActions, false, false, false, false, gamepad1.right_trigger);
 //            toggleSpeed(gamepad1.a);
             //toggles the hanger in and out, gamepad 1 x
-            verticalHanger.teleOpHanger(gamepad1.x);
+            verticalHanger.teleOpHanger(gamepad1.x, verticalWrist);
+
             //B button, overrides the coded stops on the vertical slide, resets slide perceived position on release
 //            verticalSlide.manualResetSlides(gamepad1.b);
             verticalSlide.resetSlides(gamepad1.b);
@@ -157,9 +151,9 @@ public class LimelightTeleOp extends HelperActions {
             //A button gamepad 2. Not yet working
             managePlaceSample(gamepad2.a, verticalGrabber, verticalWrist, verticalSlide, horizontalWrist, horizontalSlide, horizontalIntake, horizontalIRoll);
 
-            switchSample(gamepad1.square, gamepad1.triangle, gamepad1.cross, limeSweet);
-            manageGrabSample(gamepad1.share, limeSweet, horizontalSlide, driveActions, horizontalIRoll, horizontalWrist, horizontalIntake);
-            limeSweet.scanButter();
+//            switchSample(gamepad1.square, gamepad1.triangle, gamepad1.cross, limeSweet);
+//            manageGrabSample(gamepad1.share, limeSweet, horizontalSlide, driveActions, horizontalIRoll, horizontalWrist, horizontalIntake);
+//            limeSweet.scanButter();
 
             attachment.driveBasket(gamepad1.dpad_right);
             attachment.updateAction();

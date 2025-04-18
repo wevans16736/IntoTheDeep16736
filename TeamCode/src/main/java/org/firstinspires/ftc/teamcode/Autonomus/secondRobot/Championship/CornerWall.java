@@ -19,8 +19,8 @@ import org.firstinspires.ftc.teamcode.Configuration.secondRobot.VerticalHangerRR
 import org.firstinspires.ftc.teamcode.RR.GlobalVariables;
 import org.firstinspires.ftc.teamcode.RR.PinpointDrive;
 
-@Autonomous(name = "AutoRightChampionship", group = "auto")
-public class AutoRightChampionship extends LinearOpMode {
+@Autonomous(name = "CornerWall", group = "auto")
+public class CornerWall extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
         //set up Pinpoint and Pose2d class
@@ -49,7 +49,7 @@ public class AutoRightChampionship extends LinearOpMode {
 
 //        DetectBlockActions vision = new DetectBlockActions(hardwareMap);
 
-        TrajectoryRightChampionship trajectory = new TrajectoryRightChampionship(drive, pose, verticalSlide, verticalWrist, verticalGrabber,
+        TrajectoryCornerWall trajectory = new TrajectoryCornerWall(drive, pose, verticalSlide, verticalWrist, verticalGrabber,
                 verticalHanger, horizontalSlide, horizontalRoll, horizontalGrabber, horizontalWrist);
 
         //build everything

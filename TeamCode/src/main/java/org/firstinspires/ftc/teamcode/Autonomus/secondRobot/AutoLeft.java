@@ -21,7 +21,6 @@ import org.firstinspires.ftc.teamcode.RR.GlobalVariables;
 import org.firstinspires.ftc.teamcode.RR.PinpointDrive;
 
 @Autonomous(name = "AutoLeft")
-@Disabled
 public class AutoLeft extends LinearOpMode {
         @Override
         public void runOpMode() throws InterruptedException {

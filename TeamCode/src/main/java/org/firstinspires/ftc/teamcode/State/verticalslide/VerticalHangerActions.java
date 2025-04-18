@@ -1,9 +1,9 @@
-package org.firstinspires.ftc.teamcode.secondrobot.verticalslide;
+package org.firstinspires.ftc.teamcode.State.verticalslide;
 
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
-import org.firstinspires.ftc.teamcode.Configuration.secondRobot.Pose;
+import org.firstinspires.ftc.teamcode.State.ConfigurationSecondRobot;
 import org.firstinspires.ftc.teamcode.secondrobot.constants.ConfigConstants;
 
 public class VerticalHangerActions {
@@ -14,7 +14,7 @@ public class VerticalHangerActions {
 
         verticalHanger = hardwareMap.get(Servo.class, ConfigConstants.VERTICAL_HANGER);
 
-        verticalHanger.setPosition(Pose.verticalHangIn);
+        verticalHanger.setPosition(ConfigurationSecondRobot.verticalHangIn);
     }
 
     boolean hangerOut = false;
@@ -24,16 +24,15 @@ public class VerticalHangerActions {
 
     public void updateHanger() {
         if (hangerOut){
-            verticalHanger.setPosition(Pose.verticalHangOut);
+            verticalHanger.setPosition(ConfigurationSecondRobot.verticalHangOut);
         } else {
-            verticalHanger.setPosition(Pose.verticalHangIn);
+            verticalHanger.setPosition(ConfigurationSecondRobot.verticalHangIn);
         }
     }
     boolean wasActivate = false;
-    public void teleOpHanger(boolean activate, VerticalWristActions verticalWrist){
+    public void teleOpHanger(boolean activate){
         if (activate &! wasActivate) {
             setOut(!hangerOut);
-            verticalWrist.setPosition(Pose.verticalWristTransfer);
         }
         updateHanger();
         wasActivate = activate;

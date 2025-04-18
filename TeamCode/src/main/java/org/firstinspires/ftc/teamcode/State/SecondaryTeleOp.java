@@ -1,16 +1,15 @@
-package org.firstinspires.ftc.teamcode.secondrobot;
+package org.firstinspires.ftc.teamcode.State;
 
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-
 import org.firstinspires.ftc.teamcode.secondrobot.horizontalslide.HorizontalIRollActions;
 import org.firstinspires.ftc.teamcode.secondrobot.horizontalslide.HorizontalIntakeActions;
+import org.firstinspires.ftc.teamcode.secondrobot.horizontalslide.HorizontalSlideActions;
 import org.firstinspires.ftc.teamcode.secondrobot.horizontalslide.HorizontalWristActions;
 import org.firstinspires.ftc.teamcode.secondrobot.verticalslide.VerticalGrabberActions;
 import org.firstinspires.ftc.teamcode.secondrobot.verticalslide.VerticalHangerActions;
 import org.firstinspires.ftc.teamcode.secondrobot.verticalslide.VerticalSlideActions;
 import org.firstinspires.ftc.teamcode.secondrobot.verticalslide.VerticalWristActions;
-import org.firstinspires.ftc.teamcode.secondrobot.horizontalslide.HorizontalSlideActions;
 
 @TeleOp(name = "Tele Op second robot", group = "Linear Opmode")
 @Disabled
@@ -24,6 +23,7 @@ public class SecondaryTeleOp extends HelperActions {
     private VerticalGrabberActions verticalGrabber = null;
     private VerticalHangerActions verticalHanger = null;
     private HorizontalSlideActions horizontalSlide = null;
+    private DetectBlockActions detectBlockActions = null;
 
     double liftSpdMult = 0.8 ;
 
@@ -38,6 +38,9 @@ public class SecondaryTeleOp extends HelperActions {
         verticalWrist = new VerticalWristActions(telemetry, hardwareMap);
         verticalGrabber = new VerticalGrabberActions(telemetry, hardwareMap);
         verticalHanger = new VerticalHangerActions(hardwareMap);
+        detectBlockActions = new DetectBlockActions(hardwareMap);
+        //Set Speed for teleOp. Mecannum wheel speed.
+        //driveActions.setSpeed(1.0);
 
         telemetry.addData("reverse speed?", "press down");
         telemetry.addData("normal speed?", "press up");
@@ -109,6 +112,8 @@ public class SecondaryTeleOp extends HelperActions {
 
             //A button gamepad 2. Not yet working
             managePlaceSample(gamepad2.a, verticalGrabber, verticalWrist, verticalSlide, horizontalWrist, horizontalSlide, horizontalIntake, horizontalIRoll);
+
+            manageGrabSample(gamepad2.share, detectBlockActions, horizontalSlide);
 //            Point blockCenter = detectBlockActions.pixelToPosition(detectBlockActions.getCenter());
 //            telemetry.addData("block x %f, block y %f", blockCenter);
 //            if (gamepad2.share) {

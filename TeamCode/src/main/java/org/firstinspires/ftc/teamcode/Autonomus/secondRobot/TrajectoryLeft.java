@@ -82,7 +82,7 @@ public class TrajectoryLeft {
                         .waitSeconds(Timing.horizontalGrabberWideTime / 1000)
                         .setTangent(Math.toRadians(180))
                         .splineToLinearHeading(new Pose2d(basketX + 20, basketY, Math.toRadians(180)), Math.toRadians(180))
-                        .splineToLinearHeading(new Pose2d(basketX, basketY, Math.toRadians(230)), Math.toRadians(230));
+                        .splineToLinearHeading(new Pose2d(basketX, basketY - 1, Math.toRadians(230)), Math.toRadians(230));
                 basket++;
                 currentTrajectory = Basket.endTrajectory().fresh();
                 return Basket.build();

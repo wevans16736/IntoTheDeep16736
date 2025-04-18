@@ -1,11 +1,10 @@
-package org.firstinspires.ftc.teamcode.secondrobot.verticalslide;
+package org.firstinspires.ftc.teamcode.State.verticalslide;
 
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
-
 import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.teamcode.Configuration.secondRobot.Pose;
+import org.firstinspires.ftc.teamcode.State.ConfigurationSecondRobot;
 import org.firstinspires.ftc.teamcode.secondrobot.constants.ConfigConstants;
 
 public class VerticalWristActions {
@@ -38,12 +37,12 @@ public class VerticalWristActions {
         isSlideMiddle = isIt;
     }
     //this is a position to place it on the basket
-    double forwardUp = Pose.verticalWristBasket;
-    double forwardMiddle = (Pose.verticalWristBar);
+    double forwardUp = ConfigurationSecondRobot.verticalWristBasket;
+    double forwardMiddle = (ConfigurationSecondRobot.verticalWristBar);
     //this is a position to grab the butter from the wall or set it on the lower basket or either rung
-    double forwardDown = Pose.verticalWristWall;
+    double forwardDown = ConfigurationSecondRobot.verticalWristWall;
     //this is the position to grab the butter from the intake
-    double backwardPos = Pose.verticalWristTransfer;
+    double backwardPos = ConfigurationSecondRobot.verticalWristIntake;
     //If wrist is at highest point, set the wrist a bit higher to reach a higher point
     public void update() {
         if (forward) {
@@ -69,9 +68,9 @@ public class VerticalWristActions {
             } else {
                 forward();
             }
-            update();
         }
         wasInput = input;
+        update();
     }
     double position = 0.89;
     //Manually control the wrist. move with one button, reverse movement with other button
@@ -93,9 +92,5 @@ public class VerticalWristActions {
     }
     public void autoFlipForwardUp() {
         verticalWristServo.setPosition(forwardUp);
-    }
-
-    public void setPosition(double pose){
-        verticalWristServo.setPosition(pose);
     }
 }
