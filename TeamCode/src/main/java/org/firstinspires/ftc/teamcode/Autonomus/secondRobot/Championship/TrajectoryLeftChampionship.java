@@ -60,11 +60,11 @@ public class TrajectoryLeftChampionship {
     AccelConstraint subAccel = new ProfileAccelConstraint(-15, 10);
 
     int butter = 0; int transferCount = 0; Pose2d subPose; int sub = 0;
-    double BX = -55; double BY = -53; double BH = Math.toRadians(220); double BT = Math.toRadians(220); int basket = 0;
+    double BX = -55; double BY = -55; double BH = Math.toRadians(220); double BT = Math.toRadians(220); int basket = 0;
     //First butter position
     double FBX = -48.75; double FBY = -43.25; double FBH = Math.toRadians(-90); double FBT = Math.toRadians(90);
     //second butter position
-    double SBX = -58.75; double SBY = -42.25; double SBH = Math.toRadians(-90); double SBT = Math.toRadians(90);
+    double SBX = -58.75; double SBY = -40.5; double SBH = Math.toRadians(-90); double SBT = Math.toRadians(90);
     //third butter position
     double TBX = -56.5; double TBY = -23; double TBH = Math.toRadians(-.000001); double TBT = Math.toRadians(180);
     //location in
@@ -88,7 +88,7 @@ public class TrajectoryLeftChampionship {
                     .waitSeconds(Timing.horizontalGrabberCloseTime / 1000)
                     .waitSeconds(1.6)
                     .setTangent(Math.toRadians(-90))
-                    .strafeToLinearHeading(new Vector2d(BX, BY + 4), BT);
+                    .strafeToLinearHeading(new Vector2d(BX, BY + 1.5), BT);
             basket++;
             currentTrajectory = secondBasket.fresh();
             return secondBasket.build();
@@ -97,7 +97,7 @@ public class TrajectoryLeftChampionship {
                     .waitSeconds(Timing.horizontalGrabberCloseTime / 1000)
                     .waitSeconds(1.2)
                     .setTangent(Math.toRadians(-90))
-                    .strafeToLinearHeading(new Vector2d(BX + .25, BY), BT);
+                    .strafeToLinearHeading(new Vector2d(BX + .25, BY - .5), BT);
             basket++;
             currentTrajectory = thirdBasket.fresh();
             return thirdBasket.build();
@@ -166,7 +166,7 @@ public class TrajectoryLeftChampionship {
                     .waitSeconds(1)
                     .setTangent(Math.toRadians(0))
 //                    .splineToLinearHeading(new Pose2d(-45, -40, Math.toRadians(-90)), Math.toRadians(-45))
-                    .splineToLinearHeading(new Pose2d(BX, BY + 2, Math.toRadians(220)), BT)
+                    .splineToLinearHeading(new Pose2d(BX + 2, BY - 2, Math.toRadians(220)), BT)
                     //sub
                     .stopAndAdd(verticalGrabberRR.verticalGrabberAction(Pose.verticalOpen))
                     .waitSeconds(Timing.verticalOpenTime / 1000)
@@ -248,7 +248,7 @@ public class TrajectoryLeftChampionship {
             int ticks = strafeAction.setSlideDistanceMath();
             double distanceX = (strafeAction.grabX + 1) / 2.54;
             if (distanceX < 1){
-                distanceX = (distanceX * 0.7) - 2.5;
+                distanceX = (distanceX * 1.0) + 1.5;
                 telemetry.addData("stuff", distanceX);
                 telemetry.update();
             }
@@ -268,7 +268,7 @@ public class TrajectoryLeftChampionship {
                     .afterTime(1, verticalSlideRR.verticalSlideAction(Pose.verticalSlideBottom))
                     .stopAndAdd(verticalWristRR.verticalWristAction(Pose.verticalWristTransfer))
                     .setTangent(Math.toRadians(0))
-                    .splineToLinearHeading(new Pose2d(-5, 5, Math.toRadians(180)), Math.toRadians(0));
+                    .splineToLinearHeading(new Pose2d(-7, 5, Math.toRadians(180)), Math.toRadians(0));
             sub++;
             return test;
         } else {
@@ -301,8 +301,9 @@ public class TrajectoryLeftChampionship {
                     .setTangent(Math.toRadians(180))
                     .splineToLinearHeading(new Pose2d(-40, 0, Math.toRadians(0)), Math.toRadians(180))
                     .stopAndAdd(verticalWristRR.verticalWristAction(Pose.verticalWristUp))
+                    .stopAndAdd(verticalGrabberRR.verticalGrabberAction(Pose.verticalClose))
+                    .afterTime(1, verticalWristRR.verticalWristAction(Pose.verticalWristWall))
                     .splineToLinearHeading(new Pose2d(-30, 0, Math.toRadians(0)), Math.toRadians(0))
-                    .stopAndAdd(verticalWristRR.verticalWristAction(Pose.verticalWristWall))
                     ;
             return test;
         }

@@ -43,7 +43,7 @@ public class TrajectoryLeft {
     int butter = 0; int attachment = 0; int park = 0;int guess = 0;
     double firstButterX = -48.25; double firstButterY = -36.5;
     double secondButterX = -58.75; double secondButterY = -50;
-    double thirdButterX = -61.25; double thirdButterY = -25.5;
+    double thirdButterX = -61.25; double thirdButterY = -25;
     double parkX = -20; double parkY = 0;
     double humanX = 20.5, humanY = -63;
     public Action getBasket() {

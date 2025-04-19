@@ -22,7 +22,6 @@ import org.firstinspires.ftc.teamcode.RR.GlobalVariables;
 import org.firstinspires.ftc.teamcode.RR.PinpointDrive;
 
 @Autonomous(name = "Circut Breaker")
-@Disabled
 public class CircutBreaker extends LinearOpMode {
         @Override
         public void runOpMode() throws InterruptedException {
@@ -77,7 +76,7 @@ public class CircutBreaker extends LinearOpMode {
 
             Actions.runBlocking(new SequentialAction(
                     Basket1,
-//                    new SleepAction(1.8),
+                    new SleepAction(1.8),
                     Park1,
                     new ParallelAction(
                             Basket5,
